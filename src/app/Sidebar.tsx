@@ -1,14 +1,16 @@
 import { Tabs as RadixTabs } from "radix-ui";
 import styles from "./Sidebar.module.css";
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
-import ParameterScanIcon from "@/assets/icons//ParameterScanIcon.svg?react";
+import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
+import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
-export type SidebarTab = "TimeCourse" | "ParameterScan";
+export type SidebarTab = "TimeCourse" | "ParameterScan" | "SteadyState";
 
 // eslint-disable-next-line
 const sidebarTabIcons: Record<SidebarTab, React.FC> = {
   TimeCourse: TimeCourseIcon,
   ParameterScan: ParameterScanIcon,
+  SteadyState: SteadyStateIcon,
 } as const;
 
 interface SidebarItemProps {

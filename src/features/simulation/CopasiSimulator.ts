@@ -1,6 +1,6 @@
 import type { TimeCourseParameters } from "@/stores/workspace.ts";
 import type { ModelInfo, SimResult } from "@/third-party/copasi";
-import { Simulator, type ParameterScanOptions } from "./Simulator";
+import { Simulator, type ParameterScanOptions, type SteadyStateParameters } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
 
@@ -39,13 +39,27 @@ export class CopasiSimulator extends Simulator {
     return result as SimResult;
   }
 
+  async computeSteadyState(antimonyCode: string, { parameters }: { parameters: SteadyStateParameters; }, abortSignal?: AbortSignal): Promise<SimResult> {
+    const result = await this.#workerPool.queueTask(
+      "steadyState",
+      {
+        parameters,
+      },
+      antimonyCode,
+      abortSignal,
+    );
+    console.log(result);
+    return result;
+  }
+
   async getModelInfo(antimonyCode: string, abortSignal?: AbortSignal) {
-    return (await this.#workerPool.queueTask(
+    const result = await this.#workerPool.queueTask(
       "loadModel",
       null,
       antimonyCode,
       abortSignal,
-    )) as ModelInfo;
+    );
+    return result as ModelInfo;
   }
 
   getParameterFromSpecies(species: string): string {

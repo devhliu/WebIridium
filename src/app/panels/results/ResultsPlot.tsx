@@ -116,6 +116,7 @@ const ResultsPlot = ({
       }
       break;
     }
+
     case "parameterScan": {
       let colorIndex = 0;
       for (const scan of result.scans) {
@@ -136,6 +137,10 @@ const ResultsPlot = ({
           });
         }
       }
+      break;
+    }
+
+    case "steadyState": {
       break;
     }
   }

@@ -20,4 +20,5 @@ describe("simulation button", () => {
 
   // TODO: need tests to see if the plot display is correct.
   // TODO: need test to see if simple setting updates are working correctly
+  // TODO: add integration test where time course cancel should not be available when parameter scan sim is running
 });

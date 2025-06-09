@@ -38,7 +38,7 @@ self.onmessage = async (e) => {
   }
 
   switch (action.type) {
-    case "timeCourse":
+    case "timeCourse": {
       const { parameters, varyingParameter, varyingParameterValue } =
         action.payload;
 
@@ -61,14 +61,48 @@ self.onmessage = async (e) => {
         data: result,
       });
       break;
+    }
 
-    case "loadModel":
+    case "steadyState": {
+      const { parameters } = action.payload;
+
+      copasi.resetAll();
+      copasi.timeCourseSettings = {
+        startTime: parameters.startTime,
+        endTime: parameters.endTime,
+        numPoints: parameters.numberOfPoints,
+      };
+
+      const steadyStateValue = copasi.steadyState();
+      copasi.computeMca(true);
+
+      copasi.reset();
+      copasi.simulateEx(parameters.startTime, parameters.endTime, parameters.numberOfPoints);
+
+      self.postMessage({
+        type: "steadyState",
+        id: action.id,
+        data: {
+          value: steadyStateValue,
+          eigenValues: copasi.eigenValues2D,
+          jacobian: copasi.jacobian,
+          concentration: copasi.getConcentrationControlCoefficients(true),
+          fluxControl: copasi.getFluxControlCoefficients(true),
+          elasticities: copasi.getElasticities(true),
+        },
+      });
+
+      break;
+    }
+
+    case "loadModel": {
       self.postMessage({
         type: "loadModel",
         id: action.id,
         data: copasi.modelInfo,
       });
       break;
+    }
 
     default:
       throw new Error(`invalid action type: ${action.type}`);

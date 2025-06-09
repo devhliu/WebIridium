@@ -21,6 +21,8 @@ export type SimulationOperationResult =
  * @returns object with:
  * - `isSimulating` - whether a simulation is currently running
  * - `simulateTimeCourse` - start a time course simulation. Accepts an abort signal.
+ * - `computeSteadyState` - compute the steady state. Accepts an abort signal.
+ * - `runParameterScan` - run a parameter scan. Accepts an abort signal.
  */
 export const useSimulate = () => {
   const simulator = useSimulator();
@@ -67,6 +69,26 @@ export const useSimulate = () => {
         type: "timeCourse",
         titles: result.titles,
         columns: result.columns,
+      };
+    });
+  };
+
+  const computeSteadyState = async (
+    abortSignal?: AbortSignal
+  ): Promise<SimulationOperationResult> => {
+    return await runSimulation(async () => {
+      const result = await simulator.computeSteadyState(
+        editorContent,
+        { parameters: timeCourseParameters },
+        abortSignal,
+      );
+
+      console.log(result);
+
+      // return empty results
+      return {
+        type: "steadyState",
+        data: result,
       };
     });
   };
@@ -125,6 +147,7 @@ export const useSimulate = () => {
   return {
     isSimulating,
     simulateTimeCourse,
+    computeSteadyState,
     runParameterScan,
   };
 };
