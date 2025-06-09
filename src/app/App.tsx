@@ -20,9 +20,9 @@ const App = () => {
           onTabChange={setTab}
         />
         <PanelLayout>
-          {tab === "TimeCourse" && <TimeCoursePanel />}
-          {tab === "ParameterScan" && <ParameterScanPanel />}
-          {tab === "SteadyState" && <SteadyStatePanel />}
+          <TimeCoursePanel visible={tab === "TimeCourse"} />
+          <ParameterScanPanel visible={tab === "ParameterScan"} />
+          <SteadyStatePanel visible={tab === "SteadyState"} />
           <AntimonyEditorPanel />
           <PlotPanel />
         </PanelLayout>

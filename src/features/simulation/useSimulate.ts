@@ -45,7 +45,8 @@ export const useSimulate = () => {
         setSimulationResult(result);
         return { type: "success" };
       } catch (err) {
-        // TODO: implement error handling
+        // TODO: notify user of errors
+        console.error(err);
         return {
           type: "failure",
           message: "Unexpected error while simulating.",
@@ -65,6 +66,7 @@ export const useSimulate = () => {
         { parameters: timeCourseParameters },
         abortSignal,
       );
+      console.log(result);
       return {
         type: "timeCourse",
         titles: result.titles,
@@ -74,12 +76,12 @@ export const useSimulate = () => {
   };
 
   const computeSteadyState = async (
-    abortSignal?: AbortSignal
+    abortSignal?: AbortSignal,
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
       const result = await simulator.computeSteadyState(
         editorContent,
-        { parameters: timeCourseParameters },
+        { timeCourseParameters: timeCourseParameters },
         abortSignal,
       );
 

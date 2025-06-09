@@ -7,7 +7,10 @@
 import { atom } from "jotai";
 import defaultAntimonyModel from "/models/default.ant?raw";
 import type { SimResult, ModelInfo } from "@/third-party/copasi";
-import type { Simulator, SteadyStateResults } from "@/features/simulation/Simulator";
+import type {
+  Simulator,
+  SteadyStateResult,
+} from "@/features/simulation/Simulator";
 
 export interface TimeCourseParameters {
   startTime: number;
@@ -54,7 +57,7 @@ export type TimeCourseSimulationResult = {
   type: "timeCourse";
   titles: SimResult["titles"];
   columns: SimResult["columns"];
-}
+};
 
 export type ParameterScanSimulationResult = {
   type: "parameterScan";
@@ -64,12 +67,12 @@ export type ParameterScanSimulationResult = {
     titles: SimResult["titles"];
     columns: SimResult["columns"];
   }[];
-}
+};
 
 export type SteadyStateSimulationResult = {
-  type: "steadyState",
-  data: SteadyStateResults,
-}
+  type: "steadyState";
+  data: SteadyStateResult;
+};
 
 export type SimulationResult =
   | TimeCourseSimulationResult

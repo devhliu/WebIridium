@@ -143,7 +143,9 @@ export class WorkerPool {
 
       task.state = "terminated";
       task.reject(new WorkerTermination());
-      this.#removeWorker(task.workerInfo as WorkerInfo);
+      if (task.workerInfo) {
+        this.#removeWorker(task.workerInfo);
+      }
     }
   }
 

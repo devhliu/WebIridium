@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useSimulator } from "../workspace";
 import {
@@ -32,33 +32,42 @@ export const useEditorContent = () => {
 
   // TODO: abort every model info update when this is called for anything
   const abortControllerRef = useRef<AbortController | null>(null);
-  const setEditorContent = async (content: string) => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
+  const setEditorContent = useCallback(
+    async (content: string) => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
 
-    abortControllerRef.current = new AbortController();
+      abortControllerRef.current = new AbortController();
 
-    const modelInfo = await simulator.getModelInfo(
-      content,
-      abortControllerRef.current.signal,
-    );
-    if (
-      !hasParameter(
-        simulator,
-        modelInfo,
-        parameterScanParameters.varyingParameter,
-      )
-    ) {
-      setParameterScanParameters({
-        ...parameterScanParameters,
-        varyingParameter: modelInfo.global_parameters[0]?.name,
-      });
-    }
+      const modelInfo = await simulator.getModelInfo(
+        content,
+        abortControllerRef.current.signal,
+      );
+      if (
+        !hasParameter(
+          simulator,
+          modelInfo,
+          parameterScanParameters.varyingParameter,
+        )
+      ) {
+        setParameterScanParameters({
+          ...parameterScanParameters,
+          varyingParameter: modelInfo.global_parameters[0]?.name,
+        });
+      }
 
-    setModelInfo(modelInfo);
-    setEditorContentInternal(content);
-  };
+      setModelInfo(modelInfo);
+      setEditorContentInternal(content);
+    },
+    [
+      setModelInfo,
+      setEditorContentInternal,
+      parameterScanParameters,
+      setParameterScanParameters,
+      simulator,
+    ],
+  );
 
   return { editorContent, setEditorContent };
 };

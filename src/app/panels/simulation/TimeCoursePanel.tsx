@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState } from "react";
 import { useAtom } from "jotai";
 
 import styles from "./simulation.module.css";
@@ -14,91 +14,104 @@ import PropertyGenerator, {
 } from "@/components/property-list/PropertyGenerator";
 import VariableList from "@/components/variable-list/VariableList";
 
-export const TimeCoursePanel = () => {
+export interface TimeCoursePanelProps {
+  visible: boolean;
+}
+
+export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const { isSimulating, simulateTimeCourse } = useSimulate();
   const [timeCourseParameters, setTimeCourseParameters] = useAtom(
     timeCourseParametersAtom,
   );
-  const abortSimulationRef = useRef<AbortController | null>(null);
+  const [abortSimulation, setAbortSimulation] =
+    useState<AbortController | null>(null);
 
   const handleSimulateClick = () => {
-    if (abortSimulationRef.current) {
-      abortSimulationRef.current.abort();
+    if (abortSimulation) {
+      abortSimulation.abort();
     }
 
-    abortSimulationRef.current = new AbortController();
+    const controller = new AbortController();
+    setAbortSimulation(controller);
 
-    void simulateTimeCourse(abortSimulationRef.current.signal);
+    void simulateTimeCourse(controller.signal);
   };
 
   const handleCancelClick = () => {
-    if (abortSimulationRef.current) {
-      abortSimulationRef.current.abort();
-      abortSimulationRef.current = null;
+    if (abortSimulation) {
+      abortSimulation.abort();
+      setAbortSimulation(null);
     }
   };
 
-  return (
-    <div className={styles.simulationPanel}>
-      <h1 className={styles.panelTitle}>Time Course Simulation</h1>
-      <Button
-        icon={<PlayIcon />}
-        isLoading={isSimulating}
-        onClick={handleSimulateClick}
-        canCancel={isSimulating}
-        onCancel={handleCancelClick}
-      >
-        Simulate
-      </Button>
+  if (!visible) {
+    return null;
+  } else {
+    return (
+      <div data-testid="timeCoursePanel" className={styles.simulationPanel}>
+        <h1 className={styles.panelTitle}>Time Course Simulation</h1>
+        <Button
+          icon={<PlayIcon />}
+          isLoading={isSimulating}
+          onClick={handleSimulateClick}
+          canCancel={isSimulating && !!abortSimulation}
+          onCancel={handleCancelClick}
+        >
+          Simulate
+        </Button>
 
-      <PropertyAccordion defaultValue={["sim-params", "dependent-variables"]}>
-        <PropertyAccordionItem title="Simulation Parameters" value="sim-params">
-          <PropertyList>
-            <PropertyGenerator
-              properties={timeCourseParameters as unknown as Properties}
-              setProperty={(parameter, newValue) =>
-                setTimeCourseParameters({
-                  ...timeCourseParameters,
-                  [parameter]: newValue,
-                })
-              }
-              names={{
-                startTime: "Start Time",
-                endTime: "End Time",
-                numberOfPoints: "Number of Points",
-              }}
-              restrictions={[
-                {
-                  restriction: "range",
-                  minProperty: "startTime",
-                  maxProperty: "endTime",
-                },
-                {
-                  restriction: "bounds",
-                  properties: ["startTime", "endTime", "numberOfPoints"],
-                  min: 0,
-                  max: 1_000_000,
-                },
-                { restriction: "integer", property: "numberOfPoints" },
+        <PropertyAccordion defaultValue={["sim-params", "dependent-variables"]}>
+          <PropertyAccordionItem
+            title="Simulation Parameters"
+            value="sim-params"
+          >
+            <PropertyList>
+              <PropertyGenerator
+                properties={timeCourseParameters as unknown as Properties}
+                setProperty={(parameter, newValue) =>
+                  setTimeCourseParameters({
+                    ...timeCourseParameters,
+                    [parameter]: newValue,
+                  })
+                }
+                names={{
+                  startTime: "Start Time",
+                  endTime: "End Time",
+                  numberOfPoints: "Number of Points",
+                }}
+                restrictions={[
+                  {
+                    restriction: "range",
+                    minProperty: "startTime",
+                    maxProperty: "endTime",
+                  },
+                  {
+                    restriction: "bounds",
+                    properties: ["startTime", "endTime", "numberOfPoints"],
+                    min: 0,
+                    max: 1_000_000,
+                  },
+                  { restriction: "integer", property: "numberOfPoints" },
+                ]}
+              />
+            </PropertyList>
+          </PropertyAccordionItem>
+
+          <PropertyAccordionItem
+            title="Dependent Variables"
+            value="dependent-variables"
+          >
+            <VariableList
+              variables={[
+                { name: "test", visible: false },
+                { name: "test2", visible: false },
               ]}
             />
-          </PropertyList>
-        </PropertyAccordionItem>
-
-        <PropertyAccordionItem
-          title="Dependent Variables"
-          value="dependent-variables"
-        >
-          <VariableList
-            variables={[
-              { name: "test", visible: false },
-              { name: "test2", visible: false },
-            ]}
-          />
-        </PropertyAccordionItem>
-      </PropertyAccordion>
-    </div>
-  );
+          </PropertyAccordionItem>
+        </PropertyAccordion>
+      </div>
+    );
+  }
 };
 
 export default TimeCoursePanel;

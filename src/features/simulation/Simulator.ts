@@ -1,22 +1,18 @@
 import type { ModelInfo, SimResult } from "@/third-party/copasi";
 import type { TimeCourseParameters } from "@/stores/workspace";
 
-export type SteadyStateParameters = {
-  
-}
-
 export type ParameterScanOptions = {
   varyingParameter: string;
   varyingParameterValue: number;
 };
 
-export type SteadyStateResults = {
-  value: number,
-  eigenValues: number[][],
-  concentration: object,
-  fluxControl: object,
-  elasticities: object,
-}
+export type SteadyStateResult = {
+  value: number;
+  eigenValues: number[][];
+  concentration: unknown;
+  fluxControl: unknown;
+  elasticities: unknown;
+};
 
 export abstract class Simulator {
   abstract simulateTimeCourse(
@@ -34,12 +30,12 @@ export abstract class Simulator {
   abstract computeSteadyState(
     antimonyCode: string,
     {
-      parameters,
+      timeCourseParameters,
     }: {
-      parameters: SteadyStateParameters,
+      timeCourseParameters: TimeCourseParameters;
     },
     abortSignal?: AbortSignal,
-  ): Promise<SteadyStateResults>;
+  ): Promise<SteadyStateResult>;
 
   abstract getModelInfo(
     antimonyCode: string,

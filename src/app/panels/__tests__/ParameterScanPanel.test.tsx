@@ -12,7 +12,7 @@ describe("run button", () => {
   testSimulationButton("Run", () => {
     renderWithinWorkspace(
       <div>
-        <ParameterScanPanel />
+        <ParameterScanPanel visible />
         <PlotPanel />
       </div>,
     );

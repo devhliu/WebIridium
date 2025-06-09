@@ -12,7 +12,7 @@ describe("compute button", () => {
   testSimulationButton("Compute", () => {
     renderWithinWorkspace(
       <div>
-        <SteadyStatePanel />
+        <SteadyStatePanel visible />
         <PlotPanel />
       </div>,
     );

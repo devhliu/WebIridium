@@ -64,20 +64,24 @@ self.onmessage = async (e) => {
     }
 
     case "steadyState": {
-      const { parameters } = action.payload;
+      const { timeCourseParameters } = action.payload;
 
       copasi.resetAll();
       copasi.timeCourseSettings = {
-        startTime: parameters.startTime,
-        endTime: parameters.endTime,
-        numPoints: parameters.numberOfPoints,
+        startTime: timeCourseParameters.startTime,
+        endTime: timeCourseParameters.endTime,
+        numPoints: timeCourseParameters.numberOfPoints,
       };
 
       const steadyStateValue = copasi.steadyState();
       copasi.computeMca(true);
 
       copasi.reset();
-      copasi.simulateEx(parameters.startTime, parameters.endTime, parameters.numberOfPoints);
+      copasi.simulateEx(
+        timeCourseParameters.startTime,
+        timeCourseParameters.endTime,
+        timeCourseParameters.numberOfPoints,
+      );
 
       self.postMessage({
         type: "steadyState",
