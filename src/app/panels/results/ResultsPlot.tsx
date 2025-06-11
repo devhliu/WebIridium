@@ -1,4 +1,4 @@
-import { useState, type RefObject, useLayoutEffect } from "react";
+import { useState, type RefObject, useEffect } from "react";
 import { useAtomValue } from "jotai";
 import {
   graphSettingsAtom,
@@ -57,7 +57,8 @@ const ResultsPlot = ({
 
   const [[width, height], setDimensions] = useState([1, 1]);
 
-  useLayoutEffect(() => {
+  // when using useLayoutEffect, it breaks when rendered not at the start
+  useEffect(() => {
     if (!containerRef.current) return;
 
     const observer = new ResizeObserver((entries) => {
