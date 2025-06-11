@@ -18,7 +18,7 @@
   --primary-foreground: #f2f5f7;
   --primary-foreground-dim: #f2f5f7af;
   --primary-border: #212226;
-  --primary-solid-border: 1px solid var(--primary-border);
+  --primary-solid-border: 2px solid var(--primary-border);
 
   --secondary-background: #252729;
   --secondary-foreground: #f0f3f5;
@@ -40,6 +40,7 @@
   --input-solid-border-focused: 1px solid var(--primary-accent);
 
   /* Sizing */
+  --size-0: 2px;
   --size-1: 8px;
   --size-2: 16px;
   --size-3: 24px;

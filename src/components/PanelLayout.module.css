@@ -4,9 +4,10 @@
   display: grid;
   grid-template-columns: 300px 1.5fr 500px;
   grid-template-rows: 100%;
-  background-color: var(--primary-background);
+  gap: 2px;
+  background-color: var(--primary-border);
 }
 
 .panel-layout > div {
-  border: var(--primary-solid-border);
+  background-color: var(--primary-background);
 }

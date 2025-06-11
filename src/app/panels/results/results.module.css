@@ -1,7 +1,6 @@
 .plot-panel {
   display: flex;
   flex-direction: column;
-  position: relative;
   padding: var(--spacing-panel);
 }
 

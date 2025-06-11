@@ -1,5 +1,7 @@
 import { useState } from "react";
 import styles from "./App.module.css";
+import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
+import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import PanelLayout from "@/components/PanelLayout";
 import Sidebar, { type SidebarTab } from "./Sidebar";
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
@@ -8,6 +10,7 @@ import AntimonyEditorPanel from "./panels/AntimonyEditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import PlotPanel from "./panels/results/PlotPanel";
 import { WorkspaceProvider } from "@/features/workspace";
+import TabbedPanel from "@/components/TabbedPanel";
 
 const App = () => {
   const [tab, setTab] = useState<SidebarTab>("TimeCourse");
@@ -24,7 +27,20 @@ const App = () => {
           <ParameterScanPanel visible={tab === "ParameterScan"} />
           <SteadyStatePanel visible={tab === "SteadyState"} />
           <AntimonyEditorPanel />
-          <PlotPanel />
+          <TabbedPanel
+            tabs={[
+              {
+                name: "Plot",
+                icon: <GraphIcon width="20" height="20" />,
+                render: () => <PlotPanel />,
+              },
+              {
+                name: "Table",
+                icon: <TableIcon width="20" height="20" />,
+                render: () => <div />,
+              },
+            ]}
+          />
         </PanelLayout>
       </div>
     </WorkspaceProvider>
