@@ -66,7 +66,6 @@ export const useSimulate = () => {
         { parameters: timeCourseParameters },
         abortSignal,
       );
-      console.log(result);
       return {
         type: "timeCourse",
         titles: result.titles,

@@ -39,6 +39,11 @@
   --input-solid-border: 1px solid var(--input-border);
   --input-solid-border-focused: 1px solid var(--primary-accent);
 
+  --color-data-table-foreground: #000;
+  --color-data-table-neutral: #f2f2f2;
+  --color-data-table-positive: #fa5757;
+  --color-data-table-negative: #52e365;
+
   /* Sizing */
   --size-0: 2px;
   --size-1: 8px;

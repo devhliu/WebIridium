@@ -10,7 +10,7 @@ export const PlotPanel = () => {
   const simulationResults = useAtomValue(simulationResultAtom);
 
   return (
-    <div className={styles.plotPanel}>
+    <div className={styles.panel}>
       <div className={styles.plotContainer} ref={containerRef}>
         {!simulationResults ? (
           "nothing yet..."

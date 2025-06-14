@@ -30,7 +30,8 @@ export const useEditorContent = () => {
     parameterScanParametersAtom,
   );
 
-  // TODO: abort every model info update when this is called for anything
+  // TODO: abort every model info update when this is called from any component
+  // TODO: Do not allow simulations while model info is being retrieved? This will prevent an out-of-sync model from being simulated.
   const abortControllerRef = useRef<AbortController | null>(null);
   const setEditorContent = useCallback(
     async (content: string) => {

@@ -9,6 +9,7 @@ import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
 import AntimonyEditorPanel from "./panels/AntimonyEditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import PlotPanel from "./panels/results/PlotPanel";
+import TablePanel from "./panels/results/TablePanel";
 import { WorkspaceProvider } from "@/features/workspace";
 import TabbedPanel from "@/components/TabbedPanel";
 
@@ -37,7 +38,7 @@ const App = () => {
               {
                 name: "Table",
                 icon: <TableIcon width="20" height="20" />,
-                render: () => <div />,
+                render: () => <TablePanel />,
               },
             ]}
           />
