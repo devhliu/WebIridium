@@ -7,16 +7,16 @@
 
 .table {
   min-width: 100%;
-  background-color: var(--secondary-background);
-  border: var(--secondary-solid-border);
+  background-color: var(--color-secondary-background);
+  border: var(--color-secondary-solid-border);
   border-collapse: collapse;
   border-spacing: 0;
 }
 
 .cell {
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-small);
   min-width: 80px;
   text-align: start;
   padding: var(--spacing-2);
-  border: var(--secondary-solid-border);
+  border: var(--color-secondary-solid-border);
 }

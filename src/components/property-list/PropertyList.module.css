@@ -16,7 +16,7 @@
 
 .property-name {
   text-align: start;
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-small);
   width: 60%;
   padding-inline-end: var(--spacing-5);
 
@@ -47,8 +47,8 @@
   flex-grow: 1;
   width: 0;
   padding: var(--spacing-2);
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: var(--border-radius);
   transition-duration: var(--transition-fast);
 }
@@ -60,8 +60,8 @@
 }
 
 .property-input:focus {
-  border: 1px solid var(--primary-accent);
-  outline: var(--input-solid-border-focused);
+  border: 1px solid var(--color-primary-accent);
+  outline: var(--color-input-solid-border-focused);
 }
 
 /* Checkbox */
@@ -73,16 +73,16 @@
   padding: 0;
   height: 20px;
   width: 20px;
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: var(--border-radius);
   transition-duration: var(--transition-fast);
   cursor: pointer;
 
   &[data-state="checked"] {
-    color: var(--primary-foreground);
-    background-color: var(--primary-accent);
-    border-color: var(--primary-accent);
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary-accent);
+    border-color: var(--color-primary-accent);
   }
 }
 
@@ -107,8 +107,8 @@
 
 .slider-track {
   position: relative;
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: 9999px;
   height: var(--size-1);
   flex-grow: 1;
@@ -117,7 +117,7 @@
 
 .slider-range {
   position: absolute;
-  background-color: var(--primary-accent);
+  background-color: var(--color-primary-accent);
   border-radius: 9999px;
   height: 100%;
   cursor: pointer;
@@ -127,7 +127,7 @@
   display: block;
   width: var(--size-2);
   height: var(--size-2);
-  background-color: var(--primary-foreground);
+  background-color: var(--color-primary-foreground);
   border-radius: 10px;
   cursor: pointer;
 }
@@ -136,15 +136,15 @@
 
 .color-button {
   cursor: pointer;
-  border: var(--input-solid-border);
+  border: var(--color-input-solid-border);
   align-self: stretch;
   border-radius: var(--border-radius);
   width: 0;
 }
 
 .color-popup {
-  background-color: var(--tertiary-background);
-  border: var(--tertiary-solid-border);
+  background-color: var(--color-tertiary-background);
+  border: var(--color-tertiary-solid-border);
   padding: var(--spacing-4);
   margin: var(--spacing-3);
   border-radius: var(--border-radius);
@@ -211,8 +211,8 @@
 
 .select-trigger {
   display: flex;
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: var(--border-radius);
   justify-content: space-between;
   cursor: pointer;
@@ -225,16 +225,16 @@
 }
 
 .select-content {
-  background-color: var(--tertiary-background);
-  border: var(--tertiary-solid-border);
+  background-color: var(--color-tertiary-background);
+  border: var(--color-tertiary-solid-border);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-1);
   padding: var(--spacing-4);
 }
 
 .select-label {
-  color: var(--tertiary-foreground-dim);
-  font-size: var(--font-size-1);
+  color: var(--color-tertiary-foreground-dim);
+  font-size: var(--font-size-small);
   padding: var(--spacing-2);
 }
 
@@ -242,13 +242,13 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-small);
   padding: var(--spacing-2);
   border-radius: var(--border-radius);
   cursor: pointer;
   &[data-highlighted] {
-    color: var(--primary-foreground);
-    background-color: var(--primary-accent);
+    color: var(--color-primary-foreground);
+    background-color: var(--color-primary-accent);
   }
 }
 

@@ -5,9 +5,9 @@
   grid-template-columns: 300px 1.5fr 500px;
   grid-template-rows: 100%;
   gap: 2px;
-  background-color: var(--primary-border);
+  background-color: var(--color-primary-border);
 }
 
 .panel-layout > div {
-  background-color: var(--primary-background);
+  background-color: var(--color-primary-background);
 }

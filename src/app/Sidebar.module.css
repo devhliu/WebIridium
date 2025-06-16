@@ -1,7 +1,7 @@
 .root {
   display: flex;
   flex-direction: column;
-  border: var(--primary-solid-border);
+  border: var(--color-primary-solid-border);
 }
 
 .list {
@@ -10,7 +10,7 @@
 }
 
 .trigger {
-  color: color-mix(in hsl, var(--primary-foreground) 50%, transparent);
+  color: color-mix(in hsl, var(--color-primary-foreground) 50%, transparent);
   position: relative;
   background-color: transparent;
   border: none;
@@ -24,7 +24,7 @@
     content: "";
     background-color: color-mix(
       in hsl,
-      var(--primary-foreground) 20%,
+      var(--color-primary-foreground) 20%,
       transparent
     );
     display: block;
@@ -36,12 +36,12 @@
   }
 
   &[data-state="active"] {
-    color: var(--primary-foreground);
+    color: var(--color-primary-foreground);
   }
 
   &[data-state="active"]::before {
     content: "";
-    background-color: var(--primary-accent);
+    background-color: var(--color-primary-accent);
     display: block;
     position: absolute;
     top: 0;

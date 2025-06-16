@@ -5,8 +5,8 @@
 }
 
 .list {
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: var(--border-radius);
   padding: var(--spacing-1);
 }
@@ -23,14 +23,14 @@
   &:hover {
     background-color: color-mix(
       in hsl,
-      var(--input-foreground) 7%,
-      var(--input-background)
+      var(--color-input-foreground) 7%,
+      var(--color-input-background)
     );
   }
 }
 
 .item-name {
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-small);
 }
 
 .item-action-list {
@@ -52,24 +52,24 @@
   flex-direction: row;
   align-items: center;
 
-  background-color: var(--input-background);
-  border: var(--input-solid-border);
+  background-color: var(--color-input-background);
+  border: var(--color-input-solid-border);
   border-radius: var(--border-radius);
 
   transition-duration: var(--transition-fast);
 
   &:focus-within {
-    border: var(--input-solid-border-focused);
-    outline: var(--input-solid-border-focused);
+    border: var(--color-input-solid-border-focused);
+    outline: var(--color-input-solid-border-focused);
 
     & > .search-icon {
-      color: var(--input-foreground);
+      color: var(--color-input-foreground);
     }
   }
 }
 
 .search-icon {
-  color: var(--input-foreground-dim);
+  color: var(--color-input-foreground-dim);
   margin: var(--spacing-2);
 }
 
@@ -84,7 +84,7 @@
 }
 
 .nothing-found {
-  font-size: var(--font-size-1);
+  font-size: var(--font-size-small);
   padding: var(--spacing-2);
   text-align: center;
 }

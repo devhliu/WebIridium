@@ -11,14 +11,14 @@
   gap: var(--spacing-4);
   width: 100%;
 
-  color: var(--secondary-foreground);
-  background-color: var(--secondary-background);
+  color: var(--color-secondary-foreground);
+  background-color: var(--color-secondary-background);
   border-radius: var(--border-radius);
-  border: var(--secondary-solid-border);
+  border: var(--color-secondary-solid-border);
 
   flex-grow: 1;
   text-align: left;
-  font-size: var(--font-size-2);
+  font-size: var(--font-size-base);
   color: inherit;
   padding: var(--spacing-4);
   margin: 0;
@@ -39,9 +39,9 @@
 }
 
 .item-content {
-  color: var(--secondary-foreground);
-  background-color: var(--secondary-background);
-  border: var(--secondary-solid-border);
+  color: var(--color-secondary-foreground);
+  background-color: var(--color-secondary-background);
+  border: var(--color-secondary-solid-border);
   border-top: none;
   border-radius: var(--border-radius);
   border-top-right-radius: 0;

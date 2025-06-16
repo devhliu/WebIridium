@@ -4,7 +4,7 @@
 }
 
 .tab-root {
-  border-bottom: var(--primary-solid-border);
+  border-bottom: var(--color-primary-solid-border);
 }
 
 .tab-list {
@@ -18,7 +18,7 @@
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-3);
-  font-size: var(--font-size-2);
+  font-size: var(--font-size-base);
   background-color: transparent;
   border: none;
   transition-duration: var(--transition-fast);
@@ -30,7 +30,7 @@
   &:hover {
     background-color: color-mix(
       in hsl,
-      var(--primary-foreground) 10%,
+      var(--color-primary-foreground) 10%,
       transparent
     );
   }
@@ -38,7 +38,7 @@
   &[data-state="active"]::after {
     content: "";
     position: absolute;
-    background-color: var(--primary-accent);
+    background-color: var(--color-primary-accent);
     height: var(--size-0);
     width: 100%;
     left: 0;
@@ -47,7 +47,7 @@
 }
 
 .tab-icon {
-  color: var(--primary-foreground-dim);
+  color: var(--color-primary-foreground-dim);
   display: flex;
 }
 

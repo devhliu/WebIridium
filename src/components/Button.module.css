@@ -30,7 +30,7 @@
 
   padding: var(--spacing-3);
   margin: 0;
-  font-size: var(--font-size-2);
+  font-size: var(--font-size-base);
 
   cursor: pointer;
 
@@ -60,33 +60,37 @@
 }
 
 .primary {
-  --button-foreground: var(--primary-accent-foreground);
-  --button-background: var(--primary-accent);
+  --button-foreground: var(--color-primary-accent-foreground);
+  --button-background: var(--color-primary-accent);
 }
 
 .primary:hover {
   --button-foreground: color-mix(
     in hsl,
-    var(--primary-accent-foreground) 95%,
+    var(--color-primary-accent-foreground) 95%,
     #fff
   );
-  --button-background: color-mix(in hsl, var(--primary-accent) 93%, #fff);
+  --button-background: color-mix(in hsl, var(--color-primary-accent) 93%, #fff);
 }
 
 .primary:active {
   --button-foreground: color-mix(
     in hsl,
-    var(--primary-accent-foreground) 97%,
+    var(--color-primary-accent-foreground) 97%,
     #00071f
   );
-  --button-background: color-mix(in hsl, var(--primary-accent) 92%, #00071f);
+  --button-background: color-mix(
+    in hsl,
+    var(--color-primary-accent) 92%,
+    #00071f
+  );
 }
 
 .disabled > .primary {
   --button-foreground: color-mix(
     in hsl,
-    var(--primary-accent-foreground) 60%,
+    var(--color-primary-accent-foreground) 60%,
     #000
   );
-  --button-background: color-mix(in hsl, var(--primary-accent) 60%, #000);
+  --button-background: color-mix(in hsl, var(--color-primary-accent) 60%, #000);
 }
