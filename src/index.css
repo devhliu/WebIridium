@@ -38,6 +38,18 @@
   --color-input-solid-border: 1px solid var(--color-input-border);
   --color-input-solid-border-focused: 1px solid var(--color-primary-accent);
 
+  /* TODO: pick colors for this */
+  --color-message-background: var(--color-secondary-background);
+  --color-message-foreground: var(--color-secondary-foreground);
+  --color-message-foreground-dim: var(--color-secondary-foreground-dim);
+  --color-message-border: var(--color-secondary-border);
+  --color-message-solid-border: 1px solid var(--color-message-border);
+
+  --color-error: #f2291b;
+  --color-success: #22e369;
+  --color-warning: #e0c216;
+  --color-info: #0eb0e6;
+
   --color-data-table-foreground: #000;
   --color-data-table-neutral: #f2f2f2;
   --color-data-table-positive: #fa5757;

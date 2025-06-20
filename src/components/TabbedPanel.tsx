@@ -25,6 +25,7 @@ const TabbedPanel = ({ tabs }: TabbedPanelProps) => {
         <RadixTabs.List className={styles.tabList}>
           {tabs.map((tabInfo) => (
             <RadixTabs.Trigger
+              key={tabInfo.name}
               className={styles.tabTrigger}
               value={tabInfo.name}
             >

@@ -6,8 +6,7 @@ import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 export type SidebarTab = "TimeCourse" | "ParameterScan" | "SteadyState";
 
-// eslint-disable-next-line
-const sidebarTabIcons: Record<SidebarTab, React.FC> = {
+const sidebarTabIcons: Record<SidebarTab, React.ComponentType> = {
   TimeCourse: TimeCourseIcon,
   ParameterScan: ParameterScanIcon,
   SteadyState: SteadyStateIcon,

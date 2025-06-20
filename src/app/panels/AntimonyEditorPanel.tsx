@@ -1,4 +1,5 @@
 import styles from "./AntimonyEditorPanel.module.css";
+import ToastTest from "@/app/ToastTest";
 
 import defaultModel from "/models/default.ant?raw";
 import chickenModel from "/models/chicken.ant?raw";
@@ -22,6 +23,7 @@ export const AntimonyEditorPanel = () => {
 
   return (
     <div className={styles.antimonyEditorPanel}>
+      <ToastTest />
       <select onChange={(e) => setText(models[e.target.value])}>
         <option value="default">Default</option>
         <option value="chicken">Chicken</option>
