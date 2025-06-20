@@ -3,7 +3,7 @@ import styles from "./DataTable.module.css";
 interface DataTableProps {
   columns: {
     title: string;
-    rows: number[];
+    rows: (number | string)[];
   }[];
   decimalPlaces: number;
 }
@@ -37,24 +37,31 @@ const DataTable = ({ columns, decimalPlaces }: DataTableProps) => {
             <tr key={rowIndex} className={styles.row}>
               {columns.map((column, colIndex) => {
                 const cellValue = column.rows[rowIndex];
-
-                const targetColor =
-                  cellValue >= 0
-                    ? "color-data-table-positive"
-                    : "color-data-table-negative";
-                const maxPercent = Math.abs(cellValue / maxAbsValue) * 100;
-                return (
-                  <td
-                    key={colIndex}
-                    className={styles.cell}
-                    style={{
-                      color: "var(--color-data-table-foreground)",
-                      backgroundColor: `color-mix(in hsl, var(--${targetColor}) ${maxPercent}%, var(--color-data-table-neutral))`,
-                    }}
-                  >
-                    {cellValue.toFixed(decimalPlaces).replace(/^-0/, "0")}
-                  </td>
-                );
+                if (typeof cellValue === "number") {
+                  const targetColor =
+                    cellValue >= 0
+                      ? "var(--color-data-table-positive)"
+                      : "var(--color-data-table-negative)";
+                  const maxPercent = Math.abs(cellValue / maxAbsValue) * 100;
+                  return (
+                    <td
+                      key={colIndex}
+                      className={styles.cell}
+                      style={{
+                        color: "var(--color-data-table-foreground)",
+                        backgroundColor: `color-mix(in hsl, ${targetColor} ${maxPercent}%, var(--color-data-table-neutral))`,
+                      }}
+                    >
+                      {cellValue.toFixed(decimalPlaces)}
+                    </td>
+                  );
+                } else {
+                  return (
+                    <td key={colIndex} className={styles.cell}>
+                      {cellValue}
+                    </td>
+                  );
+                }
               })}
             </tr>
           ))}

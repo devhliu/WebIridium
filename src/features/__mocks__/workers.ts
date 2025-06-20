@@ -30,6 +30,20 @@ export const createWorker = (type: WorkerType) => {
           case "steadyState":
             worker.port.postMessage({
               value: 1.44677e-31,
+              initialConcentrations: [
+                {
+                  name: "A",
+                  value: 10,
+                },
+                {
+                  name: "B",
+                  value: 0,
+                },
+                {
+                  name: "C",
+                  value: 0,
+                },
+              ],
               eigenValues: [
                 [0, 0],
                 [-0.20000000000000004, 0],
@@ -44,7 +58,7 @@ export const createWorker = (type: WorkerType) => {
                   [0.20000000000000004, 0, 0],
                 ],
               },
-              concentration: {
+              concentrationControl: {
                 columns: ["(_J0)", "(_J1)", "'Summation Error'"],
                 rows: ["B", "A", "C"],
                 values: [
@@ -91,7 +105,6 @@ export const createWorker = (type: WorkerType) => {
             break;
 
           case "loadModel":
-            // TODO: mock this properly
             worker.port.postMessage({
               type: "loadModel",
               id: action.id,

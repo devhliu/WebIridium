@@ -21,3 +21,16 @@
   width: 100%;
   height: 100%;
 }
+
+.steady-state-container {
+  width: 100%;
+  height: 100%;
+  overflow-x: scroll;
+  overflow-y: scroll;
+}
+
+.steady-state-section {
+  & > h2 {
+    font-size: var(--font-size-big);
+  }
+}

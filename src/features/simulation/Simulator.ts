@@ -6,12 +6,23 @@ export type ParameterScanOptions = {
   varyingParameterValue: number;
 };
 
+export type SteadyStateResultItem = {
+  columns: string[];
+  rows: string[];
+  values: number[][];
+};
+
 export type SteadyStateResult = {
   value: number;
+  initialConcentrations: {
+    name: string;
+    value: number;
+  }[];
   eigenValues: number[][];
-  concentration: unknown;
-  fluxControl: unknown;
-  elasticities: unknown;
+  jacobian: SteadyStateResultItem;
+  concentrationControl: SteadyStateResultItem;
+  fluxControl: SteadyStateResultItem;
+  elasticities: SteadyStateResultItem;
 };
 
 export abstract class Simulator {

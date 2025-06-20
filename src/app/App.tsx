@@ -15,6 +15,7 @@ import AntimonyEditorPanel from "./panels/AntimonyEditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import PlotPanel from "./panels/results/PlotPanel";
 import TablePanel from "./panels/results/TablePanel";
+import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel from "@/components/TabbedPanel";
 
 const App = () => {
@@ -46,6 +47,11 @@ const App = () => {
                   name: "Table",
                   icon: <TableIcon width="20" height="20" />,
                   render: () => <TablePanel />,
+                },
+                {
+                  name: "Steady State",
+                  icon: <span>📊</span>,
+                  render: () => <SteadyStateResultPanel />,
                 },
               ]}
             />

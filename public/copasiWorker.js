@@ -77,7 +77,7 @@ self.onmessage = async (e) => {
       copasi.computeMca(true);
 
       copasi.reset();
-      copasi.simulateEx(
+      const result = copasi.simulateEx(
         timeCourseParameters.startTime,
         timeCourseParameters.endTime,
         timeCourseParameters.numberOfPoints,
@@ -88,9 +88,14 @@ self.onmessage = async (e) => {
         id: action.id,
         data: {
           value: steadyStateValue,
+          initialConcentrations: result.columns.slice(1).map((col, i) => ({
+            name: result.titles[i + 1],
+            value: col[0],
+          })),
           eigenValues: copasi.eigenValues2D,
           jacobian: copasi.jacobian,
-          concentration: copasi.getConcentrationControlCoefficients(true),
+          concentrationControl:
+            copasi.getConcentrationControlCoefficients(true),
           fluxControl: copasi.getFluxControlCoefficients(true),
           elasticities: copasi.getElasticities(true),
         },
