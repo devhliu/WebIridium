@@ -1,5 +1,4 @@
 :root {
-  color-scheme: light dark;
   box-sizing: border-box;
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -17,31 +16,31 @@
   --color-primary-foreground: #f2f5f7;
   --color-primary-foreground-dim: #f2f5f7af;
   --color-primary-border: #212226;
-  --primary-solid-border: 2px solid var(--color-primary-border);
   --color-primary-background-translucent: color-mix(
     in hsl,
     var(--color-primary-foreground) 10%,
     transparent
   );
+  --border-primary-solid: 2px solid var(--color-primary-border);
 
   --color-secondary-background: #252729;
   --color-secondary-foreground: #f0f3f5;
   --color-secondary-foreground-dim: #f0f3f59f;
   --color-secondary-border: #43444d;
-  --color-secondary-solid-border: 1px solid var(--color-secondary-border);
+  --border-secondary-solid: 1px solid var(--color-secondary-border);
 
   --color-tertiary-background: #38393b;
   --color-tertiary-foreground: #ebeef0;
   --color-tertiary-foreground-dim: #ebeef0af;
   --color-tertiary-border: #56575c;
-  --color-tertiary-solid-border: 1px solid var(--color-tertiary-border);
+  --border-tertiary-solid: 1px solid var(--color-tertiary-border);
 
   --color-input-background: #1f2021;
   --color-input-foreground: var(--color-secondary-foreground);
   --color-input-foreground-dim: var(--color-secondary-foreground-dim);
   --color-input-border: #494a4c;
-  --color-input-solid-border: 1px solid var(--color-input-border);
-  --color-input-solid-border-focused: 1px solid var(--color-primary-accent);
+  --border-input-solid: 1px solid var(--color-input-border);
+  --border-input-solid-focused: 1px solid var(--color-primary-accent);
 
   /* TODO: pick colors for this */
   --color-message-background: var(--color-secondary-background);
@@ -57,8 +56,8 @@
 
   --color-data-table-foreground: #000;
   --color-data-table-neutral: #f2f2f2;
-  --color-data-table-positive: #fa5757;
-  --color-data-table-negative: #52e365;
+  --color-data-table-positive: #52e365;
+  --color-data-table-negative: #fa5757;
 
   /* Sizing */
   --size-0: 2px;

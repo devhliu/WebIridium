@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./App.module.css";
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
+import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 import PanelLayout from "@/components/PanelLayout";
 import { WorkspaceProvider } from "@/features/workspace";
@@ -54,7 +55,7 @@ const App = () => {
                   },
                   {
                     name: "Steady State",
-                    icon: <span>📊</span>,
+                    icon: <SteadyStateIcon width="20" height="20" />,
                     render: () => <SteadyStateResultPanel />,
                   },
                 ]}

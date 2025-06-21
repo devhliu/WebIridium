@@ -39,6 +39,7 @@
 }
 
 .item-action {
+  color: var(--color-input-foreground);
   display: flex;
   box-sizing: border-box;
   padding: 0;
@@ -74,6 +75,7 @@
 }
 
 .search-input {
+  color: var(--color-input-foreground);
   background: transparent;
   border: none;
   flex-grow: 1;

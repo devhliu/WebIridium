@@ -14,12 +14,11 @@
   color: var(--color-secondary-foreground);
   background-color: var(--color-secondary-background);
   border-radius: var(--border-radius);
-  border: var(--color-secondary-solid-border);
+  border: var(--border-secondary-solid);
 
   flex-grow: 1;
   text-align: left;
   font-size: var(--font-size-base);
-  color: inherit;
   padding: var(--spacing-4);
   margin: 0;
   cursor: pointer;
@@ -41,7 +40,7 @@
 .item-content {
   color: var(--color-secondary-foreground);
   background-color: var(--color-secondary-background);
-  border: var(--color-secondary-solid-border);
+  border: var(--border-secondary-solid);
   border-top: none;
   border-radius: var(--border-radius);
   border-top-right-radius: 0;

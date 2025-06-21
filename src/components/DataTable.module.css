@@ -8,15 +8,16 @@
 .table {
   min-width: 100%;
   background-color: var(--color-secondary-background);
-  border: var(--color-secondary-solid-border);
+  border: var(--border-secondary-solid);
   border-collapse: collapse;
   border-spacing: 0;
 }
 
 .cell {
+  color: var(--color-primary-foreground);
   font-size: var(--font-size-small);
   min-width: 80px;
   text-align: start;
   padding: var(--spacing-2);
-  border: var(--color-secondary-solid-border);
+  border: var(--border-secondary-solid);
 }

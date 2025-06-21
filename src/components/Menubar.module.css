@@ -2,7 +2,7 @@
   display: flex;
   padding: var(--spacing-1);
   background-color: var(--color-primary-background);
-  border: var(--primary-solid-border);
+  border: var(--border-primary-solid);
 }
 
 .trigger {
@@ -23,7 +23,7 @@
 
 .content {
   background-color: var(--color-secondary-background);
-  border: var(--color-secondary-solid-border);
+  border: var(--border-secondary-solid);
   border-radius: var(--border-radius);
   padding: var(--spacing-2);
   box-shadow: var(--shadow-1);

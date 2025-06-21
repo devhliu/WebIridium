@@ -4,7 +4,7 @@
 }
 
 .tab-root {
-  border-bottom: var(--primary-solid-border);
+  border-bottom: var(--border-primary-solid);
 }
 
 .tab-list {
@@ -13,6 +13,7 @@
 }
 
 .tab-trigger {
+  color: var(--color-primary-foreground);
   display: flex;
   position: relative;
   flex-direction: row;

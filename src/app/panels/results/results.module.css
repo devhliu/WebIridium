@@ -1,4 +1,6 @@
 .panel {
+  color: var(--color-primary-foreground);
+  background-color: var(--color-primary-background);
   display: flex;
   flex-direction: column;
   padding: var(--spacing-panel);

@@ -47,8 +47,9 @@
   flex-grow: 1;
   width: 0;
   padding: var(--spacing-2);
+  color: var(--color-input-foreground);
   background-color: var(--color-input-background);
-  border: var(--color-input-solid-border);
+  border: var(--border-input-solid);
   border-radius: var(--border-radius);
   transition-duration: var(--transition-fast);
 }
@@ -61,7 +62,7 @@
 
 .property-input:focus {
   border: 1px solid var(--color-primary-accent);
-  outline: var(--color-input-solid-border-focused);
+  outline: var(--border-input-solid-focused);
 }
 
 /* Checkbox */
@@ -74,7 +75,7 @@
   height: 20px;
   width: 20px;
   background-color: var(--color-input-background);
-  border: var(--color-input-solid-border);
+  border: var(--border-input-solid);
   border-radius: var(--border-radius);
   transition-duration: var(--transition-fast);
   cursor: pointer;
@@ -108,7 +109,7 @@
 .slider-track {
   position: relative;
   background-color: var(--color-input-background);
-  border: var(--color-input-solid-border);
+  border: var(--border-input-solid);
   border-radius: 9999px;
   height: var(--size-1);
   flex-grow: 1;
@@ -136,7 +137,7 @@
 
 .color-button {
   cursor: pointer;
-  border: var(--color-input-solid-border);
+  border: var(--border-input-solid);
   align-self: stretch;
   border-radius: var(--border-radius);
   width: 0;
@@ -212,7 +213,7 @@
 .select-trigger {
   display: flex;
   background-color: var(--color-input-background);
-  border: var(--color-input-solid-border);
+  border: var(--border-input-solid);
   border-radius: var(--border-radius);
   justify-content: space-between;
   cursor: pointer;
@@ -239,6 +240,7 @@
 }
 
 .select-item {
+  color: var(--color-tertiary-foreground);
   display: flex;
   align-items: center;
   gap: var(--spacing-3);
