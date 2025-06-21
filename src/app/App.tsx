@@ -7,6 +7,7 @@ import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import PanelLayout from "@/components/PanelLayout";
 import { WorkspaceProvider } from "@/features/workspace";
 import Sidebar, { type SidebarTab } from "./Sidebar";
+import AppMenubar from "./AppMenubar";
 import { ToastProvider } from "@/components/Toast";
 
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
@@ -24,38 +25,42 @@ const App = () => {
     <ToastProvider>
       <WorkspaceProvider>
         <div className={styles.app}>
-          <Sidebar
-            tabs={["TimeCourse", "SteadyState", "ParameterScan"]}
-            currentTab={tab}
-            onTabChange={setTab}
-          />
-          <PanelLayout>
-            <TimeCoursePanel visible={tab === "TimeCourse"} />
-            <ParameterScanPanel visible={tab === "ParameterScan"} />
-            <SteadyStatePanel visible={tab === "SteadyState"} />
-
-            <AntimonyEditorPanel />
-
-            <TabbedPanel
-              tabs={[
-                {
-                  name: "Plot",
-                  icon: <GraphIcon width="20" height="20" />,
-                  render: () => <PlotPanel />,
-                },
-                {
-                  name: "Table",
-                  icon: <TableIcon width="20" height="20" />,
-                  render: () => <TablePanel />,
-                },
-                {
-                  name: "Steady State",
-                  icon: <span>📊</span>,
-                  render: () => <SteadyStateResultPanel />,
-                },
-              ]}
+          <AppMenubar />
+          <div className={styles.appMain}>
+            <Sidebar
+              tabs={["TimeCourse", "SteadyState", "ParameterScan"]}
+              currentTab={tab}
+              onTabChange={setTab}
             />
-          </PanelLayout>
+
+            <PanelLayout>
+              <TimeCoursePanel visible={tab === "TimeCourse"} />
+              <ParameterScanPanel visible={tab === "ParameterScan"} />
+              <SteadyStatePanel visible={tab === "SteadyState"} />
+
+              <AntimonyEditorPanel />
+
+              <TabbedPanel
+                tabs={[
+                  {
+                    name: "Plot",
+                    icon: <GraphIcon width="20" height="20" />,
+                    render: () => <PlotPanel />,
+                  },
+                  {
+                    name: "Table",
+                    icon: <TableIcon width="20" height="20" />,
+                    render: () => <TablePanel />,
+                  },
+                  {
+                    name: "Steady State",
+                    icon: <span>📊</span>,
+                    render: () => <SteadyStateResultPanel />,
+                  },
+                ]}
+              />
+            </PanelLayout>
+          </div>
         </div>
       </WorkspaceProvider>
     </ToastProvider>

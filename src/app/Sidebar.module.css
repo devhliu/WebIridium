@@ -1,7 +1,8 @@
 .root {
   display: flex;
   flex-direction: column;
-  border: var(--color-primary-solid-border);
+  background: var(--color-primary-background);
+  border-right: var(--primary-solid-border);
 }
 
 .list {

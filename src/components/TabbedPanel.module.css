@@ -4,7 +4,7 @@
 }
 
 .tab-root {
-  border-bottom: var(--color-primary-solid-border);
+  border-bottom: var(--primary-solid-border);
 }
 
 .tab-list {
@@ -28,11 +28,7 @@
   border-radius: var(--border-radius);
 
   &:hover {
-    background-color: color-mix(
-      in hsl,
-      var(--color-primary-foreground) 10%,
-      transparent
-    );
+    background-color: var(--color-primary-background-translucent);
   }
 
   &[data-state="active"]::after {

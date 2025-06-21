@@ -17,7 +17,12 @@
   --color-primary-foreground: #f2f5f7;
   --color-primary-foreground-dim: #f2f5f7af;
   --color-primary-border: #212226;
-  --color-primary-solid-border: 2px solid var(--color-primary-border);
+  --primary-solid-border: 2px solid var(--color-primary-border);
+  --color-primary-background-translucent: color-mix(
+    in hsl,
+    var(--color-primary-foreground) 10%,
+    transparent
+  );
 
   --color-secondary-background: #252729;
   --color-secondary-foreground: #f0f3f5;
@@ -82,7 +87,7 @@
   /* Misc. */
   --transition-fast: 0.1s;
 
-  --shadow-1: 0px 10px 25px -15px rgba(0, 0, 0, 0.5);
+  --shadow-1: 0px 15px 25px -15px rgba(0, 0, 0, 0.75);
 }
 
 *,

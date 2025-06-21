@@ -1,11 +1,18 @@
 .app {
+  display: flex;
+  flex-direction: column;
+
   position: fixed;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
+}
 
+.app-main {
   display: grid;
   grid-template-rows: 100%;
   grid-template-columns: var(--size-7) 1fr;
+  flex-grow: 1;
+  overflow-y: hidden;
 }
