@@ -10,7 +10,7 @@ import jestDom from "eslint-plugin-jest-dom";
 import testingLibrary from "eslint-plugin-testing-library";
 
 export default tseslint.config(
-  { ignores: ["dist", "public", "coverage"] },
+  { ignores: ["dist", "public", "coverage", "src/third-party"] },
   {
     extends: [
       js.configs.recommended,
