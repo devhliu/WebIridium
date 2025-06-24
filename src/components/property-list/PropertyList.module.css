@@ -261,6 +261,7 @@
 }
 
 .select-scroll-button {
+  color: var(--color-tertiary-foreground);
   display: flex;
   align-items: center;
   justify-content: center;

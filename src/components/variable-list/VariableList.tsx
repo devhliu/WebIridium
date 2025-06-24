@@ -1,17 +1,39 @@
+import { useState } from "react";
 import styles from "./VariableList.module.css";
-import { type VariableOptions } from "@/stores/workspace";
+import { type Variable } from "@/features/simulation/Simulator";
 import VariableItem from "./VariableItem";
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
-import { useState } from "react";
 
 export interface VariableListProps {
-  variables: VariableOptions[];
+  variables: Variable[];
 }
+
+const CATEGORY_ORDER = ["Species", "Parameter"];
+
+const VariableGroup = ({
+  group,
+  variables,
+}: {
+  group: string;
+  variables: Variable[];
+}) => {
+  return (
+    <details key={group} className={styles.groupDetails}>
+      <summary className={styles.groupSummary}>{group}</summary>
+      {variables?.map((v) => <VariableItem key={v.name} variable={v} />)}
+    </details>
+  );
+};
 
 const VariableList = ({ variables }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter((variable) =>
-    variable.name.includes(searchTerm),
+    variable.name.toLowerCase().includes(searchTerm.toLowerCase()),
+  );
+  const groupedVariables = Object.groupBy(filteredVariables, (v) => v.category);
+  const sortedGroupedVariables = Object.entries(groupedVariables).toSorted(
+    ([a, _], [b, __]) =>
+      (CATEGORY_ORDER.indexOf(a) ?? 10) - (CATEGORY_ORDER.indexOf(b) ?? 10),
   );
 
   return (
@@ -29,12 +51,12 @@ const VariableList = ({ variables }: VariableListProps) => {
       </div>
       {filteredVariables.length > 0 ? (
         <div className={styles.list}>
-          {filteredVariables.map((variable) => (
-            <VariableItem key={variable.name} variable={variable} />
-          ))}
+          {sortedGroupedVariables.map(([group, vars]) =>
+            vars ? <VariableGroup group={group} variables={vars} /> : null,
+          )}
         </div>
       ) : (
-        <div className={styles.nothingFound}>No variables found</div>
+        <div className={styles.nothingFound}>No variables</div>
       )}
     </div>
   );

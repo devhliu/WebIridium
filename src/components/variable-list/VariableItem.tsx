@@ -1,9 +1,9 @@
 import styles from "./VariableList.module.css";
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
-import { type VariableOptions } from "@/stores/workspace";
+import { type Variable } from "@/features/simulation/Simulator";
 
 export interface VariableItemProps {
-  variable: VariableOptions;
+  variable: Variable;
 }
 
 const VariableItem = ({ variable }: VariableItemProps) => {
@@ -16,7 +16,7 @@ const VariableItem = ({ variable }: VariableItemProps) => {
         </button>
       </div>
 
-      <span className={styles.itemName}>{variable.name}</span>
+      <span className={styles.itemName}>{variable.displayName}</span>
     </div>
   );
 };
