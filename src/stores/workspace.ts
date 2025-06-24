@@ -6,8 +6,11 @@
 
 import { atom } from "jotai";
 import defaultAntimonyModel from "/models/default.ant?raw";
-import type { SimResult, ModelInfo } from "@/third-party/copasi";
-import type { SteadyStateResult } from "@/features/simulation/Simulator";
+import type { SimResult } from "@/third-party/copasi";
+import type {
+  SteadyStateResult,
+  Variable,
+} from "@/features/simulation/Simulator";
 
 export interface TimeCourseParameters {
   startTime: number;
@@ -15,8 +18,8 @@ export interface TimeCourseParameters {
   numberOfPoints: number;
 }
 
-export interface ParameterScanParameters {
-  varyingParameter: string | null;
+export interface ParameterScanOptions {
+  varyingParameter: string | null | undefined;
   min: number;
   max: number;
   numberOfValues: number;
@@ -79,9 +82,10 @@ export type SimulationResult =
 // Atoms
 
 export const editorContentAtom = atom(defaultAntimonyModel);
-export const modelInfoAtom = atom<ModelInfo | null>(null);
 export const isSimulatingAtom = atom(false);
 export const simulationResultAtom = atom<SimulationResult | null>(null);
+
+export const variablesAtom = atom<Variable[]>([]);
 
 export const timeCourseParametersAtom = atom<TimeCourseParameters>({
   startTime: 0,
@@ -89,7 +93,7 @@ export const timeCourseParametersAtom = atom<TimeCourseParameters>({
   numberOfPoints: 200,
 });
 
-export const parameterScanParametersAtom = atom<ParameterScanParameters>({
+export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
   varyingParameter: null,
   min: 0.1,
   max: 1,
@@ -125,10 +129,10 @@ export const graphSettingsAtom = atom<GraphSettings>({
  */
 export const allWorkspaceAtoms = [
   editorContentAtom,
-  modelInfoAtom,
   isSimulatingAtom,
+  variablesAtom,
   simulationResultAtom,
   timeCourseParametersAtom,
-  parameterScanParametersAtom,
+  parameterScanOptionsAtom,
   graphSettingsAtom,
 ];

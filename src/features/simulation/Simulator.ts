@@ -1,4 +1,4 @@
-import type { ModelInfo, SimResult } from "@/third-party/copasi";
+import type { SimResult } from "@/third-party/copasi";
 import type { TimeCourseParameters } from "@/stores/workspace";
 
 export type ParameterScanOptions = {
@@ -25,6 +25,20 @@ export type SteadyStateResult = {
   elasticities: SteadyStateResultItem;
 };
 
+export interface Variable {
+  displayName: string;
+  /** General name used internally by the simulator */
+  name: string;
+  /**
+   * Internal name of the variable used for scanning. If present, the variable can
+   * be used as a parameter in parameter scan. Otherwise it will not appear.
+   * This is necessary because, in Copasi,
+   * to scan with species named "A", you set the value for "[A]_0"
+   */
+  scanName?: string;
+  category: string;
+}
+
 export abstract class Simulator {
   abstract simulateTimeCourse(
     antimonyCode: string,
@@ -48,10 +62,12 @@ export abstract class Simulator {
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult>;
 
-  abstract getModelInfo(
+  /**
+   * NOTE: when switching beteween simulators, make sure to reset the variable list as it is not compatible between variables
+   * @returns list of variables the simulator has for the model.
+   */
+  abstract loadModel(
     antimonyCode: string,
     abortSignal?: AbortSignal,
-  ): Promise<ModelInfo>;
-
-  abstract getParameterFromSpecies(species: string): string;
+  ): Promise<Variable[]>;
 }

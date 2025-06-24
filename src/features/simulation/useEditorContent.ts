@@ -1,33 +1,46 @@
 import { useRef, useCallback } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import { useSimulator } from "../workspace";
+import { type Variable } from "./Simulator";
 import {
-  modelInfoAtom,
+  variablesAtom,
   editorContentAtom,
-  parameterScanParametersAtom,
+  parameterScanOptionsAtom,
 } from "@/stores/workspace";
-import type { ModelInfo } from "@/third-party/copasi";
-import { type Simulator } from "@/features/simulation/Simulator";
 
-const hasParameter = (
-  simulator: Simulator,
-  modelInfo: ModelInfo,
-  name: string | null,
-): boolean => {
-  return Boolean(
-    modelInfo.global_parameters.find((param) => param.name === name) ||
-      modelInfo.species.find(
-        (specie) => simulator.getParameterFromSpecies(specie.name) === name,
-      ),
-  );
+/**
+ * TODO: unit test this
+ * Updates the current variable list so it contains all the same variables as the new one,
+ * preserving user settings for the variables.
+ */
+const patchVariables = (
+  currentVariables: Variable[],
+  newVariables: Variable[],
+): Variable[] => {
+  const currentSet = new Set(currentVariables.map((v) => v.name));
+  const newSet = new Set(newVariables.map((v) => v.name));
+
+  const result = [];
+  for (const variable of currentVariables) {
+    if (newSet.has(variable.name)) {
+      result.push(variable);
+    }
+  }
+  for (const variable of newVariables) {
+    if (!currentSet.has(variable.name)) {
+      result.push(variable);
+    }
+  }
+
+  return result;
 };
 
 export const useEditorContent = () => {
   const simulator = useSimulator();
-  const setModelInfo = useSetAtom(modelInfoAtom);
+  const [variables, setVariables] = useAtom(variablesAtom);
   const [editorContent, setEditorContentInternal] = useAtom(editorContentAtom);
-  const [parameterScanParameters, setParameterScanParameters] = useAtom(
-    parameterScanParametersAtom,
+  const [parameterScanOptions, setParameterScanOptions] = useAtom(
+    parameterScanOptionsAtom,
   );
 
   // TODO: abort every model info update when this is called from any component
@@ -41,31 +54,31 @@ export const useEditorContent = () => {
 
       abortControllerRef.current = new AbortController();
 
-      const modelInfo = await simulator.getModelInfo(
+      const newVariables = await simulator.loadModel(
         content,
         abortControllerRef.current.signal,
       );
+      const patchedVariables = patchVariables(variables, newVariables);
       if (
-        !hasParameter(
-          simulator,
-          modelInfo,
-          parameterScanParameters.varyingParameter,
+        !patchedVariables.some(
+          (v) => v.scanName === parameterScanOptions.varyingParameter,
         )
       ) {
-        setParameterScanParameters({
-          ...parameterScanParameters,
-          varyingParameter: modelInfo.global_parameters[0]?.name,
+        setParameterScanOptions({
+          ...parameterScanOptions,
+          varyingParameter: variables.find((v) => v.scanName)?.scanName,
         });
       }
 
-      setModelInfo(modelInfo);
+      setVariables(patchedVariables);
       setEditorContentInternal(content);
     },
     [
-      setModelInfo,
+      variables,
+      setVariables,
       setEditorContentInternal,
-      parameterScanParameters,
-      setParameterScanParameters,
+      parameterScanOptions,
+      setParameterScanOptions,
       simulator,
     ],
   );

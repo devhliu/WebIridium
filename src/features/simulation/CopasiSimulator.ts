@@ -4,6 +4,7 @@ import {
   Simulator,
   type ParameterScanOptions,
   type SteadyStateResult,
+  type Variable,
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
@@ -60,17 +61,34 @@ export class CopasiSimulator extends Simulator {
     return result as SteadyStateResult;
   }
 
-  async getModelInfo(antimonyCode: string, abortSignal?: AbortSignal) {
-    const result = await this.#workerPool.queueTask(
+  async loadModel(
+    antimonyCode: string,
+    abortSignal?: AbortSignal,
+  ): Promise<Variable[]> {
+    const modelInfo = (await this.#workerPool.queueTask(
       "loadModel",
       null,
       antimonyCode,
       abortSignal,
-    );
-    return result as ModelInfo;
-  }
+    )) as ModelInfo;
 
-  getParameterFromSpecies(species: string): string {
-    return `[${species}]_0`;
+    const variables: Variable[] = [];
+    for (const param of modelInfo.global_parameters) {
+      variables.push({
+        displayName: param.name,
+        name: param.name,
+        scanName: param.name,
+        category: "Parameter",
+      });
+    }
+    for (const specie of modelInfo.species) {
+      variables.push({
+        displayName: specie.name,
+        name: specie.name,
+        scanName: `[${specie.name}]_0`,
+        category: "Species",
+      });
+    }
+    return variables;
   }
 }

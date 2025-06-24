@@ -6,25 +6,23 @@ import { useSimulate } from "@/features/simulation/useSimulate";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
-import { modelInfoAtom, parameterScanParametersAtom } from "@/stores/workspace";
+import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
 import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import PropertyGenerator, {
   type Properties,
 } from "@/components/property-list/PropertyGenerator";
 import { useAtomValue } from "jotai";
-import { useSimulator } from "@/features/workspace";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
 }
 
 const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
-  const simulator = useSimulator();
-  const [parameterScanParameters, setParameterScanParameters] = useAtom(
-    parameterScanParametersAtom,
+  const variables = useAtomValue(variablesAtom);
+  const [parameterScanOptions, setParameterScanOptions] = useAtom(
+    parameterScanOptionsAtom,
   );
-  const modelInfo = useAtomValue(modelInfoAtom);
   const { isSimulating, runParameterScan } = useSimulate();
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
@@ -48,8 +46,8 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   };
 
   const setProperty = (name: string, value: unknown) => {
-    setParameterScanParameters({
-      ...parameterScanParameters,
+    setParameterScanOptions({
+      ...parameterScanOptions,
       [name]: value,
     });
   };
@@ -77,7 +75,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           >
             <PropertyList>
               <PropertyGenerator
-                properties={parameterScanParameters as unknown as Properties}
+                properties={parameterScanOptions as unknown as Properties}
                 setProperty={setProperty}
                 names={{
                   varyingParameter: "Parameter",
@@ -89,20 +87,20 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                   {
                     restriction: "selectWithGroups",
                     property: "varyingParameter",
-                    groups: {
-                      Parameters: Object.fromEntries(
-                        modelInfo?.global_parameters.map((param) => [
-                          param.name,
-                          param.name,
-                        ]) ?? [],
-                      ),
-                      Species: Object.fromEntries(
-                        modelInfo?.species.map((specie) => [
-                          specie.name,
-                          simulator.getParameterFromSpecies(specie.name),
-                        ]) ?? [],
-                      ),
-                    },
+                    groups: Object.fromEntries(
+                      Object.entries(
+                        Object.groupBy(
+                          variables.filter((v) => v.scanName),
+                          (v) => v.category,
+                        ),
+                      ).map(([category, values]) => [
+                        category,
+                        Object.fromEntries(
+                          values?.map((v) => [v.displayName, v.scanName!]) ??
+                            [],
+                        ),
+                      ]),
+                    ),
                   },
                   {
                     restriction: "range",
@@ -130,7 +128,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
               <BooleanProperty
                 asideMode
                 name="Use logarithmic distribution"
-                value={parameterScanParameters.useLogarithmicDistribution}
+                value={parameterScanOptions.useLogarithmicDistribution}
                 onChange={(value) =>
                   setProperty("useLogarithmicDistribution", value)
                 }

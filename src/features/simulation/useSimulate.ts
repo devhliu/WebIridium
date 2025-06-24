@@ -6,7 +6,7 @@ import {
   isSimulatingAtom,
   simulationResultAtom,
   timeCourseParametersAtom,
-  parameterScanParametersAtom,
+  parameterScanOptionsAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
 
@@ -29,7 +29,7 @@ export const useSimulate = () => {
   const editorContent = useAtomValue(editorContentAtom);
   const setSimulationResult = useSetAtom(simulationResultAtom);
   const timeCourseParameters = useAtomValue(timeCourseParametersAtom);
-  const parameterScanParameters = useAtomValue(parameterScanParametersAtom);
+  const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const [isSimulating, setIsSimulating] = useAtom(isSimulatingAtom);
 
   const runSimulation = async (
@@ -96,19 +96,19 @@ export const useSimulate = () => {
 
   const runParameterScan = async (abortSignal?: AbortSignal) => {
     return await runSimulation(async () => {
-      const parameter = parameterScanParameters.varyingParameter;
+      const parameter = parameterScanOptions.varyingParameter;
       if (!parameter) {
         throw new Error("select parameter to scan with");
       }
 
       const resultPromises = [];
-      const getDistribution = parameterScanParameters.useLogarithmicDistribution
+      const getDistribution = parameterScanOptions.useLogarithmicDistribution
         ? getLogarithmicDistribution
         : getLinearDistribution;
       const scanValues = getDistribution(
-        parameterScanParameters.min,
-        parameterScanParameters.max,
-        parameterScanParameters.numberOfValues,
+        parameterScanOptions.min,
+        parameterScanOptions.max,
+        parameterScanOptions.numberOfValues,
       );
 
       for (const value of scanValues) {
