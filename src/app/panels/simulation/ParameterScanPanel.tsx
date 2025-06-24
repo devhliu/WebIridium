@@ -1,18 +1,22 @@
+// TODO: fix having <=1 number of values causing an error
+// TODO: make sure your min can't be more than max (and add validators for the rest of the stuff)
 import { useState } from "react";
-import { useAtom } from "jotai";
-import Button from "@/components/Button";
+import { useAtom, useAtomValue } from "jotai";
+
 import styles from "./simulation.module.css";
 import { useSimulate } from "@/features/simulation/useSimulate";
+import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
+
+import Button from "@/components/Button";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
+
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
-import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
 import PropertyList from "@/components/property-list/PropertyList";
+
 import BooleanProperty from "@/components/property-list/BooleanProperty";
-import PropertyGenerator, {
-  type Properties,
-} from "@/components/property-list/PropertyGenerator";
-import { useAtomValue } from "jotai";
+import NumericProperty from "@/components/property-list/NumericProperty";
+import SelectProperty from "@/components/property-list/SelectProperty";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -45,11 +49,13 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     }
   };
 
-  const setProperty = (name: string, value: unknown) => {
-    setParameterScanOptions({
-      ...parameterScanOptions,
-      [name]: value,
-    });
+  const handleChangeFor = (property: keyof typeof parameterScanOptions) => {
+    return (newValue: unknown) => {
+      setParameterScanOptions({
+        ...parameterScanOptions,
+        [property]: newValue,
+      });
+    };
   };
 
   if (!visible) {
@@ -74,64 +80,46 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
             value="first-parameter"
           >
             <PropertyList>
-              <PropertyGenerator
-                properties={parameterScanOptions as unknown as Properties}
-                setProperty={setProperty}
-                names={{
-                  varyingParameter: "Parameter",
-                  min: "Min",
-                  max: "Max",
-                  numberOfValues: "Number of Values",
-                }}
-                restrictions={[
-                  {
-                    restriction: "selectWithGroups",
-                    property: "varyingParameter",
-                    groups: Object.fromEntries(
-                      Object.entries(
-                        Object.groupBy(
-                          variables.filter((v) => v.scanName),
-                          (v) => v.category,
-                        ),
-                      ).map(([category, values]) => [
-                        category,
-                        Object.fromEntries(
-                          values?.map((v) => [v.displayName, v.scanName!]) ??
-                            [],
-                        ),
-                      ]),
-                    ),
-                  },
-                  {
-                    restriction: "range",
-                    minProperty: "min",
-                    maxProperty: "max",
-                  },
-                  {
-                    restriction: "bounds",
-                    properties: ["min", "max"],
-                    min: 0,
-                    max: 1_000_000,
-                  },
-                  {
-                    restriction: "bounds",
-                    property: "numberOfValues",
-                    min: 2,
-                    max: 1_000_000,
-                  },
-                  {
-                    restriction: "integer",
-                    properties: ["min", "max", "numberOfValues"],
-                  },
-                ]}
+              {parameterScanOptions.varyingParameter && (
+                <SelectProperty
+                  name="Parameter"
+                  value={parameterScanOptions.varyingParameter}
+                  onChange={handleChangeFor("varyingParameter")}
+                  groups={Object.fromEntries(
+                    Object.entries(
+                      Object.groupBy(
+                        variables.filter((v) => v.scanName),
+                        (v) => v.category,
+                      ),
+                    ).map(([category, values]) => [
+                      category,
+                      Object.fromEntries(
+                        values?.map((v) => [v.displayName, v.scanName!]) ?? [],
+                      ),
+                    ]),
+                  )}
+                />
+              )}
+              <NumericProperty
+                name="Min"
+                value={parameterScanOptions.min}
+                onChange={handleChangeFor("min")}
+              />
+              <NumericProperty
+                name="Max"
+                value={parameterScanOptions.max}
+                onChange={handleChangeFor("max")}
+              />
+              <NumericProperty
+                name="Number of Values"
+                value={parameterScanOptions.numberOfValues}
+                onChange={handleChangeFor("numberOfValues")}
               />
               <BooleanProperty
                 asideMode
                 name="Use logarithmic distribution"
                 value={parameterScanOptions.useLogarithmicDistribution}
-                onChange={(value) =>
-                  setProperty("useLogarithmicDistribution", value)
-                }
+                onChange={handleChangeFor("useLogarithmicDistribution")}
               />
             </PropertyList>
           </PropertyAccordionItem>
