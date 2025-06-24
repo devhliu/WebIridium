@@ -1,3 +1,4 @@
+import { memo } from "react";
 import styles from "./DataTable.module.css";
 
 interface DataTableProps {
@@ -8,7 +9,7 @@ interface DataTableProps {
   decimalPlaces: number;
 }
 
-const DataTable = ({ columns, decimalPlaces }: DataTableProps) => {
+const DataTable = memo(({ columns, decimalPlaces }: DataTableProps) => {
   if (columns.length === 0) {
     return null;
   }
@@ -69,6 +70,8 @@ const DataTable = ({ columns, decimalPlaces }: DataTableProps) => {
       </table>
     </div>
   );
-};
+});
+
+DataTable.displayName = "DataTable";
 
 export default DataTable;

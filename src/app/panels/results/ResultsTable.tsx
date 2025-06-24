@@ -1,12 +1,13 @@
 import DataTable from "@/components/DataTable";
 import type { SimulationResult } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
+import { memo } from "react";
 
 export interface ResultsTableProps {
   result: SimulationResult;
 }
 
-const ResultsTable = ({ result }: ResultsTableProps) => {
+const ResultsTable = memo(({ result }: ResultsTableProps) => {
   const columns = [];
   switch (result.type) {
     case "timeCourse":
@@ -45,6 +46,8 @@ const ResultsTable = ({ result }: ResultsTableProps) => {
   }
 
   return <DataTable columns={columns} decimalPlaces={2} />;
-};
+});
+
+ResultsTable.displayName = "ResultsTable";
 
 export default ResultsTable;
