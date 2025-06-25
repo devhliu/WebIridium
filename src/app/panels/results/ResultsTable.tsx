@@ -1,5 +1,5 @@
-import DataTable from "@/components/DataTable";
-import type { SimulationResult } from "@/stores/workspace";
+import DataTable, { type DataTableProps } from "@/components/DataTable";
+import type { SimulationResult } from "@/features/simulation/Simulator";
 import { getParameterScanTitle } from "./shared";
 import { memo } from "react";
 
@@ -8,35 +8,32 @@ export interface ResultsTableProps {
 }
 
 const ResultsTable = memo(({ result }: ResultsTableProps) => {
-  const columns = [];
+  let columns: DataTableProps["columns"] = [];
   switch (result.type) {
     case "timeCourse":
-      for (let i = 0; i < result.columns.length; i++) {
-        columns.push({
-          title: result.titles[i],
-          rows: result.columns[i],
-        });
-      }
+      columns = result.columns;
       break;
 
     case "parameterScan":
-      // only need one time column
-      columns.push({
-        title: result.scans[0].titles[0],
-        rows: result.scans[0].columns[0],
-      });
+      switch (result.method) {
+        case "timeCourse": {
+          // only need one time column
+          columns.push(result.scans[0].columns[0]);
 
-      for (let i = 1; i < result.scans[0].columns.length; i++) {
-        for (const scan of result.scans) {
-          const title = getParameterScanTitle(
-            scan.titles[i],
-            result.parameter,
-            scan.value,
-          );
-          columns.push({
-            title,
-            rows: scan.columns[i],
-          });
+          for (let i = 1; i < result.scans[0].columns.length; i++) {
+            for (const scan of result.scans) {
+              const title = getParameterScanTitle(
+                scan.columns[i].title,
+                result.parameter,
+                scan.parameterValue,
+              );
+              columns.push({
+                title,
+                values: scan.columns[i].values,
+              });
+            }
+          }
+          break;
         }
       }
       break;

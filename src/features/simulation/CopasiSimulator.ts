@@ -4,6 +4,7 @@ import {
   Simulator,
   type ParameterScanOptions,
   type SteadyStateResult,
+  type TimeCourseResult,
   type Variable,
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
@@ -29,8 +30,8 @@ export class CopasiSimulator extends Simulator {
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
-  ): Promise<SimResult> {
-    const result = await this.#workerPool.queueTask(
+  ): Promise<TimeCourseResult> {
+    const result = (await this.#workerPool.queueTask(
       "timeCourse",
       {
         parameters,
@@ -39,9 +40,17 @@ export class CopasiSimulator extends Simulator {
       },
       antimonyCode,
       abortSignal,
-    );
+    )) as SimResult;
 
-    return result as SimResult;
+    return {
+      type: "timeCourse",
+      recordedSteps: result.recorded_steps,
+      columns: result.titles.map((title, index) => ({
+        title,
+        values: result.columns[index],
+      })),
+      columnSet: new Set(result.titles),
+    };
   }
 
   async computeSteadyState(
@@ -49,16 +58,16 @@ export class CopasiSimulator extends Simulator {
     { timeCourseParameters }: { timeCourseParameters: TimeCourseParameters },
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
-    const result = await this.#workerPool.queueTask(
+    const result = (await this.#workerPool.queueTask(
       "steadyState",
       {
         timeCourseParameters: timeCourseParameters,
       },
       antimonyCode,
       abortSignal,
-    );
+    )) as object;
 
-    return result as SteadyStateResult;
+    return { type: "steadyState", ...result } as SteadyStateResult;
   }
 
   async loadModel(

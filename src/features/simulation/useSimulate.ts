@@ -1,5 +1,8 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import type { SimulationResult } from "@/stores/workspace.tsx";
+import type {
+  ParameterScanResult,
+  SimulationResult,
+} from "@/features/simulation/Simulator";
 
 import {
   editorContentAtom,
@@ -61,16 +64,11 @@ export const useSimulate = () => {
     abortSignal?: AbortSignal,
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
-      const result = await simulator.simulateTimeCourse(
+      return await simulator.simulateTimeCourse(
         editorContent,
         { parameters: timeCourseParameters },
         abortSignal,
       );
-      return {
-        type: "timeCourse",
-        titles: result.titles,
-        columns: result.columns,
-      };
     });
   };
 
@@ -78,19 +76,11 @@ export const useSimulate = () => {
     abortSignal?: AbortSignal,
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
-      const result = await simulator.computeSteadyState(
+      return await simulator.computeSteadyState(
         editorContent,
         { timeCourseParameters: timeCourseParameters },
         abortSignal,
       );
-
-      console.log(result);
-
-      // return empty results
-      return {
-        type: "steadyState",
-        data: result,
-      };
     });
   };
 
@@ -131,17 +121,17 @@ export const useSimulate = () => {
       const scans = [];
       for (const [i, result] of results.entries()) {
         scans.push({
-          value: scanValues[i],
-          titles: result.titles,
-          columns: result.columns,
+          parameterValue: scanValues[i],
+          ...result,
         });
       }
 
       return {
         type: "parameterScan",
-        scans,
+        method: "timeCourse",
         parameter: parameter,
-      };
+        scans,
+      } satisfies ParameterScanResult;
     });
   };
 

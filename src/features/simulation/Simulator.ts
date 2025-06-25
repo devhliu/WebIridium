@@ -1,9 +1,36 @@
-import type { SimResult } from "@/third-party/copasi";
 import type { TimeCourseParameters } from "@/stores/workspace";
 
 export type ParameterScanOptions = {
   varyingParameter: string;
   varyingParameterValue: number;
+};
+
+export type Variable = {
+  displayName: string;
+  /** General name used internally by the simulator */
+  name: string;
+  /**
+   * Internal name of the variable used for scanning. If present, the variable can
+   * be used as a parameter in parameter scan. Otherwise it will not appear.
+   * This is necessary because, in Copasi,
+   * to scan with species named "A", you set the value for "[A]_0"
+   */
+  scanName?: string;
+  category: string;
+};
+
+/* RESULT STUFF */
+
+export type TimeCourseResult = {
+  type: "timeCourse";
+  recordedSteps: number;
+  // title -> values
+  columns: {
+    title: string;
+    values: number[];
+  }[];
+  // Set of column titles. For performance reasons.
+  columnSet: Set<string>;
 };
 
 export type SteadyStateResultItem = {
@@ -13,6 +40,7 @@ export type SteadyStateResultItem = {
 };
 
 export type SteadyStateResult = {
+  type: "steadyState";
   value: number;
   initialConcentrations: {
     name: string;
@@ -25,19 +53,30 @@ export type SteadyStateResult = {
   elasticities: SteadyStateResultItem;
 };
 
-export interface Variable {
-  displayName: string;
-  /** General name used internally by the simulator */
-  name: string;
-  /**
-   * Internal name of the variable used for scanning. If present, the variable can
-   * be used as a parameter in parameter scan. Otherwise it will not appear.
-   * This is necessary because, in Copasi,
-   * to scan with species named "A", you set the value for "[A]_0"
-   */
-  scanName?: string;
-  category: string;
-}
+export type ParameterScanResult =
+  | {
+      type: "parameterScan";
+      method: "timeCourse";
+      parameter: string;
+      // parameter value -> result
+      scans: (TimeCourseResult & {
+        parameterValue: number;
+      })[];
+    }
+  | {
+      type: "parameterScan";
+      method: "steadyState";
+      parameter: string;
+      // parameter value -> result
+      scans: (SteadyStateResult & {
+        parameterValue: number;
+      })[];
+    };
+
+export type SimulationResult =
+  | TimeCourseResult
+  | SteadyStateResult
+  | ParameterScanResult;
 
 export abstract class Simulator {
   abstract simulateTimeCourse(
@@ -50,7 +89,7 @@ export abstract class Simulator {
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
-  ): Promise<SimResult>;
+  ): Promise<TimeCourseResult>;
 
   abstract computeSteadyState(
     antimonyCode: string,

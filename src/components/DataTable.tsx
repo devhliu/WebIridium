@@ -1,10 +1,10 @@
 import { memo } from "react";
 import styles from "./DataTable.module.css";
 
-interface DataTableProps {
+export interface DataTableProps {
   columns: {
     title: string;
-    rows: (number | string)[];
+    values: (number | string)[];
   }[];
   decimalPlaces: number;
 }
@@ -15,7 +15,7 @@ const DataTable = memo(({ columns, decimalPlaces }: DataTableProps) => {
   }
 
   const allNumericValues = columns
-    .map((c) => c.rows)
+    .map((c) => c.values)
     .flat()
     .map(Number)
     .filter((v) => !isNaN(v));
@@ -34,10 +34,10 @@ const DataTable = memo(({ columns, decimalPlaces }: DataTableProps) => {
           </tr>
         </thead>
         <tbody>
-          {columns[0].rows.map((_, rowIndex) => (
+          {columns[0].values.map((_, rowIndex) => (
             <tr key={rowIndex} className={styles.row}>
               {columns.map((column, colIndex) => {
-                const cellValue = column.rows[rowIndex];
+                const cellValue = column.values[rowIndex];
                 if (typeof cellValue === "number") {
                   const targetColor =
                     cellValue >= 0

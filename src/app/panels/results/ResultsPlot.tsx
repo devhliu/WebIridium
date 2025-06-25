@@ -1,12 +1,13 @@
 import { useState, type RefObject, useEffect } from "react";
 import { useAtomValue } from "jotai";
+import Plot from "react-plotly.js";
+import type { Data } from "plotly.js";
+
+import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   graphSettingsAtom,
   timeCourseParametersAtom,
-  type SimulationResult,
 } from "@/stores/workspace";
-import Plot from "react-plotly.js";
-import type { Data } from "plotly.js";
 import { getParameterScanTitle } from "./shared";
 
 const palette = [
@@ -105,11 +106,10 @@ const ResultsPlot = ({
     case "timeCourse": {
       const timeColumn = result.columns[0];
       for (let i = 1; i < result.columns.length; i++) {
-        const column = result.columns[i];
-        const title = result.titles[i];
+        const { title, values } = result.columns[i];
         plotData.push({
-          x: timeColumn,
-          y: column,
+          x: timeColumn.values,
+          y: values,
           type: "scatter",
           mode: "lines",
           marker: { color: palette[i % palette.length] },
@@ -120,27 +120,35 @@ const ResultsPlot = ({
     }
 
     case "parameterScan": {
-      let colorIndex = 0;
-      for (const scan of result.scans) {
-        const timeColumn = scan.columns[0];
-        for (let i = 1; i < scan.columns.length; colorIndex++, i++) {
-          const column = scan.columns[i];
-          const title = getParameterScanTitle(
-            scan.titles[i],
-            result.parameter,
-            scan.value,
-          );
-          plotData.push({
-            x: timeColumn,
-            y: column,
-            type: "scatter",
-            mode: "lines",
-            marker: { color: palette[colorIndex % palette.length] },
-            line: {
-              width: 2, // TODO: add setting for this
-            },
-            name: title,
-          });
+      switch (result.method) {
+        case "timeCourse": {
+          let colorIndex = 0;
+          for (const scan of result.scans) {
+            const timeColumn = scan.columns[0];
+            for (let i = 1; i < scan.columns.length; colorIndex++, i++) {
+              const { title, values } = scan.columns[i];
+              plotData.push({
+                x: timeColumn.values,
+                y: values,
+                type: "scatter",
+                mode: "lines",
+                marker: { color: palette[colorIndex % palette.length] },
+                line: {
+                  width: 2, // TODO: add setting for this
+                },
+                name: getParameterScanTitle(
+                  title,
+                  result.parameter,
+                  scan.parameterValue,
+                ),
+              });
+            }
+          }
+          break;
+        }
+
+        case "steadyState": {
+          break;
         }
       }
       break;

@@ -23,11 +23,11 @@ const columnsFromSteadyStateItem = (item: SteadyStateResultItem) => [
   {
     // first column for row names so title is empty
     title: "",
-    rows: item.rows,
+    values: item.rows,
   },
   ...item.columns.map((name, i) => ({
     title: name,
-    rows: item.values.map((v) => v[i]),
+    values: item.values.map((v) => v[i]),
   })),
 ];
 
@@ -38,41 +38,45 @@ const SteadyStateResultPanel = () => {
     return <div>nothing yet...</div>;
   }
 
-  const { data } = simulationResults;
-
   const initialValueColumns = [
     {
       title: "Symbol",
-      rows: data.initialConcentrations.map((c) => c.name),
+      values: simulationResults.initialConcentrations.map((c) => c.name),
     },
     {
       title: "Value",
-      rows: data.initialConcentrations.map((c) => c.value),
+      values: simulationResults.initialConcentrations.map((c) => c.value),
     },
   ];
 
   const eigenvalueColumns = [
     {
       title: "Real",
-      rows: data.eigenValues.map((e) => e[0]),
+      values: simulationResults.eigenValues.map((e) => e[0]),
     },
     {
       title: "Imaginary",
-      rows: data.eigenValues.map((e) => e[1]),
+      values: simulationResults.eigenValues.map((e) => e[1]),
     },
   ];
 
-  const jacobianColumns = columnsFromSteadyStateItem(data.jacobian);
-  const fluxControlColumns = columnsFromSteadyStateItem(data.fluxControl);
-  const concentrationControlColumns = columnsFromSteadyStateItem(
-    data.concentrationControl,
+  const jacobianColumns = columnsFromSteadyStateItem(
+    simulationResults.jacobian,
   );
-  const elasticitiesColumns = columnsFromSteadyStateItem(data.elasticities);
+  const fluxControlColumns = columnsFromSteadyStateItem(
+    simulationResults.fluxControl,
+  );
+  const concentrationControlColumns = columnsFromSteadyStateItem(
+    simulationResults.concentrationControl,
+  );
+  const elasticitiesColumns = columnsFromSteadyStateItem(
+    simulationResults.elasticities,
+  );
 
   return (
     <div className={styles.panel}>
       <div className={styles.steadyStateContainer}>
-        <p>Value: {simulationResults.data.value}</p>
+        <p>Value: {simulationResults.value}</p>
         <Section title="Initial Concentrations">
           <DataTable columns={initialValueColumns} decimalPlaces={8} />
         </Section>
