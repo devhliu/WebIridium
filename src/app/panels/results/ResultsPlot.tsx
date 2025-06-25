@@ -102,60 +102,44 @@ const ResultsPlot = ({
     : [minX, maxX];
   const rangeY = isAutoscaledY ? undefined : [minY, maxY];
 
-  switch (result.type) {
-    case "timeCourse": {
-      const timeColumn = result.columns[0];
-      for (let i = 1; i < result.columns.length; i++) {
-        const { title, values } = result.columns[i];
+  if (result.type === "timeCourse") {
+    const timeColumn = result.columns[0];
+    for (let i = 1; i < result.columns.length; i++) {
+      const { title, values } = result.columns[i];
+      plotData.push({
+        x: timeColumn.values,
+        y: values,
+        type: "scatter",
+        mode: "lines",
+        marker: { color: palette[i % palette.length] },
+        name: title,
+      });
+    }
+  } else if (
+    result.type === "parameterScan" &&
+    result.method === "timeCourse"
+  ) {
+    let colorIndex = 0;
+    for (const scan of result.scans) {
+      const timeColumn = scan.columns[0];
+      for (let i = 1; i < scan.columns.length; colorIndex++, i++) {
+        const { title, values } = scan.columns[i];
         plotData.push({
           x: timeColumn.values,
           y: values,
           type: "scatter",
           mode: "lines",
-          marker: { color: palette[i % palette.length] },
-          name: title,
+          marker: { color: palette[colorIndex % palette.length] },
+          line: {
+            width: 2, // TODO: add setting for this
+          },
+          name: getParameterScanTitle(
+            title,
+            result.parameter,
+            scan.parameterValue,
+          ),
         });
       }
-      break;
-    }
-
-    case "parameterScan": {
-      switch (result.method) {
-        case "timeCourse": {
-          let colorIndex = 0;
-          for (const scan of result.scans) {
-            const timeColumn = scan.columns[0];
-            for (let i = 1; i < scan.columns.length; colorIndex++, i++) {
-              const { title, values } = scan.columns[i];
-              plotData.push({
-                x: timeColumn.values,
-                y: values,
-                type: "scatter",
-                mode: "lines",
-                marker: { color: palette[colorIndex % palette.length] },
-                line: {
-                  width: 2, // TODO: add setting for this
-                },
-                name: getParameterScanTitle(
-                  title,
-                  result.parameter,
-                  scan.parameterValue,
-                ),
-              });
-            }
-          }
-          break;
-        }
-
-        case "steadyState": {
-          break;
-        }
-      }
-      break;
-    }
-
-    case "steadyState": {
-      break;
     }
   }
 
