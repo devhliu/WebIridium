@@ -95,7 +95,7 @@ export class CopasiSimulator extends Simulator {
         scanName: param.name,
         category: "Parameter",
 
-        visible: true,
+        visible: false,
       });
     }
     for (const specie of modelInfo.species) {
@@ -104,6 +104,16 @@ export class CopasiSimulator extends Simulator {
         name: specie.name,
         scanName: `[${specie.name}]_0`,
         category: "Species",
+
+        visible: true,
+      });
+
+      // TODO!IMPORTANT: only do this for floating species, not boundary species?
+      //                 how to determine if a species is a boundary species?
+      variables.push({
+        displayName: `${specie.name}'`,
+        name: `${specie.name}.Rate`,
+        category: "Rate of Changes",
 
         visible: true,
       });

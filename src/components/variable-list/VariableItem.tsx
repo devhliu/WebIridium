@@ -5,15 +5,23 @@ import { type Variable } from "@/features/simulation/Simulator";
 
 export interface VariableItemProps {
   variable: Variable;
+  onVariableChange: (newValue: Variable) => void;
 }
 
 const EYE_ICON_DIMS = 14;
 
-const VariableItem = ({ variable }: VariableItemProps) => {
+const VariableItem = ({ variable, onVariableChange }: VariableItemProps) => {
+  const handleVisiblityToggle = () => {
+    onVariableChange({
+      ...variable,
+      visible: !variable.visible,
+    });
+  };
+
   return (
     <div className={styles.item}>
       <div className={styles.itemActionList}>
-        <button className={styles.itemAction}>
+        <button className={styles.itemAction} onClick={handleVisiblityToggle}>
           {/* TODO: add aria stuff to this */}
           {variable.visible ? (
             <EyeIcon height={EYE_ICON_DIMS} width={EYE_ICON_DIMS} />

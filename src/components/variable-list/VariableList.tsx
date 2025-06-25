@@ -1,39 +1,24 @@
 import { useState } from "react";
 import styles from "./VariableList.module.css";
 import { type Variable } from "@/features/simulation/Simulator";
-import VariableItem from "./VariableItem";
+import VariableGroup from "./VariableGroup";
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 
 export interface VariableListProps {
   variables: Variable[];
+  onVariableChange: (newValue: Variable) => void;
 }
 
-const CATEGORY_ORDER = ["Species", "Parameter"];
+const CATEGORY_ORDER = ["Species", "Rate of Changes", "Parameter"];
 
-const VariableGroup = ({
-  group,
-  variables,
-}: {
-  group: string;
-  variables: Variable[];
-}) => {
-  return (
-    <details key={group} className={styles.groupDetails}>
-      <summary className={styles.groupSummary}>{group}</summary>
-      {variables?.map((v) => <VariableItem key={v.name} variable={v} />)}
-    </details>
-  );
-};
-
-const VariableList = ({ variables }: VariableListProps) => {
+const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter((variable) =>
     variable.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
   const groupedVariables = Object.groupBy(filteredVariables, (v) => v.category);
   const sortedGroupedVariables = Object.entries(groupedVariables).toSorted(
-    ([a, _], [b, __]) =>
-      (CATEGORY_ORDER.indexOf(a) ?? 10) - (CATEGORY_ORDER.indexOf(b) ?? 10),
+    ([a, _], [b, __]) => CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b),
   );
 
   return (
@@ -53,7 +38,13 @@ const VariableList = ({ variables }: VariableListProps) => {
         <div className={styles.list}>
           {sortedGroupedVariables.map(([group, vars]) =>
             vars ? (
-              <VariableGroup key={group} group={group} variables={vars} />
+              <VariableGroup
+                key={group}
+                group={group}
+                variables={vars}
+                onVariableChange={onVariableChange}
+                isSearching={searchTerm.length > 0}
+              />
             ) : null,
           )}
         </div>
