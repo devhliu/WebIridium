@@ -71,7 +71,7 @@ export const useEditorContent = () => {
         });
       }
 
-      setVariables(old => patchVariables(old, newVariables));
+      setVariables((old) => patchVariables(old, newVariables));
       setEditorContentInternal(content);
     },
     [

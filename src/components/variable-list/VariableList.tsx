@@ -52,7 +52,9 @@ const VariableList = ({ variables }: VariableListProps) => {
       {filteredVariables.length > 0 ? (
         <div className={styles.list}>
           {sortedGroupedVariables.map(([group, vars]) =>
-            vars ? <VariableGroup group={group} variables={vars} /> : null,
+            vars ? (
+              <VariableGroup key={group} group={group} variables={vars} />
+            ) : null,
           )}
         </div>
       ) : (

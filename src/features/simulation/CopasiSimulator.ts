@@ -1,7 +1,7 @@
-import type { TimeCourseParameters } from "@/stores/workspace.ts";
 import type { ModelInfo, SimResult } from "@/third-party/copasi";
 import {
   Simulator,
+  type TimeCourseParameters,
   type ParameterScanOptions,
   type SteadyStateResult,
   type TimeCourseResult,
@@ -34,7 +34,13 @@ export class CopasiSimulator extends Simulator {
     const result = (await this.#workerPool.queueTask(
       "timeCourse",
       {
-        parameters,
+        parameters: {
+          ...parameters,
+          includeVariables: [
+            "Time",
+            ...parameters.includeVariables.map((v) => v.name),
+          ],
+        },
         varyingParameter: parameterScanOptions?.varyingParameter,
         varyingParameterValue: parameterScanOptions?.varyingParameterValue,
       },
@@ -88,6 +94,8 @@ export class CopasiSimulator extends Simulator {
         name: param.name,
         scanName: param.name,
         category: "Parameter",
+
+        visible: true,
       });
     }
     for (const specie of modelInfo.species) {
@@ -96,6 +104,8 @@ export class CopasiSimulator extends Simulator {
         name: specie.name,
         scanName: `[${specie.name}]_0`,
         category: "Species",
+
+        visible: true,
       });
     }
     return variables;

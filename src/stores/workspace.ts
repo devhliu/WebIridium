@@ -8,14 +8,9 @@ import { atom } from "jotai";
 import defaultAntimonyModel from "/models/default.ant?raw";
 import type {
   SimulationResult,
+  TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
-
-export interface TimeCourseParameters {
-  startTime: number;
-  endTime: number;
-  numberOfPoints: number;
-}
 
 export interface ParameterScanOptions {
   varyingParameter: string | null | undefined;
@@ -55,7 +50,9 @@ export const simulationResultAtom = atom<SimulationResult | null>(null);
 
 export const variablesAtom = atom<Variable[]>([]);
 
-export const timeCourseParametersAtom = atom<TimeCourseParameters>({
+export const timeCourseParametersAtom = atom<
+  Omit<TimeCourseParameters, "includeVariables">
+>({
   startTime: 0,
   endTime: 20,
   numberOfPoints: 200,

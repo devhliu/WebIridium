@@ -5,6 +5,7 @@ import type {
 } from "@/features/simulation/Simulator";
 
 import {
+  variablesAtom,
   editorContentAtom,
   isSimulatingAtom,
   simulationResultAtom,
@@ -29,11 +30,16 @@ export type SimulationOperationResult =
  */
 export const useSimulate = () => {
   const simulator = useSimulator();
+  const variables = useAtomValue(variablesAtom);
   const editorContent = useAtomValue(editorContentAtom);
   const setSimulationResult = useSetAtom(simulationResultAtom);
   const timeCourseParameters = useAtomValue(timeCourseParametersAtom);
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const [isSimulating, setIsSimulating] = useAtom(isSimulatingAtom);
+
+  const getIncludeVariableList = () => {
+    return variables.filter((v) => v.visible);
+  };
 
   const runSimulation = async (
     run: () => Promise<SimulationResult>,
@@ -66,7 +72,12 @@ export const useSimulate = () => {
     return await runSimulation(async () => {
       return await simulator.simulateTimeCourse(
         editorContent,
-        { parameters: timeCourseParameters },
+        {
+          parameters: {
+            includeVariables: getIncludeVariableList(),
+            ...timeCourseParameters,
+          },
+        },
         abortSignal,
       );
     });
@@ -78,7 +89,12 @@ export const useSimulate = () => {
     return await runSimulation(async () => {
       return await simulator.computeSteadyState(
         editorContent,
-        { timeCourseParameters: timeCourseParameters },
+        {
+          timeCourseParameters: {
+            includeVariables: getIncludeVariableList(),
+            ...timeCourseParameters,
+          },
+        },
         abortSignal,
       );
     });
@@ -101,12 +117,17 @@ export const useSimulate = () => {
         parameterScanOptions.numberOfValues,
       );
 
+      const scanTimeCourseParameters = {
+        includeVariables: getIncludeVariableList(),
+        ...timeCourseParameters,
+      };
+
       for (const value of scanValues) {
         resultPromises.push(
           simulator.simulateTimeCourse(
             editorContent,
             {
-              parameters: timeCourseParameters,
+              parameters: scanTimeCourseParameters,
               parameterScanOptions: {
                 varyingParameter: parameter,
                 varyingParameterValue: value,

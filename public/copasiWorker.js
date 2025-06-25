@@ -17,6 +17,7 @@ const loadLibraries = () => {
   return loadedPromise;
 };
 
+let cachedModelInfo = null;
 self.onmessage = async (e) => {
   await loadLibraries();
 
@@ -49,6 +50,8 @@ self.onmessage = async (e) => {
         copasi.setValue(varyingParameter, varyingParameterValue);
       }
 
+      copasi.selectionList = parameters.includeVariables;
+
       const result = copasi.simulateEx(
         parameters.startTime,
         parameters.endTime,
@@ -67,6 +70,7 @@ self.onmessage = async (e) => {
       const { timeCourseParameters } = action.payload;
 
       copasi.resetAll();
+      copasi.selectionList = cachedModelInfo?.species.map((s) => s.name) ?? [];
       copasi.timeCourseSettings = {
         startTime: timeCourseParameters.startTime,
         endTime: timeCourseParameters.endTime,
@@ -88,8 +92,8 @@ self.onmessage = async (e) => {
         id: action.id,
         data: {
           value: steadyStateValue,
-          initialConcentrations: result.columns.slice(1).map((col, i) => ({
-            name: result.titles[i + 1],
+          initialConcentrations: result.columns.map((col, i) => ({
+            name: result.titles[i],
             value: col[0],
           })),
           eigenValues: copasi.eigenValues2D,
@@ -105,10 +109,11 @@ self.onmessage = async (e) => {
     }
 
     case "loadModel": {
+      cachedModelInfo = copasi.modelInfo;
       self.postMessage({
         type: "loadModel",
         id: action.id,
-        data: copasi.modelInfo,
+        data: cachedModelInfo,
       });
       break;
     }

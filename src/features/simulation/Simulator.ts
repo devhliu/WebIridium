@@ -1,4 +1,11 @@
-import type { TimeCourseParameters } from "@/stores/workspace";
+export interface TimeCourseParameters {
+  startTime: number;
+  endTime: number;
+  numberOfPoints: number;
+
+  /** List of variables you want to include in the results. */
+  includeVariables: Variable[];
+}
 
 export type ParameterScanOptions = {
   varyingParameter: string;
@@ -17,6 +24,9 @@ export type Variable = {
    */
   scanName?: string;
   category: string;
+
+  // User settings
+  visible: boolean;
 };
 
 /* RESULT STUFF */
@@ -103,7 +113,8 @@ export abstract class Simulator {
 
   /**
    * NOTE: when switching beteween simulators, make sure to reset the variable list as it is not compatible between variables
-   * @returns list of variables the simulator has for the model.
+   * @returns List of variables the simulator has for the model. These are the default
+   *          values for the variables, but the user may modify theme.
    */
   abstract loadModel(
     antimonyCode: string,
