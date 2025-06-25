@@ -1,5 +1,5 @@
 import { useRef, useCallback } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { useSimulator } from "../workspace";
 import { type Variable } from "./Simulator";
 import {
@@ -37,7 +37,7 @@ const patchVariables = (
 
 export const useEditorContent = () => {
   const simulator = useSimulator();
-  const [variables, setVariables] = useAtom(variablesAtom);
+  const setVariables = useSetAtom(variablesAtom);
   const [editorContent, setEditorContentInternal] = useAtom(editorContentAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
@@ -58,23 +58,23 @@ export const useEditorContent = () => {
         content,
         abortControllerRef.current.signal,
       );
-      const patchedVariables = patchVariables(variables, newVariables);
       if (
-        !patchedVariables.some(
+        !newVariables.some(
           (v) => v.scanName === parameterScanOptions.varyingParameter,
         )
       ) {
+        // the variable no longer exists, use the first available scannable parameter
+        // for the parameter scan
         setParameterScanOptions({
           ...parameterScanOptions,
-          varyingParameter: variables.find((v) => v.scanName)?.scanName,
+          varyingParameter: newVariables.find((v) => v.scanName)?.scanName,
         });
       }
 
-      setVariables(patchedVariables);
+      setVariables(old => patchVariables(old, newVariables));
       setEditorContentInternal(content);
     },
     [
-      variables,
       setVariables,
       setEditorContentInternal,
       parameterScanOptions,
