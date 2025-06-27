@@ -30,10 +30,8 @@ type ToastAction =
 
 const TOAST_DURATION = 10_000;
 
-export const ToastContext = createContext<ToastContext | null>(null);
-export const ToastDispatchContext = createContext<Dispatch<ToastAction> | null>(
-  null,
-);
+const ToastContext = createContext<ToastContext | null>(null);
+const ToastDispatchContext = createContext<Dispatch<ToastAction> | null>(null);
 
 const typeIcons: Record<
   ToastType,

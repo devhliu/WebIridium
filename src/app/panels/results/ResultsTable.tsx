@@ -18,18 +18,21 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
   if (result.type === "timeCourse") {
     // move independent column to the start
     columns = [...result.columns];
-    const independentColumnIndex = columns.findIndex(col => col.title === independentVariable);
+    const independentColumnIndex = columns.findIndex(
+      (col) => col.title === independentVariable,
+    );
 
     const [independentColumn] = columns.splice(independentColumnIndex, 1);
     columns.unshift(independentColumn);
-    console.log(independentVariable, columns);
   } else if (
     result.type === "parameterScan" &&
     result.method === "timeCourse"
   ) {
     // only need one column for the independent variable
     // TODO: handle the column is not there?
-    columns.push(result.scans[0].columns.find(c => c.title === scanIndepedentVariable)!);
+    columns.push(
+      result.scans[0].columns.find((c) => c.title === scanIndepedentVariable)!,
+    );
 
     for (let i = 1; i < result.scans[0].columns.length; i++) {
       for (const scan of result.scans) {

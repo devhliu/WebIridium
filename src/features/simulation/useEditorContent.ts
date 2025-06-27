@@ -64,16 +64,21 @@ export const useEditorContent = () => {
       );
 
       // if the independent variable no longer exists, fallback to time if possible
-      if (!newVariables.find((v) => v.name === independentVariable)) {
+      if (
+        !independentVariable ||
+        !newVariables.find((v) => v.name === independentVariable)
+      ) {
         setIndependentVariable(
-          newVariables.find((v) => v.name === simulator.defaultIndependentVariableName)
-            ?.name ?? null,
+          newVariables.find(
+            (v) => v.name === simulator.defaultIndependentVariableName,
+          )?.name ?? null,
         );
       }
 
       // if the variable no longer exists, use the first available scannable parameter
       // for the parameter scan
       if (
+        !parameterScanOptions.varyingParameter ||
         !newVariables.some(
           (v) => v.scanName === parameterScanOptions.varyingParameter,
         )

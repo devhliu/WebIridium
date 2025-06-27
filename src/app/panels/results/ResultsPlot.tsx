@@ -4,10 +4,7 @@ import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import {
-  graphSettingsAtom,
-  independentVariableAtom,
-} from "@/stores/workspace";
+import { graphSettingsAtom, independentVariableAtom } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 
@@ -98,9 +95,7 @@ const ResultsPlot = ({
 
   const plotData = [];
 
-  const rangeX = isAutoscaledX
-    ? undefined
-    : [minX, maxX];
+  const rangeX = isAutoscaledX ? undefined : [minX, maxX];
   const rangeY = isAutoscaledY ? undefined : [minY, maxY];
 
   if (result.type === "timeCourse") {

@@ -1,11 +1,12 @@
+import { useEffect, useState } from "react";
+
 import styles from "./AntimonyEditorPanel.module.css";
 import ToastTest from "@/app/ToastTest";
+import { useEditorContent } from "@/features/simulation/useEditorContent";
 
 import defaultModel from "/models/default.ant?raw";
 import chickenModel from "/models/chicken.ant?raw";
 import bigYAxisModel from "/models/bigyaxis.ant?raw";
-import { useEffect, useState } from "react";
-import { useEditorContent } from "@/features/simulation/useEditorContent";
 
 const models: Record<string, string> = {
   default: defaultModel,

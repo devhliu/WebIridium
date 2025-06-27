@@ -9,14 +9,20 @@ vi.mock("react-plotly.js");
 vi.mock("plotly.js");
 
 describe("compute button", () => {
-  testSimulationButton("Compute", () => {
-    renderWithinWorkspace(
-      <div>
-        <SteadyStatePanel visible />
-        <PlotPanel />
-      </div>,
-    );
-  });
+  testSimulationButton(
+    {
+      buttonText: "Compute",
+      hasPlot: false,
+    },
+    () => {
+      renderWithinWorkspace(
+        <div>
+          <SteadyStatePanel visible />
+          <PlotPanel />
+        </div>,
+      );
+    },
+  );
 
   // TODO: need tests to see if the plot display is correct.
   // TODO: need test to see if simple setting updates are working correctly

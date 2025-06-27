@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo } from "react";
-import { type Simulator } from "@/features/simulation/Simulator";
 import { ScopeProvider } from "jotai-scope";
+
+import { type Simulator } from "@/features/simulation/Simulator";
 import { allWorkspaceAtoms } from "@/stores/workspace";
 import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 

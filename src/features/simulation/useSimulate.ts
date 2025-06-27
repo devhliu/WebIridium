@@ -14,6 +14,7 @@ import {
   independentVariableAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
+import { useToast } from "@/components/Toast";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -30,6 +31,7 @@ export type SimulationOperationResult =
  * - `runParameterScan` - run a parameter scan. Accepts an abort signal.
  */
 export const useSimulate = () => {
+  const { toast } = useToast();
   const simulator = useSimulator();
   const independentVariable = useAtomValue(independentVariableAtom);
   const variables = useAtomValue(variablesAtom);
@@ -46,7 +48,9 @@ export const useSimulate = () => {
    * @returns a list of variables to include in a simulation result
    */
   const getIncludeVariableList = (usingIndependentVariable: string | null) => {
-    return variables.filter((v) => v.name === usingIndependentVariable || v.visible);
+    return variables.filter(
+      (v) => v.name === usingIndependentVariable || v.visible,
+    );
   };
 
   const runSimulation = async (
@@ -62,11 +66,17 @@ export const useSimulate = () => {
         setSimulationResult(result);
         return { type: "success" };
       } catch (err) {
-        // TODO: notify user of errors
         console.error(err);
+        const message = err instanceof Error ? err.message : "Unknown error";
+
+        toast({
+          title: "Simulation Error",
+          description: message,
+          type: "error",
+        });
         return {
           type: "failure",
-          message: "Unexpected error while simulating.",
+          message: message,
         };
       } finally {
         setIsSimulating(false);
@@ -126,7 +136,9 @@ export const useSimulate = () => {
       );
 
       const scanTimeCourseParameters = {
-        includeVariables: getIncludeVariableList(simulator.scanIndependentVariableName),
+        includeVariables: getIncludeVariableList(
+          simulator.scanIndependentVariableName,
+        ),
         ...timeCourseParameters,
       };
 

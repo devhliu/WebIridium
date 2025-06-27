@@ -14,12 +14,12 @@ const IndependentVariableSelector = () => {
     variables.filter((v) => INDEPENDENT_VARIABLE_CATEGORIES.has(v.category)),
     (v) => v.category,
   );
-  const mappedVariables: [string, Record<string, string>][] = Object.entries(groupedVariables).map(
-    ([group, vars]) => [
-      group,
-      Object.fromEntries(vars?.map((v) => [v.displayName, v.name]) ?? []),
-    ],
-  );
+  const mappedVariables: [string, Record<string, string>][] = Object.entries(
+    groupedVariables,
+  ).map(([group, vars]) => [
+    group,
+    Object.fromEntries(vars?.map((v) => [v.displayName, v.name]) ?? []),
+  ]);
 
   return (
     <Select

@@ -10,10 +10,7 @@ const SelectProperty = (props: SelectProps) => {
         {name}
       </label>
 
-      <Select
-        {...props}
-        className={styles.propertyInput}
-      />
+      <Select {...props} className={styles.propertyInput} />
     </div>
   );
 };

@@ -10,6 +10,11 @@ afterEach(() => {
   resetWorkerResponseDelay();
 });
 
+export interface TestSimulationButtonOptions {
+  buttonText: string;
+  hasPlot: boolean;
+}
+
 /**
  * Utility function to test if a simulation button works.
  * @param buttonText - text that appears on the button
@@ -20,7 +25,7 @@ afterEach(() => {
  * environment
  */
 export const testSimulationButton = (
-  buttonText: string,
+  { buttonText, hasPlot }: TestSimulationButtonOptions,
   render: () => void,
 ) => {
   it("should disable when starting a simulation", async () => {
@@ -38,23 +43,27 @@ export const testSimulationButton = (
     expect(button).toBeDisabled();
   });
 
-  it("should cause a plot to display in the plot panel", async () => {
-    render();
+  if (hasPlot) {
+    it("should cause a plot to display in the plot panel", async () => {
+      render();
 
-    const button = screen.getByText(buttonText);
-    await userEvent.click(button);
-    expect(screen.getByTestId("results-plot")).toBeInTheDocument();
-  });
+      const button = screen.getByText(buttonText);
+      await userEvent.click(button);
+      expect(screen.getByTestId("results-plot")).toBeInTheDocument();
+    });
+  }
 
   it("should be cancellable", async () => {
-    setWorkerResponseDelay(100);
-
     render();
+
+    setWorkerResponseDelay(100);
 
     const button = screen.getByText(buttonText);
     await userEvent.click(button);
+
     const cancel = screen.getByLabelText("Cancel");
     await userEvent.click(cancel);
+
     expect(button).toBeEnabled();
     expect(cancel).not.toBeInTheDocument();
     expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
