@@ -1,19 +1,21 @@
 import { useState } from "react";
 import styles from "./simulation.module.css";
+import { useSimulate } from "@/features/simulation/useSimulate";
+import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
-import { useSimulate } from "@/features/simulation/useSimulate";
 
 export interface SteadyStatePanelProps {
   visible: boolean;
 }
 
 export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
+  const { toast } = useToast();
   const { isSimulating, computeSteadyState } = useSimulate();
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
 
-  const handleSimulateClick = () => {
+  const handleSimulateClick = async () => {
     if (abortSimulation) {
       abortSimulation.abort();
     }
@@ -21,7 +23,14 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
     const controller = new AbortController();
     setAbortSimulation(controller);
 
-    void computeSteadyState(controller.signal);
+    const result = await computeSteadyState(controller.signal);
+    if (result.type === "failure") {
+      toast({
+        type: "error",
+        title: "Steady State Error",
+        description: result.message,
+      });
+    }
   };
 
   const handleCancelClick = () => {

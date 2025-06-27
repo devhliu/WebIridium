@@ -1,5 +1,4 @@
 // TODO: add tests for multiple workers, one abort signal
-//       and `internalState`
 
 import { afterEach, it, expect } from "vitest";
 import { WorkerPool, WorkerTermination } from "../workerPool";
@@ -11,11 +10,14 @@ import {
   MockWorker,
   resetWorkerResponseDelay,
   setWorkerResponseDelay,
+  resetWorkerFailMode,
+  setWorkerFailMode,
 } from "@/testing-utils/mockWorker";
 
 afterEach(() => {
   resetCountingWorkerCount();
   resetWorkerResponseDelay();
+  resetWorkerFailMode();
 });
 
 it("should return result of queued task", async () => {
@@ -88,6 +90,26 @@ it("should fail with worker termination when abort signal already aborted on tas
   ).rejects.toThrowError(new WorkerTermination());
 });
 
+it("should terminate all workers when only one signal is used", async () => {
+  setWorkerResponseDelay(5);
+
+  const abortController = new AbortController();
+  const pool = new WorkerPool(createCountingWorker);
+  const promises = [
+    pool.queueTask("count", 0, null, abortController.signal),
+    pool.queueTask("count", 0, null, abortController.signal),
+    pool.queueTask("count", 0, null, abortController.signal),
+  ];
+
+  abortController.abort();
+
+  expect(await Promise.allSettled(promises)).toSatisfy(
+    (results: PromiseSettledResult<unknown>[]) => {
+      return results.every((r) => r.status === "rejected");
+    },
+  );
+});
+
 it(
   "should return result of 25 queued tasks with randomized delays",
   { timeout: 5000 },
@@ -128,3 +150,42 @@ it(
     }
   },
 );
+
+it("should reject when failing", async () => {
+  setWorkerFailMode("always");
+  const pool = new WorkerPool(createCountingWorker);
+  await expect(pool.queueTask("count", 0, null)).rejects.toThrow();
+});
+
+it("should reject when failing with multiple", async () => {
+  const pool = new WorkerPool(createCountingWorker, { maxWorkers: 2 });
+  setWorkerFailMode("always");
+  const promises: Promise<unknown>[] = [
+    pool.queueTask("count", 0, null),
+    pool.queueTask("count", 0, null),
+    pool.queueTask("count", 0, null),
+  ];
+
+  const r = await Promise.allSettled(promises);
+  for (const result of r) {
+    expect(result.status).toBe("rejected");
+  }
+});
+
+it("should only send internal state when required", async () => {
+  const pool = new WorkerPool(createCountingWorker);
+
+  let [state, didSendState] = (await pool.queueTask("state", 0, 1)) as [
+    number,
+    boolean,
+  ];
+  expect(state).toBe(1);
+  expect(didSendState).toBe(true);
+
+  [state, didSendState] = (await pool.queueTask("state", 0, 1)) as [
+    number,
+    boolean,
+  ];
+  expect(state).toBe(1);
+  expect(didSendState).toBe(false);
+});

@@ -78,7 +78,7 @@ export const ToastProvider = ({
   const [value, dispatch] = useReducer(toastReducer, {
     idCounter: 0,
     toasts: [],
-  } as ToastContext);
+  });
 
   return (
     <ToastDispatchContext value={dispatch}>

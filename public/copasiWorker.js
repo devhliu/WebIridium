@@ -18,7 +18,7 @@ const loadLibraries = () => {
 };
 
 let cachedModelInfo = null;
-self.onmessage = async (e) => {
+const handleMessage = async (e) => {
   await loadLibraries();
 
   const action = e.data;
@@ -59,7 +59,6 @@ self.onmessage = async (e) => {
       );
 
       self.postMessage({
-        type: "timeCourse",
         id: action.id,
         data: result,
       });
@@ -88,7 +87,6 @@ self.onmessage = async (e) => {
       );
 
       self.postMessage({
-        type: "steadyState",
         id: action.id,
         data: {
           value: steadyStateValue,
@@ -111,7 +109,6 @@ self.onmessage = async (e) => {
     case "loadModel": {
       cachedModelInfo = copasi.modelInfo;
       self.postMessage({
-        type: "loadModel",
         id: action.id,
         data: cachedModelInfo,
       });
@@ -120,5 +117,16 @@ self.onmessage = async (e) => {
 
     default:
       throw new Error(`invalid action type: ${action.type}`);
+  }
+};
+
+self.onmessage = async (e) => {
+  // when the messgae handler fails, its error must be manually propagated
+  // since it will get eaten up by the promise otherwise
+  try {
+    await handleMessage(e);
+  } catch (err) {
+    console.error(err);
+    self.postMessage({ id: e.data.id, errorMessage: err.message });
   }
 };

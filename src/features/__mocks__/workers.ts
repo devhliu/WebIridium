@@ -1,21 +1,21 @@
 import type { SimResult } from "@/third-party/copasi.js";
-import type { Action, Result } from "../workerPool.ts";
 import type { WorkerType } from "../workers.ts";
-import { MockWorker } from "@/testing-utils/mockWorker.ts";
+import {
+  createMockWorkerMessageHandler,
+  MockWorker,
+} from "@/testing-utils/mockWorker.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
 
   switch (type) {
     case "copasi": {
-      worker.port.addEventListener("message", (e) => {
-        const action = (e as MessageEvent<Action>).data;
-        switch (action.type) {
-          case "timeCourse":
-            worker.port.postMessage({
-              type: "timeCourse",
-              id: action.id,
-              data: {
+      worker.port.addEventListener(
+        "message",
+        createMockWorkerMessageHandler(worker, (action) => {
+          switch (action.type) {
+            case "timeCourse":
+              return {
                 num_variables: 2,
                 recorded_steps: 10,
                 titles: ["Time", "Mock"],
@@ -23,92 +23,86 @@ export const createWorker = (type: WorkerType) => {
                   [1, 2, 3, 4, 5],
                   [0, 1, 2, 3, 4],
                 ],
-              } as SimResult,
-            } as Result);
-            break;
+              } as SimResult;
 
-          case "steadyState":
-            worker.port.postMessage({
-              value: 1.44677e-31,
-              initialConcentrations: [
-                {
-                  name: "A",
-                  value: 10,
+            case "steadyState":
+              return {
+                value: 1.44677e-31,
+                initialConcentrations: [
+                  {
+                    name: "A",
+                    value: 10,
+                  },
+                  {
+                    name: "B",
+                    value: 0,
+                  },
+                  {
+                    name: "C",
+                    value: 0,
+                  },
+                ],
+                eigenValues: [
+                  [0, 0],
+                  [-0.20000000000000004, 0],
+                  [-0.35, 0],
+                ],
+                jacobian: {
+                  columns: ["B", "A", "C"],
+                  rows: ["B", "A", "C"],
+                  values: [
+                    [-0.20000000000000004, 0.35, 0],
+                    [0, -0.35, 0],
+                    [0.20000000000000004, 0, 0],
+                  ],
                 },
-                {
-                  name: "B",
-                  value: 0,
+                concentrationControl: {
+                  columns: ["(_J0)", "(_J1)", "'Summation Error'"],
+                  rows: ["B", "A", "C"],
+                  values: [
+                    [
+                      2.576994129064049e-308, 1.4327406791458241e228,
+                      6.4418866421773e170,
+                    ],
+                    [
+                      3.6558223763225502e233, 1.4285355974904633e248,
+                      6.520165976635771e252,
+                    ],
+                    [
+                      8.422413767467766e252, 1.983107124304e-312,
+                      2.5768583220998636e-308,
+                    ],
+                  ],
                 },
-                {
-                  name: "C",
-                  value: 0,
+                fluxControl: {
+                  columns: ["(_J0)", "(_J1)", "'Summation Error'"],
+                  rows: ["(_J0)", "(_J1)"],
+                  values: [
+                    [
+                      9.083672028618948e223, 3.004667062196259e48,
+                      8.70024606538e-313,
+                    ],
+                    [
+                      7.08665963813e-313, 2.576892273266059e-308,
+                      9.083672028618948e223,
+                    ],
+                  ],
                 },
-              ],
-              eigenValues: [
-                [0, 0],
-                [-0.20000000000000004, 0],
-                [-0.35, 0],
-              ],
-              jacobian: {
-                columns: ["B", "A", "C"],
-                rows: ["B", "A", "C"],
-                values: [
-                  [-0.20000000000000004, 0.35, 0],
-                  [0, -0.35, 0],
-                  [0.20000000000000004, 0, 0],
-                ],
-              },
-              concentrationControl: {
-                columns: ["(_J0)", "(_J1)", "'Summation Error'"],
-                rows: ["B", "A", "C"],
-                values: [
-                  [
-                    2.576994129064049e-308, 1.4327406791458241e228,
-                    6.4418866421773e170,
+                elasticities: {
+                  columns: ["B", "A", "C"],
+                  rows: ["(_J0)", "(_J1)"],
+                  values: [
+                    [
+                      2.576994129064049e-308, 1.4327406791458241e228,
+                      6.4418866421773e170,
+                    ],
+                    [5.252083457363487e170, 1.8331457249345503e50, 1.1787e-319],
                   ],
-                  [
-                    3.6558223763225502e233, 1.4285355974904633e248,
-                    6.520165976635771e252,
-                  ],
-                  [
-                    8.422413767467766e252, 1.983107124304e-312,
-                    2.5768583220998636e-308,
-                  ],
-                ],
-              },
-              fluxControl: {
-                columns: ["(_J0)", "(_J1)", "'Summation Error'"],
-                rows: ["(_J0)", "(_J1)"],
-                values: [
-                  [
-                    9.083672028618948e223, 3.004667062196259e48,
-                    8.70024606538e-313,
-                  ],
-                  [
-                    7.08665963813e-313, 2.576892273266059e-308,
-                    9.083672028618948e223,
-                  ],
-                ],
-              },
-              elasticities: {
-                columns: ["B", "A", "C"],
-                rows: ["(_J0)", "(_J1)"],
-                values: [
-                  [
-                    2.576994129064049e-308, 1.4327406791458241e228,
-                    6.4418866421773e170,
-                  ],
-                  [5.252083457363487e170, 1.8331457249345503e50, 1.1787e-319],
-                ],
-              },
-            });
-            break;
+                },
+              };
 
-          case "loadModel":
-            worker.port.postMessage({
-              type: "loadModel",
-              id: action.id,
-              data: {
+            case "loadModel":
+              return {
                 species: [
                   {
                     compartment: "default_compartment",
@@ -189,11 +183,10 @@ export const createWorker = (type: WorkerType) => {
                 status: "success",
                 messages:
                   ">WARNING 2025-06-02T02:24:26<\n  SBML (92): The default extent unit has not been set in the model or differs from the substance default units. COPASI will assume that the extent units are the same as the substance units.\n",
-              },
-            } as Result);
-            break;
-        }
-      });
+              };
+          }
+        }),
+      );
       break;
     }
   }

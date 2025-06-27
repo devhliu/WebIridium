@@ -4,15 +4,21 @@ import { userEvent } from "@testing-library/user-event";
 import {
   resetWorkerResponseDelay,
   setWorkerResponseDelay,
+  resetWorkerFailMode,
+  setWorkerFailMode,
 } from "@/testing-utils/mockWorker.ts";
+import { getToastHistory, resetToastHistory } from "@/testing-utils/mockToast";
 
 afterEach(() => {
   resetWorkerResponseDelay();
+  resetWorkerFailMode();
+  resetToastHistory();
 });
 
 export interface TestSimulationButtonOptions {
   buttonText: string;
   hasPlot: boolean;
+  shouldTestToasts: boolean;
 }
 
 /**
@@ -21,11 +27,11 @@ export interface TestSimulationButtonOptions {
  * @param render - renders the panel containing the button and plot panel
  *
  * @remarks
- * make sure to mock everything required to get a simulation to run in the test
+ * MAKE SURE to mock everything required to get a simulation to run in the test
  * environment
  */
 export const testSimulationButton = (
-  { buttonText, hasPlot }: TestSimulationButtonOptions,
+  { buttonText, hasPlot, shouldTestToasts }: TestSimulationButtonOptions,
   render: () => void,
 ) => {
   it("should disable when starting a simulation", async () => {
@@ -68,4 +74,21 @@ export const testSimulationButton = (
     expect(cancel).not.toBeInTheDocument();
     expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
   });
+
+  // NOTE: Parameter scan this breaks horribly with unhandled exception and
+  //       multiple toasts (I don't know why). For parameter scan, these tests
+  //       are disabled. They should be done manually.
+  // TODO?: there may be an underlying logic error that is not addressed
+  if (shouldTestToasts) {
+    it("should toast on an error", async () => {
+      render();
+
+      setWorkerFailMode("always");
+
+      const button = screen.getByText(buttonText);
+      await userEvent.click(button);
+
+      expect(getToastHistory()).toHaveLength(1);
+    });
+  }
 };

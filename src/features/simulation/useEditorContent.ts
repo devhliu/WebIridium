@@ -8,6 +8,7 @@ import {
   independentVariableAtom,
 } from "@/stores/workspace";
 import type { Variable } from "./Simulator";
+import { WorkerTermination } from "../workerPool";
 
 /**
  * TODO: unit test this
@@ -58,10 +59,19 @@ export const useEditorContent = () => {
 
       abortControllerRef.current = new AbortController();
 
-      const newVariables = await simulator.loadModel(
-        content,
-        abortControllerRef.current.signal,
-      );
+      let newVariables: Variable[];
+      try {
+        newVariables = await simulator.loadModel(
+          content,
+          abortControllerRef.current.signal,
+        );
+      } catch (err) {
+        if (err instanceof WorkerTermination) {
+          return;
+        } else {
+          throw err;
+        }
+      }
 
       // if the independent variable no longer exists, fallback to time if possible
       if (

@@ -15,9 +15,14 @@ export type Action = {
 };
 
 export type Result = {
-  type: string;
   id: number;
   data: unknown;
+};
+
+export type ErrorResult = {
+  /* the task id */
+  id: number;
+  errorMessage: string;
 };
 
 export type WorkerPoolOptions = {
@@ -26,8 +31,8 @@ export type WorkerPoolOptions = {
 
 type Task = {
   id: number;
-  state: "waiting" | "working" | "done" | "terminated";
-  type: Result["type"];
+  state: "waiting" | "working" | "done" | "terminated" | "failed";
+  actionType: string;
   payload: unknown;
   internalState: unknown;
   resolve: (res: unknown) => void;
@@ -84,20 +89,20 @@ export class WorkerPool {
     return new Promise((resolve, reject) => {
       const task: Task = {
         id,
-        type,
         resolve,
         reject,
         payload,
         internalState,
+        actionType: type,
         state: "waiting" as const,
       };
 
       this.#tasks.push(task);
 
       if (abortSignal) {
-        abortSignal.onabort = () => {
+        abortSignal.addEventListener("abort", () => {
           this.#terminateTask(task);
-        };
+        });
 
         if (abortSignal.aborted) {
           this.#terminateTask(task);
@@ -115,6 +120,8 @@ export class WorkerPool {
   #delegateTask(workerInfo: WorkerInfo, task: Task) {
     if (task.state === "terminated") {
       throw new Error("cannot start terminated task");
+    } else if (task.state == "failed") {
+      throw new Error("cannot start a failed task");
     }
 
     workerInfo.state = "busy";
@@ -122,7 +129,7 @@ export class WorkerPool {
     task.workerInfo = workerInfo;
 
     workerInfo.worker.postMessage({
-      type: task.type,
+      type: task.actionType,
       id: task.id,
       payload: task.payload,
       internalState:
@@ -169,23 +176,32 @@ export class WorkerPool {
   }
 
   #initializeWorker(workerInfo: WorkerInfo) {
-    workerInfo.worker.addEventListener("message", (e: MessageEvent<Result>) => {
-      const taskIndex = this.#tasks.findIndex((t) => t.id === e.data.id);
-      if (taskIndex >= 0) {
-        const task = this.#tasks[taskIndex];
-        this.#tasks.splice(taskIndex, 1);
-        task.state = "done";
-        task.workerInfo = undefined;
-        task.resolve(e.data.data);
-      }
+    workerInfo.worker.addEventListener(
+      "message",
+      (e: MessageEvent<Result | ErrorResult>) => {
+        const taskIndex = this.#tasks.findIndex((t) => t.id === e.data.id);
+        if (taskIndex >= 0) {
+          const task = this.#tasks[taskIndex];
+          this.#tasks.splice(taskIndex, 1);
+          if ("errorMessage" in e.data) {
+            task.state = "failed";
+            task.workerInfo = undefined;
+            task.reject(new Error(e.data.errorMessage));
+          } else {
+            task.state = "done";
+            task.workerInfo = undefined;
+            task.resolve(e.data.data);
+          }
+        }
 
-      const availableTask = this.#tasks.find((t) => t.state === "waiting");
-      if (availableTask) {
-        this.#delegateTask(workerInfo, availableTask);
-      } else {
-        workerInfo.state = "idle";
-      }
-    });
+        const availableTask = this.#tasks.find((t) => t.state === "waiting");
+        if (availableTask) {
+          this.#delegateTask(workerInfo, availableTask);
+        } else {
+          workerInfo.state = "idle";
+        }
+      },
+    );
   }
 
   #removeWorker(workerInfo: WorkerInfo) {

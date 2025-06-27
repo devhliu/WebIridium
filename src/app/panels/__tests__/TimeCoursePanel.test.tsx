@@ -5,6 +5,7 @@ import PlotPanel from "../results/PlotPanel.tsx";
 import { testSimulationButton } from "./testButton.tsx";
 
 vi.mock("@/features/workers.ts");
+vi.mock("@/components/Toast.tsx");
 vi.mock("react-plotly.js");
 vi.mock("plotly.js");
 
@@ -13,6 +14,7 @@ describe("simulation button", () => {
     {
       buttonText: "Simulate",
       hasPlot: true,
+      shouldTestToasts: true,
     },
     () => {
       renderWithinWorkspace(

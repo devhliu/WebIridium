@@ -7,6 +7,7 @@ import styles from "./simulation.module.css";
 import { useSimulate } from "@/features/simulation/useSimulate";
 import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
 
+import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 
@@ -23,6 +24,7 @@ export interface ParameterScanPanelProps {
 }
 
 const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
+  const { toast } = useToast();
   const variables = useAtomValue(variablesAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
@@ -31,7 +33,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
 
-  const handleSimulateClick = () => {
+  const handleSimulateClick = async () => {
     if (abortSimulation) {
       abortSimulation.abort();
     }
@@ -39,7 +41,14 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     const controller = new AbortController();
     setAbortSimulation(controller);
 
-    void runParameterScan(controller.signal);
+    const result = await runParameterScan(controller.signal);
+    if (result.type === "failure") {
+      toast({
+        type: "error",
+        title: "Parameter Scan Error",
+        description: result.message,
+      });
+    }
   };
 
   const handleCancelClick = () => {

@@ -4,6 +4,7 @@ import { useAtom } from "jotai";
 import { useSimulate } from "@/features/simulation/useSimulate";
 
 import styles from "./simulation.module.css";
+import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 
@@ -27,6 +28,7 @@ const isParameterInRange = (value: number) =>
   0 <= value && value <= MAX_PARAMETER_VALUE;
 
 export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
+  const { toast } = useToast();
   const { isSimulating, simulateTimeCourse } = useSimulate();
   const [timeCourseParameters, setTimeCourseParameters] = useAtom(
     timeCourseParametersAtom,
@@ -34,7 +36,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
 
-  const handleSimulateClick = () => {
+  const handleSimulateClick = async () => {
     if (abortSimulation) {
       abortSimulation.abort();
     }
@@ -42,7 +44,14 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
     const controller = new AbortController();
     setAbortSimulation(controller);
 
-    void simulateTimeCourse(controller.signal);
+    const result = await simulateTimeCourse(controller.signal);
+    if (result.type === "failure") {
+      toast({
+        type: "error",
+        title: "Time Course Error",
+        description: result.message,
+      });
+    }
   };
 
   const handleCancelClick = () => {
