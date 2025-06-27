@@ -15,7 +15,7 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 import { timeCourseParametersAtom } from "@/stores/workspace";
 import type { TimeCourseParameters } from "@/features/simulation/Simulator";
 
-import UncontrolledVariableList from "@/app/UncontrolledVariableList";
+import UncontrolledVariableList from "@/app/panels/simulation/UncontrolledVariableList";
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 
 export interface TimeCoursePanelProps {

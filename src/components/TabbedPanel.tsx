@@ -14,6 +14,11 @@ export interface TabbedPanelProps {
 
 const TabbedPanel = ({ tabs }: TabbedPanelProps) => {
   const [tab, setTab] = useState(tabs[0].name);
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  if (!tabs.find((t) => t.name === tab)) {
+    setTab(tabs[0].name);
+    return;
+  }
 
   return (
     <div className={styles.panel}>

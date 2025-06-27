@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useAtomValue } from "jotai";
 
 import styles from "./App.module.css";
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
+
+import { simulationResultAtom } from "@/stores/workspace";
 
 import PanelLayout from "@/components/PanelLayout";
 import { WorkspaceProvider } from "@/features/workspace";
@@ -18,7 +21,36 @@ import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import PlotPanel from "./panels/results/PlotPanel";
 import TablePanel from "./panels/results/TablePanel";
 import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
-import TabbedPanel from "@/components/TabbedPanel";
+import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
+
+const ResultTabbedPanel = () => {
+  const simulationResults = useAtomValue(simulationResultAtom);
+  let tabs: TabInfo[];
+  if (simulationResults?.type === "steadyState") {
+    tabs = [
+      {
+        name: "Steady State",
+        icon: <SteadyStateIcon width="20" height="20" />,
+        render: () => <SteadyStateResultPanel />,
+      },
+    ];
+  } else {
+    tabs = [
+      {
+        name: "Plot",
+        icon: <GraphIcon width="20" height="20" />,
+        render: () => <PlotPanel />,
+      },
+      {
+        name: "Table",
+        icon: <TableIcon width="20" height="20" />,
+        render: () => <TablePanel />,
+      },
+    ];
+  }
+
+  return <TabbedPanel tabs={tabs} />;
+};
 
 const App = () => {
   const [tab, setTab] = useState<SidebarTab>("TimeCourse");
@@ -41,25 +73,7 @@ const App = () => {
 
               <AntimonyEditorPanel />
 
-              <TabbedPanel
-                tabs={[
-                  {
-                    name: "Plot",
-                    icon: <GraphIcon width="20" height="20" />,
-                    render: () => <PlotPanel />,
-                  },
-                  {
-                    name: "Table",
-                    icon: <TableIcon width="20" height="20" />,
-                    render: () => <TablePanel />,
-                  },
-                  {
-                    name: "Steady State",
-                    icon: <SteadyStateIcon width="20" height="20" />,
-                    render: () => <SteadyStateResultPanel />,
-                  },
-                ]}
-              />
+              <ResultTabbedPanel />
             </PanelLayout>
           </div>
         </div>

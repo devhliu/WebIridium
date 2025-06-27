@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import { variablesAtom } from "@/stores/workspace";
-import VariableList from "@/components/variable-list/VariableList";
+import VariableList from "@/app/variable-list/VariableList";
 import type { Variable } from "@/features/simulation/Simulator";
 
 /**
