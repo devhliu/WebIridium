@@ -22,6 +22,7 @@ import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
+import UncontrolledVariableList from "./UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import { SCAN_PALETTES, type ScanPalette } from "@/features/colors";
 
@@ -90,7 +91,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           Run
         </Button>
 
-        <PropertyAccordion defaultValue={["first-parameter", "output"]}>
+        <PropertyAccordion
+          defaultValue={["first-parameter", "output", "variables"]}
+        >
           <PropertyAccordionItem
             title="First Parameter"
             value="first-parameter"
@@ -130,6 +133,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
               />
             </PropertyList>
           </PropertyAccordionItem>
+
           <PropertyAccordionItem title="Output" value="output">
             <PropertyList>
               <SelectProperty
@@ -143,6 +147,10 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                 onChange={(sp) => setScanPalette(sp as ScanPalette)}
               />
             </PropertyList>
+          </PropertyAccordionItem>
+
+          <PropertyAccordionItem title="Variables" value="variables">
+            <UncontrolledVariableList />
           </PropertyAccordionItem>
         </PropertyAccordion>
       </div>
