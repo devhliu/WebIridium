@@ -101,12 +101,14 @@ const ResultsPlot = ({
     for (const { title, values } of result.columns) {
       if (title === independentVariable) continue;
       const variable = variables.find((v) => v.name === title);
+      if (!variable?.visible) continue;
+
       plotData.push({
         x: independentVariableColumn.values,
         y: values,
         type: "scatter",
         mode: "lines",
-        marker: { color: variable?.color ?? DEFAULT_COLOR },
+        marker: { color: variable.color },
         line: { width: 2 },
         name: variable?.displayName ?? title,
       });
@@ -121,6 +123,8 @@ const ResultsPlot = ({
       for (const { title, values } of scan.columns) {
         if (title === scanIndependentVariable) continue;
         const variable = variables.find((v) => v.name === title);
+        if (!variable?.visible) continue;
+
         let finalColor: string;
         if (variable) {
           finalColor = getParameterScanColor(
@@ -144,7 +148,7 @@ const ResultsPlot = ({
           marker: { color: finalColor },
           line: { width: 2 },
           name: getParameterScanTitle(
-            variable?.displayName ?? title,
+            variable.displayName,
             result.parameter,
             scan.parameterValue,
           ),
