@@ -5,13 +5,13 @@
  */
 
 import { atom } from "jotai";
-import defaultAntimonyModel from "/models/default.ant?raw";
 import type {
   SimulationResult,
   TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
 import { type ScanPalette } from "@/features/colors";
+import { EditorContent } from "@/features/editorContent";
 
 export interface ParameterScanOptions {
   varyingParameter: string | null | undefined;
@@ -45,7 +45,10 @@ export interface GraphSettings {
 
 // Atoms
 
-export const editorContentAtom = atom(defaultAntimonyModel);
+export const editorContentAtom = atom<EditorContent | null>(
+  () => new EditorContent(),
+);
+
 export const isSimulatingAtom = atom(false);
 export const simulationResultAtom = atom<SimulationResult | null>(null);
 

@@ -81,7 +81,7 @@ export const useSimulate = () => {
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
       return await simulator.simulateTimeCourse(
-        editorContent,
+        editorContent.value,
         {
           parameters: {
             includeVariables: getIncludeVariableList(independentVariable),
@@ -98,7 +98,7 @@ export const useSimulate = () => {
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
       return await simulator.computeSteadyState(
-        editorContent,
+        editorContent.value,
         {
           timeCourseParameters: {
             includeVariables: getIncludeVariableList(independentVariable),
@@ -137,7 +137,7 @@ export const useSimulate = () => {
       for (const value of scanValues) {
         resultPromises.push(
           simulator.simulateTimeCourse(
-            editorContent,
+            editorContent.value,
             {
               parameters: scanTimeCourseParameters,
               parameterScanOptions: {

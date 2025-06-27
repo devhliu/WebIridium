@@ -58,10 +58,11 @@ const ResultTabbedPanel = () => {
 const App = () => {
   const tabs: SidebarTab[] = ["Time Course", "Steady State", "Parameter Scan"];
   const [tab, setTab] = useState<SidebarTab>("Time Course");
+
   return (
-    <ToastProvider>
-      <WorkspaceProvider>
-        <div className={styles.app}>
+    <div className={styles.app}>
+      <ToastProvider>
+        <WorkspaceProvider>
           <AppMenubar
             sidebarTab={tab}
             sidebarTabs={tabs}
@@ -86,9 +87,9 @@ const App = () => {
               </Allotment>
             </div>
           </div>
-        </div>
-      </WorkspaceProvider>
-    </ToastProvider>
+        </WorkspaceProvider>
+      </ToastProvider>
+    </div>
   );
 };
 

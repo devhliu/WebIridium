@@ -1,14 +1,15 @@
 import { useRef, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
-import { useSimulator } from "../workspace";
+import { useSimulator } from "./workspace";
 import {
   variablesAtom,
   editorContentAtom,
   parameterScanOptionsAtom,
   independentVariableAtom,
 } from "@/stores/workspace";
-import type { Variable } from "./Simulator";
-import { WorkerTermination } from "../workerPool";
+import type { Variable } from "./simulation/Simulator";
+import { WorkerTermination } from "./workerPool";
+import { useAtomValue } from "jotai";
 
 /**
  * TODO: unit test this
@@ -37,13 +38,14 @@ const patchVariables = (
   return result;
 };
 
+// TODO: add useSetEditorContent which doesn't read (to be used in open file)
 export const useEditorContent = () => {
   const simulator = useSimulator();
   const [independentVariable, setIndependentVariable] = useAtom(
     independentVariableAtom,
   );
   const setVariables = useSetAtom(variablesAtom);
-  const [editorContent, setEditorContentInternal] = useAtom(editorContentAtom);
+  const editorContent = useAtomValue(editorContentAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
@@ -105,13 +107,13 @@ export const useEditorContent = () => {
       }
 
       setVariables((old) => patchVariables(old, newVariables));
-      setEditorContentInternal(content);
+      editorContent?.setValue(content);
     },
     [
       independentVariable,
       setIndependentVariable,
       setVariables,
-      setEditorContentInternal,
+      editorContent,
       parameterScanOptions,
       setParameterScanOptions,
       simulator,
@@ -120,3 +122,24 @@ export const useEditorContent = () => {
 
   return { editorContent, setEditorContent };
 };
+
+/**
+ * Container for editor content. Has a "change" event that fires
+ * every time the editor content changes. This is necessary because
+ * there needs to be a way to express data flowing exclusively form
+ * the event content so that components sychronizing with it know
+ * whether to update the model info (by call setEditorContent from the useEditorContent hook).
+ */
+export class EditorContent extends EventTarget {
+  value: string;
+
+  constructor() {
+    super();
+    this.value = "";
+  }
+
+  setValue(newValue: string) {
+    this.value = newValue;
+    this.dispatchEvent(new Event("change"));
+  }
+}

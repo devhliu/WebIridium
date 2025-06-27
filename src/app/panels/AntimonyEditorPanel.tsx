@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import styles from "./AntimonyEditorPanel.module.css";
 import ToastTest from "@/app/ToastTest";
-import { useEditorContent } from "@/features/simulation/useEditorContent";
+import { useEditorContent } from "@/features/editorContent";
 
 import defaultModel from "/models/default.ant?raw";
 import chickenModel from "/models/chicken.ant?raw";
@@ -16,7 +16,18 @@ const models: Record<string, string> = {
 
 export const AntimonyEditorPanel = () => {
   const [text, setText] = useState(models.default);
-  const { setEditorContent } = useEditorContent();
+  const { editorContent, setEditorContent } = useEditorContent();
+
+  useEffect(() => {
+    const handleContentChange = () => {
+      setText(editorContent!.value);
+    };
+
+    editorContent?.addEventListener("change", handleContentChange);
+    return () => {
+      editorContent?.removeEventListener("change", handleContentChange);
+    };
+  }, [editorContent]);
 
   useEffect(() => {
     void setEditorContent(text);
