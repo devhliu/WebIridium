@@ -17,6 +17,7 @@ import type { TimeCourseParameters } from "@/features/simulation/Simulator";
 
 import UncontrolledVariableList from "@/app/panels/simulation/UncontrolledVariableList";
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
+import { MissingDataForVariablesIndicator } from "@/app/MissingDataForVariablesIndicator";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
@@ -85,6 +86,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
         >
           Simulate
         </Button>
+        <MissingDataForVariablesIndicator />
 
         <PropertyAccordion
           defaultValue={[

@@ -86,10 +86,13 @@ const AppMenubar = ({
           ))}
         </MenubarRadioGroup>
         <MenubarSeparator />
-        <MenubarItem name="toggle theme (TEMPORARY)" onSelect={() => {
-          if (getTheme() === "dark") setTheme("light");
-          else setTheme("dark");
-        }} />
+        <MenubarItem
+          name="toggle theme (TEMPORARY)"
+          onSelect={() => {
+            if (getTheme() === "dark") setTheme("light");
+            else setTheme("dark");
+          }}
+        />
       </MenubarMenu>
     </MenubarRoot>
   );

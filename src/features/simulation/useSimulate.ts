@@ -19,6 +19,8 @@ export type SimulationOperationResult =
   | { type: "success" }
   | { type: "failure"; message: string };
 
+// TODO: remove the type assertions on editorContent
+
 /**
  * Hook for simulation capabilities. Handles all the required state
  * management for running simulations.
@@ -81,7 +83,7 @@ export const useSimulate = () => {
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
       return await simulator.simulateTimeCourse(
-        editorContent.value,
+        editorContent!.value,
         {
           parameters: {
             includeVariables: getIncludeVariableList(independentVariable),
@@ -98,7 +100,7 @@ export const useSimulate = () => {
   ): Promise<SimulationOperationResult> => {
     return await runSimulation(async () => {
       return await simulator.computeSteadyState(
-        editorContent.value,
+        editorContent!.value,
         {
           timeCourseParameters: {
             includeVariables: getIncludeVariableList(independentVariable),
@@ -137,7 +139,7 @@ export const useSimulate = () => {
       for (const value of scanValues) {
         resultPromises.push(
           simulator.simulateTimeCourse(
-            editorContent.value,
+            editorContent!.value,
             {
               parameters: scanTimeCourseParameters,
               parameterScanOptions: {
