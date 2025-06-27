@@ -97,7 +97,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
             title="Simulation Parameters"
             value="sim-params"
           >
-            <PropertyList>
+            <PropertyList alignment="left">
               <NumericProperty
                 name="Start Time"
                 value={timeCourseParameters.startTime}

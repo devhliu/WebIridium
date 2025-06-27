@@ -6,7 +6,6 @@
 }
 
 .property {
-  container-type: inline-size;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -20,9 +19,13 @@
   width: 60%;
   padding-inline-end: var(--spacing-5);
 
-  @container (width > 400px) {
+  .property-list[data-alignment="center"] > .property > & {
     text-align: end;
     width: 40%;
+  }
+
+  .property-list[data-alignment="leftSmall"] > .property > & {
+    width: 30%;
   }
 }
 
@@ -35,7 +38,7 @@
   margin: 0;
   padding: 0;
 
-  & .property-name {
+  & > .property > .property-name {
     order: 2;
     flex-grow: 1;
     padding-inline-end: 0;
@@ -58,6 +61,10 @@
 .secondary {
   flex-grow: 0.25;
   margin-inline-end: var(--spacing-4);
+
+  .property-list[data-alignment="leftSmall"] > .property > & {
+    flex-grow: 0.5;
+  }
 }
 
 .property-input:focus {

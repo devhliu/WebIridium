@@ -98,7 +98,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
             title="First Parameter"
             value="first-parameter"
           >
-            <PropertyList>
+            <PropertyList alignment="left">
               {parameterScanOptions.varyingParameter && (
                 <SelectProperty
                   name="Parameter"
@@ -135,7 +135,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           </PropertyAccordionItem>
 
           <PropertyAccordionItem title="Output" value="output">
-            <PropertyList>
+            <PropertyList alignment="left">
               <SelectProperty
                 name="Palette"
                 value={scanPalette}

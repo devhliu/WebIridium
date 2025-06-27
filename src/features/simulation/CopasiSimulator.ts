@@ -98,6 +98,7 @@ export class CopasiSimulator extends Simulator {
 
       visible: false,
       color: colorGenerator.next().value!,
+      width: 2,
     });
 
     for (const specie of modelInfo.species) {
@@ -109,6 +110,7 @@ export class CopasiSimulator extends Simulator {
 
         visible: true,
         color: colorGenerator.next().value!,
+        width: 2,
       });
     }
 
@@ -123,6 +125,7 @@ export class CopasiSimulator extends Simulator {
 
         visible: false,
         color: colorGenerator.next().value!,
+        width: 2,
       });
     }
 
@@ -135,6 +138,7 @@ export class CopasiSimulator extends Simulator {
 
         visible: false,
         color: colorGenerator.next().value!,
+        width: 2,
       });
     }
 

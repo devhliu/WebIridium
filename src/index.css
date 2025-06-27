@@ -13,14 +13,14 @@
   --color-primary-accent-foreground: #f0f2f5;
 
   --color-primary-background: #101112;
-  --color-primary-foreground: #f2f5f7;
-  --color-primary-foreground-dim: #f2f5f7af;
-  --color-primary-border: #212226;
   --color-primary-background-translucent: color-mix(
     in hsl,
     var(--color-primary-foreground) 10%,
     transparent
   );
+  --color-primary-foreground: #f2f5f7;
+  --color-primary-foreground-dim: #f2f5f7af;
+  --color-primary-border: #212226;
   --border-primary-solid: 2px solid var(--color-primary-border);
 
   --color-secondary-background: #252729;
@@ -36,6 +36,11 @@
   --border-tertiary-solid: 1px solid var(--color-tertiary-border);
 
   --color-input-background: #1f2021;
+  --color-input-background-translucent: color-mix(
+    in hsl,
+    var(--color-input-foreground) 7%,
+    var(--color-input-background)
+  );
   --color-input-foreground: var(--color-secondary-foreground);
   --color-input-foreground-dim: var(--color-secondary-foreground-dim);
   --color-input-border: #494a4c;

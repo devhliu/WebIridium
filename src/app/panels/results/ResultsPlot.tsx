@@ -111,7 +111,7 @@ const ResultsPlot = ({
         type: "scatter",
         mode: "lines",
         marker: { color: variable.color },
-        line: { width: 2 },
+        line: { width: variable.width },
         name: variable?.displayName ?? title,
       });
     }
@@ -143,7 +143,7 @@ const ResultsPlot = ({
           type: "scatter",
           mode: "lines",
           marker: { color: finalColor },
-          line: { width: 2 },
+          line: { width: variable.width },
           name: getParameterScanTitle(
             variable.displayName,
             result.parameter,

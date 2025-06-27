@@ -5,6 +5,8 @@
 }
 
 .list {
+  display: flex;
+  flex-direction: column;
   background-color: var(--color-input-background);
   border: var(--border-input-solid);
   border-radius: var(--border-radius);
@@ -39,6 +41,21 @@
 
 .item {
   display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  border-radius: var(--border-radius);
+  margin-inline: var(--spacing-1);
+
+  &[data-expanded] {
+    background-color: var(--color-tertiary-background);
+    outline: var(--border-tertiary-solid);
+    margin-block: var(--spacing-2);
+    box-shadow: var(--shadow-1);
+  }
+}
+
+.item-strip {
+  display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-4);
@@ -47,17 +64,14 @@
   border-radius: var(--border-radius);
 
   user-select: none;
+}
 
-  &:hover {
-    background-color: color-mix(
-      in hsl,
-      var(--color-input-foreground) 7%,
-      var(--color-input-background)
-    );
-  }
+.item:not([data-expanded]):hover {
+  background-color: var(--color-input-background-translucent);
 }
 
 .item-name {
+  flex-grow: 1;
   font-size: var(--font-size-small);
 }
 
@@ -74,6 +88,15 @@
   background: transparent;
   border: none;
   cursor: pointer;
+
+  &.dim {
+    color: var(--color-input-foreground-dim);
+  }
+}
+
+.item-settings {
+  display: flex;
+  flex-direction: column;
 }
 
 .search-container {

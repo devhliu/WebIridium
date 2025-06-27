@@ -28,6 +28,7 @@ export type Variable = {
   // User settings
   visible: boolean;
   color: string;
+  width: number;
 };
 
 /* RESULT STUFF */
