@@ -1,0 +1,4 @@
+.select {
+  padding-inline: var(--spacing-4);
+  width: 100%;
+}

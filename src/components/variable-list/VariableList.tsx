@@ -11,6 +11,7 @@ export interface VariableListProps {
 
 const CATEGORY_ORDER = ["Species", "Rate of Changes", "Parameter"];
 
+// TODO: preserve state when closing/opening in accordion
 const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter((variable) =>

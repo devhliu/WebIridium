@@ -11,6 +11,7 @@ import {
   simulationResultAtom,
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
+  independentVariableAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
 
@@ -30,6 +31,7 @@ export type SimulationOperationResult =
  */
 export const useSimulate = () => {
   const simulator = useSimulator();
+  const independentVariable = useAtomValue(independentVariableAtom);
   const variables = useAtomValue(variablesAtom);
   const editorContent = useAtomValue(editorContentAtom);
   const setSimulationResult = useSetAtom(simulationResultAtom);
@@ -37,8 +39,14 @@ export const useSimulate = () => {
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const [isSimulating, setIsSimulating] = useAtom(isSimulatingAtom);
 
-  const getIncludeVariableList = () => {
-    return variables.filter((v) => v.visible);
+  /**
+   * @param usingIndependentVariable - The independent variable to be used when getting variables to include.
+   *                                   This exists because parameter scan must always use Time as its independent
+   *                                   variable.
+   * @returns a list of variables to include in a simulation result
+   */
+  const getIncludeVariableList = (usingIndependentVariable: string | null) => {
+    return variables.filter((v) => v.name === usingIndependentVariable || v.visible);
   };
 
   const runSimulation = async (
@@ -74,7 +82,7 @@ export const useSimulate = () => {
         editorContent,
         {
           parameters: {
-            includeVariables: getIncludeVariableList(),
+            includeVariables: getIncludeVariableList(independentVariable),
             ...timeCourseParameters,
           },
         },
@@ -91,7 +99,7 @@ export const useSimulate = () => {
         editorContent,
         {
           timeCourseParameters: {
-            includeVariables: getIncludeVariableList(),
+            includeVariables: getIncludeVariableList(independentVariable),
             ...timeCourseParameters,
           },
         },
@@ -118,7 +126,7 @@ export const useSimulate = () => {
       );
 
       const scanTimeCourseParameters = {
-        includeVariables: getIncludeVariableList(),
+        includeVariables: getIncludeVariableList(simulator.scanIndependentVariableName),
         ...timeCourseParameters,
       };
 

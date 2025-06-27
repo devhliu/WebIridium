@@ -6,9 +6,10 @@ import type { Data } from "plotly.js";
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   graphSettingsAtom,
-  timeCourseParametersAtom,
+  independentVariableAtom,
 } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
+import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 
 const palette = [
   "#1f77b4",
@@ -39,7 +40,8 @@ const ResultsPlot = ({
   containerPercentWidth = 1,
   containerPercentHeight = 1,
 }: ResultsPlotProps) => {
-  const simulationParameters = useAtomValue(timeCourseParametersAtom);
+  const scanIndependentVariable = useScanIndependentVariable();
+  const independentVariable = useAtomValue(independentVariableAtom);
   const {
     backgroundColor,
     drawingAreaColor,
@@ -96,22 +98,23 @@ const ResultsPlot = ({
 
   const plotData = [];
 
-  // TODO: do not update range whenever input changes, only when simulation is ran.
   const rangeX = isAutoscaledX
-    ? [simulationParameters.startTime, simulationParameters.endTime]
+    ? undefined
     : [minX, maxX];
   const rangeY = isAutoscaledY ? undefined : [minY, maxY];
 
   if (result.type === "timeCourse") {
-    const timeColumn = result.columns[0];
-    for (let i = 1; i < result.columns.length; i++) {
-      const { title, values } = result.columns[i];
+    // TODO: error if the independent variable column is not present
+    const independentVariableColumn =
+      result.columns.find((c) => c.title === independentVariable) ?? [];
+    for (const { title, values } of result.columns) {
+      if (title === independentVariable) continue;
       plotData.push({
-        x: timeColumn.values,
+        x: independentVariableColumn.values,
         y: values,
         type: "scatter",
         mode: "lines",
-        marker: { color: palette[i % palette.length] },
+        marker: { color: "red" },
         name: title,
       });
     }
@@ -119,20 +122,17 @@ const ResultsPlot = ({
     result.type === "parameterScan" &&
     result.method === "timeCourse"
   ) {
-    let colorIndex = 0;
     for (const scan of result.scans) {
-      const timeColumn = scan.columns[0];
-      for (let i = 1; i < scan.columns.length; colorIndex++, i++) {
-        const { title, values } = scan.columns[i];
+      const independentVariableColumn =
+        scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
+      for (const { title, values } of scan.columns) {
+        if (title === scanIndependentVariable) continue;
         plotData.push({
-          x: timeColumn.values,
+          x: independentVariableColumn.values,
           y: values,
           type: "scatter",
           mode: "lines",
-          marker: { color: palette[colorIndex % palette.length] },
-          line: {
-            width: 2, // TODO: add setting for this
-          },
+          marker: { color: "red" },
           name: getParameterScanTitle(
             title,
             result.parameter,

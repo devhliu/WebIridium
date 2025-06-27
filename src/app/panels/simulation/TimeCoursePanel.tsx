@@ -11,11 +11,11 @@ import PropertyAccordion from "@/components/property-accordion/PropertyAccordion
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import PropertyList from "@/components/property-list/PropertyList";
 import NumericProperty from "@/components/property-list/NumericProperty";
-import {
-  timeCourseParametersAtom,
-  type TimeCourseParameters,
-} from "@/stores/workspace";
+import { timeCourseParametersAtom } from "@/stores/workspace";
+import type { TimeCourseParameters } from "@/features/simulation/Simulator";
+
 import UncontrolledVariableList from "@/app/UncontrolledVariableList";
+import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
@@ -77,7 +77,13 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
           Simulate
         </Button>
 
-        <PropertyAccordion defaultValue={["sim-params", "dependent-variables"]}>
+        <PropertyAccordion
+          defaultValue={[
+            "sim-params",
+            "independent-variables",
+            "dependent-variables",
+          ]}
+        >
           <PropertyAccordionItem
             title="Simulation Parameters"
             value="sim-params"
@@ -110,6 +116,13 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
                 }
               />
             </PropertyList>
+          </PropertyAccordionItem>
+
+          <PropertyAccordionItem
+            title="Independent Variable"
+            value="independent-variables"
+          >
+            <IndependentVariableSelector />
           </PropertyAccordionItem>
 
           <PropertyAccordionItem

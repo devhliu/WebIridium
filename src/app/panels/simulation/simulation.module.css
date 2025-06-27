@@ -4,6 +4,7 @@
   flex-grow: 1;
   padding: var(--spacing-panel);
   gap: var(--spacing-5);
+  overflow-y: auto;
 }
 
 .panel-title {

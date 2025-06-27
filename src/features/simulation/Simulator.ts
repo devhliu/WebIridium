@@ -89,6 +89,9 @@ export type SimulationResult =
   | ParameterScanResult;
 
 export abstract class Simulator {
+  abstract defaultIndependentVariableName: string;
+  abstract scanIndependentVariableName: string;
+
   abstract simulateTimeCourse(
     antimonyCode: string,
     {

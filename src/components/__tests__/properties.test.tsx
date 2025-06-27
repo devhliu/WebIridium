@@ -94,9 +94,3 @@ describe("StringProperty", () => {
     expect(onChange).toHaveBeenCalledWith("hello world");
   });
 });
-
-describe("PropertyGenerator", () => {
-  it("should generate string input", async () => {
-    // TODO: finish up these tests
-  });
-});

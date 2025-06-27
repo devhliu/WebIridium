@@ -48,6 +48,7 @@ export const editorContentAtom = atom(defaultAntimonyModel);
 export const isSimulatingAtom = atom(false);
 export const simulationResultAtom = atom<SimulationResult | null>(null);
 
+export const independentVariableAtom = atom<string | null>(null);
 export const variablesAtom = atom<Variable[]>([]);
 
 export const timeCourseParametersAtom = atom<
@@ -95,8 +96,11 @@ export const graphSettingsAtom = atom<GraphSettings>({
 export const allWorkspaceAtoms = [
   editorContentAtom,
   isSimulatingAtom,
-  variablesAtom,
   simulationResultAtom,
+
+  independentVariableAtom,
+  variablesAtom,
+
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
   graphSettingsAtom,

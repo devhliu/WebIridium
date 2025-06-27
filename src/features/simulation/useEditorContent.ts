@@ -1,12 +1,13 @@
 import { useRef, useCallback } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { useSimulator } from "../workspace";
-import { type Variable } from "./Simulator";
 import {
   variablesAtom,
   editorContentAtom,
   parameterScanOptionsAtom,
+  independentVariableAtom,
 } from "@/stores/workspace";
+import type { Variable } from "./Simulator";
 
 /**
  * TODO: unit test this
@@ -37,6 +38,9 @@ const patchVariables = (
 
 export const useEditorContent = () => {
   const simulator = useSimulator();
+  const [independentVariable, setIndependentVariable] = useAtom(
+    independentVariableAtom,
+  );
   const setVariables = useSetAtom(variablesAtom);
   const [editorContent, setEditorContentInternal] = useAtom(editorContentAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
@@ -58,13 +62,22 @@ export const useEditorContent = () => {
         content,
         abortControllerRef.current.signal,
       );
+
+      // if the independent variable no longer exists, fallback to time if possible
+      if (!newVariables.find((v) => v.name === independentVariable)) {
+        setIndependentVariable(
+          newVariables.find((v) => v.name === simulator.defaultIndependentVariableName)
+            ?.name ?? null,
+        );
+      }
+
+      // if the variable no longer exists, use the first available scannable parameter
+      // for the parameter scan
       if (
         !newVariables.some(
           (v) => v.scanName === parameterScanOptions.varyingParameter,
         )
       ) {
-        // the variable no longer exists, use the first available scannable parameter
-        // for the parameter scan
         setParameterScanOptions({
           ...parameterScanOptions,
           varyingParameter: newVariables.find((v) => v.scanName)?.scanName,
@@ -75,6 +88,8 @@ export const useEditorContent = () => {
       setEditorContentInternal(content);
     },
     [
+      independentVariable,
+      setIndependentVariable,
       setVariables,
       setEditorContentInternal,
       parameterScanOptions,

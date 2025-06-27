@@ -11,6 +11,9 @@ import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
 
 export class CopasiSimulator extends Simulator {
+  defaultIndependentVariableName = "Time";
+  scanIndependentVariableName = "Time";
+
   #workerPool: WorkerPool;
 
   constructor() {
@@ -36,10 +39,7 @@ export class CopasiSimulator extends Simulator {
       {
         parameters: {
           ...parameters,
-          includeVariables: [
-            "Time",
-            ...parameters.includeVariables.map((v) => v.name),
-          ],
+          includeVariables: parameters.includeVariables.map((v) => v.name),
         },
         varyingParameter: parameterScanOptions?.varyingParameter,
         varyingParameterValue: parameterScanOptions?.varyingParameterValue,
@@ -88,6 +88,15 @@ export class CopasiSimulator extends Simulator {
     )) as ModelInfo;
 
     const variables: Variable[] = [];
+
+    variables.push({
+      displayName: "Time",
+      name: "Time",
+      category: "Time",
+
+      visible: false,
+    });
+
     for (const param of modelInfo.global_parameters) {
       variables.push({
         displayName: param.name,
@@ -115,7 +124,7 @@ export class CopasiSimulator extends Simulator {
         name: `${specie.name}.Rate`,
         category: "Rate of Changes",
 
-        visible: true,
+        visible: false,
       });
     }
     return variables;

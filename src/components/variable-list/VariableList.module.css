@@ -33,6 +33,7 @@
 }
 
 .group-container:not([data-open]) .group-trigger-icon {
+  color: var(--color-input-foreground-dim);
   transform: rotate(-90deg);
 }
 
@@ -44,6 +45,8 @@
 
   padding: var(--spacing-2);
   border-radius: var(--border-radius);
+
+  user-select: none;
 
   &:hover {
     background-color: color-mix(
