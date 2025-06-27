@@ -4,14 +4,16 @@ import styles from "./AntimonyEditorPanel.module.css";
 import ToastTest from "@/app/ToastTest";
 import { useEditorContent } from "@/features/editorContent";
 
-import defaultModel from "/models/default.ant?raw";
-import chickenModel from "/models/chicken.ant?raw";
-import bigYAxisModel from "/models/bigyaxis.ant?raw";
+import defaultModel from "@/assets/models/default.ant?raw";
+import chickenModel from "@/assets/models/chicken.ant?raw";
+import bigYAxisModel from "@/assets/models/bigyaxis.ant?raw";
+import bigModel from "@/assets/models/big.ant?raw";
 
 const models: Record<string, string> = {
   default: defaultModel,
   chicken: chickenModel,
   bigYAxis: bigYAxisModel,
+  big: bigModel,
 };
 
 export const AntimonyEditorPanel = () => {
@@ -40,6 +42,7 @@ export const AntimonyEditorPanel = () => {
         <option value="default">Default</option>
         <option value="chicken">Chicken</option>
         <option value="bigYAxis">Big Y-Axis</option>
+        <option value="big">Big</option>
       </select>
       <textarea
         name="anitmony-test"
