@@ -14,7 +14,7 @@ export interface VariableListProps {
 const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter((variable) =>
-    variable.name.toLowerCase().includes(searchTerm.toLowerCase()),
+    variable.name.toLowerCase().includes(searchTerm.toLowerCase()) || variable.category.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
