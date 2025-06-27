@@ -1,7 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
 
 import { createContext, useContext, useReducer, type Dispatch } from "react";
-import styles from "./toast.module.css";
+import styles from "./Toast.module.css";
 import { Toast as RadixToast } from "radix-ui";
 
 import CloseIcon from "@/assets/icons/CloseIcon.svg?react";
