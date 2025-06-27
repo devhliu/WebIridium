@@ -52,7 +52,7 @@
   cursor: pointer;
 
   &[data-highlighted] {
-    color: var(--color-primary-foreground);
+    color: var(--color-primary-accent-foreground);
     background-color: var(--color-primary-accent);
   }
 }

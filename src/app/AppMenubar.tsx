@@ -6,11 +6,14 @@ import {
   MenubarItem,
   MenubarRadioItem,
   MenubarRadioGroup,
+  MenubarSeparator,
 } from "@/components/Menubar";
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
 import { useEditorContent } from "@/features/editorContent";
 import { promptDownloadFile } from "@/features/promptDownloadFile";
+
+import { getTheme, setTheme } from "@/features/theme";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab;
@@ -82,6 +85,11 @@ const AppMenubar = ({
             </MenubarRadioItem>
           ))}
         </MenubarRadioGroup>
+        <MenubarSeparator />
+        <MenubarItem name="toggle theme (TEMPORARY)" onSelect={() => {
+          if (getTheme() === "dark") setTheme("light");
+          else setTheme("dark");
+        }} />
       </MenubarMenu>
     </MenubarRoot>
   );

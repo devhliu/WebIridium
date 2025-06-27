@@ -59,3 +59,8 @@
   align-items: center;
   justify-content: center;
 }
+
+.separator {
+  height: 1px;
+  background-color: var(--color-tertiary-border);
+}
