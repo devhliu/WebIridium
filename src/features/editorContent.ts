@@ -50,6 +50,10 @@ export const useEditorContent = () => {
     parameterScanOptionsAtom,
   );
 
+  if (!editorContent) {
+    throw new Error("where is the editor content?");
+  }
+
   // TODO: abort every model info update when this is called from any component
   // TODO: Do not allow simulations while model info is being retrieved? This will prevent an out-of-sync model from being simulated.
   const abortControllerRef = useRef<AbortController | null>(null);
@@ -107,7 +111,7 @@ export const useEditorContent = () => {
       }
 
       setVariables((old) => patchVariables(old, newVariables));
-      editorContent?.setValue(content);
+      editorContent.setValue(content);
     },
     [
       independentVariable,

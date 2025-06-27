@@ -20,12 +20,12 @@ export const AntimonyEditorPanel = () => {
 
   useEffect(() => {
     const handleContentChange = () => {
-      setText(editorContent!.value);
+      setText(editorContent.value);
     };
 
-    editorContent?.addEventListener("change", handleContentChange);
+    editorContent.addEventListener("change", handleContentChange);
     return () => {
-      editorContent?.removeEventListener("change", handleContentChange);
+      editorContent.removeEventListener("change", handleContentChange);
     };
   }, [editorContent]);
 

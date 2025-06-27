@@ -10,6 +10,7 @@ import {
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
 import { useEditorContent } from "@/features/editorContent";
+import { promptDownloadFile } from "@/features/promptDownloadFile";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab;
@@ -24,7 +25,11 @@ const AppMenubar = ({
 }: AppMenubarProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { setEditorContent } = useEditorContent();
+  const { editorContent, setEditorContent } = useEditorContent();
+
+  const handleDownload = () => {
+    promptDownloadFile("test.ant", editorContent.value, "ant");
+  };
 
   const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
@@ -63,7 +68,7 @@ const AppMenubar = ({
             fileInputRef.current?.click();
           }}
         />
-        <MenubarItem name="Save..." onSelect={() => null} />
+        <MenubarItem name="Download" onSelect={handleDownload} />
       </MenubarMenu>
 
       <MenubarMenu name="View">
