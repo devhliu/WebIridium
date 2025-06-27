@@ -1,5 +1,9 @@
+// eslint-disable-next-line
+import "allotment/dist/style.css";
+
 import { useState } from "react";
 import { useAtomValue } from "jotai";
+import { Allotment } from "allotment";
 
 import styles from "./App.module.css";
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
@@ -8,7 +12,6 @@ import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 import { simulationResultAtom } from "@/stores/workspace";
 
-import PanelLayout from "@/components/PanelLayout";
 import { WorkspaceProvider } from "@/features/workspace";
 import Sidebar, { type SidebarTab } from "./Sidebar";
 import AppMenubar from "./AppMenubar";
@@ -66,15 +69,21 @@ const App = () => {
               onTabChange={setTab}
             />
 
-            <PanelLayout>
-              <TimeCoursePanel visible={tab === "TimeCourse"} />
-              <ParameterScanPanel visible={tab === "ParameterScan"} />
-              <SteadyStatePanel visible={tab === "SteadyState"} />
+            <div className={styles.allotmentContainer}>
+              <Allotment>
+                <Allotment.Pane minSize={350} preferredSize={350}>
+                  <TimeCoursePanel visible={tab === "TimeCourse"} />
+                  <ParameterScanPanel visible={tab === "ParameterScan"} />
+                  <SteadyStatePanel visible={tab === "SteadyState"} />
+                </Allotment.Pane>
 
-              <AntimonyEditorPanel />
+                <AntimonyEditorPanel />
 
-              <ResultTabbedPanel />
-            </PanelLayout>
+                <Allotment.Pane preferredSize={500}>
+                  <ResultTabbedPanel />
+                </Allotment.Pane>
+              </Allotment>
+            </div>
           </div>
         </div>
       </WorkspaceProvider>

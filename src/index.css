@@ -20,7 +20,7 @@
   );
   --color-primary-foreground: #f2f5f7;
   --color-primary-foreground-dim: #f2f5f7af;
-  --color-primary-border: #212226;
+  --color-primary-border: #2c2d33; /* #212226; */
   --border-primary-solid: 2px solid var(--color-primary-border);
 
   --color-secondary-background: #252729;

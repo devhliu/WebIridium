@@ -16,3 +16,14 @@
   flex-grow: 1;
   overflow-y: hidden;
 }
+
+/* Pane stuff */
+
+.allotment-container {
+  background-color: var(--color-primary-background);
+}
+
+:root {
+  --focus-border: var(--color-primary-accent);
+  --separator-border: var(--color-primary-border);
+}

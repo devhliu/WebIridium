@@ -33,8 +33,6 @@ export type Variable = {
 
 /* RESULT STUFF */
 
-export type TimeCourseResultColumn = {};
-
 export type TimeCourseResult = {
   type: "timeCourse";
   recordedSteps: number;

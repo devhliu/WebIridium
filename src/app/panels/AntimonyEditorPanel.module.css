@@ -1,3 +1,5 @@
 .antimony-editor-panel {
+  height: 100%;
+  width: 100%;
   padding: var(--spacing-panel);
 }
