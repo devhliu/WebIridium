@@ -5,7 +5,11 @@ import { useAtom, useAtomValue } from "jotai";
 
 import styles from "./simulation.module.css";
 import { useSimulate } from "@/features/simulation/useSimulate";
-import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
+import {
+  parameterScanOptionsAtom,
+  scanPaletteAtom,
+  variablesAtom,
+} from "@/stores/workspace";
 
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
@@ -19,6 +23,7 @@ import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import { groupVariablesForSelectComponent } from "@/features/category";
+import { SCAN_PALETTES, type ScanPalette } from "@/features/colors";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -30,6 +35,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
+  const [scanPalette, setScanPalette] = useAtom(scanPaletteAtom);
   const { isSimulating, runParameterScan } = useSimulate();
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
@@ -84,7 +90,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           Run
         </Button>
 
-        <PropertyAccordion defaultValue={["first-parameter"]}>
+        <PropertyAccordion defaultValue={["first-parameter", "output"]}>
           <PropertyAccordionItem
             title="First Parameter"
             value="first-parameter"
@@ -121,6 +127,20 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                 name="Use logarithmic distribution"
                 value={parameterScanOptions.useLogarithmicDistribution}
                 onChange={handleChangeFor("useLogarithmicDistribution")}
+              />
+            </PropertyList>
+          </PropertyAccordionItem>
+          <PropertyAccordionItem title="Output" value="output">
+            <PropertyList>
+              <SelectProperty
+                name="Palette"
+                value={scanPalette}
+                options={Object.fromEntries(
+                  Object.keys(SCAN_PALETTES)
+                    .concat(["Default"])
+                    .map((name) => [name, name]),
+                )}
+                onChange={(sp) => setScanPalette(sp as ScanPalette)}
               />
             </PropertyList>
           </PropertyAccordionItem>

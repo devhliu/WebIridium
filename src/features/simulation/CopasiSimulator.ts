@@ -9,7 +9,7 @@ import {
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
-import { generateDefaultPalette } from "../seriesColors";
+import { generateDefaultPalette } from "../colors";
 
 export class CopasiSimulator extends Simulator {
   defaultIndependentVariableName = "Time";
@@ -97,7 +97,7 @@ export class CopasiSimulator extends Simulator {
       category: "Time",
 
       visible: false,
-      ...colorGenerator.next().value!,
+      color: colorGenerator.next().value!,
     });
 
     for (const specie of modelInfo.species) {
@@ -108,7 +108,7 @@ export class CopasiSimulator extends Simulator {
         category: "Species",
 
         visible: true,
-        ...colorGenerator.next().value!,
+        color: colorGenerator.next().value!,
       });
     }
 
@@ -122,7 +122,7 @@ export class CopasiSimulator extends Simulator {
         category: "Rate of Changes",
 
         visible: false,
-        ...colorGenerator.next().value!,
+        color: colorGenerator.next().value!,
       });
     }
 
@@ -134,7 +134,7 @@ export class CopasiSimulator extends Simulator {
         category: "Parameter",
 
         visible: false,
-        ...colorGenerator.next().value!,
+        color: colorGenerator.next().value!,
       });
     }
 

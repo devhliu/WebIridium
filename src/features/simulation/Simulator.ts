@@ -27,12 +27,7 @@ export type Variable = {
 
   // User settings
   visible: boolean;
-
-  /** Main color used for everything */
   color: string;
-
-  /** Secondary color gets interpolated to in parameter scan */
-  secondaryColor: string;
 };
 
 /* RESULT STUFF */

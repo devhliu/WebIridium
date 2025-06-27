@@ -7,11 +7,15 @@ import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   graphSettingsAtom,
   independentVariableAtom,
+  scanPaletteAtom,
   variablesAtom,
 } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
-import { getParameterScanColor } from "@/features/seriesColors";
+import {
+  getDefaultParameterScanColor,
+  getScanPaletteColor,
+} from "@/features/colors";
 
 export interface ResultsPlotProps {
   result: SimulationResult;
@@ -23,9 +27,6 @@ export interface ResultsPlotProps {
   containerPercentHeight?: number;
 }
 
-const DEFAULT_COLOR = "red";
-const DEFAULT_SECONDARY_COLOR = "#000";
-
 const ResultsPlot = ({
   result,
   containerRef,
@@ -33,6 +34,7 @@ const ResultsPlot = ({
   containerPercentHeight = 1,
 }: ResultsPlotProps) => {
   const variables = useAtomValue(variablesAtom);
+  const scanPalette = useAtomValue(scanPaletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const independentVariable = useAtomValue(independentVariableAtom);
   const {
@@ -126,16 +128,11 @@ const ResultsPlot = ({
         if (!variable?.visible) continue;
 
         let finalColor: string;
-        if (variable) {
-          finalColor = getParameterScanColor(
-            variable.color,
-            variable.secondaryColor,
-            scan.scanPercent,
-          );
+        if (scanPalette !== "Default") {
+          finalColor = "red"; // it will get set later
         } else {
-          finalColor = getParameterScanTitle(
-            DEFAULT_COLOR,
-            DEFAULT_SECONDARY_COLOR,
+          finalColor = getDefaultParameterScanColor(
+            variable.color,
             scan.scanPercent,
           );
         }
@@ -153,6 +150,15 @@ const ResultsPlot = ({
             scan.parameterValue,
           ),
         });
+      }
+    }
+
+    if (scanPalette !== "Default") {
+      for (const [i, data] of plotData.entries()) {
+        data.marker.color = getScanPaletteColor(
+          scanPalette,
+          i / (plotData.length - 1),
+        );
       }
     }
   }

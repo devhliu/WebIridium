@@ -11,6 +11,7 @@ import type {
   TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
+import { type ScanPalette } from "@/features/colors";
 
 export interface ParameterScanOptions {
   varyingParameter: string | null | undefined;
@@ -50,6 +51,8 @@ export const simulationResultAtom = atom<SimulationResult | null>(null);
 
 export const independentVariableAtom = atom<string | null>(null);
 export const variablesAtom = atom<Variable[]>([]);
+
+export const scanPaletteAtom = atom<ScanPalette>("Default");
 
 export const timeCourseParametersAtom = atom<
   Omit<TimeCourseParameters, "includeVariables">
@@ -100,6 +103,8 @@ export const allWorkspaceAtoms = [
 
   independentVariableAtom,
   variablesAtom,
+
+  scanPaletteAtom,
 
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
