@@ -56,25 +56,26 @@ const ResultTabbedPanel = () => {
 };
 
 const App = () => {
-  const [tab, setTab] = useState<SidebarTab>("TimeCourse");
+  const tabs: SidebarTab[] = ["Time Course", "Steady State", "Parameter Scan"];
+  const [tab, setTab] = useState<SidebarTab>("Time Course");
   return (
     <ToastProvider>
       <WorkspaceProvider>
         <div className={styles.app}>
-          <AppMenubar />
+          <AppMenubar
+            sidebarTab={tab}
+            sidebarTabs={tabs}
+            onSidebarTabChange={setTab}
+          />
           <div className={styles.appMain}>
-            <Sidebar
-              tabs={["TimeCourse", "SteadyState", "ParameterScan"]}
-              currentTab={tab}
-              onTabChange={setTab}
-            />
+            <Sidebar tabs={tabs} currentTab={tab} onTabChange={setTab} />
 
             <div className={styles.allotmentContainer}>
               <Allotment>
                 <Allotment.Pane minSize={350} preferredSize={350}>
-                  <TimeCoursePanel visible={tab === "TimeCourse"} />
-                  <ParameterScanPanel visible={tab === "ParameterScan"} />
-                  <SteadyStatePanel visible={tab === "SteadyState"} />
+                  <TimeCoursePanel visible={tab === "Time Course"} />
+                  <ParameterScanPanel visible={tab === "Parameter Scan"} />
+                  <SteadyStatePanel visible={tab === "Steady State"} />
                 </Allotment.Pane>
 
                 <AntimonyEditorPanel />

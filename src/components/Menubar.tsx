@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Menubar as RadixMenubar } from "radix-ui";
+import DotFilledIcon from "@/assets/icons/DotFilledIcon.svg?react";
 import styles from "./Menubar.module.css";
 
 export const MenubarRoot = ({
@@ -54,4 +55,45 @@ export const MenubarItem = ({
       {name}
     </RadixMenubar.Item>
   );
+};
+
+export const MenubarRadioGroup = ({
+  value,
+  onValueChange,
+  children,
+}: {
+  value: string;
+  onValueChange: (newValue: string) => void;
+  children: React.ReactNode;
+}) => {
+  return (
+    <RadixMenubar.RadioGroup
+      className={styles.radioGroup}
+      value={value}
+      onValueChange={onValueChange}
+    >
+      {children}
+    </RadixMenubar.RadioGroup>
+  );
+};
+
+export const MenubarRadioItem = ({
+  value,
+  children,
+}: {
+  value: string;
+  children: React.ReactNode;
+}) => {
+  return (
+    <RadixMenubar.RadioItem className={styles.item} value={value}>
+      <RadixMenubar.ItemIndicator className={styles.itemIndicator}>
+        <DotFilledIcon />
+      </RadixMenubar.ItemIndicator>
+      {children}
+    </RadixMenubar.RadioItem>
+  );
+};
+
+export const MenubarSeparator = () => {
+  return <RadixMenubar.Separator className={styles.separator} />;
 };

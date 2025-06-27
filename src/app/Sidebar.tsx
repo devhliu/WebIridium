@@ -4,12 +4,12 @@ import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
-export type SidebarTab = "TimeCourse" | "ParameterScan" | "SteadyState";
+export type SidebarTab = "Time Course" | "Parameter Scan" | "Steady State";
 
 const sidebarTabIcons: Record<SidebarTab, React.ComponentType> = {
-  TimeCourse: TimeCourseIcon,
-  ParameterScan: ParameterScanIcon,
-  SteadyState: SteadyStateIcon,
+  "Time Course": TimeCourseIcon,
+  "Parameter Scan": ParameterScanIcon,
+  "Steady State": SteadyStateIcon,
 } as const;
 
 interface SidebarItemProps {

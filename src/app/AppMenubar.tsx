@@ -1,9 +1,24 @@
 import styles from "./AppMenubar.module.css";
-import { MenubarRoot, MenubarMenu, MenubarItem } from "@/components/Menubar";
+import {
+  MenubarRoot,
+  MenubarMenu,
+  MenubarItem,
+  MenubarRadioItem,
+  MenubarRadioGroup,
+} from "@/components/Menubar";
+import type { SidebarTab } from "./Sidebar";
 
-export interface AppMenubarProps {}
+export interface AppMenubarProps {
+  sidebarTab: SidebarTab;
+  sidebarTabs: SidebarTab[];
+  onSidebarTabChange: (newValue: SidebarTab) => void;
+}
 
-const AppMenubar = ({}: AppMenubarProps) => {
+const AppMenubar = ({
+  sidebarTab,
+  sidebarTabs,
+  onSidebarTabChange,
+}: AppMenubarProps) => {
   return (
     <MenubarRoot className={styles.root}>
       <MenubarMenu name="File">
@@ -13,9 +28,16 @@ const AppMenubar = ({}: AppMenubarProps) => {
       </MenubarMenu>
 
       <MenubarMenu name="View">
-        <MenubarItem name="Time Course Simulation" onSelect={() => null} />
-        <MenubarItem name="Steady State" onSelect={() => null} />
-        <MenubarItem name="Parameter Scan" onSelect={() => null} />
+        <MenubarRadioGroup
+          value={sidebarTab}
+          onValueChange={onSidebarTabChange as (newValue: string) => void}
+        >
+          {sidebarTabs.map((tab) => (
+            <MenubarRadioItem key={tab} value={tab}>
+              {tab}
+            </MenubarRadioItem>
+          ))}
+        </MenubarRadioGroup>
       </MenubarMenu>
     </MenubarRoot>
   );
