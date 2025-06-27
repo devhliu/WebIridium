@@ -27,9 +27,17 @@ export type Variable = {
 
   // User settings
   visible: boolean;
+
+  /** Main color used for everything */
+  color: string;
+
+  /** Secondary color gets interpolated to in parameter scan */
+  secondaryColor: string;
 };
 
 /* RESULT STUFF */
+
+export type TimeCourseResultColumn = {};
 
 export type TimeCourseResult = {
   type: "timeCourse";
@@ -63,24 +71,31 @@ export type SteadyStateResult = {
   elasticities: SteadyStateResultItem;
 };
 
+export type ParameterScanExtras = {
+  /** The value of the parameter that was used for the scan. */
+  parameterValue: number;
+  /**
+   * Number from [0-1] representing what percentage the all the scans was completed when this scan was ran.
+   * So, for the scan range [0, 100], if the parameterValue is 50 and its linear,
+   * the scanPercent will be 0.5.
+   */
+  scanPercent: number;
+};
+
 export type ParameterScanResult =
   | {
       type: "parameterScan";
       method: "timeCourse";
       parameter: string;
       // parameter value -> result
-      scans: (TimeCourseResult & {
-        parameterValue: number;
-      })[];
+      scans: (TimeCourseResult & ParameterScanExtras)[];
     }
   | {
       type: "parameterScan";
       method: "steadyState";
       parameter: string;
       // parameter value -> result
-      scans: (SteadyStateResult & {
-        parameterValue: number;
-      })[];
+      scans: (SteadyStateResult & ParameterScanExtras)[];
     };
 
 export type SimulationResult =

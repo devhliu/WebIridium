@@ -155,6 +155,7 @@ export const useSimulate = () => {
       for (const [i, result] of results.entries()) {
         scans.push({
           parameterValue: scanValues[i],
+          scanPercent: i / (scanValues.length - 1),
           ...result,
         });
       }

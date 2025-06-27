@@ -9,6 +9,7 @@ import {
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
+import { generateDefaultPalette } from "../seriesColors";
 
 export class CopasiSimulator extends Simulator {
   defaultIndependentVariableName = "Time";
@@ -87,6 +88,7 @@ export class CopasiSimulator extends Simulator {
       abortSignal,
     )) as ModelInfo;
 
+    const colorGenerator = generateDefaultPalette();
     const variables: Variable[] = [];
 
     variables.push({
@@ -95,7 +97,34 @@ export class CopasiSimulator extends Simulator {
       category: "Time",
 
       visible: false,
+      ...colorGenerator.next().value!,
     });
+
+    for (const specie of modelInfo.species) {
+      variables.push({
+        displayName: specie.name,
+        name: specie.name,
+        scanName: `[${specie.name}]_0`,
+        category: "Species",
+
+        visible: true,
+        ...colorGenerator.next().value!,
+      });
+    }
+
+    // this is done in a separate loop so the displayed species get all the good default colors
+    for (const specie of modelInfo.species) {
+      // TODO!IMPORTANT: only do this for floating species, not boundary species?
+      //                 how to determine if a species is a boundary species?
+      variables.push({
+        displayName: `${specie.name}'`,
+        name: `${specie.name}.Rate`,
+        category: "Rate of Changes",
+
+        visible: false,
+        ...colorGenerator.next().value!,
+      });
+    }
 
     for (const param of modelInfo.global_parameters) {
       variables.push({
@@ -105,28 +134,10 @@ export class CopasiSimulator extends Simulator {
         category: "Parameter",
 
         visible: false,
+        ...colorGenerator.next().value!,
       });
     }
-    for (const specie of modelInfo.species) {
-      variables.push({
-        displayName: specie.name,
-        name: specie.name,
-        scanName: `[${specie.name}]_0`,
-        category: "Species",
 
-        visible: true,
-      });
-
-      // TODO!IMPORTANT: only do this for floating species, not boundary species?
-      //                 how to determine if a species is a boundary species?
-      variables.push({
-        displayName: `${specie.name}'`,
-        name: `${specie.name}.Rate`,
-        category: "Rate of Changes",
-
-        visible: false,
-      });
-    }
     return variables;
   }
 }

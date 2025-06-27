@@ -95,7 +95,12 @@ export const useEditorContent = () => {
       ) {
         setParameterScanOptions({
           ...parameterScanOptions,
-          varyingParameter: newVariables.find((v) => v.scanName)?.scanName,
+          varyingParameter:
+            // first try to use the first parameter
+            newVariables.find((v) => v.category === "Parameter" && v.scanName)
+              ?.scanName ??
+            // if no parameteres found, use the first available
+            newVariables.find((v) => v.scanName)?.scanName,
         });
       }
 

@@ -18,6 +18,7 @@ import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
+import { groupVariablesForSelectComponent } from "@/features/category";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -94,18 +95,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                   name="Parameter"
                   value={parameterScanOptions.varyingParameter}
                   onChange={handleChangeFor("varyingParameter")}
-                  groups={Object.fromEntries(
-                    Object.entries(
-                      Object.groupBy(
-                        variables.filter((v) => v.scanName),
-                        (v) => v.category,
-                      ),
-                    ).map(([category, values]) => [
-                      category,
-                      Object.fromEntries(
-                        values?.map((v) => [v.displayName, v.scanName!]) ?? [],
-                      ),
-                    ]),
+                  groups={groupVariablesForSelectComponent(
+                    variables.filter((v) => v.scanName),
+                    (v) => v.scanName!,
                   )}
                 />
               )}

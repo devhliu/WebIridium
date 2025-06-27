@@ -4,22 +4,14 @@ import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import { graphSettingsAtom, independentVariableAtom } from "@/stores/workspace";
+import {
+  graphSettingsAtom,
+  independentVariableAtom,
+  variablesAtom,
+} from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
-
-const palette = [
-  "#1f77b4",
-  "#ff7f0e",
-  "#2ca02c",
-  "#d62728",
-  "#9467bd",
-  "#8c564b",
-  "#e377c2",
-  "#7f7f7f",
-  "#bcbd22",
-  "#17becf",
-];
+import { getParameterScanColor } from "@/features/seriesColors";
 
 export interface ResultsPlotProps {
   result: SimulationResult;
@@ -31,12 +23,16 @@ export interface ResultsPlotProps {
   containerPercentHeight?: number;
 }
 
+const DEFAULT_COLOR = "red";
+const DEFAULT_SECONDARY_COLOR = "#000";
+
 const ResultsPlot = ({
   result,
   containerRef,
   containerPercentWidth = 1,
   containerPercentHeight = 1,
 }: ResultsPlotProps) => {
+  const variables = useAtomValue(variablesAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const independentVariable = useAtomValue(independentVariableAtom);
   const {
@@ -104,13 +100,15 @@ const ResultsPlot = ({
       result.columns.find((c) => c.title === independentVariable) ?? [];
     for (const { title, values } of result.columns) {
       if (title === independentVariable) continue;
+      const variable = variables.find((v) => v.name === title);
       plotData.push({
         x: independentVariableColumn.values,
         y: values,
         type: "scatter",
         mode: "lines",
-        marker: { color: "red" },
-        name: title,
+        marker: { color: variable?.color ?? DEFAULT_COLOR },
+        line: { width: 2 },
+        name: variable?.displayName ?? title,
       });
     }
   } else if (
@@ -122,14 +120,31 @@ const ResultsPlot = ({
         scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
       for (const { title, values } of scan.columns) {
         if (title === scanIndependentVariable) continue;
+        const variable = variables.find((v) => v.name === title);
+        let finalColor: string;
+        if (variable) {
+          finalColor = getParameterScanColor(
+            variable.color,
+            variable.secondaryColor,
+            scan.scanPercent,
+          );
+        } else {
+          finalColor = getParameterScanTitle(
+            DEFAULT_COLOR,
+            DEFAULT_SECONDARY_COLOR,
+            scan.scanPercent,
+          );
+        }
+
         plotData.push({
           x: independentVariableColumn.values,
           y: values,
           type: "scatter",
           mode: "lines",
-          marker: { color: "red" },
+          marker: { color: finalColor },
+          line: { width: 2 },
           name: getParameterScanTitle(
-            title,
+            variable?.displayName ?? title,
             result.parameter,
             scan.parameterValue,
           ),
