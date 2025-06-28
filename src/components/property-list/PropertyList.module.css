@@ -29,6 +29,13 @@
   }
 }
 
+.heading {
+  color: var(--color-secondary-foreground-dim);
+  font-size: var(--font-size-small);
+  font-weight: bold;
+  margin: 0;
+}
+
 /* See the comment in BooleanProperty.tsx for more about this. */
 .aside-property {
   display: flex;
@@ -95,6 +102,7 @@
 }
 
 .checkbox-indicator {
+  color: var(--color-primary-accent-foreground);
   pointer-events: none;
   display: flex;
   padding: 0;
@@ -152,7 +160,7 @@
 
 .color-popup {
   background-color: var(--color-tertiary-background);
-  border: var(--color-tertiary-solid-border);
+  border: var(--border-tertiary-solid);
   padding: var(--spacing-4);
   margin: var(--spacing-3);
   border-radius: var(--border-radius);

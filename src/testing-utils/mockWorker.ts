@@ -1,9 +1,5 @@
-// this is used to configure how often workers fail
-// - normal: fail like they would when running in the site
-
 import type { Action, ErrorResult, Result } from "@/features/workerPool";
 
-// - always: always fail
 export type WorkerFailMode = "normal" | "always";
 
 let minDelay = 0;

@@ -97,6 +97,7 @@
 .item-settings {
   display: flex;
   flex-direction: column;
+  padding: var(--spacing-2);
 }
 
 .search-container {

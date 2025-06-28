@@ -1,20 +1,22 @@
 import { useAtom } from "jotai";
-import { graphSettingsAtom } from "@/stores/workspace";
 import styles from "./results.module.css";
-import PropertyList from "@/components/property-list/PropertyList";
+import { graphSettingsAtom, paletteAtom } from "@/stores/workspace";
+import { PALETTES, type Palette } from "@/features/colors";
+
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
-import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
-import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import StringProperty from "@/components/property-list/StringProperty";
 import ColorProperty from "@/components/property-list/ColorProperty";
+import SelectProperty from "@/components/property-list/SelectProperty";
 
-// NOTE: Might be a good idea to have more atomic state updates.
-//       Right now every single component is updated when one property is updated.
-//       Not an issue at the moment...
+import PropertyList from "@/components/property-list/PropertyList";
+import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
+import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
+
 const SettingsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
+  const [scanPalette, setScanPalette] = useAtom(paletteAtom);
 
   const changeHandlerFor = (
     setting: keyof typeof graphSettings,
@@ -123,6 +125,21 @@ const SettingsPanel = () => {
                 step={0.5}
               />
             )}
+          </PropertyList>
+        </PropertyAccordionItem>
+
+        <PropertyAccordionItem title="Series" value="series">
+          <PropertyList alignment="left">
+            <SelectProperty
+              name="Palette"
+              value={scanPalette}
+              options={Object.fromEntries(
+                ["Custom"]
+                  .concat(Object.keys(PALETTES))
+                  .map((name) => [name, name]),
+              )}
+              onChange={(sp) => setScanPalette(sp as Palette)}
+            />
           </PropertyList>
         </PropertyAccordionItem>
       </PropertyAccordion>

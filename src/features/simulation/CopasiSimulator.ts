@@ -9,7 +9,7 @@ import {
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
-import { generateDefaultPalette } from "../colors";
+import { generateDefaultCustomPalette } from "../colors";
 
 export class CopasiSimulator extends Simulator {
   defaultIndependentVariableName = "Time";
@@ -88,7 +88,7 @@ export class CopasiSimulator extends Simulator {
       abortSignal,
     )) as ModelInfo;
 
-    const colorGenerator = generateDefaultPalette();
+    const colorGenerator = generateDefaultCustomPalette();
     const variables: Variable[] = [];
 
     variables.push({

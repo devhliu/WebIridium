@@ -7,14 +7,14 @@ import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   graphSettingsAtom,
   independentVariableAtom,
-  scanPaletteAtom,
+  paletteAtom,
   variablesAtom,
 } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import {
   getDefaultParameterScanColor,
-  getScanPaletteColor,
+  getPaletteColor,
 } from "@/features/colors";
 
 export interface ResultsPlotProps {
@@ -34,7 +34,7 @@ const ResultsPlot = ({
   containerPercentHeight = 1,
 }: ResultsPlotProps) => {
   const variables = useAtomValue(variablesAtom);
-  const scanPalette = useAtomValue(scanPaletteAtom);
+  const scanPalette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const independentVariable = useAtomValue(independentVariableAtom);
   const {
@@ -128,7 +128,7 @@ const ResultsPlot = ({
         if (!variable?.visible) continue;
 
         let finalColor: string;
-        if (scanPalette !== "Default") {
+        if (scanPalette !== "Custom") {
           finalColor = "red"; // it will get set later
         } else {
           finalColor = getDefaultParameterScanColor(
@@ -152,14 +152,14 @@ const ResultsPlot = ({
         });
       }
     }
+  }
 
-    if (scanPalette !== "Default") {
-      for (const [i, data] of plotData.entries()) {
-        data.marker.color = getScanPaletteColor(
-          scanPalette,
-          i / (plotData.length - 1),
-        );
-      }
+  if (scanPalette !== "Custom") {
+    for (const [i, data] of plotData.entries()) {
+      data.marker.color = getPaletteColor(
+        scanPalette,
+        i / (plotData.length - 1),
+      );
     }
   }
 

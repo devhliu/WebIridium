@@ -13,8 +13,10 @@ export interface VariableListProps {
 // TODO: preserve state when closing/opening in accordion
 const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const filteredVariables = variables.filter((variable) =>
-    variable.name.toLowerCase().includes(searchTerm.toLowerCase()) || variable.category.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredVariables = variables.filter(
+    (variable) =>
+      variable.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      variable.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   return (

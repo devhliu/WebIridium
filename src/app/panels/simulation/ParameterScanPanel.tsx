@@ -5,11 +5,7 @@ import { useAtom, useAtomValue } from "jotai";
 
 import styles from "./simulation.module.css";
 import { useSimulate } from "@/features/simulation/useSimulate";
-import {
-  parameterScanOptionsAtom,
-  scanPaletteAtom,
-  variablesAtom,
-} from "@/stores/workspace";
+import { parameterScanOptionsAtom, variablesAtom } from "@/stores/workspace";
 
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
@@ -24,7 +20,6 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import UncontrolledVariableList from "./UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
-import { SCAN_PALETTES, type ScanPalette } from "@/features/colors";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -36,7 +31,6 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
-  const [scanPalette, setScanPalette] = useAtom(scanPaletteAtom);
   const { isSimulating, runParameterScan } = useSimulate();
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
@@ -133,22 +127,6 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
               />
             </PropertyList>
           </PropertyAccordionItem>
-
-          <PropertyAccordionItem title="Output" value="output">
-            <PropertyList alignment="left">
-              <SelectProperty
-                name="Palette"
-                value={scanPalette}
-                options={Object.fromEntries(
-                  Object.keys(SCAN_PALETTES)
-                    .concat(["Default"])
-                    .map((name) => [name, name]),
-                )}
-                onChange={(sp) => setScanPalette(sp as ScanPalette)}
-              />
-            </PropertyList>
-          </PropertyAccordionItem>
-
           <PropertyAccordionItem title="Variables" value="variables">
             <UncontrolledVariableList />
           </PropertyAccordionItem>

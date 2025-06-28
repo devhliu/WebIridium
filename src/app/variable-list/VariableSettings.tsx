@@ -1,8 +1,13 @@
+import { useAtomValue } from "jotai";
+
+import { paletteAtom } from "@/stores/workspace";
+
 import PropertyList from "@/components/property-list/PropertyList";
 import type { Variable } from "@/features/simulation/Simulator";
 
 import ColorProperty from "@/components/property-list/ColorProperty";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
+import PropertyHeading from "@/components/property-list/PropertyHeading";
 
 export interface VariableSettingsProps {
   variable: Variable;
@@ -13,6 +18,7 @@ const VariableSettings = ({
   variable,
   onVariableChange,
 }: VariableSettingsProps) => {
+  const palette = useAtomValue(paletteAtom);
   const handleChangeFor = (setting: keyof Variable) => {
     return (newValue: unknown) => {
       onVariableChange({
@@ -24,11 +30,14 @@ const VariableSettings = ({
 
   return (
     <PropertyList alignment="leftSmall">
-      <ColorProperty
-        name="Color"
-        value={variable.color}
-        onChange={handleChangeFor("color")}
-      />
+      <PropertyHeading>Plot Settings</PropertyHeading>
+      {palette === "Custom" && (
+        <ColorProperty
+          name="Color"
+          value={variable.color}
+          onChange={handleChangeFor("color")}
+        />
+      )}
       <NumericSliderProperty
         name="Width"
         value={variable.width}
