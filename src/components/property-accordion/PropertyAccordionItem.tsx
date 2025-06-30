@@ -3,14 +3,13 @@ import styles from "./PropertyAccordion.module.css";
 import ChevronDownIcon from "@/assets/icons//ChevronDownIcon.svg?react";
 
 export interface AccordionItemProps {
-  title: React.ReactNode;
-  value: string;
+  title: string;
   children?: React.ReactNode;
 }
 
-const AccordionItem = ({ title, value, children }: AccordionItemProps) => {
+const AccordionItem = ({ title, children }: AccordionItemProps) => {
   return (
-    <RadixAccordion.Item value={value}>
+    <RadixAccordion.Item value={title}>
       <RadixAccordion.Trigger className={styles.itemTrigger}>
         <ChevronDownIcon />
         {title}

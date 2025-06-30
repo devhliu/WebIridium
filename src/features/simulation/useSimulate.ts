@@ -2,6 +2,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import type {
   ParameterScanResult,
   SimulationResult,
+  TimeCourseParameters,
 } from "@/features/simulation/Simulator";
 
 import {
@@ -14,6 +15,12 @@ import {
   independentVariableAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
+
+/** Time course parameters that are editable by the user manually. */
+export type EditableTimeCourseParameters = Omit<
+  TimeCourseParameters,
+  "includeVariables"
+>;
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -112,7 +119,10 @@ export const useSimulate = () => {
     });
   };
 
-  const runParameterScan = async (abortSignal?: AbortSignal) => {
+  const runParameterScan = async (
+    simulationParameters: EditableTimeCourseParameters,
+    abortSignal?: AbortSignal,
+  ) => {
     return await runSimulation(async () => {
       const parameter = parameterScanOptions.varyingParameter;
       if (!parameter) {
@@ -133,7 +143,7 @@ export const useSimulate = () => {
         includeVariables: getIncludeVariableList(
           simulator.scanIndependentVariableName,
         ),
-        ...timeCourseParameters,
+        ...simulationParameters,
       };
 
       for (const value of scanValues) {

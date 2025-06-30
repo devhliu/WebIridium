@@ -7,11 +7,11 @@
 import { atom } from "jotai";
 import type {
   SimulationResult,
-  TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
 import { type Palette } from "@/features/colors";
 import { EditorContent } from "@/features/editorContent";
+import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 
 export interface ParameterScanOptions {
   varyingParameter: string | null | undefined;
@@ -57,9 +57,7 @@ export const variablesAtom = atom<Variable[]>([]);
 
 export const paletteAtom = atom<Palette>("Custom");
 
-export const timeCourseParametersAtom = atom<
-  Omit<TimeCourseParameters, "includeVariables">
->({
+export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
   startTime: 0,
   endTime: 20,
   numberOfPoints: 200,

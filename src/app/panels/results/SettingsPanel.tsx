@@ -28,8 +28,8 @@ const SettingsPanel = () => {
 
   return (
     <div className={styles.settingsContainer}>
-      <PropertyAccordion defaultValue={["bounds"]}>
-        <PropertyAccordionItem title="Bounds" value="bounds">
+      <PropertyAccordion defaultOpen={["Bounds"]}>
+        <PropertyAccordionItem title="Bounds">
           <PropertyList alignment="center">
             <BooleanProperty
               name="Autoscale X"
@@ -77,7 +77,7 @@ const SettingsPanel = () => {
           </PropertyList>
         </PropertyAccordionItem>
 
-        <PropertyAccordionItem title="Graph" value="graph">
+        <PropertyAccordionItem title="Graph">
           <PropertyList alignment="center">
             <ColorProperty
               name="Background Color"
@@ -128,7 +128,7 @@ const SettingsPanel = () => {
           </PropertyList>
         </PropertyAccordionItem>
 
-        <PropertyAccordionItem title="Series" value="series">
+        <PropertyAccordionItem title="Series">
           <PropertyList alignment="left">
             <SelectProperty
               name="Palette"

@@ -2,16 +2,16 @@ import { Accordion as RadixAccordion } from "radix-ui";
 import styles from "./PropertyAccordion.module.css";
 
 export interface AccordionProps {
-  defaultValue: string[];
+  defaultOpen: string[];
   children: React.ReactNode;
 }
 
-const Accordion = ({ defaultValue, children }: AccordionProps) => {
+const Accordion = ({ defaultOpen, children }: AccordionProps) => {
   return (
     <RadixAccordion.Root
       className={styles.accordion}
       type="multiple"
-      defaultValue={defaultValue}
+      defaultValue={defaultOpen}
     >
       {children}
     </RadixAccordion.Root>

@@ -6,13 +6,9 @@ import PropertyAccordionItem from "../property-accordion/PropertyAccordionItem";
 describe("Accordion", () => {
   it("should render its children", () => {
     render(
-      <PropertyAccordion defaultValue={["test", "test2"]}>
-        <PropertyAccordionItem title="hello" value="test">
-          test
-        </PropertyAccordionItem>
-        <PropertyAccordionItem title="hello2" value="test2">
-          test2
-        </PropertyAccordionItem>
+      <PropertyAccordion defaultOpen={["hello", "hello2"]}>
+        <PropertyAccordionItem title="hello">test</PropertyAccordionItem>
+        <PropertyAccordionItem title="hello2">test2</PropertyAccordionItem>
       </PropertyAccordion>,
     );
 

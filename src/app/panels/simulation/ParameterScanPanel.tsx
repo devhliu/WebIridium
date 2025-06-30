@@ -20,6 +20,8 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import UncontrolledVariableList from "./UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
+import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
+import TimeCoursePropertyList from "./TimeCoursePropertyList";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -35,6 +37,13 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
 
+  const [simulationParameters, setSimulationParameters] =
+    useState<EditableTimeCourseParameters>({
+      startTime: 0,
+      endTime: 10,
+      numberOfPoints: 100,
+    });
+
   const handleSimulateClick = async () => {
     if (abortSimulation) {
       abortSimulation.abort();
@@ -43,7 +52,10 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     const controller = new AbortController();
     setAbortSimulation(controller);
 
-    const result = await runParameterScan(controller.signal);
+    const result = await runParameterScan(
+      simulationParameters,
+      controller.signal,
+    );
     if (result.type === "failure") {
       toast({
         type: "error",
@@ -86,12 +98,20 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
         </Button>
 
         <PropertyAccordion
-          defaultValue={["first-parameter", "output", "variables"]}
+          defaultOpen={[
+            "Simulation Parameters",
+            "First Parameter",
+            "Variables",
+          ]}
         >
-          <PropertyAccordionItem
-            title="First Parameter"
-            value="first-parameter"
-          >
+          <PropertyAccordionItem title="Simulation Parameters">
+            <TimeCoursePropertyList
+              parameters={simulationParameters}
+              onParameterChange={setSimulationParameters}
+            />
+          </PropertyAccordionItem>
+
+          <PropertyAccordionItem title="First Parameter">
             <PropertyList alignment="left">
               {parameterScanOptions.varyingParameter && (
                 <SelectProperty
@@ -127,7 +147,8 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
               />
             </PropertyList>
           </PropertyAccordionItem>
-          <PropertyAccordionItem title="Variables" value="variables">
+
+          <PropertyAccordionItem title="Variables">
             <UncontrolledVariableList />
           </PropertyAccordionItem>
         </PropertyAccordion>

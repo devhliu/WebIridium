@@ -28,7 +28,6 @@ export const MissingDataForVariablesIndicator = () => {
   const missing = variables
     .filter((v) => v.visible)
     .filter((v) => !haveSet.has(v.name));
-  console.log(missing, haveSet);
   if (missing.length > 0) {
     return (
       <p style={{ color: "var(--color-primary-foreground)" }}>
