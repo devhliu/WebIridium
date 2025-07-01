@@ -1,4 +1,3 @@
-import { useState, type RefObject, useEffect } from "react";
 import { useAtomValue } from "jotai";
 import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
@@ -19,19 +18,14 @@ import {
 
 export interface ResultsPlotProps {
   result: SimulationResult;
-  /** Used to size the plot */
-  containerRef: RefObject<HTMLElement | null>;
-  /** Number from [0-1) representing how much width of the container it takes up. */
-  containerPercentWidth?: number;
-  /** Number from [0-1] representing how much height of the container it takes up. */
-  containerPercentHeight?: number;
+  width: number;
+  height: number;
 }
 
 const ResultsPlot = ({
   result,
-  containerRef,
-  containerPercentWidth = 1,
-  containerPercentHeight = 1,
+  width,
+  height,
 }: ResultsPlotProps) => {
   const variables = useAtomValue(variablesAtom);
   const scanPalette = useAtomValue(paletteAtom);
@@ -53,43 +47,6 @@ const ResultsPlot = ({
     maxY,
     margin,
   } = useAtomValue(graphSettingsAtom);
-
-  const [[width, height], setDimensions] = useState([1, 1]);
-
-  // when using useLayoutEffect, it breaks when rendered not at the start
-  useEffect(() => {
-    if (!containerRef.current) return;
-
-    const observer = new ResizeObserver((entries) => {
-      for (const entry of entries) {
-        // ResizeObserver API is really weird, for newer browsers, contentBoxSize is an array,
-        // for older ones (old Firefox) it is a single object.
-        const contentBoxSize = entry.contentBoxSize[0] ?? entry.contentBoxSize;
-        setDimensions((prev) => {
-          if (
-            contentBoxSize.inlineSize !== width ||
-            contentBoxSize.blockSize !== height
-          ) {
-            return [
-              contentBoxSize.inlineSize * containerPercentWidth,
-              contentBoxSize.blockSize * containerPercentHeight,
-            ];
-          }
-          return prev;
-        });
-      }
-    });
-
-    observer.observe(containerRef.current);
-
-    return () => observer.disconnect();
-  }, [
-    containerRef,
-    width,
-    height,
-    containerPercentWidth,
-    containerPercentHeight,
-  ]);
 
   const plotData = [];
 

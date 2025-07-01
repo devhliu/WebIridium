@@ -93,7 +93,6 @@ it("should not let you have number of points or end time too big", async () => {
   expect(numberPointsInput).toHaveValue(DEFAULT_PARAMETERS.numberOfPoints);
 });
 
-
 it("should not let you have non-integer number of points", async () => {
   render(<ListContainer />);
 
