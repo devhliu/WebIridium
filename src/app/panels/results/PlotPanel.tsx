@@ -59,9 +59,7 @@ export const PlotPanel = () => {
         </div>
 
         <Allotment.Pane preferredSize={250}>
-          <div className={styles.settingsContainer}>
-            <SettingsPanel />
-          </div>
+          <SettingsPanel />
         </Allotment.Pane>
       </Allotment>
     </div>

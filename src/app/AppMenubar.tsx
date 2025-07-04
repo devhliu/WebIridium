@@ -89,8 +89,9 @@ const AppMenubar = ({
         <MenubarItem
           name="toggle theme (TEMPORARY)"
           onSelect={() => {
-            if (getTheme() === "dark") setTheme("light");
-            else setTheme("dark");
+            if (getTheme() === "dark")
+              setTheme("light", { applyTransition: true });
+            else setTheme("dark", { applyTransition: true });
           }}
         />
       </MenubarMenu>

@@ -22,11 +22,7 @@ export interface ResultsPlotProps {
   height: number;
 }
 
-const ResultsPlot = ({
-  result,
-  width,
-  height,
-}: ResultsPlotProps) => {
+const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const variables = useAtomValue(variablesAtom);
   const scanPalette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
@@ -72,10 +68,7 @@ const ResultsPlot = ({
         name: variable?.displayName ?? title,
       });
     }
-  } else if (
-    result.type === "parameterScan" &&
-    result.method === "timeCourse"
-  ) {
+  } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
     for (const scan of result.scans) {
       const independentVariableColumn =
         scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
@@ -108,6 +101,33 @@ const ResultsPlot = ({
           ),
         });
       }
+    }
+  } else if (result.type === "parameterScan" && result.mode === "steadyState") {
+    const parameterValues = result.scans.map((s) => s.parameterValue);
+    const concentrationsMap = new Map<string, number[]>();
+    for (const scan of result.scans) {
+      for (const { name, value } of scan.concentrations) {
+        if (!concentrationsMap.has(name)) {
+          concentrationsMap.set(name, [value]);
+        } else {
+          concentrationsMap.get(name)!.push(value);
+        }
+      }
+    }
+
+    for (const [variableName, concentrations] of concentrationsMap.entries()) {
+      const variable = variables.find((v) => v.name === variableName);
+      if (!variable?.visible) continue;
+
+      plotData.push({
+        x: parameterValues,
+        y: concentrations,
+        type: "scatter",
+        mode: "lines",
+        marker: { color: variable.color },
+        line: { width: variable.width },
+        name: variable.displayName,
+      });
     }
   }
 

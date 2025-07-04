@@ -109,10 +109,7 @@ export const useSimulate = () => {
       return await simulator.computeSteadyState(
         editorContent!.value,
         {
-          timeCourseParameters: {
-            includeVariables: getIncludeVariableList(independentVariable),
-            ...timeCourseParameters,
-          },
+          parameters: {},
         },
         abortSignal,
       );
@@ -139,45 +136,81 @@ export const useSimulate = () => {
         parameterScanOptions.numberOfValues,
       );
 
-      const scanTimeCourseParameters = {
-        includeVariables: getIncludeVariableList(
-          simulator.scanIndependentVariableName,
-        ),
-        ...simulationParameters,
-      };
-
-      for (const value of scanValues) {
-        resultPromises.push(
-          simulator.simulateTimeCourse(
-            editorContent!.value,
-            {
-              parameters: scanTimeCourseParameters,
-              parameterScanOptions: {
-                varyingParameter: parameter,
-                varyingParameterValue: value,
-              },
-            },
-            abortSignal,
+      if (parameterScanOptions.mode === "timeCourse") {
+        const scanTimeCourseParameters = {
+          includeVariables: getIncludeVariableList(
+            simulator.scanIndependentVariableName,
           ),
-        );
-      }
+          ...simulationParameters,
+        };
 
-      const results = await Promise.all(resultPromises);
-      const scans = [];
-      for (const [i, result] of results.entries()) {
-        scans.push({
-          parameterValue: scanValues[i],
-          scanPercent: i / (scanValues.length - 1),
-          ...result,
-        });
-      }
+        for (const value of scanValues) {
+          resultPromises.push(
+            simulator.simulateTimeCourse(
+              editorContent!.value,
+              {
+                parameters: scanTimeCourseParameters,
+                parameterScanOptions: {
+                  varyingParameter: parameter,
+                  varyingParameterValue: value,
+                },
+              },
+              abortSignal,
+            ),
+          );
+        }
 
-      return {
-        type: "parameterScan",
-        method: "timeCourse",
-        parameter: parameter,
-        scans,
-      } satisfies ParameterScanResult;
+        const results = await Promise.all(resultPromises);
+        const scans = [];
+        for (const [i, result] of results.entries()) {
+          scans.push({
+            parameterValue: scanValues[i],
+            scanPercent: i / (scanValues.length - 1),
+            ...result,
+          });
+        }
+
+        return {
+          type: "parameterScan",
+          mode: "timeCourse",
+          parameter,
+          scans,
+        } satisfies ParameterScanResult;
+      } else {
+        const resultPromises = [];
+        for (const value of scanValues) {
+          resultPromises.push(
+            simulator.computeSteadyState(
+              editorContent!.value,
+              {
+                parameters: {},
+                parameterScanOptions: {
+                  varyingParameter: parameter,
+                  varyingParameterValue: value,
+                },
+              },
+              abortSignal,
+            ),
+          );
+        }
+
+        const results = await Promise.all(resultPromises);
+        const scans = [];
+        for (const [i, result] of results.entries()) {
+          scans.push({
+            parameterValue: scanValues[i],
+            scanPercent: i / (scanValues.length - 1),
+            concentrations: result.concentrations,
+          });
+        }
+
+        return {
+          type: "parameterScan",
+          mode: "steadyState",
+          parameter,
+          scans,
+        } satisfies ParameterScanResult;
+      }
     });
   };
 

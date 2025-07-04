@@ -16,7 +16,7 @@ export const MissingDataForVariablesIndicator = () => {
     }
   } else if (
     simulatorResult?.type === "parameterScan" &&
-    simulatorResult.method === "timeCourse"
+    simulatorResult.mode === "timeCourse"
   ) {
     for (const scan of simulatorResult.scans) {
       for (const column of scan.columns) {

@@ -38,14 +38,14 @@ const SteadyStateResultPanel = () => {
     return <div>nothing yet...</div>;
   }
 
-  const initialValueColumns = [
+  const concentrationColumns = [
     {
       title: "Symbol",
-      values: simulationResults.initialConcentrations.map((c) => c.name),
+      values: simulationResults.concentrations.map((c) => c.name),
     },
     {
       title: "Value",
-      values: simulationResults.initialConcentrations.map((c) => c.value),
+      values: simulationResults.concentrations.map((c) => c.value),
     },
   ];
 
@@ -77,8 +77,8 @@ const SteadyStateResultPanel = () => {
     <div className={styles.panel}>
       <div className={styles.steadyStateContainer}>
         <p>Value: {simulationResults.value}</p>
-        <Section title="Initial Concentrations">
-          <DataTable columns={initialValueColumns} decimalPlaces={8} />
+        <Section title="Concentrations">
+          <DataTable columns={concentrationColumns} decimalPlaces={8} />
         </Section>
         <Section title="Eigenvalues">
           <DataTable columns={eigenvalueColumns} decimalPlaces={8} />

@@ -6,6 +6,7 @@
 
 import { atom } from "jotai";
 import type {
+  ParameterScanResult,
   SimulationResult,
   Variable,
 } from "@/features/simulation/Simulator";
@@ -14,6 +15,7 @@ import { EditorContent } from "@/features/editorContent";
 import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 
 export interface ParameterScanOptions {
+  mode: ParameterScanResult["mode"];
   varyingParameter: string | null | undefined;
   min: number;
   max: number;
@@ -64,6 +66,7 @@ export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
 });
 
 export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
+  mode: "timeCourse",
   varyingParameter: null,
   min: 0.1,
   max: 1,

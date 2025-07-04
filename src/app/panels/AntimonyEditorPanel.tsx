@@ -8,12 +8,14 @@ import defaultModel from "@/assets/models/default.ant?raw";
 import chickenModel from "@/assets/models/chicken.ant?raw";
 import bigYAxisModel from "@/assets/models/bigyaxis.ant?raw";
 import bigModel from "@/assets/models/big.ant?raw";
+import phosphorylationModel from "@/assets/models/phosphorylation.ant?raw";
 
 const models: Record<string, string> = {
   default: defaultModel,
   chicken: chickenModel,
   bigYAxis: bigYAxisModel,
   big: bigModel,
+  phosphorylation: phosphorylationModel,
 };
 
 export const AntimonyEditorPanel = () => {
@@ -42,7 +44,8 @@ export const AntimonyEditorPanel = () => {
         <option value="default">Default</option>
         <option value="chicken">Chicken</option>
         <option value="bigYAxis">Big Y-Axis</option>
-        <option value="big">Big</option>
+        <option value="big">Big (Random)</option>
+        <option value="phosphorylation">Phosphorylation</option>
       </select>
       <textarea
         name="anitmony-test"

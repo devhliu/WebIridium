@@ -1,11 +1,13 @@
-export interface TimeCourseParameters {
+export type TimeCourseParameters = {
   startTime: number;
   endTime: number;
   numberOfPoints: number;
 
   /** List of variables you want to include in the results. */
   includeVariables: Variable[];
-}
+};
+
+export type SteadyStateParameters = {};
 
 export type ParameterScanOptions = {
   varyingParameter: string;
@@ -54,7 +56,7 @@ export type SteadyStateResultItem = {
 export type SteadyStateResult = {
   type: "steadyState";
   value: number;
-  initialConcentrations: {
+  concentrations: {
     name: string;
     value: number;
   }[];
@@ -79,17 +81,22 @@ export type ParameterScanExtras = {
 export type ParameterScanResult =
   | {
       type: "parameterScan";
-      method: "timeCourse";
+      mode: "timeCourse";
       parameter: string;
       // parameter value -> result
       scans: (TimeCourseResult & ParameterScanExtras)[];
     }
   | {
       type: "parameterScan";
-      method: "steadyState";
+      mode: "steadyState";
       parameter: string;
       // parameter value -> result
-      scans: (SteadyStateResult & ParameterScanExtras)[];
+      scans: (ParameterScanExtras & {
+        concentrations: {
+          name: string;
+          value: number;
+        }[];
+      })[];
     };
 
 export type SimulationResult =
@@ -116,9 +123,11 @@ export abstract class Simulator {
   abstract computeSteadyState(
     antimonyCode: string,
     {
-      timeCourseParameters,
+      parameters,
+      parameterScanOptions,
     }: {
-      timeCourseParameters: TimeCourseParameters;
+      parameters: SteadyStateParameters;
+      parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult>;

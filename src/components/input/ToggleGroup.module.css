@@ -1,0 +1,30 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  border: var(--border-secondary-accent-solid);
+  border-radius: calc(var(--border-radius) + 1px);
+}
+
+.button {
+  color: var(--color-secondary-accent-foreground);
+  background-color: var(--color-secondary-accent);
+  border: none;
+  flex-grow: 1;
+  padding: var(--spacing-2);
+  cursor: pointer;
+
+  &[data-state="on"] {
+    color: var(--color-primary-accent-foreground);
+    background-color: var(--color-primary-accent);
+  }
+
+  &:first-child {
+    border-top-left-radius: var(--border-radius);
+    border-bottom-left-radius: var(--border-radius);
+  }
+
+  &:last-child {
+    border-top-right-radius: var(--border-radius);
+    border-bottom-right-radius: var(--border-radius);
+  }
+}

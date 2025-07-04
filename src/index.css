@@ -9,8 +9,23 @@
 
   /* Colors */
 
+  /* FAQ
+   * # What is the difference between --color-primary and --color-accent-primay?
+   * `color-accent` is for things that stand out like buttons.
+   * `color` is for the base color of each layer. primary is the first layer, secondary the secondary layer, ...
+   *  (basically the background color)
+   * This is only the case for the colors with primary/secondary/tertiary in them though, to differentiate their roles.
+   * For example, `color-input` does not include `accent`.
+   */
+
   --color-primary-accent: #0786db;
   --color-primary-accent-foreground: #f0f2f5;
+
+  --color-secondary-accent: #44474b;
+  --color-secondary-accent-foreground: #f0f3f5;
+  --color-secondary-accent-border: #2c2d2e;
+  --border-secondary-accent-solid: 1px solid
+    var(--color-secondary-accent-border);
 
   --color-primary-background: #101112;
   --color-primary-background-translucent: color-mix(
@@ -47,7 +62,6 @@
   --border-input-solid: 1px solid var(--color-input-border);
   --border-input-solid-focused: 1px solid var(--color-primary-accent);
 
-  /* TODO: pick colors for this */
   --color-message-background: var(--color-secondary-background);
   --color-message-foreground: var(--color-secondary-foreground);
   --color-message-foreground-dim: var(--color-secondary-foreground-dim);
@@ -100,6 +114,12 @@
   --color-primary-accent: #0786db;
   --color-primary-accent-foreground: #f0f2f5;
 
+  --color-secondary-accent: #ededed;
+  --color-secondary-accent-foreground: #080808;
+  --color-secondary-accent-border: #aeaeae;
+  --border-secondary-accent-solid: 1px solid
+    var(--color-secondary-accent-border);
+
   --color-primary-background: #f7f7f7;
   --color-primary-background-translucent: color-mix(
     in hsl,
@@ -135,13 +155,6 @@
   --border-input-solid: 1px solid var(--color-input-border);
   --border-input-solid-focused: 1px solid var(--color-primary-accent);
 
-  /* TODO: pick colors for this */
-  --color-message-background: var(--color-secondary-background);
-  --color-message-foreground: var(--color-secondary-foreground);
-  --color-message-foreground-dim: var(--color-secondary-foreground-dim);
-  --color-message-border: var(--color-secondary-border);
-  --color-message-solid-border: 1px solid var(--color-message-border);
-
   --color-error: #bc1f14;
   --color-success: #18ab4e;
   --color-warning: #b69d10;
@@ -157,4 +170,14 @@
 *:before,
 *:after {
   box-sizing: inherit;
+}
+
+/* This style is temporarily applied to create the theme transition effect. */
+/* https://mwichary.medium.com/dark-theme-in-a-day-3518dde2955a */
+.theme-in-transition,
+.theme-in-transition *,
+.theme-in-transition *::before,
+.theme-in-transition *::after {
+  transition-duration: 200ms !important;
+  transition-delay: 0 !important;
 }

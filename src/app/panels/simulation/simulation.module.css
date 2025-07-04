@@ -16,3 +16,7 @@
   color: var(--color-primary-foreground-dim);
   margin-block: var(--spacing-2);
 }
+
+.mode-toggle-group {
+  margin-bottom: var(--spacing-2);
+}

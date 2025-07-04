@@ -24,10 +24,7 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
 
     const [independentColumn] = columns.splice(independentColumnIndex, 1);
     columns.unshift(independentColumn);
-  } else if (
-    result.type === "parameterScan" &&
-    result.method === "timeCourse"
-  ) {
+  } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
     // only need one column for the independent variable
     // TODO: handle the column is not there?
     columns.push(
@@ -48,6 +45,29 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
           values: scan.columns[i].values,
         });
       }
+    }
+  } else if (result.type === "parameterScan" && result.mode === "steadyState") {
+    columns.push({
+      title: result.parameter,
+      values: result.scans.map((s) => s.parameterValue),
+    });
+
+    const concentrationsMap = new Map<string, number[]>();
+    for (const scan of result.scans) {
+      for (const { name, value } of scan.concentrations) {
+        if (!concentrationsMap.has(name)) {
+          concentrationsMap.set(name, [value]);
+        } else {
+          concentrationsMap.get(name)!.push(value);
+        }
+      }
+    }
+
+    for (const [variableName, concentrations] of concentrationsMap.entries()) {
+      columns.push({
+        title: variableName,
+        values: concentrations,
+      });
     }
   }
 

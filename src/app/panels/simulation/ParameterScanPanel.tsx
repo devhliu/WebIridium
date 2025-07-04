@@ -22,6 +22,10 @@ import UncontrolledVariableList from "./UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
+import {
+  ToggleGroupButton,
+  ToggleGroupContainer,
+} from "@/components/input/ToggleGroup";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -98,17 +102,28 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
         </Button>
 
         <PropertyAccordion
-          defaultOpen={[
-            "Simulation Parameters",
-            "First Parameter",
-            "Variables",
-          ]}
+          defaultOpen={["Simulation", "First Parameter", "Variables"]}
         >
-          <PropertyAccordionItem title="Simulation Parameters">
-            <TimeCoursePropertyList
-              parameters={simulationParameters}
-              onParameterChange={setSimulationParameters}
-            />
+          <PropertyAccordionItem title="Simulation">
+            <ToggleGroupContainer
+              className={styles.modeToggleGroup}
+              value={parameterScanOptions.mode}
+              onValueChange={handleChangeFor("mode")}
+            >
+              <ToggleGroupButton value="timeCourse">
+                Time Course
+              </ToggleGroupButton>
+              <ToggleGroupButton value="steadyState">
+                Steady State
+              </ToggleGroupButton>
+            </ToggleGroupContainer>
+
+            {parameterScanOptions.mode === "timeCourse" && (
+              <TimeCoursePropertyList
+                parameters={simulationParameters}
+                onParameterChange={setSimulationParameters}
+              />
+            )}
           </PropertyAccordionItem>
 
           <PropertyAccordionItem title="First Parameter">

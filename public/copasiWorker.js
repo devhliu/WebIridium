@@ -36,6 +36,7 @@ const handleMessage = async (e) => {
     }
 
     copasi.loadModel(sbmlConversion.getResult());
+    cachedModelInfo = copasi.modelInfo;
   }
 
   switch (action.type) {
@@ -50,7 +51,7 @@ const handleMessage = async (e) => {
         copasi.setValue(varyingParameter, varyingParameterValue);
       }
 
-      copasi.selectionList = parameters.includeVariables;
+      copasi.selectionList = parameters.selectionList;
 
       const result = copasi.simulateEx(
         parameters.startTime,
@@ -66,40 +67,52 @@ const handleMessage = async (e) => {
     }
 
     case "steadyState": {
-      const { timeCourseParameters } = action.payload;
+      const { varyingParameter, varyingParameterValue } = action.payload;
 
-      copasi.resetAll();
-      copasi.selectionList = cachedModelInfo?.species.map((s) => s.name) ?? [];
-      copasi.timeCourseSettings = {
-        startTime: timeCourseParameters.startTime,
-        endTime: timeCourseParameters.endTime,
-        numPoints: timeCourseParameters.numberOfPoints,
+      // I don't know what this is for, it is just copied from the original: https://github.com/sys-bio/SimBioUI/blob/9a71226dd47c914dc85d68b47b4731669bba313f/my-dropdown-app/src/App.js#L593
+      const timeCourseParameters = {
+        startTime: 0,
+        endTime: 20,
+        numPoints: 200,
       };
+
+      if (varyingParameter) {
+        copasi.setValue(varyingParameter, varyingParameterValue);
+      }
+
+      // `resetAll` does not work with setValue + steadyState, idk why
+      // copasi.resetAll();
+      copasi.reset();
+
+      copasi.timeCourseSettings = timeCourseParameters;
+
+      const selectionList = cachedModelInfo?.species.map((s) => s.name) ?? [];
+      copasi.selectionList = selectionList;
 
       const steadyStateValue = copasi.steadyState();
       copasi.computeMca(true);
 
-      copasi.reset();
-      const result = copasi.simulateEx(
-        timeCourseParameters.startTime,
-        timeCourseParameters.endTime,
-        timeCourseParameters.numberOfPoints,
-      );
+      const selectedValues = copasi.selectedValues;
+      const eigenValues = copasi.eigenValues2D;
+      const jacobian = copasi.jacobian;
+      const concentrationControl =
+        copasi.getConcentrationControlCoefficients(true);
+      const fluxControl = copasi.getFluxControlCoefficients(true);
+      const elasticities = copasi.getElasticities(true);
 
       self.postMessage({
         id: action.id,
         data: {
+          eigenValues,
+          jacobian,
+          concentrationControl,
+          fluxControl,
+          elasticities,
           value: steadyStateValue,
-          initialConcentrations: result.columns.map((col, i) => ({
-            name: result.titles[i],
-            value: col[0],
+          concentrations: selectionList.map((name, i) => ({
+            name: name,
+            value: selectedValues[i],
           })),
-          eigenValues: copasi.eigenValues2D,
-          jacobian: copasi.jacobian,
-          concentrationControl:
-            copasi.getConcentrationControlCoefficients(true),
-          fluxControl: copasi.getFluxControlCoefficients(true),
-          elasticities: copasi.getElasticities(true),
         },
       });
 
@@ -107,7 +120,6 @@ const handleMessage = async (e) => {
     }
 
     case "loadModel": {
-      cachedModelInfo = copasi.modelInfo;
       self.postMessage({
         id: action.id,
         data: cachedModelInfo,
