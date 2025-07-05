@@ -45,7 +45,7 @@
   margin: 0;
   padding: 0;
 
-  & > .property > .property-name {
+  & > .property-name {
     order: 2;
     flex-grow: 1;
     padding-inline-end: 0;
