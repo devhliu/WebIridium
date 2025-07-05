@@ -85,87 +85,91 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     };
   };
 
-    return (
-      <div data-testid="parameterScanPanel" className={styles.simulationPanel} style={visible ? {} : { display: "none" }}>
-        <h1 className={styles.panelTitle}>Parameter Scan</h1>
-        <Button
-          icon={<PlayIcon />}
-          isLoading={isSimulating}
-          onClick={handleSimulateClick}
-          canCancel={isSimulating && !!abortSimulation}
-          onCancel={handleCancelClick}
-        >
-          Run
-        </Button>
+  return (
+    <div
+      data-testid="parameterScanPanel"
+      className={styles.simulationPanel}
+      style={visible ? {} : { display: "none" }}
+    >
+      <h1 className={styles.panelTitle}>Parameter Scan</h1>
+      <Button
+        icon={<PlayIcon />}
+        isLoading={isSimulating}
+        onClick={handleSimulateClick}
+        canCancel={isSimulating && !!abortSimulation}
+        onCancel={handleCancelClick}
+      >
+        Run
+      </Button>
 
-        <PropertyAccordion
-          defaultOpen={["Simulation", "First Parameter", "Variables"]}
-        >
-          <PropertyAccordionItem title="Simulation">
-            <ToggleGroupContainer
-              className={styles.modeToggleGroup}
-              value={parameterScanOptions.mode}
-              onValueChange={handleChangeFor("mode")}
-            >
-              <ToggleGroupButton value="timeCourse">
-                Time Course
-              </ToggleGroupButton>
-              <ToggleGroupButton value="steadyState">
-                Steady State
-              </ToggleGroupButton>
-            </ToggleGroupContainer>
+      <PropertyAccordion
+        defaultOpen={["Simulation", "First Parameter", "Variables"]}
+      >
+        <PropertyAccordionItem title="Simulation">
+          <ToggleGroupContainer
+            className={styles.modeToggleGroup}
+            value={parameterScanOptions.mode}
+            onValueChange={handleChangeFor("mode")}
+          >
+            <ToggleGroupButton value="timeCourse">
+              Time Course
+            </ToggleGroupButton>
+            <ToggleGroupButton value="steadyState">
+              Steady State
+            </ToggleGroupButton>
+          </ToggleGroupContainer>
 
-            {parameterScanOptions.mode === "timeCourse" && (
-              <TimeCoursePropertyList
-                parameters={simulationParameters}
-                onParameterChange={setSimulationParameters}
+          {parameterScanOptions.mode === "timeCourse" && (
+            <TimeCoursePropertyList
+              parameters={simulationParameters}
+              onParameterChange={setSimulationParameters}
+            />
+          )}
+        </PropertyAccordionItem>
+
+        <PropertyAccordionItem title="First Parameter">
+          <PropertyList alignment="left">
+            {parameterScanOptions.varyingParameter && (
+              <SelectProperty
+                name="Parameter"
+                value={parameterScanOptions.varyingParameter}
+                onChange={handleChangeFor("varyingParameter")}
+                groups={groupVariablesForSelectComponent(
+                  variables.filter((v) => v.scanName),
+                  (v) => v.scanName!,
+                )}
               />
             )}
-          </PropertyAccordionItem>
+            <NumericProperty
+              name="Min"
+              value={parameterScanOptions.min}
+              onChange={handleChangeFor("min")}
+            />
+            <NumericProperty
+              name="Max"
+              value={parameterScanOptions.max}
+              onChange={handleChangeFor("max")}
+            />
+            <NumericProperty
+              name="Number of Values"
+              value={parameterScanOptions.numberOfValues}
+              onChange={handleChangeFor("numberOfValues")}
+            />
+            <BooleanProperty
+              asideMode
+              name="Use logarithmic distribution"
+              value={parameterScanOptions.useLogarithmicDistribution}
+              onChange={handleChangeFor("useLogarithmicDistribution")}
+            />
+          </PropertyList>
+        </PropertyAccordionItem>
 
-          <PropertyAccordionItem title="First Parameter">
-            <PropertyList alignment="left">
-              {parameterScanOptions.varyingParameter && (
-                <SelectProperty
-                  name="Parameter"
-                  value={parameterScanOptions.varyingParameter}
-                  onChange={handleChangeFor("varyingParameter")}
-                  groups={groupVariablesForSelectComponent(
-                    variables.filter((v) => v.scanName),
-                    (v) => v.scanName!,
-                  )}
-                />
-              )}
-              <NumericProperty
-                name="Min"
-                value={parameterScanOptions.min}
-                onChange={handleChangeFor("min")}
-              />
-              <NumericProperty
-                name="Max"
-                value={parameterScanOptions.max}
-                onChange={handleChangeFor("max")}
-              />
-              <NumericProperty
-                name="Number of Values"
-                value={parameterScanOptions.numberOfValues}
-                onChange={handleChangeFor("numberOfValues")}
-              />
-              <BooleanProperty
-                asideMode
-                name="Use logarithmic distribution"
-                value={parameterScanOptions.useLogarithmicDistribution}
-                onChange={handleChangeFor("useLogarithmicDistribution")}
-              />
-            </PropertyList>
-          </PropertyAccordionItem>
-
-          <PropertyAccordionItem title="Variables">
-            <UncontrolledVariableList />
-          </PropertyAccordionItem>
-        </PropertyAccordion>
-      </div>
-    );
+        <PropertyAccordionItem title="Variables">
+          <UncontrolledVariableList />
+        </PropertyAccordionItem>
+      </PropertyAccordion>
+    </div>
+  );
 };
 
 export default ParameterScanPanel;

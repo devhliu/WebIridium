@@ -78,9 +78,18 @@ const App = () => {
                 <Allotment.Pane minSize={320} preferredSize={320}>
                   {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
                       Adding the `key` fixed that. */}
-                  <TimeCoursePanel key="timeCourse" visible={tab === "Time Course"} />
-                  <ParameterScanPanel key="parameterScan" visible={tab === "Parameter Scan"} />
-                  <SteadyStatePanel key="steadyState" visible={tab === "Steady State"} />
+                  <TimeCoursePanel
+                    key="timeCourse"
+                    visible={tab === "Time Course"}
+                  />
+                  <ParameterScanPanel
+                    key="parameterScan"
+                    visible={tab === "Parameter Scan"}
+                  />
+                  <SteadyStatePanel
+                    key="steadyState"
+                    visible={tab === "Steady State"}
+                  />
                 </Allotment.Pane>
 
                 <AntimonyEditorPanel />

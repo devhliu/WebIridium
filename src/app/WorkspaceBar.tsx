@@ -30,10 +30,10 @@ export const WorkspaceBar = () => {
       setOpen(false);
       setWorkspaceName(typing);
     } else {
-      cancelInput()
+      cancelInput();
     }
   };
-  
+
   const handleInputBlur = () => {
     cancelInput();
   };
@@ -57,7 +57,16 @@ export const WorkspaceBar = () => {
     return (
       <div className={clsx(styles.main, styles.active)}>
         <SearchIcon className={styles.searchIcon} />
-        <input id="workspaceBar" type="text" className={styles.input} autoFocus value={typing} onBlur={handleInputBlur} onKeyDown={handleInputKeyDown} onChange={(evt) => setTyping(evt.target.value)} />
+        <input
+          id="workspaceBar"
+          type="text"
+          className={styles.input}
+          autoFocus
+          value={typing}
+          onBlur={handleInputBlur}
+          onKeyDown={handleInputKeyDown}
+          onChange={(evt) => setTyping(evt.target.value)}
+        />
       </div>
     );
   }

@@ -1,20 +1,19 @@
 import { it, expect } from "vitest";
 import { useAtomValue } from "jotai";
-import { screen } from "@testing-library/dom";
+import { screen } from "@testing-library/react";
 
 import { renderWithinWorkspace } from "@/testing-utils/render";
 import { nameAtom } from "@/stores/workspace";
 import WorkspaceBar from "../WorkspaceBar";
 import userEvent from "@testing-library/user-event";
 
-const getWorkspaceNameLabelText = (workspaceName: string) => `Workspace Name: ${workspaceName}`
+const getWorkspaceNameLabelText = (workspaceName: string) =>
+  `Workspace Name: ${workspaceName}`;
 
 /** Helper test component that shows the workspace name. */
 const WorkspaceNameLabel = () => {
-  const workspaceName = useAtomValue(nameAtom)
-  return (
-    <p>{getWorkspaceNameLabelText(workspaceName)}</p>
-  );
+  const workspaceName = useAtomValue(nameAtom);
+  return <p>{getWorkspaceNameLabelText(workspaceName)}</p>;
 };
 
 const renderWorkspaceBar = () => {
@@ -22,7 +21,7 @@ const renderWorkspaceBar = () => {
     <div>
       <WorkspaceNameLabel />
       <WorkspaceBar />
-    </div>
+    </div>,
   );
 };
 
@@ -40,7 +39,9 @@ it("should rename the workspace", async () => {
   await userEvent.type(input, "new name[Enter]");
 
   expect(input).not.toHaveFocus();
-  expect(screen.queryByText(getWorkspaceNameLabelText("new name"))).toBeInTheDocument();
+  expect(
+    screen.getByText(getWorkspaceNameLabelText("new name")),
+  ).toBeInTheDocument();
 });
 
 it("should cancel rename on escape", async () => {
@@ -53,7 +54,9 @@ it("should cancel rename on escape", async () => {
   await userEvent.type(input, "new name[Escape]");
 
   expect(input).not.toHaveFocus();
-  expect(screen.queryByText(getWorkspaceNameLabelText("new name"))).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(getWorkspaceNameLabelText("new name")),
+  ).not.toBeInTheDocument();
 });
 
 it("should cancel rename when clicking somewhere else", async () => {
@@ -68,5 +71,7 @@ it("should cancel rename when clicking somewhere else", async () => {
   await userEvent.pointer({ keys: "[MouseLeft]" });
 
   expect(input).not.toHaveFocus();
-  expect(screen.queryByText(getWorkspaceNameLabelText("new name"))).not.toBeInTheDocument();
+  expect(
+    screen.queryByText(getWorkspaceNameLabelText("new name")),
+  ).not.toBeInTheDocument();
 });

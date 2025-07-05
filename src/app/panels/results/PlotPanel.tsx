@@ -47,7 +47,7 @@ export const PlotPanel = () => {
     <div className={styles.panel}>
       <Allotment vertical>
         <div className={styles.plotContainer} ref={containerRef}>
-          {!simulationResults || !width || !height ? (
+          {!simulationResults ? (
             <span className={styles.nothingYetLabel}>"nothing yet..."</span>
           ) : (
             <ResultsPlot

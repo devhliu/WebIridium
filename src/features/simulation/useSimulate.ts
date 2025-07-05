@@ -120,6 +120,7 @@ export const useSimulate = () => {
   ) => {
     return await runSimulation(async () => {
       const parameter = parameterScanOptions.varyingParameter;
+      console.log(parameter);
       if (!parameter) {
         throw new Error("select parameter to scan with");
       }

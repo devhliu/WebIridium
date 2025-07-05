@@ -55,43 +55,47 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
     }
   };
 
-    return (
-      <div data-testid="timeCoursePanel" className={styles.simulationPanel} style={visible ? {} : { display: "none" }}>
-        <h1 className={styles.panelTitle}>Time Course Simulation</h1>
-        <Button
-          icon={<PlayIcon />}
-          isLoading={isSimulating}
-          onClick={handleSimulateClick}
-          canCancel={isSimulating && !!abortSimulation}
-          onCancel={handleCancelClick}
-        >
-          Simulate
-        </Button>
+  return (
+    <div
+      data-testid="timeCoursePanel"
+      className={styles.simulationPanel}
+      style={visible ? {} : { display: "none" }}
+    >
+      <h1 className={styles.panelTitle}>Time Course Simulation</h1>
+      <Button
+        icon={<PlayIcon />}
+        isLoading={isSimulating}
+        onClick={handleSimulateClick}
+        canCancel={isSimulating && !!abortSimulation}
+        onCancel={handleCancelClick}
+      >
+        Simulate
+      </Button>
 
-        <PropertyAccordion
-          defaultOpen={[
-            "Simulation Parameters",
-            "Independent Variable",
-            "Dependent Variables",
-          ]}
-        >
-          <PropertyAccordionItem title="Simulation Parameters">
-            <TimeCoursePropertyList
-              parameters={timeCourseParameters}
-              onParameterChange={setTimeCourseParameters}
-            />
-          </PropertyAccordionItem>
+      <PropertyAccordion
+        defaultOpen={[
+          "Simulation Parameters",
+          "Independent Variable",
+          "Dependent Variables",
+        ]}
+      >
+        <PropertyAccordionItem title="Simulation Parameters">
+          <TimeCoursePropertyList
+            parameters={timeCourseParameters}
+            onParameterChange={setTimeCourseParameters}
+          />
+        </PropertyAccordionItem>
 
-          <PropertyAccordionItem title="Independent Variable">
-            <IndependentVariableSelector />
-          </PropertyAccordionItem>
+        <PropertyAccordionItem title="Independent Variable">
+          <IndependentVariableSelector />
+        </PropertyAccordionItem>
 
-          <PropertyAccordionItem title="Dependent Variables">
-            <UncontrolledVariableList />
-          </PropertyAccordionItem>
-        </PropertyAccordion>
-      </div>
-    );
+        <PropertyAccordionItem title="Dependent Variables">
+          <UncontrolledVariableList />
+        </PropertyAccordionItem>
+      </PropertyAccordion>
+    </div>
+  );
 };
 
 export default TimeCoursePanel;

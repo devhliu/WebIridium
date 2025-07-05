@@ -66,47 +66,45 @@ const AppMenubar = ({
       />
 
       <div className={styles.menubarLeft}>
-      <MenubarMenu name="File">
-        <MenubarItem name="New" onSelect={() => null} />
-        <MenubarItem
-          name="Open..."
-          onSelect={() => {
-            fileInputRef.current?.click();
-          }}
-        />
-        <MenubarItem name="Download" onSelect={handleDownload} />
-      </MenubarMenu>
+        <MenubarMenu name="File">
+          <MenubarItem name="New" onSelect={() => null} />
+          <MenubarItem
+            name="Open..."
+            onSelect={() => {
+              fileInputRef.current?.click();
+            }}
+          />
+          <MenubarItem name="Download" onSelect={handleDownload} />
+        </MenubarMenu>
 
-      <MenubarMenu name="View">
-        <MenubarRadioGroup
-          value={sidebarTab}
-          onValueChange={onSidebarTabChange as (newValue: string) => void}
-        >
-          {sidebarTabs.map((tab) => (
-            <MenubarRadioItem key={tab} value={tab}>
-              {tab}
-            </MenubarRadioItem>
-          ))}
-        </MenubarRadioGroup>
-        <MenubarSeparator />
-        <MenubarItem
-          name="toggle theme (TEMPORARY)"
-          onSelect={() => {
-            if (getTheme() === "dark")
-              setTheme("light", { applyTransition: true });
-            else setTheme("dark", { applyTransition: true });
-          }}
-        />
-      </MenubarMenu>
+        <MenubarMenu name="View">
+          <MenubarRadioGroup
+            value={sidebarTab}
+            onValueChange={onSidebarTabChange as (newValue: string) => void}
+          >
+            {sidebarTabs.map((tab) => (
+              <MenubarRadioItem key={tab} value={tab}>
+                {tab}
+              </MenubarRadioItem>
+            ))}
+          </MenubarRadioGroup>
+          <MenubarSeparator />
+          <MenubarItem
+            name="toggle theme (TEMPORARY)"
+            onSelect={() => {
+              if (getTheme() === "dark")
+                setTheme("light", { applyTransition: true });
+              else setTheme("dark", { applyTransition: true });
+            }}
+          />
+        </MenubarMenu>
       </div>
 
       <div className={styles.menubarCenter}>
         <WorkspaceBar />
       </div>
 
-      <div className={styles.menubarRight}>
-        {/* empty for now */}
-      </div>
+      <div className={styles.menubarRight}>{/* empty for now */}</div>
     </MenubarRoot>
   );
 };

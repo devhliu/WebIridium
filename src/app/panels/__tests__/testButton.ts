@@ -1,3 +1,10 @@
+/**
+ * Shared tests between simulation panels.
+ *
+ * MAKE SURE to mock everything required to get a simulation to run in the test
+ * environment
+ */
+
 import { it, afterEach, expect } from "vitest";
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
@@ -16,24 +23,14 @@ afterEach(() => {
 });
 
 export interface TestSimulationButtonOptions {
+  render: () => void;
   buttonText: string;
-  hasPlot: boolean;
-  shouldTestToasts: boolean;
 }
 
-/**
- * Utility function to test if a simulation button works.
- * @param buttonText - text that appears on the button
- * @param render - renders the panel containing the button and plot panel
- *
- * @remarks
- * MAKE SURE to mock everything required to get a simulation to run in the test
- * environment
- */
-export const testSimulationButton = (
-  { buttonText, hasPlot, shouldTestToasts }: TestSimulationButtonOptions,
-  render: () => void,
-) => {
+export const itShouldDisableWhenStartingSimulation = ({
+  render,
+  buttonText,
+}: TestSimulationButtonOptions) => {
   it("should disable when starting a simulation", async () => {
     // need to have some delay otherwise the button will instantly simulate and undisable itself
 
@@ -48,17 +45,25 @@ export const testSimulationButton = (
     await userEvent.click(button);
     expect(button).toBeDisabled();
   });
+};
 
-  if (hasPlot) {
-    it("should cause a plot to display in the plot panel", async () => {
-      render();
+export const itShouldDisplayPlot = ({
+  render,
+  buttonText,
+}: TestSimulationButtonOptions) => {
+  it("should display a plot", async () => {
+    render();
 
-      const button = screen.getByText(buttonText);
-      await userEvent.click(button);
-      expect(screen.getByTestId("results-plot")).toBeInTheDocument();
-    });
-  }
+    const button = screen.getByText(buttonText);
+    await userEvent.click(button);
+    expect(screen.getByTestId("results-plot")).toBeInTheDocument();
+  });
+};
 
+export const itShouldBeCancellable = ({
+  render,
+  buttonText,
+}: TestSimulationButtonOptions) => {
   it("should be cancellable", async () => {
     render();
 
@@ -74,21 +79,20 @@ export const testSimulationButton = (
     expect(cancel).not.toBeInTheDocument();
     expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
   });
+};
 
-  // NOTE: Parameter scan this breaks horribly with unhandled exception and
-  //       multiple toasts (I don't know why). For parameter scan, these tests
-  //       are disabled. They should be done manually.
-  // TODO?: there may be an underlying logic error that is not addressed
-  if (shouldTestToasts) {
-    it("should toast on an error", async () => {
-      render();
+export const itShouldDisplayToasts = ({
+  render,
+  buttonText,
+}: TestSimulationButtonOptions) => {
+  it("should toast on an error", async () => {
+    render();
 
-      setWorkerFailMode("always");
+    setWorkerFailMode("always");
 
-      const button = screen.getByText(buttonText);
-      await userEvent.click(button);
+    const button = screen.getByText(buttonText);
+    await userEvent.click(button);
 
-      expect(getToastHistory()).toHaveLength(1);
-    });
-  }
+    expect(getToastHistory()).toHaveLength(1);
+  });
 };

@@ -40,20 +40,24 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
     }
   };
 
-    return (
-      <div data-testid="steadyStatePanel" className={styles.simulationPanel}style={visible ? {} : { display: "none" }}>
-        <h1 className={styles.panelTitle}>Compute Steady State</h1>
-        <Button
-          icon={<PlayIcon />}
-          isLoading={isSimulating}
-          onClick={handleSimulateClick}
-          canCancel={isSimulating && !!abortSimulation}
-          onCancel={handleCancelClick}
-        >
-          Compute
-        </Button>
-      </div>
-    );
+  return (
+    <div
+      data-testid="steadyStatePanel"
+      className={styles.simulationPanel}
+      style={visible ? {} : { display: "none" }}
+    >
+      <h1 className={styles.panelTitle}>Compute Steady State</h1>
+      <Button
+        icon={<PlayIcon />}
+        isLoading={isSimulating}
+        onClick={handleSimulateClick}
+        canCancel={isSimulating && !!abortSimulation}
+        onCancel={handleCancelClick}
+      >
+        Compute
+      </Button>
+    </div>
+  );
 };
 
 export default SteadyStatePanel;

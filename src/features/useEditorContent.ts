@@ -71,15 +71,24 @@ export const useEditorContent = () => {
       let newVariables: Variable[];
       try {
         // wait a bit in case the user is still typing
-        newVariables = await new Promise((resolve) =>
-          setTimeout(resolve, skipDebounce ? 0 : MODEL_LOAD_DEBOUNCE),
-        )
-          .then(() => {
-            if (thisAbortController.signal.aborted) {
-              throw new WorkerTermination();
-            }
-          })
-          .then(() => simulator.loadModel(content, thisAbortController.signal));
+        if (skipDebounce) {
+          newVariables = await simulator.loadModel(
+            content,
+            thisAbortController.signal,
+          );
+        } else {
+          newVariables = await new Promise((resolve) =>
+            setTimeout(resolve, MODEL_LOAD_DEBOUNCE),
+          )
+            .then(() => {
+              if (thisAbortController.signal.aborted) {
+                throw new WorkerTermination();
+              }
+            })
+            .then(() =>
+              simulator.loadModel(content, thisAbortController.signal),
+            );
+        }
       } catch (err) {
         if (err instanceof WorkerTermination) {
           return;
