@@ -17,8 +17,6 @@ afterEach(() => {
 });
 
 test("only panel that is currently simulating should be cancellable", async () => {
-  setWorkerResponseDelay(100);
-
   renderWithinWorkspace(
     <div>
       <TimeCoursePanel visible />
@@ -26,6 +24,8 @@ test("only panel that is currently simulating should be cancellable", async () =
       <ParameterScanPanel visible />
     </div>,
   );
+
+  setWorkerResponseDelay(100);
 
   const timeCoursePanel = screen.getByTestId("timeCoursePanel");
   const steadyStatePanel = screen.getByTestId("steadyStatePanel");

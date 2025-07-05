@@ -3,7 +3,7 @@ import "allotment/dist/style.css";
 
 import { useState } from "react";
 import { useAtomValue } from "jotai";
-import { Allotment } from "allotment";
+import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
@@ -28,9 +28,9 @@ import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 
 const ResultTabbedPanel = () => {
-  const simulationResults = useAtomValue(simulationResultAtom);
+  const simulationResult = useAtomValue(simulationResultAtom);
   let tabs: TabInfo[];
-  if (simulationResults?.type === "steadyState") {
+  if (simulationResult?.type === "steadyState") {
     tabs = [
       {
         name: "Steady State",
@@ -56,55 +56,73 @@ const ResultTabbedPanel = () => {
   return <TabbedPanel tabs={tabs} />;
 };
 
-const App = () => {
+const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <ToastProvider>
+      <WorkspaceProvider>{children}</WorkspaceProvider>
+    </ToastProvider>
+  );
+};
+
+const AppContent = () => {
   const tabs: SidebarTab[] = ["Time Course", "Steady State", "Parameter Scan"];
   const [tab, setTab] = useState<SidebarTab>("Time Course");
+  const simulationResult = useAtomValue(simulationResultAtom);
 
   return (
     <div className={styles.app}>
-      <ToastProvider>
-        <WorkspaceProvider>
-          <AppMenubar
-            sidebarTab={tab}
-            sidebarTabs={tabs}
-            onSidebarTabChange={setTab}
-          />
+      <AppMenubar
+        sidebarTab={tab}
+        sidebarTabs={tabs}
+        onSidebarTabChange={setTab}
+      />
 
-          <div className={styles.appMain}>
-            <Sidebar tabs={tabs} currentTab={tab} onTabChange={setTab} />
+      <div className={styles.appMain}>
+        <Sidebar tabs={tabs} currentTab={tab} onTabChange={setTab} />
 
-            <div className={styles.allotmentContainer}>
-              <Allotment>
-                <Allotment.Pane minSize={320} preferredSize={320}>
-                  {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
+        <div className={styles.allotmentContainer}>
+          <Allotment>
+            <Allotment.Pane minSize={320} preferredSize={320}>
+              {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
                       Adding the `key` fixed that. */}
-                  <TimeCoursePanel
-                    key="timeCourse"
-                    visible={tab === "Time Course"}
-                  />
-                  <ParameterScanPanel
-                    key="parameterScan"
-                    visible={tab === "Parameter Scan"}
-                  />
-                  <SteadyStatePanel
-                    key="steadyState"
-                    visible={tab === "Steady State"}
-                  />
-                </Allotment.Pane>
+              <TimeCoursePanel
+                key="timeCourse"
+                visible={tab === "Time Course"}
+              />
+              <ParameterScanPanel
+                key="parameterScan"
+                visible={tab === "Parameter Scan"}
+              />
+              <SteadyStatePanel
+                key="steadyState"
+                visible={tab === "Steady State"}
+              />
+            </Allotment.Pane>
 
-                <AntimonyEditorPanel />
+            <Allotment.Pane priority={LayoutPriority.High}>
+              <AntimonyEditorPanel />
+            </Allotment.Pane>
 
-                <Allotment.Pane preferredSize={575}>
-                  <ResultTabbedPanel />
-                </Allotment.Pane>
-              </Allotment>
-            </div>
-          </div>
+            <Allotment.Pane
+              visible={Boolean(simulationResult)}
+              preferredSize={575}
+            >
+              <ResultTabbedPanel />
+            </Allotment.Pane>
+          </Allotment>
+        </div>
+      </div>
 
-          <AppStatusBar />
-        </WorkspaceProvider>
-      </ToastProvider>
+      <AppStatusBar />
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 };
 

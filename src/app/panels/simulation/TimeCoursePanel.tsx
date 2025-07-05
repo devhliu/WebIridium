@@ -39,7 +39,6 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
 
     const result = await simulateTimeCourse(controller.signal);
     if (result.type === "failure") {
-      console.log(result.message);
       toast({
         type: "error",
         title: "Time Course Error",

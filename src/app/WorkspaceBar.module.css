@@ -7,7 +7,7 @@
   justify-content: center;
   gap: var(--spacing-3);
   width: 100%;
-  padding: var(--spacing-2) var(--spacing-3);;
+  padding: var(--spacing-2) var(--spacing-3);
   margin: var(--spacing-1);
 
   font-size: var(--font-size-base);

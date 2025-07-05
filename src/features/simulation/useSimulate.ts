@@ -69,7 +69,10 @@ export const useSimulate = () => {
     if (isSimulating) {
       return { type: "failure", message: "Simulation already in progress." };
     } else if (modelStatus.type === "loading") {
-      return { type: "failure", message: "Model is still loading. Please wait." };
+      return {
+        type: "failure",
+        message: "Model is still loading. Please wait.",
+      };
     } else if (modelStatus.type === "error") {
       return { type: "failure", message: "There is an error with your model." };
     } else {
@@ -78,6 +81,7 @@ export const useSimulate = () => {
       try {
         const result = await run();
         setSimulationResult(result);
+        console.log(result);
         return { type: "success" };
       } catch (err) {
         // console.error(err);
