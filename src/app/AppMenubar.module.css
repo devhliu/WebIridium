@@ -1,6 +1,9 @@
 .root {
-  display: grid !important;
+  display: grid;
   grid-template-columns: 1fr 30% 1fr;
+  align-items: center;
+
+  background-color: var(--color-primary-background);
   border-bottom: var(--border-primary-solid);
 }
 

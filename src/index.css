@@ -167,6 +167,7 @@
 .theme-in-transition *,
 .theme-in-transition *::before,
 .theme-in-transition *::after {
+  transition-property: color, background-color, border-color !important;
   transition-duration: 200ms !important;
   transition-delay: 0 !important;
 }

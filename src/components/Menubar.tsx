@@ -33,7 +33,7 @@ export const MenubarMenu = ({
         <RadixMenubar.Content
           className={styles.content}
           align="start"
-          sideOffset={6}
+          sideOffset={3}
           alignOffset={-2}
         >
           {children}

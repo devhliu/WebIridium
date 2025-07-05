@@ -56,7 +56,7 @@ const AppMenubar = ({
   };
 
   return (
-    <MenubarRoot className={styles.root}>
+    <div className={styles.root}>
       <input
         style={{ display: "none" }}
         ref={fileInputRef}
@@ -65,7 +65,7 @@ const AppMenubar = ({
         accept=".ant,.txt"
       />
 
-      <div className={styles.menubarLeft}>
+      <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
           <MenubarItem name="New" onSelect={() => null} />
           <MenubarItem
@@ -98,14 +98,14 @@ const AppMenubar = ({
             }}
           />
         </MenubarMenu>
-      </div>
+      </MenubarRoot>
 
       <div className={styles.menubarCenter}>
         <WorkspaceBar />
       </div>
 
       <div className={styles.menubarRight}>{/* empty for now */}</div>
-    </MenubarRoot>
+    </div>
   );
 };
 
