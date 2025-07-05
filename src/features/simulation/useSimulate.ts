@@ -13,6 +13,7 @@ import {
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
   independentVariableAtom,
+  modelStatusAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
 
@@ -40,11 +41,15 @@ export const useSimulate = () => {
   const simulator = useSimulator();
   const independentVariable = useAtomValue(independentVariableAtom);
   const variables = useAtomValue(variablesAtom);
+
   const editorContent = useAtomValue(editorContentAtom);
-  const setSimulationResult = useSetAtom(simulationResultAtom);
+  const modelStatus = useAtomValue(modelStatusAtom);
+
   const timeCourseParameters = useAtomValue(timeCourseParametersAtom);
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
+
   const [isSimulating, setIsSimulating] = useAtom(isSimulatingAtom);
+  const setSimulationResult = useSetAtom(simulationResultAtom);
 
   /**
    * @param usingIndependentVariable - The independent variable to be used when getting variables to include.
@@ -62,7 +67,11 @@ export const useSimulate = () => {
     run: () => Promise<SimulationResult>,
   ): Promise<SimulationOperationResult> => {
     if (isSimulating) {
-      return { type: "failure", message: "simulation already in progress" };
+      return { type: "failure", message: "Simulation already in progress." };
+    } else if (modelStatus.type === "loading") {
+      return { type: "failure", message: "Model is still loading. Please wait." };
+    } else if (modelStatus.type === "error") {
+      return { type: "failure", message: "There is an error with your model." };
     } else {
       setIsSimulating(true);
 
