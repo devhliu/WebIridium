@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { useAtomValue } from "jotai";
 import styles from "./AppMenubar.module.css";
 
 import {
@@ -16,6 +17,7 @@ import WorkspaceBar from "./WorkspaceBar";
 
 import { promptDownloadFile } from "@/features/promptDownloadFile";
 import { getTheme, setTheme } from "@/features/theme";
+import { nameAtom } from "@/stores/workspace";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab;
@@ -31,9 +33,10 @@ const AppMenubar = ({
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { editorContent, updateEditorContent } = useEditorContent();
+  const workspaceName = useAtomValue(nameAtom);
 
   const handleDownload = () => {
-    promptDownloadFile("test.ant", editorContent, "ant");
+    promptDownloadFile(`${workspaceName}.ant`, editorContent, "ant");
   };
 
   const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
