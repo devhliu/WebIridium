@@ -71,6 +71,14 @@ const MissingDataStatusItem = () => {
         haveSet.add(column.title);
       }
     }
+  } else if (
+    simulatorResult?.type === "parameterScan" &&
+    simulatorResult.mode === "steadyState"
+  ) {
+    haveSet.add(simulatorResult.parameter);
+    for (const scan of simulatorResult.scans[0].concentrations) {
+      haveSet.add(scan.name);
+    }
   }
 
   const missing = variables
