@@ -4,7 +4,7 @@ import { createContext, useContext, useReducer, type Dispatch } from "react";
 import styles from "./Toast.module.css";
 import { Toast as RadixToast } from "radix-ui";
 
-import CloseIcon from "@/assets/icons/CloseIcon.svg?react";
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import ErrorIcon from "@/assets/icons/ErrorIcon.svg?react";
 import SuccessIcon from "@/assets/icons/SuccessIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
@@ -113,7 +113,7 @@ export const ToastProvider = ({
                 {info.description}
               </RadixToast.Description>
               <RadixToast.Close className={styles.close}>
-                <CloseIcon className={styles.closeIcon} />
+                <CrossIcon className={styles.closeIcon} />
               </RadixToast.Close>
             </RadixToast.Root>
           );

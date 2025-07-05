@@ -10,7 +10,7 @@ import {
 } from "@/components/Menubar";
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
-import { useEditorContent } from "@/features/editorContent";
+import { useEditorContent } from "@/features/useEditorContent";
 import { promptDownloadFile } from "@/features/promptDownloadFile";
 
 import { getTheme, setTheme } from "@/features/theme";
@@ -28,10 +28,10 @@ const AppMenubar = ({
 }: AppMenubarProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { editorContent, setEditorContent } = useEditorContent();
+  const { editorContent, updateEditorContent } = useEditorContent();
 
   const handleDownload = () => {
-    promptDownloadFile("test.ant", editorContent.value, "ant");
+    promptDownloadFile("test.ant", editorContent, "ant");
   };
 
   const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,7 +49,7 @@ const AppMenubar = ({
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
-      void setEditorContent(reader.result as string);
+      void updateEditorContent(reader.result as string);
     };
   };
 

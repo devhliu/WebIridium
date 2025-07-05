@@ -36,7 +36,7 @@
   --color-primary-foreground: #f2f5f7;
   --color-primary-foreground-dim: #f2f5f7af;
   --color-primary-border: #2c2d33; /* #212226; */
-  --border-primary-solid: 2px solid var(--color-primary-border);
+  --border-primary-solid: 1px solid var(--color-primary-border);
 
   --color-secondary-background: #252729;
   --color-secondary-foreground: #f0f3f5;
@@ -61,12 +61,6 @@
   --color-input-border: #494a4c;
   --border-input-solid: 1px solid var(--color-input-border);
   --border-input-solid-focused: 1px solid var(--color-primary-accent);
-
-  --color-message-background: var(--color-secondary-background);
-  --color-message-foreground: var(--color-secondary-foreground);
-  --color-message-foreground-dim: var(--color-secondary-foreground-dim);
-  --color-message-border: var(--color-secondary-border);
-  --color-message-solid-border: 1px solid var(--color-message-border);
 
   --color-error: #f2291b;
   --color-success: #22e369;
@@ -127,19 +121,19 @@
     transparent
   );
   --color-primary-foreground: #080808;
-  --color-primary-foreground-dim: #080808af;
+  --color-primary-foreground-dim: #0808087f;
   --color-primary-border: #d1d1d1;
-  --border-primary-solid: 2px solid var(--color-primary-border);
+  --border-primary-solid: 1px solid var(--color-primary-border);
 
-  --color-secondary-background: #e1e1e1;
+  --color-secondary-background: #e7e7e7;
   --color-secondary-foreground: #080808;
-  --color-secondary-foreground-dim: #080808af;
+  --color-secondary-foreground-dim: #0808087f;
   --color-secondary-border: #a6a6a6;
   --border-secondary-solid: 1px solid var(--color-secondary-border);
 
-  --color-tertiary-background: #c7c6c6;
+  --color-tertiary-background: #d2d2d2;
   --color-tertiary-foreground: #080808;
-  --color-tertiary-foreground-dim: #080808af;
+  --color-tertiary-foreground-dim: #0808087f;
   --color-tertiary-border: #8b8b8b;
   --border-tertiary-solid: 1px solid var(--color-tertiary-border);
 

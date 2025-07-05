@@ -16,9 +16,9 @@
 
 .root {
   position: relative;
-  color: var(--color-message-foreground);
-  background-color: var(--color-message-background);
-  border: var(--color-message-solid-border);
+  color: var(--color-secondary-foreground);
+  background-color: var(--color-secondary-background);
+  border: var(--border-secondary-solid);
   border-radius: var(--border-radius);
   padding: var(--spacing-4);
   box-shadow: var(--shadow-1);
@@ -73,7 +73,7 @@
 }
 
 .close {
-  color: var(--color-message-foreground-dim);
+  color: var(--color-secondary-foreground-dim);
   position: absolute;
   top: var(--spacing-3);
   right: var(--spacing-3);

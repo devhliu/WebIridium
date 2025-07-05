@@ -1,6 +1,6 @@
 import { clsx } from "clsx";
 import styles from "./Button.module.css";
-import CloseIcon from "@/assets/icons//CloseIcon.svg?react";
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PulseLoader from "./PulseLoader";
 
 export interface ButtonProps {
@@ -57,7 +57,7 @@ const Button = ({
           aria-label="Cancel"
           onClick={onCancel}
         >
-          <CloseIcon />
+          <CrossIcon />
         </button>
       )}
     </span>

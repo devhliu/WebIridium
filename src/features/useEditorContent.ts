@@ -6,10 +6,12 @@ import {
   editorContentAtom,
   parameterScanOptionsAtom,
   independentVariableAtom,
+  modelStatusAtom,
 } from "@/stores/workspace";
 import type { Variable } from "./simulation/Simulator";
 import { WorkerTermination } from "./workerPool";
-import { useAtomValue } from "jotai";
+
+const MODEL_LOAD_DEBOUNCE = 500; // in ms
 
 /**
  * TODO: unit test this
@@ -38,41 +40,54 @@ const patchVariables = (
   return result;
 };
 
-// TODO: add useSetEditorContent which doesn't read (to be used in open file)
 export const useEditorContent = () => {
   const simulator = useSimulator();
   const [independentVariable, setIndependentVariable] = useAtom(
     independentVariableAtom,
   );
   const setVariables = useSetAtom(variablesAtom);
-  const editorContent = useAtomValue(editorContentAtom);
+  const [editorContent, setEditorContent] = useAtom(editorContentAtom);
+  const setModelStatus = useSetAtom(modelStatusAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
 
-  if (!editorContent) {
-    throw new Error("where is the editor content?");
-  }
-
-  // TODO: abort every model info update when this is called from any component
-  // TODO: Do not allow simulations while model info is being retrieved? This will prevent an out-of-sync model from being simulated.
   const abortControllerRef = useRef<AbortController | null>(null);
-  const setEditorContent = useCallback(
-    async (content: string) => {
+  const updateEditorContent = useCallback(
+    async (
+      content: string,
+      { skipDebounce }: { skipDebounce?: boolean } = {},
+    ) => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
 
-      abortControllerRef.current = new AbortController();
+      const thisAbortController = new AbortController();
+      abortControllerRef.current = thisAbortController;
+
+      setEditorContent(content);
+      setModelStatus({ type: "loading" });
 
       let newVariables: Variable[];
       try {
-        newVariables = await simulator.loadModel(
-          content,
-          abortControllerRef.current.signal,
-        );
+        // wait a bit in case the user is still typing
+        newVariables = await new Promise((resolve) =>
+          setTimeout(resolve, skipDebounce ? 0 : MODEL_LOAD_DEBOUNCE),
+        )
+          .then(() => {
+            if (thisAbortController.signal.aborted) {
+              throw new WorkerTermination();
+            }
+          })
+          .then(() => simulator.loadModel(content, thisAbortController.signal));
       } catch (err) {
         if (err instanceof WorkerTermination) {
+          return;
+        } else if (err instanceof Error) {
+          setModelStatus({
+            type: "error",
+            message: err.message,
+          });
           return;
         } else {
           throw err;
@@ -111,39 +126,19 @@ export const useEditorContent = () => {
       }
 
       setVariables((old) => patchVariables(old, newVariables));
-      editorContent.setValue(content);
+      setModelStatus({ type: "success" });
     },
     [
       independentVariable,
       setIndependentVariable,
       setVariables,
-      editorContent,
+      setEditorContent,
+      setModelStatus,
       parameterScanOptions,
       setParameterScanOptions,
       simulator,
     ],
   );
 
-  return { editorContent, setEditorContent };
+  return { editorContent, updateEditorContent };
 };
-
-/**
- * Container for editor content. Has a "change" event that fires
- * every time the editor content changes. This is necessary because
- * there needs to be a way to express data flowing exclusively form
- * the event content so that components sychronizing with it know
- * whether to update the model info (by call setEditorContent from the useEditorContent hook).
- */
-export class EditorContent extends EventTarget {
-  value: string;
-
-  constructor() {
-    super();
-    this.value = "";
-  }
-
-  setValue(newValue: string) {
-    this.value = newValue;
-    this.dispatchEvent(new Event("change"));
-  }
-}

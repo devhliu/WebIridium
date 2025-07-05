@@ -1,0 +1,14 @@
+.item-loading {
+  color: var(--color-primary-foreground-dim);
+  background-color: var(--color-tertiary-background);
+}
+
+.item-success {
+  color: var(--color-primary-accent-foreground);
+  background-color: var(--color-primary-accent);
+}
+
+.item-fail {
+  color: var(--color-primary-foreground-dim);
+  background-color: var(--color-tertiary-background);
+}

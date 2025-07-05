@@ -5,13 +5,15 @@
  */
 
 import { atom } from "jotai";
+
+import defaultModel from "@/assets/models/default.ant?raw";
+
 import type {
   ParameterScanResult,
   SimulationResult,
   Variable,
 } from "@/features/simulation/Simulator";
 import { type Palette } from "@/features/colors";
-import { EditorContent } from "@/features/editorContent";
 import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 
 export interface ParameterScanOptions {
@@ -45,11 +47,15 @@ export interface GraphSettings {
   margin: number;
 }
 
+export type ModelStatus =
+  | { type: "loading" }
+  | { type: "error"; message: string }
+  | { type: "success" };
+
 // Atoms
 
-export const editorContentAtom = atom<EditorContent | null>(
-  () => new EditorContent(),
-);
+export const editorContentAtom = atom(defaultModel);
+export const modelStatusAtom = atom<ModelStatus>({ type: "loading" });
 
 export const isSimulatingAtom = atom(false);
 export const simulationResultAtom = atom<SimulationResult | null>(null);

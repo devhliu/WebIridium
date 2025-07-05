@@ -1,0 +1,23 @@
+.root {
+  --color-status-background: color-mix(
+    in hsl,
+    var(--color-primary-background) 95%,
+    black
+  );
+
+  display: flex;
+  flex-direction: row;
+  color: var(--color-primary-foreground);
+  background-color: var(--color-status-background);
+  font-size: var(--font-size-small);
+  border-bottom: var(--border-primary-solid);
+  border-top: var(--border-primary-solid);
+}
+
+.item {
+  display: flex;
+  flex-direction: row;
+  padding: var(--spacing-2) var(--spacing-3);
+  gap: var(--spacing-2);
+  align-items: center;
+}

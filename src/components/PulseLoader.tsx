@@ -19,7 +19,7 @@ export interface PulseLoaderProps {
 
 const PulseLoader = memo(
   ({
-    color = "var(--color-primary-foreground)",
+    color = "currentColor",
     size = "7px",
     spacing = "3px",
     cssOverride = {},

@@ -15,6 +15,7 @@ import { simulationResultAtom } from "@/stores/workspace";
 import { WorkspaceProvider } from "@/features/workspace";
 import Sidebar, { type SidebarTab } from "./Sidebar";
 import AppMenubar from "./AppMenubar";
+import AppStatusBar from "./AppStatusBar";
 import { ToastProvider } from "@/components/Toast";
 
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
@@ -68,6 +69,7 @@ const App = () => {
             sidebarTabs={tabs}
             onSidebarTabChange={setTab}
           />
+
           <div className={styles.appMain}>
             <Sidebar tabs={tabs} currentTab={tab} onTabChange={setTab} />
 
@@ -87,6 +89,8 @@ const App = () => {
               </Allotment>
             </div>
           </div>
+
+          <AppStatusBar />
         </WorkspaceProvider>
       </ToastProvider>
     </div>

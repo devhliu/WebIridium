@@ -1,15 +1,27 @@
-import { createContext, useContext, useMemo } from "react";
+import { createContext, useContext, useEffect, useMemo } from "react";
 import { ScopeProvider } from "jotai-scope";
+
+import defaultModel from "@/assets/models/default.ant?raw";
 
 import { type Simulator } from "@/features/simulation/Simulator";
 import { allWorkspaceAtoms } from "@/stores/workspace";
 import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
+import { useEditorContent } from "./useEditorContent";
 
 export interface Workspace {
   simulator: Simulator;
 }
 
 const WorkspaceContext = createContext<Workspace | null>(null);
+
+const InitializeEditorContent = () => {
+  const { updateEditorContent } = useEditorContent();
+  useEffect(() => {
+    void updateEditorContent(defaultModel, { skipDebounce: true });
+    // eslint-disable-next-line
+  }, []);
+  return null;
+};
 
 export const WorkspaceProvider = ({
   children,
@@ -24,7 +36,10 @@ export const WorkspaceProvider = ({
 
   return (
     <ScopeProvider atoms={allWorkspaceAtoms}>
-      <WorkspaceContext value={workspace}>{children}</WorkspaceContext>
+      <WorkspaceContext value={workspace}>
+        <InitializeEditorContent />
+        {children}
+      </WorkspaceContext>
     </ScopeProvider>
   );
 };

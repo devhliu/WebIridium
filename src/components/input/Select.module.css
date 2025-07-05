@@ -29,7 +29,7 @@
 
 .content {
   background-color: var(--color-tertiary-background);
-  border: var(--color-tertiary-solid-border);
+  border: var(--border-tertiary-solid);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-1);
   padding: var(--spacing-4);
