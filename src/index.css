@@ -18,8 +18,8 @@
    * For example, `color-input` does not include `accent`.
    */
 
-  --color-primary-accent: #0786db;
-  --color-primary-accent-foreground: #f0f2f5;
+  --color-primary-accent: #248f8f;
+  --color-primary-accent-foreground: #fff;
 
   --color-secondary-accent: #35383b;
   --color-secondary-accent-foreground: #f0f3f5;
@@ -104,9 +104,6 @@
 
 :root[data-theme="light"] {
   /* Colors */
-
-  --color-primary-accent: #0786db;
-  --color-primary-accent-foreground: #f0f2f5;
 
   --color-secondary-accent: #ededed;
   --color-secondary-accent-foreground: #080808;
