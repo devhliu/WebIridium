@@ -1,5 +1,6 @@
 import { useRef } from "react";
 import styles from "./AppMenubar.module.css";
+
 import {
   MenubarRoot,
   MenubarMenu,
@@ -11,8 +12,9 @@ import {
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
 import { useEditorContent } from "@/features/useEditorContent";
-import { promptDownloadFile } from "@/features/promptDownloadFile";
+import WorkspaceBar from "./WorkspaceBar";
 
+import { promptDownloadFile } from "@/features/promptDownloadFile";
 import { getTheme, setTheme } from "@/features/theme";
 
 export interface AppMenubarProps {
@@ -63,6 +65,7 @@ const AppMenubar = ({
         accept=".ant,.txt"
       />
 
+      <div className={styles.menubarLeft}>
       <MenubarMenu name="File">
         <MenubarItem name="New" onSelect={() => null} />
         <MenubarItem
@@ -95,6 +98,15 @@ const AppMenubar = ({
           }}
         />
       </MenubarMenu>
+      </div>
+
+      <div className={styles.menubarCenter}>
+        <WorkspaceBar />
+      </div>
+
+      <div className={styles.menubarRight}>
+        {/* empty for now */}
+      </div>
     </MenubarRoot>
   );
 };

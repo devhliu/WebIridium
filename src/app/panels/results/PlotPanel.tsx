@@ -58,7 +58,7 @@ export const PlotPanel = () => {
           )}
         </div>
 
-        <Allotment.Pane preferredSize={250}>
+        <Allotment.Pane preferredSize={200}>
           <SettingsPanel />
         </Allotment.Pane>
       </Allotment>

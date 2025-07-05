@@ -56,6 +56,7 @@ export type ModelStatus =
 
 export const editorContentAtom = atom(defaultModel);
 export const modelStatusAtom = atom<ModelStatus>({ type: "loading" });
+export const nameAtom = atom("Starter Model");
 
 export const isSimulatingAtom = atom(false);
 export const simulationResultAtom = atom<SimulationResult | null>(null);
@@ -107,7 +108,10 @@ export const graphSettingsAtom = atom<GraphSettings>({
  * so you can you scope the workspace.
  */
 export const allWorkspaceAtoms = [
+  nameAtom,
+
   editorContentAtom,
+  modelStatusAtom,
   isSimulatingAtom,
   simulationResultAtom,
 

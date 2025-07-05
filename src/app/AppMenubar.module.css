@@ -1,3 +1,17 @@
 .root {
+  display: grid !important;
+  grid-template-columns: 1fr 30% 1fr;
   border-bottom: var(--border-primary-solid);
+}
+
+.menubar-left {
+  grid-column: 1;
+}
+
+.menubar-center {
+  grid-column: 2;
+}
+
+.menubar-right {
+  grid-column: 3;
 }

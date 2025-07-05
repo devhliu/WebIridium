@@ -7,6 +7,8 @@ import chickenModel from "@/assets/models/chicken.ant?raw";
 import bigYAxisModel from "@/assets/models/bigyaxis.ant?raw";
 import bigModel from "@/assets/models/big.ant?raw";
 import phosphorylationModel from "@/assets/models/phosphorylation.ant?raw";
+import glycolysisModel from "@/assets/models/glycolysis.ant?raw";
+import insulinModel from "@/assets/models/insulin.ant?raw";
 
 const models: Record<string, string> = {
   default: defaultModel,
@@ -14,6 +16,8 @@ const models: Record<string, string> = {
   bigYAxis: bigYAxisModel,
   big: bigModel,
   phosphorylation: phosphorylationModel,
+  glycolysis: glycolysisModel,
+  insulin: insulinModel,
 };
 
 export const AntimonyEditorPanel = () => {
@@ -30,6 +34,8 @@ export const AntimonyEditorPanel = () => {
         <option value="bigYAxis">Big Y-Axis</option>
         <option value="big">Big (Random)</option>
         <option value="phosphorylation">Phosphorylation</option>
+        <option value="glycolysis">Glycolysis</option>
+        <option value="insulin">Insulin</option>
       </select>
       <textarea
         name="anitmony-test"
