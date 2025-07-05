@@ -40,11 +40,8 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
     }
   };
 
-  if (!visible) {
-    return null;
-  } else {
     return (
-      <div data-testid="steadyStatePanel" className={styles.simulationPanel}>
+      <div data-testid="steadyStatePanel" className={styles.simulationPanel}style={visible ? {} : { display: "none" }}>
         <h1 className={styles.panelTitle}>Compute Steady State</h1>
         <Button
           icon={<PlayIcon />}
@@ -57,7 +54,6 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
         </Button>
       </div>
     );
-  }
 };
 
 export default SteadyStatePanel;

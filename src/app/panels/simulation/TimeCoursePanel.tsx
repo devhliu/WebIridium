@@ -55,11 +55,8 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
     }
   };
 
-  if (!visible) {
-    return null;
-  } else {
     return (
-      <div data-testid="timeCoursePanel" className={styles.simulationPanel}>
+      <div data-testid="timeCoursePanel" className={styles.simulationPanel} style={visible ? {} : { display: "none" }}>
         <h1 className={styles.panelTitle}>Time Course Simulation</h1>
         <Button
           icon={<PlayIcon />}
@@ -95,7 +92,6 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
         </PropertyAccordion>
       </div>
     );
-  }
 };
 
 export default TimeCoursePanel;

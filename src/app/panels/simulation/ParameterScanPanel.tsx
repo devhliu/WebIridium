@@ -85,11 +85,8 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     };
   };
 
-  if (!visible) {
-    return null;
-  } else {
     return (
-      <div data-testid="parameterScanPanel" className={styles.simulationPanel}>
+      <div data-testid="parameterScanPanel" className={styles.simulationPanel} style={visible ? {} : { display: "none" }}>
         <h1 className={styles.panelTitle}>Parameter Scan</h1>
         <Button
           icon={<PlayIcon />}
@@ -169,7 +166,6 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
         </PropertyAccordion>
       </div>
     );
-  }
 };
 
 export default ParameterScanPanel;
