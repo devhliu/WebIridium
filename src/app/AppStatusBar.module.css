@@ -12,3 +12,11 @@
   color: var(--color-primary-foreground-dim);
   background-color: var(--color-tertiary-background);
 }
+
+.error-icon {
+  color: var(--color-error);
+}
+
+.warning-icon {
+  color: var(--color-warning);
+}

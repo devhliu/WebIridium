@@ -14,7 +14,6 @@ import PropertyAccordionItem from "@/components/property-accordion/PropertyAccor
 
 import UncontrolledVariableList from "@/app/panels/simulation/UncontrolledVariableList";
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
-import { MissingDataForVariablesIndicator } from "@/app/MissingDataForVariablesIndicator";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 
 export interface TimeCoursePanelProps {
@@ -71,7 +70,6 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
         >
           Simulate
         </Button>
-        <MissingDataForVariablesIndicator />
 
         <PropertyAccordion
           defaultOpen={[
