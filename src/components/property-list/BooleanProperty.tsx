@@ -1,6 +1,5 @@
-import { Checkbox as RadixCheckbox } from "radix-ui";
 import styles from "./PropertyList.module.css";
-import CheckIcon from "@/assets/icons//CheckIcon.svg?react";
+import Checkbox from "../input/Checkbox";
 
 export interface BooleanPropertyProps {
   name: string;
@@ -29,16 +28,7 @@ const BooleanProperty = ({
         {name}
       </label>
 
-      <RadixCheckbox.Root
-        id={name}
-        className={styles.checkboxRoot}
-        checked={value}
-        onCheckedChange={onChange}
-      >
-        <RadixCheckbox.Indicator className={styles.checkboxIndicator}>
-          {value && <CheckIcon aria-hidden />}
-        </RadixCheckbox.Indicator>
-      </RadixCheckbox.Root>
+      <Checkbox name={name} value={value} onChange={onChange} />
     </div>
   );
 };
