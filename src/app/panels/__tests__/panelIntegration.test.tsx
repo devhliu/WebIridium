@@ -68,7 +68,7 @@ test("results panel should only be visible after simulating", async () => {
 
   // the view as table button should not be there yet
   expect(screen.queryByText("Table")).not.toBeInTheDocument();
-  
+
   const simulateButton = screen.getByText("Simulate");
   await userEvent.click(simulateButton);
 

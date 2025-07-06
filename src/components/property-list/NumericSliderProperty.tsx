@@ -1,9 +1,8 @@
-import type React from "react";
-import { Slider as RadixSlider } from "radix-ui";
+import clsx from "clsx";
 import styles from "./PropertyList.module.css";
-import { clsx } from "clsx";
+import Slider from "@/components/input/Slider";
 
-export interface NumericSliderProperty {
+export interface NumericSliderPropertyProps {
   name: string;
   value: number;
   min: number;
@@ -19,7 +18,7 @@ const NumericSliderProperty = ({
   max,
   step,
   onChange,
-}: NumericSliderProperty) => {
+}: NumericSliderPropertyProps) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const number = +e.target.value;
     if (!Number.isNaN(number) && min <= number && number <= max) {
@@ -42,19 +41,13 @@ const NumericSliderProperty = ({
         onChange={handleChange}
       />
 
-      <RadixSlider.Root
-        className={styles.sliderRoot}
-        value={[value]}
-        onValueChange={([newValue]) => onChange(newValue)}
+      <Slider
+        value={value}
         min={min}
         max={max}
         step={step}
-      >
-        <RadixSlider.Track className={styles.sliderTrack}>
-          <RadixSlider.Range className={styles.sliderRange} />
-        </RadixSlider.Track>
-        <RadixSlider.Thumb className={styles.sliderThumb} />
-      </RadixSlider.Root>
+        onChange={onChange}
+      />
     </div>
   );
 };
