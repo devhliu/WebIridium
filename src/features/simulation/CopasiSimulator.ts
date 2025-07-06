@@ -97,7 +97,7 @@ export class CopasiSimulator extends Simulator {
     const variables: Variable[] = [];
 
     variables.push({
-      displayName: "Time",
+      defaultDisplayName: "Time",
       name: "Time",
       category: "Time",
     });
@@ -106,13 +106,13 @@ export class CopasiSimulator extends Simulator {
       // TODO!IMPORTANT: only do this for floating species, not boundary species?
       //                 how to determine if a species is a boundary species?
       variables.push({
-        displayName: `${specie.name}'`,
+        defaultDisplayName: `${specie.name}'`,
         name: `${specie.name}.Rate`,
         category: "Rate of Changes",
       });
 
       variables.push({
-        displayName: specie.name,
+        defaultDisplayName: specie.name,
         name: specie.name,
         scanName: `[${specie.name}]_0`,
         category: "Species",
@@ -121,7 +121,7 @@ export class CopasiSimulator extends Simulator {
 
     for (const param of modelInfo.global_parameters) {
       variables.push({
-        displayName: param.name,
+        defaultDisplayName: param.name,
         name: param.name,
         scanName: param.name,
         category: "Parameter",

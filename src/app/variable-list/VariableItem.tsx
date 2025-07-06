@@ -11,7 +11,7 @@ import VariableSettingsPropertyList from "./VariableSettingsPropertyList";
 
 export interface VariableItemProps {
   variable: Variable;
-  variableSettings: VariableSettings;
+  settings: VariableSettings;
   onVariableSettingsChange: (newSettings: VariableSettings) => void;
 }
 
@@ -20,16 +20,15 @@ const ICON_DIMS = 14;
 
 const VariableItem = memo(
   ({
-    variable,
-    variableSettings,
+    settings,
     onVariableSettingsChange,
   }: VariableItemProps) => {
     const [settingsActive, setSettingsActive] = useState(false);
 
     const handleVisiblityToggle = () => {
       onVariableSettingsChange({
-        ...variableSettings,
-        visible: !variableSettings.visible,
+        ...settings,
+        visible: !settings.visible,
       });
     };
 
@@ -49,7 +48,7 @@ const VariableItem = memo(
               onClick={handleVisiblityToggle}
             >
               {/* TODO: add aria stuff to this */}
-              {variableSettings.visible ? (
+              {settings.visible ? (
                 <EyeIcon height="1em" width="1em" />
               ) : (
                 <ClosedEyeIcon height="1em" width="1em" />
@@ -57,7 +56,7 @@ const VariableItem = memo(
             </button>
           </div>
 
-          <span className={styles.itemName}>{variable.displayName}</span>
+          <span className={styles.itemName}>{settings.displayName}</span>
 
           <div className={styles.itemActionList}>
             <button
@@ -72,7 +71,7 @@ const VariableItem = memo(
         {settingsActive && (
           <div className={styles.itemSettings}>
             <VariableSettingsPropertyList
-              settings={variableSettings}
+              settings={settings}
               onVariableSettingsChange={onVariableSettingsChange}
             />
           </div>

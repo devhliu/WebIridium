@@ -34,7 +34,7 @@ const patchVariablesSettings = (
       isPriorityVariable(variable)
     ) {
       adding[variable.name] = {
-        displayName: variable.displayName,
+        displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
         color: colorGenerator.next().value!,
         width: 2,
@@ -49,7 +49,7 @@ const patchVariablesSettings = (
       !isPriorityVariable(variable)
     ) {
       adding[variable.name] = {
-        displayName: variable.displayName,
+        displayName: variable.defaultDisplayName,
         visible: false,
         color: colorGenerator.next().value!,
         width: 2,

@@ -16,7 +16,7 @@ export type ParameterScanOptions = {
 
 export type Variable = {
   /** Default display name. */
-  displayName: string;
+  defaultDisplayName: string;
   /** General name used internally by the simulator */
   name: string;
   /**

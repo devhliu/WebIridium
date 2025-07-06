@@ -48,7 +48,7 @@ const VariableGroup = ({
             <VariableItem
               key={v.name}
               variable={v}
-              variableSettings={variableSettingss[v.name]}
+              settings={variableSettingss[v.name]}
               onVariableSettingsChange={(newSettings) =>
                 onVariableSettingsChange(v.name, newSettings)
               }

@@ -1,6 +1,6 @@
 import { useAtom, useAtomValue } from "jotai";
 import styles from "./IndependentVariableSelector.module.css";
-import { independentVariableAtom, variablesAtom } from "@/stores/workspace";
+import { independentVariableAtom, variablesAtom, variableSettingssAtom } from "@/stores/workspace";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import Select from "@/components/input/Select";
 
@@ -11,6 +11,7 @@ const IndependentVariableSelector = () => {
     independentVariableAtom,
   );
   const variables = useAtomValue(variablesAtom);
+  const variableSettingss = useAtomValue(variableSettingssAtom);
   const filteredVariables = variables.filter((v) =>
     INDEPENDENT_VARIABLE_CATEGORIES.has(v.category),
   );
@@ -21,6 +22,7 @@ const IndependentVariableSelector = () => {
       value={indepedentVariable ?? "???"}
       groups={groupVariablesForSelectComponent(
         filteredVariables,
+        variableSettingss,
         (v) => v.name,
       )}
       onChange={(name) => setIndependentVariable(name)}

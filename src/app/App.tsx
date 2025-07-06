@@ -26,7 +26,7 @@ import PlotPanel from "./panels/results/PlotPanel";
 import TablePanel from "./panels/results/TablePanel";
 import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
-import SlidersPanel from "./panels/SlidersPanel";
+import SlidersPanel from "./panels/sliders/SlidersPanel";
 
 const ResultTabbedPanel = () => {
   const simulationResult = useAtomValue(simulationResultAtom);
