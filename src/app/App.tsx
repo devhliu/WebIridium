@@ -53,7 +53,11 @@ const ResultTabbedPanel = () => {
     ];
   }
 
-  return <TabbedPanel tabs={tabs} />;
+  if (simulationResult) {
+    return <TabbedPanel tabs={tabs} />;
+  } else {
+    return null;
+  }
 };
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {

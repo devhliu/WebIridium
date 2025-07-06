@@ -1,16 +1,21 @@
 import { test, expect, afterEach, vi } from "vitest";
-import { screen, within } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { renderWithinWorkspace } from "@/testing-utils/render";
-import TimeCoursePanel from "../simulation/TimeCoursePanel";
-import SteadyStatePanel from "../simulation/SteadyStatePanel";
-import ParameterScanPanel from "../simulation/ParameterScanPanel";
 import userEvent from "@testing-library/user-event";
+
 import {
   setWorkerResponseDelay,
   resetWorkerResponseDelay,
 } from "@/testing-utils/mockWorker";
 
+import TimeCoursePanel from "../simulation/TimeCoursePanel";
+import SteadyStatePanel from "../simulation/SteadyStatePanel";
+import ParameterScanPanel from "../simulation/ParameterScanPanel";
+import App from "@/app/App";
+
 vi.mock("@/features/workers");
+vi.mock("react-plotly.js");
+vi.mock("plotly.js");
 
 afterEach(() => {
   resetWorkerResponseDelay();
@@ -56,4 +61,16 @@ test("only panel that is currently simulating should be cancellable", async () =
   expect(simulateTimeCourseButton).toBeEnabled();
   expect(computeSteadyStateButton).toBeEnabled();
   expect(runParameterScanButton).toBeEnabled();
+});
+
+test("results panel should only be visible after simulating", async () => {
+  render(<App />);
+
+  // the view as table button should not be there yet
+  expect(screen.queryByText("Table")).not.toBeInTheDocument();
+  
+  const simulateButton = screen.getByText("Simulate");
+  await userEvent.click(simulateButton);
+
+  expect(screen.getByText("Table")).toBeInTheDocument();
 });
