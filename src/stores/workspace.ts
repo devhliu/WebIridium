@@ -54,6 +54,12 @@ export interface VariableSettings {
   width: number;
 }
 
+export interface VariableSliderState {
+  value: number;
+  min: number;
+  max: number;
+}
+
 export type ModelStatus =
   | { type: "loading" }
   | { type: "error"; message: string }
@@ -71,6 +77,9 @@ export const simulationResultAtom = atom<SimulationResult | null>(null);
 export const independentVariableAtom = atom<string | null>(null);
 export const variablesAtom = atom<Variable[]>([]);
 export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
+export const variableSliderStatesAtom = atom<
+  Record<string, VariableSliderState | undefined>
+>({});
 
 export const paletteAtom = atom<Palette>("Custom");
 
@@ -126,6 +135,7 @@ export const allWorkspaceAtoms = [
   independentVariableAtom,
   variablesAtom,
   variableSettingssAtom,
+  variableSliderStatesAtom,
 
   paletteAtom,
 

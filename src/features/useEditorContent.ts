@@ -10,7 +10,7 @@ import {
   variableSettingssAtom,
   type VariableSettings,
 } from "@/stores/workspace";
-import type { Variable } from "./simulation/Simulator";
+import type { SettableVariable, Variable } from "./simulation/Simulator";
 import { WorkerTermination } from "./workerPool";
 import { generateDefaultCustomPalette } from "./colors";
 
@@ -145,17 +145,21 @@ export const useEditorContent = () => {
       if (
         !parameterScanOptions.varyingParameter ||
         !newVariables.some(
-          (v) => v.scanName === parameterScanOptions.varyingParameter,
+          (v) =>
+            "setName" in v &&
+            v.setName === parameterScanOptions.varyingParameter,
         )
       ) {
+        const firstAvailableParameter = newVariables.find(
+          (v) => "setName" in v && v.category === "Parameters",
+        ) as SettableVariable;
         setParameterScanOptions({
           ...parameterScanOptions,
           varyingParameter:
             // first try to use the first parameter
-            newVariables.find((v) => v.category === "Parameter" && v.scanName)
-              ?.scanName ??
+            firstAvailableParameter?.setName ??
             // if no parameteres found, use the first available
-            newVariables.find((v) => v.scanName)?.scanName,
+            newVariables.find((v) => "setName" in v)?.setName,
         });
       }
 

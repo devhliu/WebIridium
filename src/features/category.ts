@@ -4,23 +4,25 @@ import type { VariableSettings } from "@/stores/workspace";
 import type { Variable } from "./simulation/Simulator";
 import type { SelectGroupedProps } from "@/components/input/Select";
 
-export const CATEGORY_ORDER = ["Species", "Rate of Changes", "Parameter"];
+export const CATEGORY_ORDER = ["Species", "Rate of Changes", "Parameters"];
 
 /**
  * Groups variables into categories, following the pre-defined category order.
  *
  * @param variables - list of variables
+ * @param categoryOrder - custom category order (optional)
  * @returns an array of tuple [categoryName, variables]
  */
-export const groupVariables = (
-  variables: Variable[],
-): [categoryName: string, variables: Variable[]][] => {
+export const groupVariables = <TVar extends Variable>(
+  variables: TVar[],
+  categoryOrder: string[] = CATEGORY_ORDER,
+): [categoryName: string, variables: TVar[]][] => {
   const groupedVariables = Object.groupBy(
     variables,
     (v) => v.category,
-  ) as Record<string, Variable[]>;
+  ) as Record<string, TVar[]>;
   const sortedGroupedVariables = Object.entries(groupedVariables).toSorted(
-    ([a, _], [b, __]) => CATEGORY_ORDER.indexOf(a) - CATEGORY_ORDER.indexOf(b),
+    ([a, _], [b, __]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
   );
   return sortedGroupedVariables;
 };
@@ -34,16 +36,19 @@ export const groupVariables = (
  *
  * @returns variables grouped into a format usable by the select component
  */
-export const groupVariablesForSelectComponent = (
-  variables: Variable[],
+export const groupVariablesForSelectComponent = <TVar extends Variable>(
+  variables: TVar[],
   variableSettingss: Record<string, VariableSettings>,
-  nameSelector: (v: Variable) => string,
+  nameSelector: (v: TVar) => string,
 ): SelectGroupedProps["groups"] => {
   return groupVariables(variables).reduce((acc, [category, variables]) => {
     return {
       ...acc,
       [category]: Object.fromEntries(
-        variables.map((v) => [variableSettingss[v.name].displayName, nameSelector(v)]),
+        variables.map((v) => [
+          variableSettingss[v.name].displayName,
+          nameSelector(v),
+        ]),
       ),
     };
   }, {});

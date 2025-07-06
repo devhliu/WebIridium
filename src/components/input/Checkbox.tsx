@@ -12,17 +12,17 @@ export interface CheckboxProps {
 
 const Checkbox = ({ name, value, onChange, className }: CheckboxProps) => {
   return (
-      <RadixCheckbox.Root
-        id={name}
-        className={clsx(styles.root, className)}
-        checked={value}
-        onCheckedChange={onChange}
-      >
-        <RadixCheckbox.Indicator className={styles.indicator}>
-          {value && <CheckIcon aria-hidden />}
-        </RadixCheckbox.Indicator>
-      </RadixCheckbox.Root>
-    );
+    <RadixCheckbox.Root
+      id={name}
+      className={clsx(styles.root, className)}
+      checked={value}
+      onCheckedChange={onChange}
+    >
+      <RadixCheckbox.Indicator className={styles.indicator}>
+        {value && <CheckIcon aria-hidden />}
+      </RadixCheckbox.Indicator>
+    </RadixCheckbox.Root>
+  );
 };
 
 export default Checkbox;

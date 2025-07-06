@@ -19,10 +19,7 @@ export interface VariableItemProps {
 const ICON_DIMS = 14;
 
 const VariableItem = memo(
-  ({
-    settings,
-    onVariableSettingsChange,
-  }: VariableItemProps) => {
+  ({ settings, onVariableSettingsChange }: VariableItemProps) => {
     const [settingsActive, setSettingsActive] = useState(false);
 
     const handleVisiblityToggle = () => {

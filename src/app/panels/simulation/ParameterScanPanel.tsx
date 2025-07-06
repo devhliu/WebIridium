@@ -5,7 +5,11 @@ import { useAtom, useAtomValue } from "jotai";
 
 import styles from "./simulation.module.css";
 import { useSimulate } from "@/features/simulation/useSimulate";
-import { parameterScanOptionsAtom, variablesAtom, variableSettingssAtom } from "@/stores/workspace";
+import {
+  parameterScanOptionsAtom,
+  variablesAtom,
+  variableSettingssAtom,
+} from "@/stores/workspace";
 
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
@@ -136,9 +140,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                 value={parameterScanOptions.varyingParameter}
                 onChange={handleChangeFor("varyingParameter")}
                 groups={groupVariablesForSelectComponent(
-                  variables.filter((v) => v.scanName),
+                  variables.filter((v) => v.type === "settable"),
                   variableSettingss,
-                  (v) => v.scanName!,
+                  (v) => v.setName,
                 )}
               />
             )}

@@ -14,20 +14,30 @@ export type ParameterScanOptions = {
   varyingParameterValue: number;
 };
 
-export type Variable = {
+type VariableBase = {
   /** Default display name. */
   defaultDisplayName: string;
   /** General name used internally by the simulator */
   name: string;
+  category: string;
+};
+
+export type NormalVariable = VariableBase & {
+  type: "normal";
+};
+
+export type SettableVariable = VariableBase & {
+  type: "settable";
   /**
-   * Internal name of the variable used for scanning. If present, the variable can
-   * be used as a parameter in parameter scan. Otherwise it will not appear.
+   * Internal name of the variable used for scanning and sliders.
    * This is necessary because, in Copasi,
    * to scan with species named "A", you set the value for "[A]_0"
    */
-  scanName?: string;
-  category: string;
+  setName: string;
+  defaultValue: number;
 };
+
+export type Variable = NormalVariable | SettableVariable;
 
 /* RESULT STUFF */
 

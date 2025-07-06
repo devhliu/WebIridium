@@ -13,9 +13,9 @@ import type { Variable } from "../simulation/Simulator";
 
 const makeGenericVariable = (name: string): Variable => {
   return {
+    type: "normal",
     defaultDisplayName: name,
     name: name,
-    scanName: name,
     category: "Test",
   };
 };
