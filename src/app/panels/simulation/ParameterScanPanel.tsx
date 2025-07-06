@@ -18,7 +18,7 @@ import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
-import UncontrolledVariableList from "./UncontrolledVariableList";
+import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";

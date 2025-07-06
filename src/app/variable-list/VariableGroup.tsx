@@ -3,21 +3,27 @@ import styles from "./VariableList.module.css";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableItem from "./VariableItem";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
+import type { VariableSettings } from "@/stores/workspace";
 
 const DEFAULT_OPEN_GROUPS = new Set(["Species"]);
 
 export interface VariableGroupProps {
   group: string;
   variables: Variable[];
+  variableSettingss: Record<string, VariableSettings>;
   isSearching: boolean;
-  onVariableChange: (newValue: Variable) => void;
+  onVariableSettingsChange: (
+    variableName: string,
+    newSettings: VariableSettings,
+  ) => void;
 }
 
 const VariableGroup = ({
   group,
   variables,
+  variableSettingss,
   isSearching,
-  onVariableChange,
+  onVariableSettingsChange,
 }: VariableGroupProps) => {
   const [open, setOpen] = useState(() => DEFAULT_OPEN_GROUPS.has(group));
 
@@ -42,7 +48,10 @@ const VariableGroup = ({
             <VariableItem
               key={v.name}
               variable={v}
-              onVariableChange={onVariableChange}
+              variableSettings={variableSettingss[v.name]}
+              onVariableSettingsChange={(newSettings) =>
+                onVariableSettingsChange(v.name, newSettings)
+              }
             />
           ))}
         </div>

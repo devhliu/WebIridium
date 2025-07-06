@@ -10,7 +10,6 @@ import {
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
-import { generateDefaultCustomPalette } from "../colors";
 
 export class CopasiSimulator extends Simulator {
   defaultIndependentVariableName = "Time";
@@ -95,33 +94,14 @@ export class CopasiSimulator extends Simulator {
       abortSignal,
     )) as ModelInfo;
 
-    const colorGenerator = generateDefaultCustomPalette();
     const variables: Variable[] = [];
 
     variables.push({
       displayName: "Time",
       name: "Time",
       category: "Time",
-
-      visible: false,
-      color: colorGenerator.next().value!,
-      width: 2,
     });
 
-    for (const specie of modelInfo.species) {
-      variables.push({
-        displayName: specie.name,
-        name: specie.name,
-        scanName: `[${specie.name}]_0`,
-        category: "Species",
-
-        visible: true,
-        color: colorGenerator.next().value!,
-        width: 2,
-      });
-    }
-
-    // this is done in a separate loop so the displayed species get all the good default colors
     for (const specie of modelInfo.species) {
       // TODO!IMPORTANT: only do this for floating species, not boundary species?
       //                 how to determine if a species is a boundary species?
@@ -129,10 +109,13 @@ export class CopasiSimulator extends Simulator {
         displayName: `${specie.name}'`,
         name: `${specie.name}.Rate`,
         category: "Rate of Changes",
+      });
 
-        visible: false,
-        color: colorGenerator.next().value!,
-        width: 2,
+      variables.push({
+        displayName: specie.name,
+        name: specie.name,
+        scanName: `[${specie.name}]_0`,
+        category: "Species",
       });
     }
 
@@ -142,10 +125,6 @@ export class CopasiSimulator extends Simulator {
         name: param.name,
         scanName: param.name,
         category: "Parameter",
-
-        visible: false,
-        color: colorGenerator.next().value!,
-        width: 2,
       });
     }
 

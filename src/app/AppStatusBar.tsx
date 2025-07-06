@@ -9,7 +9,7 @@ import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import ErrorIcon from "@/assets/icons/ErrorIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
 
-import { modelStatusAtom } from "@/stores/workspace";
+import { modelStatusAtom, variableSettingssAtom } from "@/stores/workspace";
 import { simulationResultAtom, variablesAtom } from "@/stores/workspace";
 
 const ModelStatusItem = () => {
@@ -52,6 +52,7 @@ const ModelStatusItem = () => {
 const MissingDataStatusItem = () => {
   const simulatorResult = useAtomValue(simulationResultAtom);
   const variables = useAtomValue(variablesAtom);
+  const variableSettingss = useAtomValue(variableSettingssAtom);
 
   if (!simulatorResult) {
     return null;
@@ -82,7 +83,7 @@ const MissingDataStatusItem = () => {
   }
 
   const missing = variables
-    .filter((v) => v.visible)
+    .filter((v) => variableSettingss[v.name]?.visible)
     .filter((v) => !haveSet.has(v.name));
   if (missing.length > 0) {
     return (

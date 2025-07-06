@@ -14,6 +14,7 @@ import {
   parameterScanOptionsAtom,
   independentVariableAtom,
   modelStatusAtom,
+  variableSettingssAtom,
 } from "@/stores/workspace";
 import { useSimulator } from "@/features/workspace.tsx";
 
@@ -41,6 +42,7 @@ export const useSimulate = () => {
   const simulator = useSimulator();
   const independentVariable = useAtomValue(independentVariableAtom);
   const variables = useAtomValue(variablesAtom);
+  const variableSettingss = useAtomValue(variableSettingssAtom);
 
   const editorContent = useAtomValue(editorContentAtom);
   const modelStatus = useAtomValue(modelStatusAtom);
@@ -59,7 +61,9 @@ export const useSimulate = () => {
    */
   const getIncludeVariableList = (usingIndependentVariable: string | null) => {
     return variables.filter(
-      (v) => v.name === usingIndependentVariable || v.visible,
+      (v) =>
+        v.name === usingIndependentVariable ||
+        variableSettingss[v.name]?.visible,
     );
   };
 
@@ -81,7 +85,6 @@ export const useSimulate = () => {
       try {
         const result = await run();
         setSimulationResult(result);
-        console.log(result);
         return { type: "success" };
       } catch (err) {
         // console.error(err);

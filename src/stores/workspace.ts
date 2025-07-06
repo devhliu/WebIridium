@@ -47,6 +47,13 @@ export interface GraphSettings {
   margin: number;
 }
 
+export interface VariableSettings {
+  displayName: string;
+  visible: boolean;
+  color: string;
+  width: number;
+}
+
 export type ModelStatus =
   | { type: "loading" }
   | { type: "error"; message: string }
@@ -63,6 +70,7 @@ export const simulationResultAtom = atom<SimulationResult | null>(null);
 
 export const independentVariableAtom = atom<string | null>(null);
 export const variablesAtom = atom<Variable[]>([]);
+export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
 
 export const paletteAtom = atom<Palette>("Custom");
 
@@ -117,6 +125,7 @@ export const allWorkspaceAtoms = [
 
   independentVariableAtom,
   variablesAtom,
+  variableSettingssAtom,
 
   paletteAtom,
 

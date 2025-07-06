@@ -15,6 +15,7 @@ export type ParameterScanOptions = {
 };
 
 export type Variable = {
+  /** Default display name. */
   displayName: string;
   /** General name used internally by the simulator */
   name: string;
@@ -26,11 +27,6 @@ export type Variable = {
    */
   scanName?: string;
   category: string;
-
-  // User settings
-  visible: boolean;
-  color: string;
-  width: number;
 };
 
 /* RESULT STUFF */

@@ -7,37 +7,61 @@ import {
   parameterScanOptionsAtom,
   independentVariableAtom,
   modelStatusAtom,
+  variableSettingssAtom,
+  type VariableSettings,
 } from "@/stores/workspace";
 import type { Variable } from "./simulation/Simulator";
 import { WorkerTermination } from "./workerPool";
+import { generateDefaultCustomPalette } from "./colors";
 
 const MODEL_LOAD_DEBOUNCE = 500; // in ms
 
-/**
- * TODO: unit test this
- * Updates the current variable list so it contains all the same variables as the new one,
- * preserving user settings for the variables.
- */
-const patchVariables = (
-  currentVariables: Variable[],
+// TODO: unit test this?
+const patchVariablesSettings = (
+  currentVariablesSettings: Record<string, VariableSettings>,
   newVariables: Variable[],
-): Variable[] => {
-  const currentSet = new Set(currentVariables.map((v) => v.name));
-  const newSet = new Set(newVariables.map((v) => v.name));
+): Record<string, VariableSettings> => {
+  const adding: Record<string, VariableSettings> = {};
+  const colorGenerator = generateDefaultCustomPalette();
 
-  const result = [];
-  for (const variable of currentVariables) {
-    if (newSet.has(variable.name)) {
-      result.push(variable);
-    }
-  }
+  const isPriorityVariable = (variable: Variable) =>
+    variable.category === "Species" || variable.category === "Time";
+
+  // first pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
-    if (!currentSet.has(variable.name)) {
-      result.push(variable);
+    if (
+      !currentVariablesSettings[variable.name] &&
+      isPriorityVariable(variable)
+    ) {
+      adding[variable.name] = {
+        displayName: variable.displayName,
+        visible: variable.category !== "Time",
+        color: colorGenerator.next().value!,
+        width: 2,
+      };
     }
   }
 
-  return result;
+  // second pass for everything else
+  for (const variable of newVariables) {
+    if (
+      !currentVariablesSettings[variable.name] &&
+      !isPriorityVariable(variable)
+    ) {
+      adding[variable.name] = {
+        displayName: variable.displayName,
+        visible: false,
+        color: colorGenerator.next().value!,
+        width: 2,
+      };
+    }
+  }
+
+  if (Object.keys(adding).length === 0) {
+    return currentVariablesSettings;
+  } else {
+    return { ...currentVariablesSettings, ...adding };
+  }
 };
 
 export const useEditorContent = () => {
@@ -46,6 +70,7 @@ export const useEditorContent = () => {
     independentVariableAtom,
   );
   const setVariables = useSetAtom(variablesAtom);
+  const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const [editorContent, setEditorContent] = useAtom(editorContentAtom);
   const setModelStatus = useSetAtom(modelStatusAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
@@ -134,13 +159,15 @@ export const useEditorContent = () => {
         });
       }
 
-      setVariables((old) => patchVariables(old, newVariables));
+      setVariables(newVariables);
+      setVariableSettingss((old) => patchVariablesSettings(old, newVariables));
       setModelStatus({ type: "success" });
     },
     [
       independentVariable,
       setIndependentVariable,
       setVariables,
+      setVariableSettingss,
       setEditorContent,
       setModelStatus,
       parameterScanOptions,

@@ -17,10 +17,6 @@ const makeGenericVariable = (name: string): Variable => {
     name: name,
     scanName: name,
     category: "Test",
-
-    visible: false,
-    color: "red",
-    width: 2,
   };
 };
 

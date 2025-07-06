@@ -12,7 +12,7 @@ import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 
-import UncontrolledVariableList from "@/app/panels/simulation/UncontrolledVariableList";
+import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 

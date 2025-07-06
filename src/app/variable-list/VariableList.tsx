@@ -1,17 +1,26 @@
 import { useState } from "react";
 import styles from "./VariableList.module.css";
 import { groupVariables } from "@/features/category";
+import { type VariableSettings } from "@/stores/workspace";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableGroup from "./VariableGroup";
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 
 export interface VariableListProps {
   variables: Variable[];
-  onVariableChange: (newValue: Variable) => void;
+  variableSettingss: Record<string, VariableSettings>;
+  onVariableSettingsChange: (
+    variableName: string,
+    newSettings: VariableSettings,
+  ) => void;
 }
 
 // TODO: preserve state when closing/opening in accordion
-const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
+const VariableList = ({
+  variables,
+  variableSettingss,
+  onVariableSettingsChange,
+}: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter(
     (variable) =>
@@ -39,7 +48,8 @@ const VariableList = ({ variables, onVariableChange }: VariableListProps) => {
               key={group}
               group={group}
               variables={vars}
-              onVariableChange={onVariableChange}
+              variableSettingss={variableSettingss}
+              onVariableSettingsChange={onVariableSettingsChange}
               isSearching={searchTerm.length > 0}
             />
           ))}

@@ -1,28 +1,27 @@
 import { useAtomValue } from "jotai";
 
-import { paletteAtom } from "@/stores/workspace";
+import { paletteAtom, type VariableSettings } from "@/stores/workspace";
 
 import PropertyList from "@/components/property-list/PropertyList";
-import type { Variable } from "@/features/simulation/Simulator";
 
 import ColorProperty from "@/components/property-list/ColorProperty";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
 import PropertyHeading from "@/components/property-list/PropertyHeading";
 
-export interface VariableSettingsProps {
-  variable: Variable;
-  onVariableChange: (newVariable: Variable) => void;
+export interface VariableSettingsPropertyListProps {
+  settings: VariableSettings;
+  onVariableSettingsChange: (newSettings: VariableSettings) => void;
 }
 
-const VariableSettings = ({
-  variable,
-  onVariableChange,
-}: VariableSettingsProps) => {
+const VariableSettingsPropertyList = ({
+  settings,
+  onVariableSettingsChange,
+}: VariableSettingsPropertyListProps) => {
   const palette = useAtomValue(paletteAtom);
-  const handleChangeFor = (setting: keyof Variable) => {
+  const handleChangeFor = (setting: keyof VariableSettings) => {
     return (newValue: unknown) => {
-      onVariableChange({
-        ...variable,
+      onVariableSettingsChange({
+        ...settings,
         [setting]: newValue,
       });
     };
@@ -34,13 +33,13 @@ const VariableSettings = ({
       {palette === "Custom" && (
         <ColorProperty
           name="Color"
-          value={variable.color}
+          value={settings.color}
           onChange={handleChangeFor("color")}
         />
       )}
       <NumericSliderProperty
         name="Width"
-        value={variable.width}
+        value={settings.width}
         min={0.5}
         max={25}
         step={0.5}
@@ -50,4 +49,4 @@ const VariableSettings = ({
   );
 };
 
-export default VariableSettings;
+export default VariableSettingsPropertyList;

@@ -7,7 +7,7 @@ import {
   graphSettingsAtom,
   independentVariableAtom,
   paletteAtom,
-  variablesAtom,
+  variableSettingssAtom,
 } from "@/stores/workspace";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
@@ -23,7 +23,7 @@ export interface ResultsPlotProps {
 }
 
 const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
-  const variables = useAtomValue(variablesAtom);
+  const variableSettingss = useAtomValue(variableSettingssAtom);
   const scanPalette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const independentVariable = useAtomValue(independentVariableAtom);
@@ -55,17 +55,17 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       result.columns.find((c) => c.title === independentVariable) ?? [];
     for (const { title, values } of result.columns) {
       if (title === independentVariable) continue;
-      const variable = variables.find((v) => v.name === title);
-      if (!variable?.visible) continue;
+      const settings = variableSettingss[title];
+      if (!settings?.visible) continue;
 
       plotData.push({
         x: independentVariableColumn.values,
         y: values,
         type: "scatter",
         mode: "lines",
-        marker: { color: variable.color },
-        line: { width: variable.width },
-        name: variable?.displayName ?? title,
+        marker: { color: settings.color },
+        line: { width: settings.width },
+        name: settings?.displayName ?? title,
       });
     }
   } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
@@ -74,15 +74,15 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
       for (const { title, values } of scan.columns) {
         if (title === scanIndependentVariable) continue;
-        const variable = variables.find((v) => v.name === title);
-        if (!variable?.visible) continue;
+        const settings = variableSettingss[title];
+        if (!settings?.visible) continue;
 
         let finalColor: string;
         if (scanPalette !== "Custom") {
           finalColor = "red"; // it will get set later
         } else {
           finalColor = getDefaultParameterScanColor(
-            variable.color,
+            settings.color,
             scan.scanPercent,
           );
         }
@@ -93,9 +93,9 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
           type: "scatter",
           mode: "lines",
           marker: { color: finalColor },
-          line: { width: variable.width },
+          line: { width: settings.width },
           name: getParameterScanTitle(
-            variable.displayName,
+            settings.displayName,
             result.parameter,
             scan.parameterValue,
           ),
@@ -116,17 +116,17 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     }
 
     for (const [variableName, concentrations] of concentrationsMap.entries()) {
-      const variable = variables.find((v) => v.name === variableName);
-      if (!variable?.visible) continue;
+      const settings = variableSettingss[variableName];
+      if (!settings?.visible) continue;
 
       plotData.push({
         x: parameterValues,
         y: concentrations,
         type: "scatter",
         mode: "lines",
-        marker: { color: variable.color },
-        line: { width: variable.width },
-        name: variable.displayName,
+        marker: { color: settings.color },
+        line: { width: settings.width },
+        name: settings.displayName,
       });
     }
   }

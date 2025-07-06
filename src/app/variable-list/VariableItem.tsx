@@ -6,24 +6,30 @@ import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
 import { type Variable } from "@/features/simulation/Simulator";
-import VariableSettings from "./VariableSettings";
+import type { VariableSettings } from "@/stores/workspace";
+import VariableSettingsPropertyList from "./VariableSettingsPropertyList";
 
 export interface VariableItemProps {
   variable: Variable;
-  onVariableChange: (newValue: Variable) => void;
+  variableSettings: VariableSettings;
+  onVariableSettingsChange: (newSettings: VariableSettings) => void;
 }
 
 // TODO: this should be in the css? but it can't be??? how to get this into css??
 const ICON_DIMS = 14;
 
 const VariableItem = memo(
-  ({ variable, onVariableChange }: VariableItemProps) => {
+  ({
+    variable,
+    variableSettings,
+    onVariableSettingsChange,
+  }: VariableItemProps) => {
     const [settingsActive, setSettingsActive] = useState(false);
 
     const handleVisiblityToggle = () => {
-      onVariableChange({
-        ...variable,
-        visible: !variable.visible,
+      onVariableSettingsChange({
+        ...variableSettings,
+        visible: !variableSettings.visible,
       });
     };
 
@@ -43,10 +49,10 @@ const VariableItem = memo(
               onClick={handleVisiblityToggle}
             >
               {/* TODO: add aria stuff to this */}
-              {variable.visible ? (
-                <EyeIcon height={ICON_DIMS} width={ICON_DIMS} />
+              {variableSettings.visible ? (
+                <EyeIcon height="1em" width="1em" />
               ) : (
-                <ClosedEyeIcon height={ICON_DIMS} width={ICON_DIMS} />
+                <ClosedEyeIcon height="1em" width="1em" />
               )}
             </button>
           </div>
@@ -65,9 +71,9 @@ const VariableItem = memo(
 
         {settingsActive && (
           <div className={styles.itemSettings}>
-            <VariableSettings
-              variable={variable}
-              onVariableChange={onVariableChange}
+            <VariableSettingsPropertyList
+              settings={variableSettings}
+              onVariableSettingsChange={onVariableSettingsChange}
             />
           </div>
         )}
