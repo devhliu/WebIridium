@@ -87,7 +87,7 @@ const AppContent = () => {
 
         <div className={styles.allotmentContainer}>
           <Allotment>
-            <Allotment.Pane minSize={320} preferredSize={320}>
+            <Allotment.Pane minSize={280} preferredSize={280}>
               {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
                       Adding the `key` fixed that. */}
               <TimeCoursePanel
