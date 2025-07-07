@@ -8,7 +8,7 @@ import {
   isSimulatingAtom,
   runParameterScanAtom,
 } from "@/globals/workspace/simulation";
-import { variablesAtom } from "@/globals/workspace/model";
+import { modelStatusAtom, variablesAtom } from "@/globals/workspace/model";
 import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
@@ -46,6 +46,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     parameterScanOptionsAtom,
   );
   const isSimulating = useAtomValue(isSimulatingAtom);
+  const modelStatus = useAtomValue(modelStatusAtom);
   const runParameterScan = useSetAtom(runParameterScanAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
@@ -82,7 +83,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating}
+        isLoading={isSimulating || modelStatus.type === "loading"}
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}

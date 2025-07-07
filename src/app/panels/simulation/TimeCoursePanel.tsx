@@ -19,6 +19,7 @@ import {
   cancelSimulationAtom,
   isSimulatingAtom,
 } from "@/globals/workspace/simulation";
+import { modelStatusAtom } from "@/globals/workspace/model";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
@@ -27,6 +28,7 @@ export interface TimeCoursePanelProps {
 export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
+  const modelStatus = useAtomValue(modelStatusAtom);
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
   const [timeCourseParameters, setTimeCourseParameters] = useAtom(
@@ -57,7 +59,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
       <h1 className={styles.panelTitle}>Time Course Simulation</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating}
+        isLoading={isSimulating || modelStatus.type === "loading"}
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}

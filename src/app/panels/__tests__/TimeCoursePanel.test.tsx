@@ -7,7 +7,9 @@ import {
   itShouldBeCancellable,
   itShouldDisplayPlot,
   itShouldDisplayToasts,
-} from "./testButton.ts";
+  itShouldBeLoadingWhenModelIsLoading,
+  ForceModelUpdateButton,
+} from "./testButton";
 
 vi.mock("@/features/workers.ts");
 vi.mock("@/components/Toast.tsx");
@@ -17,8 +19,8 @@ vi.mock("plotly.js");
 describe("simulation button", () => {
   const testButtonOptions = {
     buttonText: "Simulate",
-    render: () => {
-      renderWithinWorkspace(
+    render: async () => {
+      await renderWithinWorkspace(
         <div>
           <TimeCoursePanel visible />
           <PlotPanel />
@@ -31,6 +33,17 @@ describe("simulation button", () => {
   itShouldBeCancellable(testButtonOptions);
   itShouldDisplayPlot(testButtonOptions);
   itShouldDisplayToasts(testButtonOptions);
+  itShouldBeLoadingWhenModelIsLoading({
+    render: async () => {
+      await renderWithinWorkspace(
+        <div>
+          <TimeCoursePanel visible />
+          <ForceModelUpdateButton />
+          <PlotPanel />
+        </div>,
+      );
+    },
+  });
 
   // TODO: need tests to see if the plot display is correct.
   // TODO: need test to see if simple setting updates are working correctly

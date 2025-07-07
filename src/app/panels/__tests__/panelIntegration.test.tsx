@@ -1,6 +1,6 @@
 import { test, expect, afterEach, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
-import { renderWithinWorkspace } from "@/testing-utils/render";
+import { screen, within } from "@testing-library/react";
+import { renderFlush, renderWithinWorkspace } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
 
 import {
@@ -22,7 +22,7 @@ afterEach(() => {
 });
 
 test("panels should all be cancellable when a simulation is running", async () => {
-  renderWithinWorkspace(
+  await renderWithinWorkspace(
     <div>
       <TimeCoursePanel visible />
       <SteadyStatePanel visible />
@@ -50,11 +50,9 @@ test("panels should all be cancellable when a simulation is running", async () =
 
   const cancelButton = within(timeCoursePanel).getByLabelText("Cancel");
   expect(cancelButton).toBeInTheDocument();
+  expect(within(steadyStatePanel).getByLabelText("Cancel")).toBeInTheDocument();
   expect(
-    within(steadyStatePanel).queryByLabelText("Cancel"),
-  ).toBeInTheDocument();
-  expect(
-    within(parameterScanPanel).queryByLabelText("Cancel"),
+    within(parameterScanPanel).getByLabelText("Cancel"),
   ).toBeInTheDocument();
 
   await userEvent.click(cancelButton);
@@ -65,7 +63,7 @@ test("panels should all be cancellable when a simulation is running", async () =
 });
 
 test("results panel should only be visible after simulating", async () => {
-  render(<App />);
+  await renderFlush(<App />);
 
   // the view as table button should not be there yet
   expect(screen.queryByText("Table")).not.toBeInTheDocument();

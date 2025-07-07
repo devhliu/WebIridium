@@ -40,9 +40,10 @@ const Button = ({
         )}
         onClick={onClick}
         disabled={isLoading}
+        aria-label={isLoading ? "Loading" : undefined}
       >
         {isLoading ? (
-          <PulseLoader color="var(--button-foreground)" />
+          <PulseLoader aria-hidden="true" color="var(--button-foreground)" />
         ) : (
           <>
             {icon}

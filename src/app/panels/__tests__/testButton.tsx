@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 /**
  * Shared tests between simulation panels.
  *
@@ -15,6 +16,8 @@ import {
   setWorkerFailMode,
 } from "@/testing-utils/mockWorker.ts";
 import { getToastHistory, resetToastHistory } from "@/testing-utils/mockToast";
+import { useSetAtom } from "jotai";
+import { updateEditorContentAtom } from "@/globals/workspace/model";
 
 afterEach(() => {
   resetWorkerResponseDelay();
@@ -23,7 +26,7 @@ afterEach(() => {
 });
 
 export interface TestSimulationButtonOptions {
-  render: () => void;
+  render: () => Promise<void>;
   buttonText: string;
 }
 
@@ -34,7 +37,7 @@ export const itShouldDisableWhenStartingSimulation = ({
   it("should disable when starting a simulation", async () => {
     // need to have some delay otherwise the button will instantly simulate and undisable itself
 
-    render();
+    await render();
 
     // This has to go after the render because the model info update
     // also goes through a worker round-trip. The button will refuse
@@ -52,7 +55,7 @@ export const itShouldDisplayPlot = ({
   buttonText,
 }: TestSimulationButtonOptions) => {
   it("should display a plot", async () => {
-    render();
+    await render();
 
     const button = screen.getByText(buttonText);
     await userEvent.click(button);
@@ -65,7 +68,7 @@ export const itShouldBeCancellable = ({
   buttonText,
 }: TestSimulationButtonOptions) => {
   it("should be cancellable", async () => {
-    render();
+    await render();
 
     setWorkerResponseDelay(100);
 
@@ -86,7 +89,7 @@ export const itShouldDisplayToasts = ({
   buttonText,
 }: TestSimulationButtonOptions) => {
   it("should toast on an error", async () => {
-    render();
+    await render();
 
     setWorkerFailMode("always");
 
@@ -94,5 +97,33 @@ export const itShouldDisplayToasts = ({
     await userEvent.click(button);
 
     expect(getToastHistory()).toHaveLength(1);
+  });
+};
+
+export const ForceModelUpdateButton = () => {
+  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  return (
+    <button onClick={() => updateEditorContent({ content: "test" })}>
+      FORCE UPDATE
+    </button>
+  );
+};
+
+/** For this render function, make sure to include the ForceModelUpdateButton component in the render. */
+export const itShouldBeLoadingWhenModelIsLoading = ({
+  render,
+}: Omit<TestSimulationButtonOptions, "buttonText">) => {
+  it("should be loading when model is loading", async () => {
+    setWorkerResponseDelay(50);
+
+    await render();
+
+    const forceUpdateButton = screen.getByText("FORCE UPDATE");
+    const button = screen.getByLabelText("Loading");
+
+    await userEvent.click(forceUpdateButton);
+
+    expect(button).toBeInTheDocument();
+    expect(button).toBeDisabled();
   });
 };

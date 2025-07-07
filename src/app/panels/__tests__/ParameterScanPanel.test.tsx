@@ -5,7 +5,9 @@ import {
   itShouldDisableWhenStartingSimulation,
   itShouldBeCancellable,
   itShouldDisplayPlot,
-} from "./testButton.ts";
+  itShouldBeLoadingWhenModelIsLoading,
+  ForceModelUpdateButton,
+} from "./testButton";
 import ParameterScanPanel from "../simulation/ParameterScanPanel.tsx";
 
 vi.mock("@/features/workers.ts");
@@ -16,8 +18,8 @@ vi.mock("plotly.js");
 describe("run button", () => {
   const testButtonOptions = {
     buttonText: "Run",
-    render: () => {
-      renderWithinWorkspace(
+    render: async () => {
+      await renderWithinWorkspace(
         <div>
           <ParameterScanPanel visible />
           <PlotPanel />
@@ -29,6 +31,17 @@ describe("run button", () => {
   itShouldDisableWhenStartingSimulation(testButtonOptions);
   itShouldBeCancellable(testButtonOptions);
   itShouldDisplayPlot(testButtonOptions);
+  itShouldBeLoadingWhenModelIsLoading({
+    render: async () => {
+      await renderWithinWorkspace(
+        <div>
+          <ParameterScanPanel visible />
+          <ForceModelUpdateButton />
+          <PlotPanel />
+        </div>,
+      );
+    },
+  });
 
   // TODO: need tests to see if the plot display is correct
   // TODO: need test to see if simple setting updates are working correctly

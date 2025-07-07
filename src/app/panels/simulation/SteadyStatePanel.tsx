@@ -9,6 +9,7 @@ import {
   computeSteadyStateAtom,
   isSimulatingAtom,
 } from "@/globals/workspace/simulation";
+import { modelStatusAtom } from "@/globals/workspace/model";
 
 export interface SteadyStatePanelProps {
   visible: boolean;
@@ -17,6 +18,7 @@ export interface SteadyStatePanelProps {
 export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
+  const modelStatus = useAtomValue(modelStatusAtom);
   const computeSteadyState = useSetAtom(computeSteadyStateAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
@@ -44,7 +46,7 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
       <h1 className={styles.panelTitle}>Compute Steady State</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating}
+        isLoading={isSimulating || modelStatus.type === "loading"}
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}

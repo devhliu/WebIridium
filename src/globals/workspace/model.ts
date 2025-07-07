@@ -21,7 +21,7 @@ export type ModelStatus =
   | { type: "error"; message: string }
   | { type: "success" };
 
-const MODEL_LOAD_DEBOUNCE = 500; // in ms
+const MODEL_LOAD_DEBOUNCE = 200; // in ms
 
 const _updateAbortControllerAtom = atom<AbortController | null>(null);
 const _editorContentAtom = atom(defaultModel);
