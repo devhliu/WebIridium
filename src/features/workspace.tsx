@@ -4,10 +4,7 @@ import { ScopeProvider } from "jotai-scope";
 
 import defaultModel from "@/assets/models/default.ant?raw";
 
-import {
-  modelAtoms,
-  updateEditorContentAtom,
-} from "@/globals/workspace/model";
+import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";
 import { settingsAtoms } from "@/globals/workspace/settings";
 import { simulationAtoms } from "@/globals/workspace/simulation";

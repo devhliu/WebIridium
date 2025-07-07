@@ -9,9 +9,10 @@ Application --> Simulator --> Worker --> Anitmony/Copasi
 Application code interfaces with a Simulator class. This Simulator class manages a [Web Worker](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers). The Web Worker calls the Antimony/Copasi APIs directly.
 
 When you want to add a new simulation feature, you will likely have to edit multiple files. Here are places to look:
- - `src/globals/simulation + src/globals/model` - these contain the Simulator instance and other various information about the model the user is typing.
- - `src/features/Simulator` - the Simulator interface. As of now, the only implementation is in `src/features/CopasiSimulator`.
- - `public/copasiWorker`
+
+- `src/globals/simulation + src/globals/model` - these contain the Simulator instance and other various information about the model the user is typing.
+- `src/features/Simulator` - the Simulator interface. As of now, the only implementation is in `src/features/CopasiSimulator`.
+- `public/copasiWorker`
 
 ## worker interface
 

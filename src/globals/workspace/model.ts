@@ -23,6 +23,15 @@ export type ModelStatus =
 
 const MODEL_LOAD_DEBOUNCE = 500; // in ms
 
+const _updateAbortControllerAtom = atom<AbortController | null>(null);
+const _editorContentAtom = atom(defaultModel);
+const _variablesAtom = atom<Variable[]>([]);
+const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
+
+export const editorContentAtom = atom((get) => get(_editorContentAtom));
+export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
+export const variablesAtom = atom((get) => get(_variablesAtom));
+
 // TODO: unit test this?
 const patchVariablesSettings = (
   currentVariablesSettings: Record<string, VariableSettings>,
@@ -71,14 +80,6 @@ const patchVariablesSettings = (
   }
 };
 
-const _updateAbortControllerAtom = atom<AbortController | null>(null);
-const _editorContentAtom = atom(defaultModel);
-const _variablesAtom = atom<Variable[]>([]);
-const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
-
-export const editorContentAtom = atom((get) => get(_editorContentAtom));
-export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
-export const variablesAtom = atom((get) => get(_variablesAtom));
 export const updateEditorContentAtom = atom(
   null,
   async (

@@ -108,6 +108,6 @@ export const settingsAtoms = [
 
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
-  
+
   graphSettingsAtom,
 ];
