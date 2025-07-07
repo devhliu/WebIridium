@@ -38,14 +38,14 @@
 .slider-title {
   align-items: center;
   margin: 0;
-  margin-bottom: var(--spacing-2);
+  margin-bottom: var(--spacing-1);
 
   display: flex;
   flex-direction: row;
   gap: var(--spacing-4);
 
   color: var(--color-primary-foreground);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-small);
 
   .disabled > & {
     color: var(--color-primary-foreground-dim);
@@ -58,5 +58,11 @@
 }
 
 .slider-number-box {
-  width: 80px;
+  font-size: var(--font-size-small);
+  width: 72px;
+  padding-block: var(--spacing-1);
+}
+
+.slider-actual-slider {
+  --slider-height: 12px;
 }

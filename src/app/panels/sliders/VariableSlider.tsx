@@ -143,6 +143,7 @@ const VariableSlider = memo(
 
         {sliderState && (
           <Slider
+            className={styles.sliderActualSlider}
             min={sliderState.min}
             max={sliderState.max}
             step={(sliderState.max - sliderState.min) / SLIDER_TOTAL_STEPS}

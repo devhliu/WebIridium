@@ -1,11 +1,13 @@
 .root {
+  --slider-height: 16px;
+
   display: flex;
   flex-grow: 1;
   align-items: center;
   position: relative;
   user-select: none;
   touch-action: none;
-  height: 15px;
+  height: var(--slider-height);
 }
 
 .track {
@@ -13,7 +15,7 @@
   background-color: var(--color-input-background);
   border: var(--border-input-solid);
   border-radius: 9999px;
-  height: var(--size-1);
+  height: 50%;
   flex-grow: 1;
   cursor: pointer;
 }
@@ -28,8 +30,8 @@
 
 .thumb {
   display: block;
-  width: var(--size-2);
-  height: var(--size-2);
+  height: var(--slider-height);
+  aspect-ratio: 1 / 1;
   background-color: var(--color-primary-foreground);
   border-radius: 10px;
   cursor: pointer;
