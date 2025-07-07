@@ -22,6 +22,7 @@ import {
   variableSettingssAtom,
   type VariableSettings,
 } from "./settings";
+import { WorkerTermination } from "@/features/workerPool";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -29,13 +30,20 @@ export type SimulationOperationResult =
 
 // internal atoms
 
-const _isSimulatingAtom = atom(false);
+type SimulationInternalState = {
+  type: string;
+  abortController: AbortController;
+};
+
 const _simulationResultAtom = atom<SimulationResult | null>(null);
 const _simulatorAtom = atomWithLazy<Simulator>(() => new CopasiSimulator());
+const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms
 
-export const isSimulatingAtom = atom((get) => get(_isSimulatingAtom));
+export const currentSimulationTypeAtom = atom(
+  (get) => get(_simulationInternalStateAtom)?.type,
+);
 export const simulationResultAtom = atom((get) => get(_simulationResultAtom));
 export const simulatorAtom = atom((get) => get(_simulatorAtom));
 
@@ -53,12 +61,13 @@ const getIncludeVariableList = (
 };
 
 const runSimulation = async (
+  simulationType: string,
   get: Getter,
   set: Setter,
-  run: () => Promise<SimulationResult>,
+  run: (abortSignal: AbortSignal) => Promise<SimulationResult>,
 ): Promise<SimulationOperationResult> => {
   const modelStatus = get(modelStatusAtom);
-  if (get(isSimulatingAtom)) {
+  if (get(_simulationInternalStateAtom)) {
     return { type: "failure", message: "Simulation already in progress." };
   } else if (modelStatus.type === "loading") {
     return {
@@ -68,29 +77,45 @@ const runSimulation = async (
   } else if (modelStatus.type === "error") {
     return { type: "failure", message: "There is an error with your model." };
   } else {
-    set(_isSimulatingAtom, true);
+    const abortController = new AbortController();
+    set(_simulationInternalStateAtom, {
+      type: simulationType,
+      abortController,
+    });
 
     try {
-      const result = await run();
+      const result = await run(abortController.signal);
       set(_simulationResultAtom, result);
       return { type: "success" };
     } catch (err) {
-      // console.error(err);
+      if (err instanceof WorkerTermination) {
+        return { type: "success" };
+      } else {
+        if (err instanceof Error && err.message !== "mock fail") {
+          console.error(err);
+        }
 
-      return {
-        type: "failure",
-        message: err instanceof Error ? err.message : "Unknown error",
-      };
+        return {
+          type: "failure",
+          message: err instanceof Error ? err.message : "Unknown error",
+        };
+      }
     } finally {
-      set(_isSimulatingAtom, false);
+      if (
+        get(_simulationInternalStateAtom)?.abortController === abortController
+      ) {
+        set(_simulationInternalStateAtom, null);
+      }
     }
   }
 };
 
-export const simulateTimeCourseAtom = atom(
-  null,
-  async (get, set, abortSignal?: AbortSignal) => {
-    return await runSimulation(get, set, async () => {
+export const simulateTimeCourseAtom = atom(null, async (get, set) => {
+  return await runSimulation(
+    "timeCourse",
+    get,
+    set,
+    async (abortSignal: AbortSignal) => {
       return await get(simulatorAtom).simulateTimeCourse(
         get(editorContentAtom),
         {
@@ -105,14 +130,16 @@ export const simulateTimeCourseAtom = atom(
         },
         abortSignal,
       );
-    });
-  },
-);
+    },
+  );
+});
 
-export const computeSteadyStateAtom = atom(
-  null,
-  async (get, set, abortSignal?: AbortSignal) => {
-    return await runSimulation(get, set, async () => {
+export const computeSteadyStateAtom = atom(null, async (get, set) => {
+  return await runSimulation(
+    "steadyState",
+    get,
+    set,
+    async (abortSignal: AbortSignal) => {
       return await get(simulatorAtom).computeSteadyState(
         get(editorContentAtom),
         {
@@ -120,20 +147,22 @@ export const computeSteadyStateAtom = atom(
         },
         abortSignal,
       );
-    });
-  },
-);
+    },
+  );
+});
 
-export const runParameterScanAtom = atom(
-  null,
-  async (get, set, abortSignal?: AbortSignal) => {
-    const simulator = get(simulatorAtom);
-    const parameterScanOptions = get(parameterScanOptionsAtom);
-    const variables = get(variablesAtom);
-    const variableSettingss = get(variableSettingssAtom);
-    const editorContent = get(editorContentAtom);
+export const runParameterScanAtom = atom(null, async (get, set) => {
+  const simulator = get(simulatorAtom);
+  const parameterScanOptions = get(parameterScanOptionsAtom);
+  const variables = get(variablesAtom);
+  const variableSettingss = get(variableSettingssAtom);
+  const editorContent = get(editorContentAtom);
 
-    return await runSimulation(get, set, async () => {
+  return await runSimulation(
+    "parameterScan",
+    get,
+    set,
+    async (abortSignal: AbortSignal) => {
       const parameter = parameterScanOptions.varyingParameter;
       if (!parameter) {
         throw new Error("select parameter to scan with");
@@ -226,20 +255,28 @@ export const runParameterScanAtom = atom(
           scans,
         } satisfies ParameterScanResult;
       }
-    });
-  },
-);
+    },
+  );
+});
+
+export const cancelSimulationAtom = atom(null, (get) => {
+  const internalState = get(_simulationInternalStateAtom);
+  if (internalState?.abortController) {
+    internalState.abortController.abort();
+  }
+});
 
 export const simulationAtoms = [
-  _isSimulatingAtom,
   _simulationResultAtom,
   _simulatorAtom,
+  _simulationInternalStateAtom,
 
-  isSimulatingAtom,
+  currentSimulationTypeAtom,
   simulationResultAtom,
   simulatorAtom,
 
   simulateTimeCourseAtom,
   computeSteadyStateAtom,
   runParameterScanAtom,
+  cancelSimulationAtom,
 ];

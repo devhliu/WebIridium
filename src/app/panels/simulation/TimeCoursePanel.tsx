@@ -1,5 +1,4 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { useState } from "react";
 
 import { timeCourseParametersAtom } from "@/globals/workspace/settings";
 
@@ -16,8 +15,9 @@ import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 
 import {
-  isSimulatingAtom,
   simulateTimeCourseAtom,
+  currentSimulationTypeAtom,
+  cancelSimulationAtom,
 } from "@/globals/workspace/simulation";
 
 export interface TimeCoursePanelProps {
@@ -26,23 +26,15 @@ export interface TimeCoursePanelProps {
 
 export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const { toast } = useToast();
-  const isSimulating = useAtomValue(isSimulatingAtom);
+  const currentSimulationType = useAtomValue(currentSimulationTypeAtom);
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
-  const [abortSimulation, setAbortSimulation] =
-    useState<AbortController | null>(null);
+  const cancelSimulation = useSetAtom(cancelSimulationAtom);
   const [timeCourseParameters, setTimeCourseParameters] = useAtom(
     timeCourseParametersAtom,
   );
 
   const handleSimulateClick = async () => {
-    if (abortSimulation) {
-      abortSimulation.abort();
-    }
-
-    const controller = new AbortController();
-    setAbortSimulation(controller);
-
-    const result = await simulateTimeCourse(controller.signal);
+    const result = await simulateTimeCourse();
     if (result.type === "failure") {
       toast({
         type: "error",
@@ -53,10 +45,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   };
 
   const handleCancelClick = () => {
-    if (abortSimulation) {
-      abortSimulation.abort();
-      setAbortSimulation(null);
-    }
+    cancelSimulation();
   };
 
   return (
@@ -68,9 +57,9 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
       <h1 className={styles.panelTitle}>Time Course Simulation</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating}
+        isLoading={Boolean(currentSimulationType)}
         onClick={handleSimulateClick}
-        canCancel={isSimulating && !!abortSimulation}
+        canCancel={currentSimulationType === "timeCourse"}
         onCancel={handleCancelClick}
       >
         Simulate

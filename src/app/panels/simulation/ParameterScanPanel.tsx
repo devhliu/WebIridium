@@ -1,11 +1,11 @@
 // TODO: fix having <=1 number of values causing an error
 // TODO: make sure your min can't be more than max (and add validators for the rest of the stuff)
-import { useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import styles from "./simulation.module.css";
 import {
-  isSimulatingAtom,
+  cancelSimulationAtom,
+  currentSimulationTypeAtom,
   runParameterScanAtom,
 } from "@/globals/workspace/simulation";
 import { variablesAtom } from "@/globals/workspace/model";
@@ -45,21 +45,12 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
-  const isSimulating = useAtomValue(isSimulatingAtom);
+  const currentSimulationType = useAtomValue(currentSimulationTypeAtom);
   const runParameterScan = useSetAtom(runParameterScanAtom);
-
-  const [abortSimulation, setAbortSimulation] =
-    useState<AbortController | null>(null);
+  const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
   const handleSimulateClick = async () => {
-    if (abortSimulation) {
-      abortSimulation.abort();
-    }
-
-    const controller = new AbortController();
-    setAbortSimulation(controller);
-
-    const result = await runParameterScan(controller.signal);
+    const result = await runParameterScan();
     if (result.type === "failure") {
       toast({
         type: "error",
@@ -70,10 +61,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   };
 
   const handleCancelClick = () => {
-    if (abortSimulation) {
-      abortSimulation.abort();
-      setAbortSimulation(null);
-    }
+    cancelSimulation();
   };
 
   const handleChangeFor = (property: keyof typeof parameterScanOptions) => {
@@ -94,9 +82,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating}
+        isLoading={Boolean(currentSimulationType)}
         onClick={handleSimulateClick}
-        canCancel={isSimulating && !!abortSimulation}
+        canCancel={currentSimulationType === "parameterScan"}
         onCancel={handleCancelClick}
       >
         Run
