@@ -3,7 +3,7 @@ import styles from "./VariableList.module.css";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableItem from "./VariableItem";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
-import type { VariableSettings } from "@/stores/workspace/settings";
+import type { VariableSettings } from "@/globals/workspace/settings";
 
 const DEFAULT_OPEN_GROUPS = new Set(["Species"]);
 

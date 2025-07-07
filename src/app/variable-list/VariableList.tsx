@@ -1,7 +1,7 @@
 import { useState } from "react";
 import styles from "./VariableList.module.css";
 import { groupVariables } from "@/features/category";
-import { type VariableSettings } from "@/stores/workspace/settings";
+import { type VariableSettings } from "@/globals/workspace/settings";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableGroup from "./VariableGroup";
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";

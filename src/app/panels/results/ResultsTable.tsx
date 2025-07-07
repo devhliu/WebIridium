@@ -4,7 +4,7 @@ import DataTable, { type DataTableProps } from "@/components/DataTable";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import { independentVariableAtom } from "@/stores/workspace/settings";
+import { independentVariableAtom } from "@/globals/workspace/settings";
 
 export interface ResultsTableProps {
   result: SimulationResult;

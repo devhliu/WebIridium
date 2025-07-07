@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { simulationResultAtom } from "@/stores/workspace/simulation";
+import { simulationResultAtom } from "@/globals/workspace/simulation";
 import styles from "./results.module.css";
 import DataTable from "@/components/DataTable";
 import { type SteadyStateResultItem } from "@/features/simulation/Simulator";

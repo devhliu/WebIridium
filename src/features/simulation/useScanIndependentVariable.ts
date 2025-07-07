@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { simulatorAtom } from "@/stores/workspace/simulation";
+import { simulatorAtom } from "@/globals/workspace/simulation";
 
 export const useScanIndependentVariable = (): string => {
   const simulator = useAtomValue(simulatorAtom);

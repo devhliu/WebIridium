@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import {
   paletteAtom,
   type VariableSettings,
-} from "@/stores/workspace/settings";
+} from "@/globals/workspace/settings";
 
 import PropertyList from "@/components/property-list/PropertyList";
 

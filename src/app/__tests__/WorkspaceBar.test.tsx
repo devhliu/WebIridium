@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { screen } from "@testing-library/react";
 
 import { renderWithinWorkspace } from "@/testing-utils/render";
-import { nameAtom } from "@/stores/workspace/settings";
+import { nameAtom } from "@/globals/workspace/settings";
 import WorkspaceBar from "../WorkspaceBar";
 import userEvent from "@testing-library/user-event";
 

@@ -8,7 +8,7 @@ import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 import {
   computeSteadyStateAtom,
   isSimulatingAtom,
-} from "@/stores/workspace/simulation";
+} from "@/globals/workspace/simulation";
 
 export interface SteadyStatePanelProps {
   visible: boolean;

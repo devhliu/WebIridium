@@ -16,11 +16,11 @@ import WorkspaceBar from "./WorkspaceBar";
 
 import { promptDownloadFile } from "@/features/promptDownloadFile";
 import { getTheme, setTheme } from "@/features/theme";
-import { nameAtom } from "@/stores/workspace/settings";
+import { nameAtom } from "@/globals/workspace/settings";
 import {
   editorContentAtom,
   updateEditorContentAtom,
-} from "@/stores/workspace/model";
+} from "@/globals/workspace/model";
 import { useSetAtom } from "jotai";
 
 export interface AppMenubarProps {

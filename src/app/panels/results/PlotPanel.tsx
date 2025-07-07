@@ -1,6 +1,6 @@
 import { useRef, useState, useLayoutEffect } from "react";
 import { useAtomValue } from "jotai";
-import { simulationResultAtom } from "@/stores/workspace/simulation";
+import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
 import styles from "./results.module.css";
 import ResultsPlot from "./ResultsPlot";
 import SettingsPanel from "./SettingsPanel.tsx";

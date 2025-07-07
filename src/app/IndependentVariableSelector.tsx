@@ -3,8 +3,8 @@ import styles from "./IndependentVariableSelector.module.css";
 import {
   independentVariableAtom,
   variableSettingssAtom,
-} from "@/stores/workspace/settings";
-import { variablesAtom } from "@/stores/workspace/model";
+} from "@/globals/workspace/settings";
+import { variablesAtom } from "@/globals/workspace/model";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import Select from "@/components/input/Select";
 

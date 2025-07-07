@@ -6,7 +6,7 @@ import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
 import { type Variable } from "@/features/simulation/Simulator";
-import type { VariableSettings } from "@/stores/workspace/settings";
+import type { VariableSettings } from "@/globals/workspace/settings";
 import VariableSettingsPropertyList from "./VariableSettingsPropertyList";
 
 export interface VariableItemProps {

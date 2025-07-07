@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 
-import { timeCourseParametersAtom } from "@/stores/workspace/settings";
+import { timeCourseParametersAtom } from "@/globals/workspace/settings";
 
 import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
@@ -18,7 +18,7 @@ import TimeCoursePropertyList from "./TimeCoursePropertyList";
 import {
   isSimulatingAtom,
   simulateTimeCourseAtom,
-} from "@/stores/workspace/simulation";
+} from "@/globals/workspace/simulation";
 
 export interface TimeCoursePanelProps {
   visible: boolean;

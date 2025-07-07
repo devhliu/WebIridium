@@ -1,11 +1,11 @@
 import { useAtom, useAtomValue } from "jotai";
 import styles from "./SlidersPanel.module.css";
-import { variablesAtom } from "@/stores/workspace/model";
+import { variablesAtom } from "@/globals/workspace/model";
 import {
   variableSliderStatesAtom,
   type VariableSliderState,
-} from "@/stores/workspace/slider";
-import { variableSettingssAtom } from "@/stores/workspace/settings";
+} from "@/globals/workspace/slider";
+import { variableSettingssAtom } from "@/globals/workspace/settings";
 import { groupVariables } from "@/features/category";
 import VariableSlider from "./VariableSlider";
 import { useCallback } from "react";

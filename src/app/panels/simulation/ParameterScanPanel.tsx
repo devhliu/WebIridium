@@ -7,12 +7,12 @@ import styles from "./simulation.module.css";
 import {
   isSimulatingAtom,
   runParameterScanAtom,
-} from "@/stores/workspace/simulation";
-import { variablesAtom } from "@/stores/workspace/model";
+} from "@/globals/workspace/simulation";
+import { variablesAtom } from "@/globals/workspace/model";
 import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
-} from "@/stores/workspace/settings";
+} from "@/globals/workspace/settings";
 
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";

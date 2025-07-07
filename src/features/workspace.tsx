@@ -7,10 +7,10 @@ import defaultModel from "@/assets/models/default.ant?raw";
 import {
   modelAtoms,
   updateEditorContentAtom,
-} from "@/stores/workspace/model.ts";
-import { sliderAtoms } from "@/stores/workspace/slider.ts";
-import { settingsAtoms } from "@/stores/workspace/settings.ts";
-import { simulationAtoms } from "@/stores/workspace/simulation.ts";
+} from "@/globals/workspace/model";
+import { sliderAtoms } from "@/globals/workspace/slider";
+import { settingsAtoms } from "@/globals/workspace/settings";
+import { simulationAtoms } from "@/globals/workspace/simulation";
 
 const allWorkspaceAtoms = [
   ...modelAtoms,

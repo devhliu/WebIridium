@@ -5,7 +5,7 @@ import ToastTest from "@/app/ToastTest";
 import {
   editorContentAtom,
   updateEditorContentAtom,
-} from "@/stores/workspace/model";
+} from "@/globals/workspace/model";
 
 import defaultModel from "@/assets/models/default.ant?raw";
 import chickenModel from "@/assets/models/chicken.ant?raw";
