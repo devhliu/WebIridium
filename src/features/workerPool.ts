@@ -2,8 +2,8 @@
 //       This is low priority since there isn't any obvious way to get multiple workers at the moment.
 
 export type Action = {
-  type: string;
   id: number;
+  type: string;
   payload: unknown;
 
   /**
@@ -15,12 +15,15 @@ export type Action = {
 };
 
 export type Result = {
+  /**
+   * This should be the same as the id of the action that
+   * triggered this result.
+   */
   id: number;
   data: unknown;
 };
 
 export type ErrorResult = {
-  /* the task id */
   id: number;
   errorMessage: string;
 };

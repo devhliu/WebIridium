@@ -102,9 +102,12 @@ export const graphSettingsAtom = atom<GraphSettings>({
 export const settingsAtoms = [
   nameAtom,
   paletteAtom,
+
   variableSettingssAtom,
   independentVariableAtom,
+
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
+  
   graphSettingsAtom,
 ];
