@@ -23,11 +23,7 @@ import {
   type VariableSettings,
 } from "./settings";
 import { WorkerTermination } from "@/features/workerPool";
-import {
-  isSliderSimulationQueuedAtom,
-  variableSliderStatesAtom,
-  type VariableSliderState,
-} from "./slider";
+import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -46,14 +42,10 @@ const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms
 
-export const currentSimulationTypeAtom = atom(
-  (get) => get(_simulationInternalStateAtom)?.type,
-);
 export const simulationResultAtom = atom((get) => get(_simulationResultAtom));
 export const simulatorAtom = atom((get) => get(_simulatorAtom));
-
 export const isSimulatingAtom = atom((get) =>
-  Boolean(get(currentSimulationTypeAtom) || get(isSliderSimulationQueuedAtom)),
+  Boolean(get(_simulationInternalStateAtom)),
 );
 
 // exported simulation action atoms
@@ -303,7 +295,6 @@ export const simulationAtoms = [
   _simulatorAtom,
   _simulationInternalStateAtom,
 
-  currentSimulationTypeAtom,
   simulationResultAtom,
   simulatorAtom,
 

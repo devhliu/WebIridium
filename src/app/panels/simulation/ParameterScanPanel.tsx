@@ -32,6 +32,7 @@ import {
   ToggleGroupButton,
   ToggleGroupContainer,
 } from "@/components/input/ToggleGroup";
+import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -46,6 +47,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     parameterScanOptionsAtom,
   );
   const isSimulating = useAtomValue(isSimulatingAtom);
+  const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
   const modelStatus = useAtomValue(modelStatusAtom);
   const runParameterScan = useSetAtom(runParameterScanAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
@@ -83,7 +85,11 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={isSimulating || modelStatus.type === "loading"}
+        isLoading={
+          isSimulating ||
+          isSliderSimulationQueued ||
+          modelStatus.type === "loading"
+        }
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}
