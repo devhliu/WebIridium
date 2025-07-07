@@ -1,9 +1,9 @@
 import { useAtom, useAtomValue } from "jotai";
+import { variablesAtom } from "@/stores/workspace/model";
 import {
-  variablesAtom,
   variableSettingssAtom,
   type VariableSettings,
-} from "@/stores/workspace";
+} from "@/stores/workspace/settings";
 import VariableList from "@/app/variable-list/VariableList";
 import { useCallback } from "react";
 

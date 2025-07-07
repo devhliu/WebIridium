@@ -9,8 +9,9 @@ import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import ErrorIcon from "@/assets/icons/ErrorIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
 
-import { modelStatusAtom, variableSettingssAtom } from "@/stores/workspace";
-import { simulationResultAtom, variablesAtom } from "@/stores/workspace";
+import { variablesAtom, modelStatusAtom } from "@/stores/workspace/model";
+import { variableSettingssAtom } from "@/stores/workspace/settings";
+import { simulationResultAtom } from "@/stores/workspace/simulation";
 
 const ModelStatusItem = () => {
   const status = useAtomValue(modelStatusAtom);

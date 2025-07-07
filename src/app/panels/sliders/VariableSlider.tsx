@@ -4,7 +4,8 @@ import { memo } from "react";
 import styles from "./SlidersPanel.module.css";
 
 import type { SettableVariable } from "@/features/simulation/Simulator";
-import type { VariableSettings, VariableSliderState } from "@/stores/workspace";
+import type { VariableSettings } from "@/stores/workspace/settings";
+import type { VariableSliderState } from "@/stores/workspace/slider";
 
 import Slider from "@/components/input/Slider";
 import Checkbox from "@/components/input/Checkbox";

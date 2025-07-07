@@ -1,9 +1,14 @@
 import { useState } from "react";
+import { useAtomValue, useSetAtom } from "jotai";
+
 import styles from "./simulation.module.css";
-import { useSimulate } from "@/features/simulation/useSimulate";
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
+import {
+  computeSteadyStateAtom,
+  isSimulatingAtom,
+} from "@/stores/workspace/simulation";
 
 export interface SteadyStatePanelProps {
   visible: boolean;
@@ -11,7 +16,8 @@ export interface SteadyStatePanelProps {
 
 export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
   const { toast } = useToast();
-  const { isSimulating, computeSteadyState } = useSimulate();
+  const isSimulating = useAtomValue(isSimulatingAtom);
+  const computeSteadyState = useSetAtom(computeSteadyStateAtom);
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
 

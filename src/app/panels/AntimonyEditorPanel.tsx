@@ -1,6 +1,11 @@
+import { useAtomValue, useSetAtom } from "jotai";
+
 import styles from "./AntimonyEditorPanel.module.css";
 import ToastTest from "@/app/ToastTest";
-import { useEditorContent } from "@/features/useEditorContent";
+import {
+  editorContentAtom,
+  updateEditorContentAtom,
+} from "@/stores/workspace/model";
 
 import defaultModel from "@/assets/models/default.ant?raw";
 import chickenModel from "@/assets/models/chicken.ant?raw";
@@ -21,13 +26,16 @@ const models: Record<string, string> = {
 };
 
 export const AntimonyEditorPanel = () => {
-  const { editorContent, updateEditorContent } = useEditorContent();
+  const editorContent = useAtomValue(editorContentAtom);
+  const updateEditorContent = useSetAtom(updateEditorContentAtom);
 
   return (
     <div className={styles.antimonyEditorPanel}>
       <ToastTest />
       <select
-        onChange={(e) => void updateEditorContent(models[e.target.value])}
+        onChange={(e) =>
+          void updateEditorContent({ content: models[e.target.value] })
+        }
       >
         <option value="default">Default</option>
         <option value="chicken">Chicken</option>
@@ -41,7 +49,7 @@ export const AntimonyEditorPanel = () => {
         name="anitmony-test"
         value={editorContent}
         style={{ width: "100%", height: "500px" }}
-        onChange={(e) => void updateEditorContent(e.target.value)}
+        onChange={(e) => void updateEditorContent({ content: e.target.value })}
       />
     </div>
   );

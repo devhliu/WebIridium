@@ -1,20 +1,17 @@
-/**
- * manages state of the current workspace. stuff like:
- *  - editor content
- *  - simulation stuff
- */
-
 import { atom } from "jotai";
 
-import defaultModel from "@/assets/models/default.ant?raw";
+import { type Palette } from "@/features/colors";
 
 import type {
   ParameterScanResult,
-  SimulationResult,
-  Variable,
+  TimeCourseParameters,
 } from "@/features/simulation/Simulator";
-import { type Palette } from "@/features/colors";
-import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
+
+/** Time course parameters that are editable by the user manually. */
+export type EditableTimeCourseParameters = Omit<
+  TimeCourseParameters,
+  "includeVariables"
+>;
 
 export interface ParameterScanOptions {
   mode: ParameterScanResult["mode"];
@@ -23,6 +20,7 @@ export interface ParameterScanOptions {
   max: number;
   numberOfValues: number;
   useLogarithmicDistribution: boolean;
+  timeCourseParameters: EditableTimeCourseParameters;
 }
 
 export interface GraphSettings {
@@ -54,34 +52,10 @@ export interface VariableSettings {
   width: number;
 }
 
-export interface VariableSliderState {
-  value: number;
-  min: number;
-  max: number;
-}
-
-export type ModelStatus =
-  | { type: "loading" }
-  | { type: "error"; message: string }
-  | { type: "success" };
-
-// Atoms
-
-export const editorContentAtom = atom(defaultModel);
-export const modelStatusAtom = atom<ModelStatus>({ type: "loading" });
 export const nameAtom = atom("Starter Model");
-
-export const isSimulatingAtom = atom(false);
-export const simulationResultAtom = atom<SimulationResult | null>(null);
-
-export const independentVariableAtom = atom<string | null>(null);
-export const variablesAtom = atom<Variable[]>([]);
-export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
-export const variableSliderStatesAtom = atom<
-  Record<string, VariableSliderState | undefined>
->({});
-
 export const paletteAtom = atom<Palette>("Custom");
+export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
+export const independentVariableAtom = atom<string | null>(null);
 
 export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
   startTime: 0,
@@ -96,6 +70,11 @@ export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
   max: 1,
   numberOfValues: 16,
   useLogarithmicDistribution: false,
+  timeCourseParameters: {
+    startTime: 0,
+    endTime: 10,
+    numberOfPoints: 100,
+  },
 });
 
 export const graphSettingsAtom = atom<GraphSettings>({
@@ -120,25 +99,11 @@ export const graphSettingsAtom = atom<GraphSettings>({
   margin: 70,
 });
 
-/**
- * List of all atoms for the workspace, meant to be used with <ScopeProvider> from "jotai-scope"
- * so you can you scope the workspace.
- */
-export const allWorkspaceAtoms = [
+export const settingsAtoms = [
   nameAtom,
-
-  editorContentAtom,
-  modelStatusAtom,
-  isSimulatingAtom,
-  simulationResultAtom,
-
-  independentVariableAtom,
-  variablesAtom,
-  variableSettingssAtom,
-  variableSliderStatesAtom,
-
   paletteAtom,
-
+  variableSettingssAtom,
+  independentVariableAtom,
   timeCourseParametersAtom,
   parameterScanOptionsAtom,
   graphSettingsAtom,

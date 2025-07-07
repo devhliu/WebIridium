@@ -1,8 +1,7 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 
-import { useSimulate } from "@/features/simulation/useSimulate";
-import { timeCourseParametersAtom } from "@/stores/workspace";
+import { timeCourseParametersAtom } from "@/stores/workspace/settings";
 
 import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
@@ -16,13 +15,19 @@ import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableLi
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 
+import {
+  isSimulatingAtom,
+  simulateTimeCourseAtom,
+} from "@/stores/workspace/simulation";
+
 export interface TimeCoursePanelProps {
   visible: boolean;
 }
 
 export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const { toast } = useToast();
-  const { isSimulating, simulateTimeCourse } = useSimulate();
+  const isSimulating = useAtomValue(isSimulatingAtom);
+  const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
   const [timeCourseParameters, setTimeCourseParameters] = useAtom(

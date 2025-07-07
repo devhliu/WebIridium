@@ -1,0 +1,191 @@
+import { atom } from "jotai";
+
+import defaultModel from "@/assets/models/default.ant?raw";
+import type {
+  Variable,
+  SettableVariable,
+} from "@/features/simulation/Simulator";
+import { WorkerTermination } from "@/features/workerPool";
+import { generateDefaultCustomPalette } from "@/features/colors";
+
+import { type VariableSettings } from "./settings";
+import { simulatorAtom } from "./simulation";
+import {
+  independentVariableAtom,
+  parameterScanOptionsAtom,
+  variableSettingssAtom,
+} from "./settings";
+
+export type ModelStatus =
+  | { type: "loading" }
+  | { type: "error"; message: string }
+  | { type: "success" };
+
+const MODEL_LOAD_DEBOUNCE = 500; // in ms
+
+// TODO: unit test this?
+const patchVariablesSettings = (
+  currentVariablesSettings: Record<string, VariableSettings>,
+  newVariables: Variable[],
+): Record<string, VariableSettings> => {
+  const adding: Record<string, VariableSettings> = {};
+  const colorGenerator = generateDefaultCustomPalette();
+
+  const isPriorityVariable = (variable: Variable) =>
+    variable.category === "Species" || variable.category === "Time";
+
+  // first pass for prioritized variables (this is so they get the good default colors)
+  for (const variable of newVariables) {
+    if (
+      !currentVariablesSettings[variable.name] &&
+      isPriorityVariable(variable)
+    ) {
+      adding[variable.name] = {
+        displayName: variable.defaultDisplayName,
+        visible: variable.category !== "Time",
+        color: colorGenerator.next().value!,
+        width: 2,
+      };
+    }
+  }
+
+  // second pass for everything else
+  for (const variable of newVariables) {
+    if (
+      !currentVariablesSettings[variable.name] &&
+      !isPriorityVariable(variable)
+    ) {
+      adding[variable.name] = {
+        displayName: variable.defaultDisplayName,
+        visible: false,
+        color: colorGenerator.next().value!,
+        width: 2,
+      };
+    }
+  }
+
+  if (Object.keys(adding).length === 0) {
+    return currentVariablesSettings;
+  } else {
+    return { ...currentVariablesSettings, ...adding };
+  }
+};
+
+const _updateAbortControllerAtom = atom<AbortController | null>(null);
+const _editorContentAtom = atom(defaultModel);
+const _variablesAtom = atom<Variable[]>([]);
+const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
+
+export const editorContentAtom = atom((get) => get(_editorContentAtom));
+export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
+export const variablesAtom = atom((get) => get(_variablesAtom));
+export const updateEditorContentAtom = atom(
+  null,
+  async (
+    get,
+    set,
+    {
+      content,
+      skipDebounce = false,
+    }: { content: string; skipDebounce?: boolean },
+  ) => {
+    const simulator = get(simulatorAtom);
+    const prevAbortController = get(_updateAbortControllerAtom);
+    if (prevAbortController) {
+      prevAbortController.abort();
+    }
+
+    const currentAbortController = new AbortController();
+    set(_updateAbortControllerAtom, currentAbortController);
+
+    set(_editorContentAtom, content);
+    set(_modelStatusAtom, { type: "loading" });
+
+    let newVariables: Variable[];
+    try {
+      // wait a bit in case the user is still typing
+      if (skipDebounce) {
+        newVariables = await simulator.loadModel(
+          content,
+          currentAbortController.signal,
+        );
+      } else {
+        newVariables = await new Promise((resolve) =>
+          setTimeout(resolve, MODEL_LOAD_DEBOUNCE),
+        )
+          .then(() => {
+            if (currentAbortController.signal.aborted) {
+              throw new WorkerTermination();
+            }
+          })
+          .then(() =>
+            simulator.loadModel(content, currentAbortController.signal),
+          );
+      }
+    } catch (err) {
+      if (err instanceof WorkerTermination) {
+        return;
+      } else if (err instanceof Error) {
+        set(_modelStatusAtom, {
+          type: "error",
+          message: err.message,
+        });
+        return;
+      } else {
+        throw err;
+      }
+    }
+
+    const independentVariable = get(independentVariableAtom);
+    const parameterScanOptions = get(parameterScanOptionsAtom);
+
+    // if the independent variable no longer exists, fallback to time if possible
+    if (
+      !independentVariable ||
+      !newVariables.find((v) => v.name === independentVariable)
+    ) {
+      set(
+        independentVariableAtom,
+        newVariables.find(
+          (v) => v.name === simulator.defaultIndependentVariableName,
+        )?.name ?? null,
+      );
+    }
+
+    // if the variable no longer exists, use the first available scannable parameter
+    // for the parameter scan
+    if (
+      !parameterScanOptions.varyingParameter ||
+      !newVariables.some(
+        (v) =>
+          "setName" in v && v.setName === parameterScanOptions.varyingParameter,
+      )
+    ) {
+      const firstAvailableParameter = newVariables.find(
+        (v) => "setName" in v && v.category === "Parameters",
+      ) as SettableVariable;
+      set(parameterScanOptionsAtom, {
+        ...parameterScanOptions,
+        varyingParameter:
+          // first try to use the first parameter
+          firstAvailableParameter?.setName ??
+          // if no parameteres found, use the first available
+          newVariables.find((v) => "setName" in v)?.setName,
+      });
+    }
+
+    set(_variablesAtom, newVariables);
+    set(
+      variableSettingssAtom,
+      patchVariablesSettings(get(variableSettingssAtom), newVariables),
+    );
+    set(_modelStatusAtom, { type: "success" });
+  },
+);
+
+export const modelAtoms = [
+  editorContentAtom,
+  modelStatusAtom,
+  variablesAtom,
+  updateEditorContentAtom,
+];

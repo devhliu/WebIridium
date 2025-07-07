@@ -12,12 +12,16 @@ import {
 } from "@/components/Menubar";
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
-import { useEditorContent } from "@/features/useEditorContent";
 import WorkspaceBar from "./WorkspaceBar";
 
 import { promptDownloadFile } from "@/features/promptDownloadFile";
 import { getTheme, setTheme } from "@/features/theme";
-import { nameAtom } from "@/stores/workspace";
+import { nameAtom } from "@/stores/workspace/settings";
+import {
+  editorContentAtom,
+  updateEditorContentAtom,
+} from "@/stores/workspace/model";
+import { useSetAtom } from "jotai";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab;
@@ -32,7 +36,8 @@ const AppMenubar = ({
 }: AppMenubarProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { editorContent, updateEditorContent } = useEditorContent();
+  const editorContent = useAtomValue(editorContentAtom);
+  const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const workspaceName = useAtomValue(nameAtom);
 
   const handleDownload = () => {
@@ -54,7 +59,7 @@ const AppMenubar = ({
     const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = () => {
-      void updateEditorContent(reader.result as string);
+      void updateEditorContent({ content: reader.result as string });
     };
   };
 

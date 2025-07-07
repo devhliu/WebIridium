@@ -1,6 +1,7 @@
-import { useSimulator } from "../workspace";
+import { useAtomValue } from "jotai";
+import { simulatorAtom } from "@/stores/workspace/simulation";
 
 export const useScanIndependentVariable = (): string => {
-  const simulator = useSimulator();
+  const simulator = useAtomValue(simulatorAtom);
   return simulator.scanIndependentVariableName;
 };

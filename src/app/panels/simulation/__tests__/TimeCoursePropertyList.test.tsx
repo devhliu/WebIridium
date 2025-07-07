@@ -1,6 +1,6 @@
 import { it, expect } from "vitest";
 import TimeCoursePropertyList from "../TimeCoursePropertyList";
-import { type EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
+import { type EditableTimeCourseParameters } from "@/stores/workspace/settings";
 import { useState } from "react";
 import { render, screen } from "@testing-library/react";
 import { typeIntoNumberInput } from "@/testing-utils/inputUtils";

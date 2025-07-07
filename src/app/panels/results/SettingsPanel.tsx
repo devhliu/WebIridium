@@ -1,6 +1,6 @@
 import { useAtom } from "jotai";
 import styles from "./results.module.css";
-import { graphSettingsAtom, paletteAtom } from "@/stores/workspace";
+import { graphSettingsAtom, paletteAtom } from "@/stores/workspace/settings";
 import { PALETTES, type Palette } from "@/features/colors";
 
 import BooleanProperty from "@/components/property-list/BooleanProperty";

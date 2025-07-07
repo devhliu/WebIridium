@@ -10,7 +10,7 @@ import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
-import { simulationResultAtom } from "@/stores/workspace";
+import { simulationResultAtom } from "@/stores/workspace/simulation";
 
 import { WorkspaceProvider } from "@/features/workspace";
 import Sidebar, { type SidebarTab } from "./Sidebar";

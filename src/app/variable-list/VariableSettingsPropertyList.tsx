@@ -1,6 +1,9 @@
 import { useAtomValue } from "jotai";
 
-import { paletteAtom, type VariableSettings } from "@/stores/workspace";
+import {
+  paletteAtom,
+  type VariableSettings,
+} from "@/stores/workspace/settings";
 
 import PropertyList from "@/components/property-list/PropertyList";
 

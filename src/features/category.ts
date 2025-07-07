@@ -1,6 +1,6 @@
 // Helpful utilities for managing variable categories and grouping them up
 
-import type { VariableSettings } from "@/stores/workspace";
+import type { VariableSettings } from "@/stores/workspace/settings";
 import type { Variable } from "./simulation/Simulator";
 import type { SelectGroupedProps } from "@/components/input/Select";
 

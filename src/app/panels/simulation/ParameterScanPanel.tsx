@@ -1,15 +1,18 @@
 // TODO: fix having <=1 number of values causing an error
 // TODO: make sure your min can't be more than max (and add validators for the rest of the stuff)
 import { useState } from "react";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import styles from "./simulation.module.css";
-import { useSimulate } from "@/features/simulation/useSimulate";
+import {
+  isSimulatingAtom,
+  runParameterScanAtom,
+} from "@/stores/workspace/simulation";
+import { variablesAtom } from "@/stores/workspace/model";
 import {
   parameterScanOptionsAtom,
-  variablesAtom,
   variableSettingssAtom,
-} from "@/stores/workspace";
+} from "@/stores/workspace/settings";
 
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
@@ -24,7 +27,6 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
 import { groupVariablesForSelectComponent } from "@/features/category";
-import type { EditableTimeCourseParameters } from "@/features/simulation/useSimulate";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 import {
   ToggleGroupButton,
@@ -37,21 +39,17 @@ export interface ParameterScanPanelProps {
 
 const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const { toast } = useToast();
+
   const variables = useAtomValue(variablesAtom);
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
-  const { isSimulating, runParameterScan } = useSimulate();
+  const isSimulating = useAtomValue(isSimulatingAtom);
+  const runParameterScan = useSetAtom(runParameterScanAtom);
+
   const [abortSimulation, setAbortSimulation] =
     useState<AbortController | null>(null);
-
-  const [simulationParameters, setSimulationParameters] =
-    useState<EditableTimeCourseParameters>({
-      startTime: 0,
-      endTime: 10,
-      numberOfPoints: 100,
-    });
 
   const handleSimulateClick = async () => {
     if (abortSimulation) {
@@ -61,10 +59,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
     const controller = new AbortController();
     setAbortSimulation(controller);
 
-    const result = await runParameterScan(
-      simulationParameters,
-      controller.signal,
-    );
+    const result = await runParameterScan(controller.signal);
     if (result.type === "failure") {
       toast({
         type: "error",
@@ -126,8 +121,13 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
 
           {parameterScanOptions.mode === "timeCourse" && (
             <TimeCoursePropertyList
-              parameters={simulationParameters}
-              onParameterChange={setSimulationParameters}
+              parameters={parameterScanOptions.timeCourseParameters}
+              onParameterChange={(newParams) =>
+                setParameterScanOptions({
+                  ...parameterScanOptions,
+                  timeCourseParameters: newParams,
+                })
+              }
             />
           )}
         </PropertyAccordionItem>

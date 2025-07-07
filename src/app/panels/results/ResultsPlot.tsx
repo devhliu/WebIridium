@@ -8,7 +8,7 @@ import {
   independentVariableAtom,
   paletteAtom,
   variableSettingssAtom,
-} from "@/stores/workspace";
+} from "@/stores/workspace/settings";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import {

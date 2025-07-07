@@ -5,7 +5,7 @@ import styles from "./WorkspaceBar.module.css";
 
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 
-import { nameAtom } from "@/stores/workspace";
+import { nameAtom } from "@/stores/workspace/settings";
 
 const isNameValid = (name: string): boolean => {
   return name.length > 0;
