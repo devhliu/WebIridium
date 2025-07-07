@@ -21,7 +21,7 @@ afterEach(() => {
   resetWorkerResponseDelay();
 });
 
-test("only panel that is currently simulating should be cancellable", async () => {
+test("panels should all be cancellable when a simulation is running", async () => {
   renderWithinWorkspace(
     <div>
       <TimeCoursePanel visible />
@@ -52,12 +52,13 @@ test("only panel that is currently simulating should be cancellable", async () =
   expect(cancelButton).toBeInTheDocument();
   expect(
     within(steadyStatePanel).queryByLabelText("Cancel"),
-  ).not.toBeInTheDocument();
+  ).toBeInTheDocument();
   expect(
     within(parameterScanPanel).queryByLabelText("Cancel"),
-  ).not.toBeInTheDocument();
+  ).toBeInTheDocument();
 
   await userEvent.click(cancelButton);
+
   expect(simulateTimeCourseButton).toBeEnabled();
   expect(computeSteadyStateButton).toBeEnabled();
   expect(runParameterScanButton).toBeEnabled();
