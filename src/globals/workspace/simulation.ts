@@ -23,6 +23,11 @@ import {
   type VariableSettings,
 } from "./settings";
 import { WorkerTermination } from "@/features/workerPool";
+import {
+  isSliderSimulationQueuedAtom,
+  variableSliderStatesAtom,
+  type VariableSliderState,
+} from "./slider";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -47,6 +52,10 @@ export const currentSimulationTypeAtom = atom(
 export const simulationResultAtom = atom((get) => get(_simulationResultAtom));
 export const simulatorAtom = atom((get) => get(_simulatorAtom));
 
+export const isSimulatingAtom = atom((get) =>
+  Boolean(get(currentSimulationTypeAtom) || get(isSliderSimulationQueuedAtom)),
+);
+
 // exported simulation action atoms
 
 const getIncludeVariableList = (
@@ -57,6 +66,18 @@ const getIncludeVariableList = (
   return variables.filter(
     (v) =>
       v.name === usingIndependentVariable || variableSettingss[v.name]?.visible,
+  );
+};
+
+const getVariableValues = (
+  sliderStates: Record<string, VariableSliderState>,
+) => {
+  return Object.entries(sliderStates).reduce(
+    (acc, [name, state]) => ({
+      ...acc,
+      [name]: state.value,
+    }),
+    {},
   );
 };
 
@@ -77,6 +98,11 @@ const runSimulation = async (
   } else if (modelStatus.type === "error") {
     return { type: "failure", message: "There is an error with your model." };
   } else {
+    const prevInternalState = get(_simulationInternalStateAtom);
+    if (prevInternalState) {
+      prevInternalState.abortController.abort();
+    }
+
     const abortController = new AbortController();
     set(_simulationInternalStateAtom, {
       type: simulationType,
@@ -127,6 +153,7 @@ export const simulateTimeCourseAtom = atom(null, async (get, set) => {
             ),
             ...get(timeCourseParametersAtom),
           },
+          variableValues: getVariableValues(get(variableSliderStatesAtom)),
         },
         abortSignal,
       );
@@ -144,6 +171,7 @@ export const computeSteadyStateAtom = atom(null, async (get, set) => {
         get(editorContentAtom),
         {
           parameters: {},
+          variableValues: getVariableValues(get(variableSliderStatesAtom)),
         },
         abortSignal,
       );
@@ -178,6 +206,8 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
         parameterScanOptions.numberOfValues,
       );
 
+      const variableValues = getVariableValues(get(variableSliderStatesAtom));
+
       if (parameterScanOptions.mode === "timeCourse") {
         const scanTimeCourseParameters = {
           includeVariables: getIncludeVariableList(
@@ -194,6 +224,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
               editorContent,
               {
                 parameters: scanTimeCourseParameters,
+                variableValues,
                 parameterScanOptions: {
                   varyingParameter: parameter,
                   varyingParameterValue: value,
@@ -228,6 +259,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
               editorContent,
               {
                 parameters: {},
+                variableValues,
                 parameterScanOptions: {
                   varyingParameter: parameter,
                   varyingParameterValue: value,

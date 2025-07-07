@@ -7,6 +7,7 @@ import {
   type TimeCourseResult,
   type Variable,
   type SteadyStateParameters,
+  type VariableValues,
 } from "./Simulator";
 import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
@@ -28,9 +29,11 @@ export class CopasiSimulator extends Simulator {
     antimonyCode: string,
     {
       parameters,
+      variableValues,
       parameterScanOptions,
     }: {
       parameters: TimeCourseParameters;
+      variableValues: VariableValues;
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
@@ -42,6 +45,7 @@ export class CopasiSimulator extends Simulator {
           ...parameters,
           selectionList: parameters.includeVariables.map((v) => v.name),
         },
+        variableValues,
         ...parameterScanOptions,
       },
       antimonyCode,
@@ -63,9 +67,11 @@ export class CopasiSimulator extends Simulator {
     antimonyCode: string,
     {
       parameters,
+      variableValues,
       parameterScanOptions,
     }: {
       parameters: SteadyStateParameters;
+      variableValues: VariableValues;
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
@@ -74,6 +80,7 @@ export class CopasiSimulator extends Simulator {
       "steadyState",
       {
         parameters,
+        variableValues,
         ...parameterScanOptions,
       },
       antimonyCode,

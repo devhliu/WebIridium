@@ -15,10 +15,11 @@ export interface VariableSliderProps {
   variable: SettableVariable;
   settings: VariableSettings;
   sliderState: VariableSliderState | undefined;
-  onChange: (
+  onStateChange: (
     variableName: string,
-    newValue: VariableSliderState | undefined,
+    newState: VariableSliderState | undefined,
   ) => void;
+  onValueChange: (variableName: string, newValue: number) => void;
 }
 
 const SLIDER_TOTAL_STEPS = 100;
@@ -43,22 +44,32 @@ const getInitialSliderState = (
 };
 
 const VariableSlider = memo(
-  ({ variable, settings, sliderState, onChange }: VariableSliderProps) => {
+  ({
+    variable,
+    settings,
+    sliderState,
+    onValueChange,
+    onStateChange,
+  }: VariableSliderProps) => {
     const handleToggle = () => {
       if (sliderState) {
-        onChange(variable.name, undefined);
+        onStateChange(variable.name, undefined);
       } else {
-        onChange(variable.name, getInitialSliderState(variable));
+        onStateChange(variable.name, getInitialSliderState(variable));
       }
     };
 
     const handleChangeFor = (property: keyof VariableSliderState) => {
       if (!sliderState) throw new Error("sliderState is uninitialized");
       return (newValue: unknown) => {
-        onChange(variable.name, {
-          ...sliderState,
-          [property]: newValue,
-        });
+        if (property === "value") {
+          onValueChange(variable.name, newValue as number);
+        } else {
+          onStateChange(variable.name, {
+            ...sliderState,
+            [property]: newValue,
+          });
+        }
       };
     };
 

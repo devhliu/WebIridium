@@ -31,6 +31,7 @@ const simulateTimeCourseGeneric = async (abortSignal?: AbortSignal) => {
           makeGenericVariable("C"),
         ],
       },
+      variableValues: {},
     },
     abortSignal,
   );

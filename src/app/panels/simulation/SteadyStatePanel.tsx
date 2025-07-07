@@ -7,7 +7,7 @@ import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 import {
   cancelSimulationAtom,
   computeSteadyStateAtom,
-  currentSimulationTypeAtom,
+  isSimulatingAtom,
 } from "@/globals/workspace/simulation";
 
 export interface SteadyStatePanelProps {
@@ -16,7 +16,7 @@ export interface SteadyStatePanelProps {
 
 export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
   const { toast } = useToast();
-  const currentSimulationType = useAtomValue(currentSimulationTypeAtom);
+  const isSimulating = useAtomValue(isSimulatingAtom);
   const computeSteadyState = useSetAtom(computeSteadyStateAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
@@ -44,9 +44,9 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
       <h1 className={styles.panelTitle}>Compute Steady State</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={Boolean(currentSimulationType)}
+        isLoading={isSimulating}
         onClick={handleSimulateClick}
-        canCancel={currentSimulationType === "steadyState"}
+        canCancel={isSimulating}
         onCancel={handleCancelClick}
       >
         Compute

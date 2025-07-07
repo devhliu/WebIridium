@@ -39,6 +39,9 @@ export type SettableVariable = VariableBase & {
 
 export type Variable = NormalVariable | SettableVariable;
 
+/** Record of user-set variable values. Used by sliders. */
+export type VariableValues = { [variableName: string]: number };
+
 /* RESULT STUFF */
 
 export type TimeCourseResult = {
@@ -118,9 +121,11 @@ export abstract class Simulator {
     antimonyCode: string,
     {
       parameters,
+      variableValues,
       parameterScanOptions,
     }: {
       parameters: TimeCourseParameters;
+      variableValues: VariableValues;
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,
@@ -130,9 +135,11 @@ export abstract class Simulator {
     antimonyCode: string,
     {
       parameters,
+      variableValues,
       parameterScanOptions,
     }: {
       parameters: SteadyStateParameters;
+      variableValues: VariableValues;
       parameterScanOptions?: ParameterScanOptions;
     },
     abortSignal?: AbortSignal,

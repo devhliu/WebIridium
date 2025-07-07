@@ -41,14 +41,24 @@ const handleMessage = async (e) => {
 
   switch (action.type) {
     case "timeCourse": {
-      const { parameters, varyingParameter, varyingParameterValue } =
-        action.payload;
+      const {
+        parameters,
+        variableValues,
+        varyingParameter,
+        varyingParameterValue,
+      } = action.payload;
 
       copasi.resetAll();
 
       // for parameter scan
       if (varyingParameter) {
         copasi.setValue(varyingParameter, varyingParameterValue);
+      }
+
+      for (const [name, value] of Object.entries(variableValues)) {
+        if (name !== varyingParameter) {
+          copasi.setValue(name, value);
+        }
       }
 
       copasi.selectionList = parameters.selectionList;
@@ -59,6 +69,10 @@ const handleMessage = async (e) => {
         parameters.numberOfPoints,
       );
 
+      if (result.status === "error") {
+        throw new Error(result.messages);
+      }
+
       self.postMessage({
         id: action.id,
         data: result,
@@ -67,7 +81,8 @@ const handleMessage = async (e) => {
     }
 
     case "steadyState": {
-      const { varyingParameter, varyingParameterValue } = action.payload;
+      const { variableValues, varyingParameter, varyingParameterValue } =
+        action.payload;
 
       // I don't know what this is for, it is just copied from the original: https://github.com/sys-bio/SimBioUI/blob/9a71226dd47c914dc85d68b47b4731669bba313f/my-dropdown-app/src/App.js#L593
       const timeCourseParameters = {
@@ -78,6 +93,12 @@ const handleMessage = async (e) => {
 
       if (varyingParameter) {
         copasi.setValue(varyingParameter, varyingParameterValue);
+      }
+
+      for (const [name, value] of Object.entries(variableValues)) {
+        if (name !== varyingParameter) {
+          copasi.setValue(name, value);
+        }
       }
 
       // `resetAll` does not work with setValue + steadyState, idk why

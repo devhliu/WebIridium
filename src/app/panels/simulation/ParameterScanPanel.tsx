@@ -5,7 +5,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styles from "./simulation.module.css";
 import {
   cancelSimulationAtom,
-  currentSimulationTypeAtom,
+  isSimulatingAtom,
   runParameterScanAtom,
 } from "@/globals/workspace/simulation";
 import { variablesAtom } from "@/globals/workspace/model";
@@ -45,7 +45,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const [parameterScanOptions, setParameterScanOptions] = useAtom(
     parameterScanOptionsAtom,
   );
-  const currentSimulationType = useAtomValue(currentSimulationTypeAtom);
+  const isSimulating = useAtomValue(isSimulatingAtom);
   const runParameterScan = useSetAtom(runParameterScanAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
@@ -82,9 +82,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <Button
         icon={<PlayIcon />}
-        isLoading={Boolean(currentSimulationType)}
+        isLoading={isSimulating}
         onClick={handleSimulateClick}
-        canCancel={currentSimulationType === "parameterScan"}
+        canCancel={isSimulating}
         onCancel={handleCancelClick}
       >
         Run
