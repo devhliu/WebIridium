@@ -7,7 +7,8 @@ import defaultModel from "@/assets/models/default.ant?raw";
 import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";
 import { settingsAtoms } from "@/globals/workspace/settings";
-import { simulationAtoms } from "@/globals/workspace/simulation";
+import { simulationAtoms, updateSimulatorAtom } from "@/globals/workspace/simulation";
+import { CopasiSimulator } from "./simulation/CopasiSimulator";
 
 const allWorkspaceAtoms = [
   ...modelAtoms,
@@ -16,12 +17,13 @@ const allWorkspaceAtoms = [
   ...simulationAtoms,
 ];
 
-const InitializeEditorContent = () => {
+const InitializeAtoms = () => {
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  const updateSimulator = useSetAtom(updateSimulatorAtom);
   useEffect(() => {
+    updateSimulator(new CopasiSimulator());
     void updateEditorContent({ content: defaultModel, skipDebounce: true });
-    // eslint-disable-next-line
-  }, []);
+  }, [updateEditorContent, updateSimulator]);
   return null;
 };
 
@@ -32,7 +34,7 @@ export const WorkspaceProvider = ({
 }) => {
   return (
     <ScopeProvider atoms={allWorkspaceAtoms}>
-      <InitializeEditorContent />
+      <InitializeAtoms />
       {children}
     </ScopeProvider>
   );

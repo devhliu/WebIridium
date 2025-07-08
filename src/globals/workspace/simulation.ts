@@ -1,5 +1,4 @@
 import { atom, type Getter } from "jotai";
-import { atomWithLazy } from "jotai/utils";
 
 import type {
   ParameterScanResult,
@@ -12,7 +11,6 @@ import {
   getLogarithmicDistribution,
 } from "@/features/distribution";
 
-import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 import type { Setter } from "jotai";
 import { editorContentAtom, modelStatusAtom, variablesAtom } from "./model";
 import {
@@ -37,13 +35,19 @@ type SimulationInternalState = {
 };
 
 const _simulationResultAtom = atom<SimulationResult | null>(null);
-const _simulatorAtom = atomWithLazy<Simulator>(() => new CopasiSimulator());
+const _simulatorAtom = atom<Simulator>({} as Simulator);
 const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms
 
 export const simulationResultAtom = atom((get) => get(_simulationResultAtom));
 export const simulatorAtom = atom((get) => get(_simulatorAtom));
+export const updateSimulatorAtom = atom(
+  null,
+  (_, set, simulator: Simulator) => {
+    set(_simulatorAtom, simulator);
+  }
+);
 export const isSimulatingAtom = atom((get) =>
   Boolean(get(_simulationInternalStateAtom)),
 );
