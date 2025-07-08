@@ -46,7 +46,7 @@ export const updateSimulatorAtom = atom(
   null,
   (_, set, simulator: Simulator) => {
     set(_simulatorAtom, simulator);
-  }
+  },
 );
 export const isSimulatingAtom = atom((get) =>
   Boolean(get(_simulationInternalStateAtom)),

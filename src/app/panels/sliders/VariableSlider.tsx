@@ -15,47 +15,30 @@ export interface VariableSliderProps {
   variable: SettableVariable;
   settings: VariableSettings;
   sliderState: VariableSliderState | undefined;
+  onToggle: (variable: SettableVariable, on: boolean) => void;
   onStateChange: (
-    variableName: string,
-    newState: VariableSliderState | undefined,
+    variable: SettableVariable,
+    newState: VariableSliderState,
   ) => void;
-  onValueChange: (variableName: string, newValue: number) => void;
+  onValueChange: (variable: SettableVariable, newValue: number) => void;
 }
 
 const SLIDER_TOTAL_STEPS = 100;
-
-const getInitialSliderState = (
-  variable: SettableVariable,
-): VariableSliderState => {
-  const baseScale = variable.defaultValue || 1;
-  if (variable.defaultValue >= 0) {
-    return {
-      value: variable.defaultValue,
-      min: Math.round(100 * (0.1 * baseScale)) / 100,
-      max: Math.round(100 * (5 * baseScale)) / 100,
-    };
-  } else {
-    return {
-      value: variable.defaultValue,
-      min: Math.round(100 * (5 * baseScale)) / 100,
-      max: Math.round(100 * (0.1 * baseScale)) / 100,
-    };
-  }
-};
 
 const VariableSlider = memo(
   ({
     variable,
     settings,
     sliderState,
+    onToggle,
     onValueChange,
     onStateChange,
   }: VariableSliderProps) => {
     const handleToggle = () => {
       if (sliderState) {
-        onStateChange(variable.name, undefined);
+        onToggle(variable, false);
       } else {
-        onStateChange(variable.name, getInitialSliderState(variable));
+        onToggle(variable, true);
       }
     };
 
@@ -63,9 +46,9 @@ const VariableSlider = memo(
       if (!sliderState) throw new Error("sliderState is uninitialized");
       return (newValue: unknown) => {
         if (property === "value") {
-          onValueChange(variable.name, newValue as number);
+          onValueChange(variable, newValue as number);
         } else {
-          onStateChange(variable.name, {
+          onStateChange(variable, {
             ...sliderState,
             [property]: newValue,
           });

@@ -7,7 +7,10 @@ import defaultModel from "@/assets/models/default.ant?raw";
 import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";
 import { settingsAtoms } from "@/globals/workspace/settings";
-import { simulationAtoms, updateSimulatorAtom } from "@/globals/workspace/simulation";
+import {
+  simulationAtoms,
+  updateSimulatorAtom,
+} from "@/globals/workspace/simulation";
 import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 
 const allWorkspaceAtoms = [
@@ -27,11 +30,7 @@ const InitializeAtoms = () => {
   return null;
 };
 
-const WorkspaceProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+const WorkspaceProvider = ({ children }: { children: React.ReactNode }) => {
   return (
     <ScopeProvider atoms={allWorkspaceAtoms}>
       <InitializeAtoms />

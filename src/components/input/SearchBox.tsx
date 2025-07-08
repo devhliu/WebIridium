@@ -10,19 +10,25 @@ export interface SearchBoxProps {
   className?: string;
 }
 
-const SearchBox = ({ name, placeholder: placeholderText, value, onChange, className }: SearchBoxProps) => {
+const SearchBox = ({
+  name,
+  placeholder: placeholderText,
+  value,
+  onChange,
+  className,
+}: SearchBoxProps) => {
   return (
-      <div className={clsx(styles.root, className)}>
-        <SearchIcon className={styles.icon} height="14" width="14" />
-        <input
-          className={styles.input}
-          type="search"
-          name={name}
-          placeholder={placeholderText}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </div>
+    <div className={clsx(styles.root, className)}>
+      <SearchIcon className={styles.icon} height="14" width="14" />
+      <input
+        className={styles.input}
+        type="search"
+        name={name}
+        placeholder={placeholderText}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
   );
 };
 
