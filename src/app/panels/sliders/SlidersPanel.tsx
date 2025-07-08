@@ -106,43 +106,51 @@ const SlidersPanel = () => {
         onChange={setSearchTerm}
       />
       <div className={styles.sliders}>
-        {groups.map(([group, vars]) => {
-          const checkboxState = vars.every((v) => variableSliderStates[v.name])
-            ? true
-            : vars.some((v) => variableSliderStates[v.name])
-              ? "indeterminate"
-              : false;
+        {filteredVariables.length === 0 ? (
+          <p className={styles.noVariables}>No Variables</p>
+        ) : (
+          groups.map(([group, vars]) => {
+            const checkboxState = vars.every(
+              (v) => variableSliderStates[v.name],
+            )
+              ? true
+              : vars.some((v) => variableSliderStates[v.name])
+                ? "indeterminate"
+                : false;
 
-          const handleGroupToggle = (on: boolean) => {
-            for (const v of vars) {
-              handleToggle(v, on);
-            }
-          };
+            const handleGroupToggle = (on: boolean) => {
+              for (const v of vars) {
+                handleToggle(v, on);
+              }
+            };
 
-          return (
-            <div key={group} className={styles.group}>
-              <h3 className={styles.groupTitle}>
-                <Checkbox
-                  name={`slider-group-${group}`}
-                  value={checkboxState}
-                  onChange={handleGroupToggle}
-                />
-                {group}
-              </h3>
-              {vars.map((v) => (
-                <VariableSlider
-                  key={v.name}
-                  variable={v}
-                  settings={variableSettingss[v.name]}
-                  sliderState={variableSliderStates[v.name]}
-                  onToggle={handleToggle}
-                  onValueChange={handleValueChange}
-                  onStateChange={handleStateChange}
-                />
-              ))}
-            </div>
-          );
-        })}
+            return (
+              <div key={group} className={styles.group}>
+                <h3 className={styles.groupTitle}>
+                  {searchTerm.length === 0 && (
+                    <Checkbox
+                      name={`slider-group-${group}`}
+                      value={checkboxState}
+                      onChange={handleGroupToggle}
+                    />
+                  )}
+                  {group}
+                </h3>
+                {vars.map((v) => (
+                  <VariableSlider
+                    key={v.name}
+                    variable={v}
+                    settings={variableSettingss[v.name]}
+                    sliderState={variableSliderStates[v.name]}
+                    onToggle={handleToggle}
+                    onValueChange={handleValueChange}
+                    onStateChange={handleStateChange}
+                  />
+                ))}
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );
