@@ -1,10 +1,10 @@
 import { it, expect, vi } from "vitest";
 import { screen, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import Button from "../Button";
+import CancellableButton from "../CancellableButton";
 
 it("should render its children and icon", () => {
-  render(<Button icon={<span>hey</span>}>test</Button>);
+  render(<CancellableButton icon={<span>hey</span>}>test</CancellableButton>);
 
   expect(screen.getByText("hey")).toBeInTheDocument();
   expect(screen.getByText("test")).toBeInTheDocument();
@@ -13,9 +13,9 @@ it("should render its children and icon", () => {
 it("should call click when clicked", async () => {
   const onClick = vi.fn();
   render(
-    <Button icon={<span>hey</span>} onClick={onClick}>
+    <CancellableButton icon={<span>hey</span>} onClick={onClick}>
       test
-    </Button>,
+    </CancellableButton>,
   );
 
   await userEvent.click(screen.getByRole("button"));
@@ -25,9 +25,9 @@ it("should call click when clicked", async () => {
 it("should not be clickable when loading", async () => {
   const onClick = vi.fn();
   render(
-    <Button icon={<span>hey</span>} onClick={onClick} isLoading={true}>
+    <CancellableButton icon={<span>hey</span>} onClick={onClick} isLoading={true}>
       test
-    </Button>,
+    </CancellableButton>,
   );
 
   await userEvent.click(screen.getByRole("button"));
@@ -37,14 +37,14 @@ it("should not be clickable when loading", async () => {
 it("should be cancellable", async () => {
   const onCancel = vi.fn();
   render(
-    <Button
+    <CancellableButton
       icon={<span>hey</span>}
       onCancel={onCancel}
       isLoading={true}
       canCancel={true}
     >
       test
-    </Button>,
+    </CancellableButton>,
   );
 
   const cancelButton = screen

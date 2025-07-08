@@ -1,5 +1,5 @@
 import { clsx } from "clsx";
-import styles from "./Button.module.css";
+import styles from "./CancellableButton.module.css";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PulseLoader from "./PulseLoader";
 
@@ -22,7 +22,7 @@ export interface ButtonProps {
   children?: React.ReactNode;
 }
 
-const Button = ({
+const CancellableButton = ({
   icon,
   onClick,
   isLoading = false,
@@ -65,4 +65,4 @@ const Button = ({
   );
 };
 
-export default Button;
+export default CancellableButton;

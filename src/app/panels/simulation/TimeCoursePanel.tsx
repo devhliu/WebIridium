@@ -4,7 +4,7 @@ import { timeCourseParametersAtom } from "@/globals/workspace/settings";
 
 import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
-import Button from "@/components/Button";
+import CancellableButton from "@/components/CancellableButton";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
@@ -59,7 +59,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
       style={visible ? {} : { display: "none" }}
     >
       <h1 className={styles.panelTitle}>Time Course Simulation</h1>
-      <Button
+      <CancellableButton
         icon={<PlayIcon />}
         isLoading={
           isSimulating ||
@@ -71,7 +71,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
         onCancel={handleCancelClick}
       >
         Simulate
-      </Button>
+      </CancellableButton>
 
       <PropertyAccordion
         defaultOpen={[

@@ -15,7 +15,7 @@ import {
 } from "@/globals/workspace/settings";
 
 import { useToast } from "@/components/Toast";
-import Button from "@/components/Button";
+import CancellableButton from "@/components/CancellableButton";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
@@ -83,7 +83,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       style={visible ? {} : { display: "none" }}
     >
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
-      <Button
+      <CancellableButton
         icon={<PlayIcon />}
         isLoading={
           isSimulating ||
@@ -95,7 +95,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
         onCancel={handleCancelClick}
       >
         Run
-      </Button>
+      </CancellableButton>
 
       <PropertyAccordion
         defaultOpen={["Simulation", "First Parameter", "Variables"]}

@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 
 import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
-import Button from "@/components/Button";
+import CancellableButton from "@/components/CancellableButton";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
 import {
   cancelSimulationAtom,
@@ -46,7 +46,7 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
       style={visible ? {} : { display: "none" }}
     >
       <h1 className={styles.panelTitle}>Compute Steady State</h1>
-      <Button
+      <CancellableButton
         icon={<PlayIcon />}
         isLoading={
           isSimulating ||
@@ -58,7 +58,7 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
         onCancel={handleCancelClick}
       >
         Compute
-      </Button>
+      </CancellableButton>
     </div>
   );
 };
