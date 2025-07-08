@@ -8,7 +8,7 @@ import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";
 import { settingsAtoms } from "@/globals/workspace/settings";
 import { simulationAtoms, updateSimulatorAtom } from "@/globals/workspace/simulation";
-import { CopasiSimulator } from "./simulation/CopasiSimulator";
+import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 
 const allWorkspaceAtoms = [
   ...modelAtoms,
@@ -27,7 +27,7 @@ const InitializeAtoms = () => {
   return null;
 };
 
-export const WorkspaceProvider = ({
+const WorkspaceProvider = ({
   children,
 }: {
   children: React.ReactNode;
@@ -39,3 +39,5 @@ export const WorkspaceProvider = ({
     </ScopeProvider>
   );
 };
+
+export default WorkspaceProvider;

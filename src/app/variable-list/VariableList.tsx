@@ -4,7 +4,6 @@ import { groupVariables } from "@/features/category";
 import { type VariableSettings } from "@/globals/workspace/settings";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableGroup from "./VariableGroup";
-import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 import SearchBox from "@/components/input/SearchBox";
 
 export interface VariableListProps {

@@ -1,6 +1,6 @@
 import { render } from "@testing-library/react";
 import { ToastProvider } from "@/components/Toast";
-import { WorkspaceProvider } from "@/features/workspace";
+import WorkspaceProvider from "@/app/WorkspaceProvider";
 
 /**
  * Renders then waits for microtask queue to clear.

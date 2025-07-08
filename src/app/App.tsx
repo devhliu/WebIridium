@@ -12,7 +12,7 @@ import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
-import { WorkspaceProvider } from "@/features/workspace";
+import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar, { type SidebarTab } from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
