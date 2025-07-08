@@ -5,6 +5,7 @@ import { type VariableSettings } from "@/globals/workspace/settings";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableGroup from "./VariableGroup";
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
+import SearchBox from "@/components/input/SearchBox";
 
 export interface VariableListProps {
   variables: Variable[];
@@ -30,17 +31,12 @@ const VariableList = ({
 
   return (
     <div className={styles.container}>
-      <div className={styles.searchContainer}>
-        <SearchIcon className={styles.searchIcon} height="14" width="14" />
-        <input
-          className={styles.searchInput}
-          type="search"
-          name="variable-search"
-          placeholder="Variable name"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </div>
+      <SearchBox
+        name="variable-search"
+        placeholder="Variable Name"
+        value={searchTerm}
+        onChange={setSearchTerm}
+      />
       {filteredVariables.length > 0 ? (
         <div className={styles.list}>
           {groupVariables(filteredVariables).map(([group, vars]) => (
