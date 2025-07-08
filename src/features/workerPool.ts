@@ -115,7 +115,6 @@ export class WorkerPool {
 
       const workerInfo = this.#getAvailableWorker();
       if (workerInfo) {
-        console.log("WHY");
         this.#delegateTask(workerInfo, task);
       }
     });
