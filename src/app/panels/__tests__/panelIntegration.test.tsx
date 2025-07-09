@@ -13,10 +13,6 @@ import SteadyStatePanel from "../simulation/SteadyStatePanel";
 import ParameterScanPanel from "../simulation/ParameterScanPanel";
 import App from "@/app/App";
 
-vi.mock("@/features/workers");
-vi.mock("react-plotly.js");
-vi.mock("plotly.js");
-
 afterEach(() => {
   resetWorkerResponseDelay();
 });

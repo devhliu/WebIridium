@@ -11,11 +11,6 @@ import {
   ForceModelUpdateButton,
 } from "./testButton";
 
-vi.mock("@/features/workers.ts");
-vi.mock("@/components/Toast.tsx");
-vi.mock("react-plotly.js");
-vi.mock("plotly.js");
-
 describe("compute button", () => {
   const testButtonOptions = {
     buttonText: "Compute",

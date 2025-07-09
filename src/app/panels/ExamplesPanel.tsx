@@ -82,7 +82,14 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
         description: "Something happened while loading the model.",
       });
 
-      setRunningExample(null);
+      // only set running to null if another one did not override
+      setRunningExample((old) => {
+        if (old === example) {
+          return null;
+        } else {
+          return old;
+        }
+      });
     } else {
       // apply preset
       const preset = examplePresets[example];

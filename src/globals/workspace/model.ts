@@ -135,7 +135,7 @@ export const updateEditorContentAtom = atom(
       }
     } catch (err) {
       if (err instanceof WorkerTermination) {
-        return;
+        return false;
       } else if (err instanceof Error) {
         set(_modelStatusAtom, {
           type: "error",

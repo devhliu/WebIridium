@@ -10,11 +10,6 @@ import {
 } from "./testButton";
 import ParameterScanPanel from "../simulation/ParameterScanPanel.tsx";
 
-vi.mock("@/features/workers.ts");
-vi.mock("@/components/Toast.tsx");
-vi.mock("react-plotly.js");
-vi.mock("plotly.js");
-
 describe("run button", () => {
   const testButtonOptions = {
     buttonText: "Run",

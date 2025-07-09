@@ -1,4 +1,4 @@
-import { describe, it, expect, afterEach, vi } from "vitest";
+import { describe, it, expect, afterEach } from "vitest";
 import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 import { WorkerTermination } from "../workerPool";
 import {
@@ -36,8 +36,6 @@ const simulateTimeCourseGeneric = async (abortSignal?: AbortSignal) => {
     abortSignal,
   );
 };
-
-vi.mock("@/features/workers");
 
 afterEach(() => {
   resetWorkerResponseDelay();

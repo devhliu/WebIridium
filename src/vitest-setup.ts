@@ -4,6 +4,12 @@ import "@testing-library/jest-dom/vitest";
 import { cleanup } from "@testing-library/react";
 import { vi, afterEach, beforeAll } from "vitest";
 
+// default mocks
+vi.mock("@/components/Toast.tsx");
+vi.mock("@/features/workers");
+vi.mock("react-plotly.js");
+vi.mock("plotly.js");
+
 afterEach(cleanup);
 
 beforeAll(() => {
