@@ -24,6 +24,15 @@ export interface ParameterScanOptions {
   timeCourseParameters: EditableTimeCourseParameters;
 }
 
+export interface AxisSettings {
+  includeTitle: boolean;
+  useDefaultTitle: boolean;
+  title: string;
+  showMajorTicks: boolean;
+  showMinorTicks: boolean;
+  color: string;
+}
+
 export interface GraphSettings {
   backgroundColor: string;
   drawingAreaColor: string;
@@ -44,6 +53,9 @@ export interface GraphSettings {
   maxY: number;
 
   margin: number;
+
+  xAxis: AxisSettings;
+  yAxis: AxisSettings;
 }
 
 export interface VariableSettings {
@@ -99,6 +111,24 @@ export const graphSettingsAtom = atom<GraphSettings>({
   maxY: 10,
 
   margin: 70,
+
+  xAxis: {
+    includeTitle: true,
+    useDefaultTitle: true,
+    title: "Time",
+    showMajorTicks: true,
+    showMinorTicks: false,
+    color: "#000",
+  },
+
+  yAxis: {
+    includeTitle: true,
+    useDefaultTitle: true,
+    title: "Concentrations",
+    showMajorTicks: true,
+    showMinorTicks: false,
+    color: "#000",
+  },
 });
 
 export const settingsAtoms = [

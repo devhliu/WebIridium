@@ -10,6 +10,7 @@
 
 .settings-container {
   padding: var(--spacing-panel);
+  padding-bottom: 64px; /* give them space to scroll */
   overflow-y: auto;
   display: grid;
   flex-grow: 1;

@@ -1,4 +1,5 @@
 import { useAtom } from "jotai";
+import { useState } from "react";
 import styles from "./results.module.css";
 import { graphSettingsAtom, paletteAtom } from "@/globals/workspace/settings";
 import { PALETTES, type Palette } from "@/features/colors";
@@ -13,16 +14,37 @@ import SelectProperty from "@/components/property-list/SelectProperty";
 import PropertyList from "@/components/property-list/PropertyList";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
+import {
+  ToggleGroupButton,
+  ToggleGroupContainer,
+} from "@/components/input/ToggleGroup";
 
 const SettingsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
   const [scanPalette, setScanPalette] = useAtom(paletteAtom);
 
-  const changeHandlerFor = (
+  const [selectedAxis, setSelectedAxis] = useState<"xAxis" | "yAxis">("xAxis");
+  const axisSettings = graphSettings[selectedAxis];
+
+  const handleChangeFor = (
     setting: keyof typeof graphSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({ ...graphSettings, [setting]: newValue });
+    };
+  };
+
+  const handleAxisChangeFor = (
+    setting: keyof typeof axisSettings,
+  ): ((newValue: unknown) => void) => {
+    return (newValue) => {
+      setGraphSettings({
+        ...graphSettings,
+        [selectedAxis]: {
+          ...axisSettings,
+          [setting]: newValue,
+        },
+      });
     };
   };
 
@@ -34,13 +56,13 @@ const SettingsPanel = () => {
             <BooleanProperty
               name="Autoscale X"
               value={graphSettings.isAutoscaledX}
-              onChange={changeHandlerFor("isAutoscaledX")}
+              onChange={handleChangeFor("isAutoscaledX")}
             />
             {!graphSettings.isAutoscaledX && (
               <NumericProperty
                 name="X Minimum"
                 value={graphSettings.minX}
-                onChange={changeHandlerFor("minX")}
+                onChange={handleChangeFor("minX")}
                 validator={(newValue) => newValue < graphSettings.maxX}
               />
             )}
@@ -48,7 +70,7 @@ const SettingsPanel = () => {
               <NumericProperty
                 name="X Maximum"
                 value={graphSettings.maxX}
-                onChange={changeHandlerFor("maxX")}
+                onChange={handleChangeFor("maxX")}
                 validator={(newValue) => newValue > graphSettings.minX}
               />
             )}
@@ -56,13 +78,13 @@ const SettingsPanel = () => {
             <BooleanProperty
               name="Autoscale Y"
               value={graphSettings.isAutoscaledY}
-              onChange={changeHandlerFor("isAutoscaledY")}
+              onChange={handleChangeFor("isAutoscaledY")}
             />
             {!graphSettings.isAutoscaledY && (
               <NumericProperty
                 name="Y Minimum"
                 value={graphSettings.minY}
-                onChange={changeHandlerFor("minY")}
+                onChange={handleChangeFor("minY")}
                 validator={(newValue) => newValue < graphSettings.maxY}
               />
             )}
@@ -70,7 +92,7 @@ const SettingsPanel = () => {
               <NumericProperty
                 name="Y Maximum"
                 value={graphSettings.maxY}
-                onChange={changeHandlerFor("maxY")}
+                onChange={handleChangeFor("maxY")}
                 validator={(newValue) => newValue > graphSettings.minY}
               />
             )}
@@ -82,44 +104,44 @@ const SettingsPanel = () => {
             <ColorProperty
               name="Background Color"
               value={graphSettings.backgroundColor}
-              onChange={changeHandlerFor("backgroundColor")}
+              onChange={handleChangeFor("backgroundColor")}
             />
             <ColorProperty
               name="Drawing Area Color"
               value={graphSettings.drawingAreaColor}
-              onChange={changeHandlerFor("drawingAreaColor")}
+              onChange={handleChangeFor("drawingAreaColor")}
             />
 
             <BooleanProperty
               name="Include Title"
               value={graphSettings.includeTitle}
-              onChange={changeHandlerFor("includeTitle")}
+              onChange={handleChangeFor("includeTitle")}
             />
             {graphSettings.includeTitle && (
               <StringProperty
                 name="Title"
                 value={graphSettings.title}
-                onChange={changeHandlerFor("title")}
+                onChange={handleChangeFor("title")}
               />
             )}
 
             <BooleanProperty
               name="Include Border"
               value={graphSettings.includeBorder}
-              onChange={changeHandlerFor("includeBorder")}
+              onChange={handleChangeFor("includeBorder")}
             />
             {graphSettings.includeBorder && (
               <ColorProperty
                 name="Border Color"
                 value={graphSettings.borderColor}
-                onChange={changeHandlerFor("borderColor")}
+                onChange={handleChangeFor("borderColor")}
               />
             )}
             {graphSettings.includeBorder && (
               <NumericSliderProperty
                 name="Border Thickness"
                 value={graphSettings.borderThickness}
-                onChange={changeHandlerFor("borderThickness")}
+                onChange={handleChangeFor("borderThickness")}
                 min={0}
                 max={10}
                 step={0.5}
@@ -129,7 +151,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Series">
-          <PropertyList alignment="left">
+          <PropertyList alignment="center">
             <SelectProperty
               name="Palette"
               value={scanPalette}
@@ -139,6 +161,57 @@ const SettingsPanel = () => {
                   .map((name) => [name, name]),
               )}
               onChange={(sp) => setScanPalette(sp as Palette)}
+            />
+          </PropertyList>
+        </PropertyAccordionItem>
+
+        <PropertyAccordionItem title="Axes">
+          <PropertyList alignment="center">
+            <ToggleGroupContainer
+              value={selectedAxis}
+              onValueChange={setSelectedAxis as (val: string) => void}
+            >
+              <ToggleGroupButton value="xAxis">X-Axis</ToggleGroupButton>
+              <ToggleGroupButton value="yAxis">Y-Axis</ToggleGroupButton>
+            </ToggleGroupContainer>
+
+            <BooleanProperty
+              name="Include Axis Title"
+              value={axisSettings["includeTitle"]}
+              onChange={handleAxisChangeFor("includeTitle")}
+            />
+
+            {axisSettings.includeTitle && (
+              <BooleanProperty
+                name="Use Default Title"
+                value={axisSettings["useDefaultTitle"]}
+                onChange={handleAxisChangeFor("useDefaultTitle")}
+              />
+            )}
+
+            {axisSettings.includeTitle && !axisSettings.useDefaultTitle && (
+              <StringProperty
+                name="Axis Title"
+                value={axisSettings["title"]}
+                onChange={handleAxisChangeFor("title")}
+              />
+            )}
+
+            <ColorProperty
+              name="Axis Color"
+              value={axisSettings["color"]}
+              onChange={handleAxisChangeFor("color")}
+            />
+
+            <BooleanProperty
+              name="Show Major Ticks"
+              value={axisSettings["showMajorTicks"]}
+              onChange={handleAxisChangeFor("showMajorTicks")}
+            />
+            <BooleanProperty
+              name="Show Minor Ticks"
+              value={axisSettings["showMinorTicks"]}
+              onChange={handleAxisChangeFor("showMinorTicks")}
             />
           </PropertyList>
         </PropertyAccordionItem>

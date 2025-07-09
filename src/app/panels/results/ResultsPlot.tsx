@@ -1,4 +1,5 @@
 import { useAtomValue } from "jotai";
+import { useEffect, useReducer } from "react";
 import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
@@ -42,15 +43,42 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     minY,
     maxY,
     margin,
+    xAxis,
+    yAxis,
   } = useAtomValue(graphSettingsAtom);
+
+  // For whatever reason, plotly gets messed up whenever
+  // we update some of the properties.
+  //
+  // So, we have to use a key to forcefully re-render the plot
+  // every time these properties update.
+  // TODO: FIND A BETTER SOLUTION??? This seems to an issue with the autoscale
+  //       so we might have to do that manually
+  const [key, incrementKey] = useReducer((prevKey) => prevKey + 1, 0);
+  useEffect(() => {
+    incrementKey();
+  }, [
+    xAxis,
+    yAxis,
+  ]);
 
   const plotData = [];
 
+  // if we do undefined, plotly autoscales for us
   const rangeX = isAutoscaledX ? undefined : [minX, maxX];
   const rangeY = isAutoscaledY ? undefined : [minY, maxY];
 
+  let xAxisTitle = xAxis.useDefaultTitle ? "Time" : xAxis.title;
+  const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
+
   if (result.type === "timeCourse") {
-    // TODO: error if the independent variable column is not present
+    // axis titles
+    if (xAxis.useDefaultTitle) {
+      xAxisTitle =
+        variableSettingss[independentVariable!]?.displayName ?? xAxisTitle;
+    }
+
+    // columns
     const independentVariableColumn =
       result.columns.find((c) => c.title === independentVariable) ?? [];
     for (const { title, values } of result.columns) {
@@ -69,6 +97,13 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       });
     }
   } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
+    // axis titles
+    if (xAxis.useDefaultTitle) {
+      xAxisTitle =
+        variableSettingss[scanIndependentVariable]?.displayName ?? xAxisTitle;
+    }
+
+    // columns
     for (const scan of result.scans) {
       const independentVariableColumn =
         scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
@@ -103,6 +138,13 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       }
     }
   } else if (result.type === "parameterScan" && result.mode === "steadyState") {
+    // axis titles
+    if (xAxis.useDefaultTitle) {
+      xAxisTitle =
+        variableSettingss[result.parameter]?.displayName ?? xAxisTitle;
+    }
+
+    // column
     const parameterValues = result.scans.map((s) => s.parameterValue);
     const concentrationsMap = new Map<string, number[]>();
     for (const scan of result.scans) {
@@ -143,6 +185,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   return (
     <Plot
       data-testid="results-plot"
+      key={key}
       data={plotData as unknown as Data[]}
       style={{ position: "relative" }}
       layout={{
@@ -156,13 +199,19 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         showlegend: false,
         paper_bgcolor: backgroundColor,
         plot_bgcolor: drawingAreaColor,
-        yaxis: {
-          title: { text: "Concentrations" },
-          range: rangeY,
-        },
         xaxis: {
-          title: { text: "Time" },
+          title: !xAxis.includeTitle ? undefined : { text: xAxisTitle },
           range: rangeX,
+          color: xAxis.color,
+          autorange: isAutoscaledX,
+          showticklabels: xAxis.showMajorTicks,
+        },
+        yaxis: {
+          title: !yAxis.includeTitle ? undefined : { text: yAxisTitle },
+          range: rangeY,
+          color: yAxis.color,
+          autorange: isAutoscaledY,
+          showticklabels: yAxis.showMajorTicks,
         },
         margin: {
           l: margin,
