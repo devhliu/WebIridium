@@ -9,6 +9,16 @@
   height: 100%;
 }
 
+.topbar {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-3);
+}
+
+.search-box {
+  flex-grow: 1;
+}
+
 .sliders {
   display: flex;
   flex-direction: column;

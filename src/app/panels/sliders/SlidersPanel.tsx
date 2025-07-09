@@ -16,6 +16,10 @@ import { groupVariables } from "@/features/category";
 import VariableSlider from "./VariableSlider";
 import SearchBox from "@/components/input/SearchBox";
 import Checkbox from "@/components/input/Checkbox";
+import Button from "@/components/Button";
+
+import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
+import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 
 const SLIDER_CATEGORY_ORDER = ["Parameters", "Species"];
 
@@ -44,10 +48,13 @@ const SlidersPanel = () => {
   const [variableSliderStates, setVariableSliderStates] = useAtom(
     variableSliderStatesAtom,
   );
+  const updateVariableSliderValue = useSetAtom(updateVariableSliderValueAtom);
 
   const [searchTerm, setSearchTerm] = useState("");
+  const [showingInactive, setShowingInactive] = useState(true);
 
   const filteredVariables = variables
+    .filter((v) => showingInactive || variableSliderStates[v.name])
     .filter((v) => v.type === "settable")
     .filter(
       (v) =>
@@ -56,9 +63,8 @@ const SlidersPanel = () => {
           .includes(searchTerm.toLowerCase()) ||
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
-  const groups = groupVariables(filteredVariables, SLIDER_CATEGORY_ORDER);
 
-  const updateVariableSliderValue = useSetAtom(updateVariableSliderValueAtom);
+  const filteredGroups = groupVariables(filteredVariables, SLIDER_CATEGORY_ORDER);
 
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
@@ -99,17 +105,29 @@ const SlidersPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <SearchBox
-        name="slider-variable-search"
-        placeholder="Variable Name"
-        value={searchTerm}
-        onChange={setSearchTerm}
-      />
+      <div className={styles.topbar}>
+        <SearchBox
+          className={styles.searchBox}
+          name="slider-variable-search"
+          placeholder="Variable Name"
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
+        <Button
+          onClick={() => setShowingInactive(!showingInactive)}
+        >
+          {showingInactive
+            ? <ClosedEyeIcon width="1em" height="1em" />
+            : <EyeIcon width="1em" height="1em" />}
+          {showingInactive ? "Hide Inactive" : "Show Inactive"}
+        </Button>
+      </div>
+
       <div className={styles.sliders}>
         {filteredVariables.length === 0 ? (
           <p className={styles.noVariables}>No Variables</p>
         ) : (
-          groups.map(([group, vars]) => {
+          filteredGroups.map(([group, vars]) => {
             const checkboxState = vars.every(
               (v) => variableSliderStates[v.name],
             )
