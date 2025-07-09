@@ -83,6 +83,10 @@ const patchVariablesSettings = (
   }
 };
 
+/**
+ * Update editor content and associated things like model info, variables, etc.
+ * @returns `true` on successful model update, `false` on failed model update
+ */
 export const updateEditorContentAtom = atom(
   null,
   async (
@@ -135,7 +139,7 @@ export const updateEditorContentAtom = atom(
           type: "error",
           message: err.message,
         });
-        return;
+        return false;
       } else {
         throw err;
       }
@@ -203,6 +207,8 @@ export const updateEditorContentAtom = atom(
         ),
       );
     }
+
+    return true;
   },
 );
 

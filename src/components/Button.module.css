@@ -10,12 +10,26 @@
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-2);
+
+  &.disabled {
+    color: color-mix(
+      in hsl,
+      var(--color-secondary-accent-foreground) 50%,
+      transparent
+    );
+    background-color: color-mix(
+      in hsl,
+      var(--color-secondary-accent) 50%,
+      transparent
+    );
+  }
 }
 
 .ghost {
   color: var(--color-primary-foreground);
   background-color: transparent;
   border: none;
+  border-radius: var(--border-radius);
   padding: var(--spacing-2);
   cursor: pointer;
 

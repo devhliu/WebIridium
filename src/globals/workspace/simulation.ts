@@ -25,6 +25,7 @@ import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
 
 export type SimulationOperationResult =
   | { type: "success" }
+  | { type: "cancel" }
   | { type: "failure"; message: string };
 
 // internal atoms
@@ -84,9 +85,7 @@ const runSimulation = async (
   run: (abortSignal: AbortSignal) => Promise<SimulationResult>,
 ): Promise<SimulationOperationResult> => {
   const modelStatus = get(modelStatusAtom);
-  if (get(_simulationInternalStateAtom)) {
-    return { type: "failure", message: "Simulation already in progress." };
-  } else if (modelStatus.type === "loading") {
+  if (modelStatus.type === "loading") {
     return {
       type: "failure",
       message: "Model is still loading. Please wait.",
@@ -94,6 +93,7 @@ const runSimulation = async (
   } else if (modelStatus.type === "error") {
     return { type: "failure", message: modelStatus.message };
   } else {
+    // cancel the current simulaton if any
     const prevInternalState = get(_simulationInternalStateAtom);
     if (prevInternalState) {
       prevInternalState.abortController.abort();
@@ -111,7 +111,7 @@ const runSimulation = async (
       return { type: "success" };
     } catch (err) {
       if (err instanceof WorkerTermination) {
-        return { type: "success" };
+        return { type: "cancel" };
       } else {
         if (err instanceof Error && err.message !== "mock fail") {
           console.error(err);

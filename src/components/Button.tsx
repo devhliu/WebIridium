@@ -20,7 +20,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={clsx(styles[style], className)}
+      className={clsx(styles[style], disabled && styles.disabled, className)}
       onClick={onClick}
       disabled={disabled}
     >

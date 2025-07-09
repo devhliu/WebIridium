@@ -119,7 +119,7 @@ const AppContent = () => {
                 slidersPanelActive={slidersPanelActive}
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
-              {tab === "Examples" && <ExamplesPanel />}
+              <ExamplesPanel visible={tab === "Examples"} />
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>
