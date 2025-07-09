@@ -92,7 +92,7 @@ const runSimulation = async (
       message: "Model is still loading. Please wait.",
     };
   } else if (modelStatus.type === "error") {
-    return { type: "failure", message: "There is an error with your model." };
+    return { type: "failure", message: modelStatus.message };
   } else {
     const prevInternalState = get(_simulationInternalStateAtom);
     if (prevInternalState) {
