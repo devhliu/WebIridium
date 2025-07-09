@@ -53,6 +53,7 @@ const patchVariablesSettings = (
         displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
         color: colorGenerator.next().value!,
+        lineStyle: "solid",
         width: 2,
       };
     }

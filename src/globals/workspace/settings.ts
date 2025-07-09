@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 
 import { type Palette } from "@/features/colors";
+import { type LineStyle } from "@/features/lineStyle";
 
 import type {
   ParameterScanResult,
@@ -50,6 +51,7 @@ export interface VariableSettings {
   visible: boolean;
   color: string;
   width: number;
+  lineStyle: LineStyle;
 }
 
 export const nameAtom = atom("Starter Model");

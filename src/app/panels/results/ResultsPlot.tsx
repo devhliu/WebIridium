@@ -64,7 +64,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         type: "scatter",
         mode: "lines",
         marker: { color: settings.color },
-        line: { width: settings.width },
+        line: { width: settings.width, dash: settings.lineStyle },
         name: settings?.displayName ?? title,
       });
     }
@@ -93,7 +93,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
           type: "scatter",
           mode: "lines",
           marker: { color: finalColor },
-          line: { width: settings.width },
+          line: { width: settings.width, dash: settings.lineStyle },
           name: getParameterScanTitle(
             settings.displayName,
             result.parameter,
@@ -125,7 +125,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         type: "scatter",
         mode: "lines",
         marker: { color: settings.color },
-        line: { width: settings.width },
+        line: { width: settings.width, dash: settings.lineStyle },
         name: settings.displayName,
       });
     }

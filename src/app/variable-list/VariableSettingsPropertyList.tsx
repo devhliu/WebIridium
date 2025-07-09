@@ -1,5 +1,7 @@
 import { useAtomValue } from "jotai";
 
+import { LINE_STYLES } from "@/features/lineStyle";
+
 import {
   paletteAtom,
   type VariableSettings,
@@ -10,11 +12,16 @@ import PropertyList from "@/components/property-list/PropertyList";
 import ColorProperty from "@/components/property-list/ColorProperty";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
 import PropertyHeading from "@/components/property-list/PropertyHeading";
+import SelectProperty from "@/components/property-list/SelectProperty";
 
 export interface VariableSettingsPropertyListProps {
   settings: VariableSettings;
   onVariableSettingsChange: (newSettings: VariableSettings) => void;
 }
+
+const LINE_STYLE_OPTIONS = Object.fromEntries(
+  LINE_STYLES.map((style) => [style, style]),
+);
 
 const VariableSettingsPropertyList = ({
   settings,
@@ -47,6 +54,12 @@ const VariableSettingsPropertyList = ({
         max={25}
         step={0.5}
         onChange={handleChangeFor("width")}
+      />
+      <SelectProperty
+        name="Line Style"
+        value={settings.lineStyle}
+        options={LINE_STYLE_OPTIONS}
+        onChange={handleChangeFor("lineStyle")}
       />
     </PropertyList>
   );
