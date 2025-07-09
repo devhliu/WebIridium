@@ -9,8 +9,16 @@ export interface ButtonProps {
 
   onClick?: () => void;
 
-  /** A button that is loading will have its content replaced with a spinner. */
+  /**
+   * A button that is loading will have its content replaced with a spinner.
+   * Loading also means disabled.
+   */
   isLoading?: boolean;
+  /**
+   * Whether the button is disabled.
+   * If a button isLoading, that takes precedence
+   */
+  disabled?: boolean;
 
   /**
    * When a button in cancellable, an 'x' will appear to the right of it
@@ -26,12 +34,18 @@ const CancellableButton = ({
   icon,
   onClick,
   isLoading = false,
+  disabled = false,
   canCancel = false,
   onCancel,
   children,
 }: ButtonProps) => {
   return (
-    <span className={clsx(styles.container, isLoading && styles.disabled)}>
+    <span
+      className={clsx(
+        styles.container,
+        (isLoading || disabled) && styles.disabled,
+      )}
+    >
       <button
         className={clsx(
           styles.main,
@@ -39,7 +53,7 @@ const CancellableButton = ({
           canCancel && styles.hasSiblingCancel,
         )}
         onClick={onClick}
-        disabled={isLoading}
+        disabled={isLoading || disabled}
         aria-label={isLoading ? "Loading" : undefined}
       >
         {isLoading ? (

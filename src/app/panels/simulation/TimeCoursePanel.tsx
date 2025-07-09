@@ -61,11 +61,8 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
       <h1 className={styles.panelTitle}>Time Course Simulation</h1>
       <CancellableButton
         icon={<PlayIcon />}
-        isLoading={
-          isSimulating ||
-          isSliderSimulationQueued ||
-          modelStatus.type === "loading"
-        }
+        disabled={modelStatus.type === "loading"}
+        isLoading={isSimulating || isSliderSimulationQueued}
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}

@@ -112,14 +112,15 @@ export const ForceModelUpdateButton = () => {
 /** For this render function, make sure to include the ForceModelUpdateButton component in the render. */
 export const itShouldBeLoadingWhenModelIsLoading = ({
   render,
-}: Omit<TestSimulationButtonOptions, "buttonText">) => {
+  buttonText,
+}: TestSimulationButtonOptions) => {
   it("should be loading when model is loading", async () => {
     setWorkerResponseDelay(50);
 
     await render();
 
     const forceUpdateButton = screen.getByText("FORCE UPDATE");
-    const button = screen.getByLabelText("Loading");
+    const button = screen.getByText(buttonText);
 
     await userEvent.click(forceUpdateButton);
 

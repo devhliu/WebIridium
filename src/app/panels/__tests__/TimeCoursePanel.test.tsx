@@ -34,6 +34,7 @@ describe("simulation button", () => {
   itShouldDisplayPlot(testButtonOptions);
   itShouldDisplayToasts(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
+    ...testButtonOptions,
     render: async () => {
       await renderWithinWorkspace(
         <div>

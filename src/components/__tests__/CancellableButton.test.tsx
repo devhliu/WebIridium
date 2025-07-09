@@ -25,7 +25,11 @@ it("should call click when clicked", async () => {
 it("should not be clickable when loading", async () => {
   const onClick = vi.fn();
   render(
-    <CancellableButton icon={<span>hey</span>} onClick={onClick} isLoading={true}>
+    <CancellableButton
+      icon={<span>hey</span>}
+      onClick={onClick}
+      isLoading={true}
+    >
       test
     </CancellableButton>,
   );

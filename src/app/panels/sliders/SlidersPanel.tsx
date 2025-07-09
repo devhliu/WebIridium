@@ -72,8 +72,16 @@ const SlidersPanel = () => {
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-  const unfilteredGroups = new Map(groupVariables(variables.filter(v => v.type === "settable"), SLIDER_CATEGORY_ORDER));
-  const filteredGroups = groupVariables(filteredVariables, SLIDER_CATEGORY_ORDER);
+  const unfilteredGroups = new Map(
+    groupVariables(
+      variables.filter((v) => v.type === "settable"),
+      SLIDER_CATEGORY_ORDER,
+    ),
+  );
+  const filteredGroups = groupVariables(
+    filteredVariables,
+    SLIDER_CATEGORY_ORDER,
+  );
 
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
@@ -122,12 +130,12 @@ const SlidersPanel = () => {
           value={searchTerm}
           onChange={setSearchTerm}
         />
-        <Button
-          onClick={() => setShowingInactive(!showingInactive)}
-        >
-          {showingInactive
-            ? <ClosedEyeIcon width="1em" height="1em" />
-            : <EyeIcon width="1em" height="1em" />}
+        <Button onClick={() => setShowingInactive(!showingInactive)}>
+          {showingInactive ? (
+            <ClosedEyeIcon width="1em" height="1em" />
+          ) : (
+            <EyeIcon width="1em" height="1em" />
+          )}
           {showingInactive ? "Hide Inactive" : "Show Inactive"}
         </Button>
       </div>
@@ -160,9 +168,7 @@ const SlidersPanel = () => {
                       onChange={handleGroupToggle}
                     />
                   )}
-                  <label htmlFor={`slider-group-${group}`}>
-                    {group}
-                  </label>
+                  <label htmlFor={`slider-group-${group}`}>{group}</label>
                 </h3>
                 {vars.map((v) => (
                   <VariableSlider

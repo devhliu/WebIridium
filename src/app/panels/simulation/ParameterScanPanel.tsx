@@ -85,11 +85,8 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <CancellableButton
         icon={<PlayIcon />}
-        isLoading={
-          isSimulating ||
-          isSliderSimulationQueued ||
-          modelStatus.type === "loading"
-        }
+        disabled={modelStatus.type === "loading"}
+        isLoading={isSimulating || isSliderSimulationQueued}
         onClick={handleSimulateClick}
         canCancel={isSimulating}
         onCancel={handleCancelClick}

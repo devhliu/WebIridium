@@ -32,6 +32,7 @@ describe("run button", () => {
   itShouldBeCancellable(testButtonOptions);
   itShouldDisplayPlot(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
+    ...testButtonOptions,
     render: async () => {
       await renderWithinWorkspace(
         <div>

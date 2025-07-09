@@ -8,9 +8,18 @@ export interface ButtonProps {
   className?: string;
 }
 
-const Button = ({ onClick, disabled, children, className }: ButtonProps) => {
+const Button = ({
+  onClick,
+  disabled = false,
+  children,
+  className,
+}: ButtonProps) => {
   return (
-    <button className={clsx(styles.button, className)} onClick={onClick} disabled={disabled}>
+    <button
+      className={clsx(styles.button, className)}
+      onClick={onClick}
+      disabled={disabled}
+    >
       {children}
     </button>
   );
