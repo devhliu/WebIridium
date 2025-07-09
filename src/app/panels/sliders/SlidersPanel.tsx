@@ -27,19 +27,27 @@ const getInitialSliderState = (
   variable: SettableVariable,
 ): VariableSliderState => {
   const baseScale = variable.defaultValue || 1;
+  let result;
   if (variable.defaultValue >= 0) {
-    return {
+    result = {
       value: variable.defaultValue,
       min: Math.round(100 * (0.1 * baseScale)) / 100,
       max: Math.round(100 * (5 * baseScale)) / 100,
     };
   } else {
-    return {
+    result = {
       value: variable.defaultValue,
       min: Math.round(100 * (5 * baseScale)) / 100,
       max: Math.round(100 * (0.1 * baseScale)) / 100,
     };
   }
+
+  // sometimes the baseScale is so small, min and max get rounded to zero
+  if (result.min === result.max) {
+    result.max += 1;
+  }
+
+  return result;
 };
 
 const SlidersPanel = () => {
@@ -64,6 +72,7 @@ const SlidersPanel = () => {
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
+  const unfilteredGroups = new Map(groupVariables(variables.filter(v => v.type === "settable"), SLIDER_CATEGORY_ORDER));
   const filteredGroups = groupVariables(filteredVariables, SLIDER_CATEGORY_ORDER);
 
   const handleValueChange = useCallback(
@@ -128,16 +137,15 @@ const SlidersPanel = () => {
           <p className={styles.noVariables}>No Variables</p>
         ) : (
           filteredGroups.map(([group, vars]) => {
-            const checkboxState = vars.every(
-              (v) => variableSliderStates[v.name],
-            )
-              ? true
-              : vars.some((v) => variableSliderStates[v.name])
-                ? "indeterminate"
-                : false;
+            const unfilteredVars = unfilteredGroups.get(group)!;
+            // prettier-ignore
+            const checkboxState =
+              unfilteredVars.every((v) => variableSliderStates[v.name]) ? true
+              : unfilteredVars.some((v) => variableSliderStates[v.name]) ? "indeterminate"
+              : false;
 
             const handleGroupToggle = (on: boolean) => {
-              for (const v of vars) {
+              for (const v of unfilteredVars) {
                 handleToggle(v, on);
               }
             };
@@ -152,7 +160,9 @@ const SlidersPanel = () => {
                       onChange={handleGroupToggle}
                     />
                   )}
-                  {group}
+                  <label htmlFor={`slider-group-${group}`}>
+                    {group}
+                  </label>
                 </h3>
                 {vars.map((v) => (
                   <VariableSlider
