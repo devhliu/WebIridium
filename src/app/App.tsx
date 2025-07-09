@@ -123,7 +123,7 @@ const AppContent = () => {
                   visible={slidersPanelActive}
                   preferredSize={250}
                 >
-                  <SlidersPanel />
+                  {slidersPanelActive && <SlidersPanel />}
                 </Allotment.Pane>
               </Allotment>
             </Allotment.Pane>

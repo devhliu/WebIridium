@@ -121,7 +121,7 @@ const SlidersPanel = () => {
   );
 
   return (
-    <div className={styles.panel}>
+    <div className={styles.panel} data-testid="sliders-panel">
       <div className={styles.topbar}>
         <SearchBox
           className={styles.searchBox}

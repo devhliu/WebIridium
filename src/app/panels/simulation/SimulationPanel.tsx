@@ -33,10 +33,11 @@ const SimulationPanel = ({
 
         <button
           className={styles.slidersButton}
+          aria-label="Sliders"
           aria-pressed={slidersPanelActive}
           onClick={() => onSlidersPanelToggle(!slidersPanelActive)}
         >
-          <SlidersIcon aria-label="Sliders" width="1em" height="1em" />
+          <SlidersIcon aria-hidden width="1em" height="1em" />
         </button>
       </div>
 

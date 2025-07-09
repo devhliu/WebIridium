@@ -85,3 +85,16 @@ test("results panel should only be visible after simulating", async () => {
 
   expect(screen.getByText("Table")).toBeInTheDocument();
 });
+
+test("clicking sliders button should toggle sliders panel", async () => {
+  await renderFlush(<App />);
+
+  expect(screen.queryByTestId("sliders-panel")).not.toBeInTheDocument();
+
+  const sliderButton = within(
+    screen.getByTestId("timeCoursePanel"),
+  ).getByLabelText("Sliders");
+  await userEvent.click(sliderButton);
+
+  expect(screen.getByTestId("sliders-panel")).toBeInTheDocument();
+});

@@ -5,9 +5,7 @@ import Button from "../Button";
 
 it("should call onClick", async () => {
   const onClick = vi.fn();
-  render(
-    <Button onClick={onClick}>test</Button>
-  );
+  render(<Button onClick={onClick}>test</Button>);
 
   const button = screen.getByText("test");
   await userEvent.click(button);
@@ -18,7 +16,9 @@ it("should call onClick", async () => {
 it("should be able to be disabled", async () => {
   const onClick = vi.fn();
   render(
-    <Button onClick={onClick} disabled>test</Button>
+    <Button onClick={onClick} disabled>
+      test
+    </Button>,
   );
 
   const button = screen.getByText("test");
