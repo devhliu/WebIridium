@@ -68,21 +68,25 @@
   --button-foreground: color-mix(
     in hsl,
     var(--color-primary-accent-foreground) 95%,
-    #fff
+    transparent
   );
-  --button-background: color-mix(in hsl, var(--color-primary-accent) 93%, #fff);
+  --button-background: color-mix(
+    in hsl,
+    var(--color-primary-accent) 93%,
+    transparent
+  );
 }
 
 .primary:active {
   --button-foreground: color-mix(
     in hsl,
     var(--color-primary-accent-foreground) 97%,
-    #00071f
+    transparent
   );
   --button-background: color-mix(
     in hsl,
     var(--color-primary-accent) 92%,
-    #00071f
+    transparent
   );
 }
 
@@ -90,7 +94,11 @@
   --button-foreground: color-mix(
     in hsl,
     var(--color-primary-accent-foreground) 60%,
-    #000
+    transparent
   );
-  --button-background: color-mix(in hsl, var(--color-primary-accent) 60%, #000);
+  --button-background: color-mix(
+    in hsl,
+    var(--color-primary-accent) 60%,
+    transparent
+  );
 }
