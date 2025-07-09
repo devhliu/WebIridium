@@ -1,7 +1,10 @@
 import clsx from "clsx";
 import styles from "./Button.module.css";
 
+export type ButtonStyle = "default" | "ghost";
+
 export interface ButtonProps {
+  style?: ButtonStyle;
   onClick?: () => void;
   disabled?: boolean;
   children?: React.ReactNode;
@@ -9,6 +12,7 @@ export interface ButtonProps {
 }
 
 const Button = ({
+  style = "default",
   onClick,
   disabled = false,
   children,
@@ -16,7 +20,7 @@ const Button = ({
 }: ButtonProps) => {
   return (
     <button
-      className={clsx(styles.button, className)}
+      className={clsx(styles[style], className)}
       onClick={onClick}
       disabled={disabled}
     >

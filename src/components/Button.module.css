@@ -1,4 +1,4 @@
-.button {
+.default {
   color: var(--color-secondary-accent-foreground);
   background-color: var(--color-secondary-accent);
   border: var(--border-secondary-accent-solid);
@@ -10,4 +10,28 @@
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-2);
+}
+
+.ghost {
+  color: var(--color-primary-foreground);
+  background-color: transparent;
+  border: none;
+  padding: var(--spacing-2);
+  cursor: pointer;
+
+  &:hover {
+    background-color: color-mix(
+      in hsl,
+      var(--color-primary-foreground) 10%,
+      transparent
+    );
+  }
+
+  &:active {
+    background-color: color-mix(
+      in hsl,
+      var(--color-primary-foreground) 15%,
+      transparent
+    );
+  }
 }
