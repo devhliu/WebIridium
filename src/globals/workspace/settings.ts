@@ -68,8 +68,12 @@ export interface VariableSettings {
 
 export const nameAtom = atom("Starter Model");
 export const paletteAtom = atom<Palette>("Custom");
-export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
 export const independentVariableAtom = atom<string | null>(null);
+
+// note that variable settings will always be a superset of
+// variables because the settings are retained even if the
+// variables are no longer in the model.
+export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
 
 export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
   startTime: 0,

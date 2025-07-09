@@ -57,10 +57,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const [key, incrementKey] = useReducer((prevKey) => prevKey + 1, 0);
   useEffect(() => {
     incrementKey();
-  }, [
-    xAxis,
-    yAxis,
-  ]);
+  }, [xAxis, yAxis]);
 
   const plotData = [];
 

@@ -15,14 +15,15 @@ const UncontrolledVariableList = () => {
   const [variableSettingss, setVariableSettingss] = useAtom(
     variableSettingssAtom,
   );
+
   const handleVariableSettingsChange = useCallback(
     (variableName: string, newSettings: VariableSettings) => {
-      setVariableSettingss({
-        ...variableSettingss,
+      setVariableSettingss((old) => ({
+        ...old,
         [variableName]: newSettings,
-      });
+      }));
     },
-    [variableSettingss, setVariableSettingss],
+    [setVariableSettingss],
   );
 
   return (

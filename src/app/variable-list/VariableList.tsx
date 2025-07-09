@@ -1,10 +1,16 @@
 import { useState } from "react";
 import styles from "./VariableList.module.css";
+
 import { groupVariables } from "@/features/category";
 import { type VariableSettings } from "@/globals/workspace/settings";
 import { type Variable } from "@/features/simulation/Simulator";
+
+import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
+import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
+
 import VariableGroup from "./VariableGroup";
 import SearchBox from "@/components/input/SearchBox";
+import Button from "@/components/Button";
 
 export interface VariableListProps {
   variables: Variable[];
@@ -30,14 +36,39 @@ const VariableList = ({
       variable.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
+  const areAllVisible = variables.every(
+    (v) => variableSettingss[v.name].visible,
+  );
+
+  const toggleAllVisible = () => {
+    for (const variable of variables) {
+      onVariableSettingsChange(variable.name, {
+        ...variableSettingss[variable.name],
+        visible: !areAllVisible,
+      });
+    }
+  };
+
   return (
     <div className={styles.container}>
-      <SearchBox
-        name="variable-search"
-        placeholder="Variable Name"
-        value={searchTerm}
-        onChange={setSearchTerm}
-      />
+      <div className={styles.topbar}>
+        <SearchBox
+          className={styles.searchBox}
+          name="variable-search"
+          placeholder="Variable Name"
+          value={searchTerm}
+          onChange={setSearchTerm}
+        />
+
+        <Button onClick={toggleAllVisible}>
+          {areAllVisible ? (
+            <ClosedEyeIcon width="1em" height="1em" />
+          ) : (
+            <EyeIcon width="1em" height="1em" />
+          )}
+          {areAllVisible ? "Hide All" : "Show All"}
+        </Button>
+      </div>
       {filteredVariables.length > 0 ? (
         <div className={styles.list}>
           {groupVariables(filteredVariables).map(([group, vars]) => (

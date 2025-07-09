@@ -4,6 +4,17 @@
   gap: var(--spacing-3);
 }
 
+.topbar {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-3);
+  align-items: center;
+}
+
+.search-box {
+  flex-grow: 1;
+}
+
 .list {
   display: flex;
   flex-direction: column;
