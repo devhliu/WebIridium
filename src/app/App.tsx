@@ -27,6 +27,15 @@ import TablePanel from "./panels/results/TablePanel";
 import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import SlidersPanel from "./panels/sliders/SlidersPanel";
+import ExamplesPanel from "./panels/ExamplesPanel";
+
+const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <ToastProvider>
+      <WorkspaceProvider>{children}</WorkspaceProvider>
+    </ToastProvider>
+  );
+};
 
 const ResultTabbedPanel = () => {
   const simulationResult = useAtomValue(simulationResultAtom);
@@ -61,18 +70,15 @@ const ResultTabbedPanel = () => {
   }
 };
 
-const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <ToastProvider>
-      <WorkspaceProvider>{children}</WorkspaceProvider>
-    </ToastProvider>
-  );
-};
-
 const AppContent = () => {
   const simulationResult = useAtomValue(simulationResultAtom);
 
-  const tabs: SidebarTab[] = ["Time Course", "Steady State", "Parameter Scan"];
+  const tabs: SidebarTab[] = [
+    "Time Course",
+    "Steady State",
+    "Parameter Scan",
+    "Examples",
+  ];
   const [tab, setTab] = useState<SidebarTab>("Time Course");
 
   const [slidersPanelActive, setSlidersPanelActive] = useState(false);
@@ -113,6 +119,7 @@ const AppContent = () => {
                 slidersPanelActive={slidersPanelActive}
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
+              {tab === "Examples" && <ExamplesPanel />}
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>

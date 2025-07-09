@@ -10,9 +10,8 @@
 }
 
 .app-main {
-  display: grid;
-  grid-template-rows: 100%;
-  grid-template-columns: var(--size-7) 1fr;
+  display: flex;
+  flex-direction: row;
   flex-grow: 1;
   overflow-y: hidden;
 }
@@ -20,6 +19,7 @@
 /* Pane stuff */
 
 .allotment-container {
+  flex-grow: 1;
   background-color: var(--color-primary-background);
 }
 

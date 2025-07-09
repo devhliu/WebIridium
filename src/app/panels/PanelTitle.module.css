@@ -1,0 +1,13 @@
+.title-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-text {
+  font-size: var(--font-size-base);
+  font-weight: bold;
+  color: var(--color-primary-foreground-dim);
+  margin-block: var(--spacing-2);
+}

@@ -1,0 +1,5 @@
+.panel {
+  padding: var(--spacing-panel);
+  height: 100%;
+  width: 100%;
+}

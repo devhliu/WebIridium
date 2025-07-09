@@ -1,3 +1,4 @@
+import PanelTitle from "../PanelTitle";
 import styles from "./simulation.module.css";
 
 import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
@@ -28,9 +29,7 @@ const SimulationPanel = ({
       className={styles.simulationPanel}
       style={visible ? {} : { display: "none" }}
     >
-      <div className={styles.titleSection}>
-        <h2 className={styles.titleText}>{title}</h2>
-
+      <PanelTitle title={title}>
         <button
           className={styles.slidersButton}
           aria-label="Sliders"
@@ -39,7 +38,7 @@ const SimulationPanel = ({
         >
           <SlidersIcon aria-hidden width="1em" height="1em" />
         </button>
-      </div>
+      </PanelTitle>
 
       {children}
     </div>
