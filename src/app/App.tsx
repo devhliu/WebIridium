@@ -79,7 +79,7 @@ const AppContent = () => {
     "Parameter Scan",
     "Examples",
   ];
-  const [tab, setTab] = useState<SidebarTab>("Time Course");
+  const [tab, setTab] = useState<SidebarTab | null>("Time Course");
 
   const [slidersPanelActive, setSlidersPanelActive] = useState(false);
 
@@ -98,7 +98,11 @@ const AppContent = () => {
 
         <div className={styles.allotmentContainer}>
           <Allotment>
-            <Allotment.Pane minSize={290} preferredSize={290}>
+            <Allotment.Pane
+              minSize={290}
+              preferredSize={290}
+              visible={tab !== null}
+            >
               {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
                       Adding the `key` fixed that. */}
               <TimeCoursePanel

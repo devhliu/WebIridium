@@ -53,11 +53,19 @@ const SidebarItem = ({ tab, isActive, onClick }: SidebarItemProps) => {
 export interface SidebarProps {
   // TOOD: should this be moved out to some global constant?
   tabs: SidebarTab[];
-  currentTab: SidebarTab;
-  onTabChange: (tab: SidebarTab) => void;
+  currentTab: SidebarTab | null;
+  onTabChange: (tab: SidebarTab | null) => void;
 }
 
 const Sidebar = ({ tabs, currentTab, onTabChange }: SidebarProps) => {
+  const handleTabClick = (tab: SidebarTab) => {
+    if (currentTab === tab) {
+      onTabChange(null);
+    } else {
+      onTabChange(tab);
+    }
+  };
+
   return (
     <div className={styles.root}>
       <div className={styles.list}>
@@ -68,7 +76,7 @@ const Sidebar = ({ tabs, currentTab, onTabChange }: SidebarProps) => {
               key={tab}
               tab={tab}
               isActive={currentTab === tab}
-              onClick={() => onTabChange(tab)}
+              onClick={() => handleTabClick(tab)}
             />
           ))}
       </div>
@@ -81,7 +89,7 @@ const Sidebar = ({ tabs, currentTab, onTabChange }: SidebarProps) => {
               key={tab}
               tab={tab}
               isActive={currentTab === tab}
-              onClick={() => onTabChange(tab)}
+              onClick={() => handleTabClick(tab)}
             />
           ))}
       </div>

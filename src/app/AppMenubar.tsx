@@ -25,7 +25,7 @@ import {
 import { useSetAtom } from "jotai";
 
 export interface AppMenubarProps {
-  sidebarTab: SidebarTab;
+  sidebarTab: SidebarTab | null;
   sidebarTabs: SidebarTab[];
   onSidebarTabChange: (newValue: SidebarTab) => void;
 

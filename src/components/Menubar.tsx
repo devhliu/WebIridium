@@ -64,14 +64,14 @@ export const MenubarRadioGroup = ({
   onValueChange,
   children,
 }: {
-  value: string;
+  value: string | null;
   onValueChange: (newValue: string) => void;
   children: React.ReactNode;
 }) => {
   return (
     <RadixMenubar.RadioGroup
       className={styles.radioGroup}
-      value={value}
+      value={value ?? undefined}
       onValueChange={onValueChange}
     >
       {children}
@@ -83,11 +83,11 @@ export const MenubarRadioItem = ({
   value,
   children,
 }: {
-  value: string;
+  value: string | null;
   children: React.ReactNode;
 }) => {
   return (
-    <RadixMenubar.RadioItem className={styles.item} value={value}>
+    <RadixMenubar.RadioItem className={styles.item} value={value!}>
       <RadixMenubar.ItemIndicator className={styles.itemIndicator}>
         <DotFilledIcon />
       </RadixMenubar.ItemIndicator>
