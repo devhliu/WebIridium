@@ -83,6 +83,8 @@ const AppContent = () => {
         sidebarTab={tab}
         sidebarTabs={tabs}
         onSidebarTabChange={setTab}
+        slidersPanelActive={slidersPanelActive}
+        onSlidersPanelToggle={setSlidersPanelActive}
       />
 
       <div className={styles.appMain}>

@@ -7,6 +7,7 @@ import {
   MenubarMenu,
   MenubarItem,
   MenubarRadioItem,
+  MenubarCheckboxItem,
   MenubarRadioGroup,
   MenubarSeparator,
 } from "@/components/Menubar";
@@ -27,12 +28,18 @@ export interface AppMenubarProps {
   sidebarTab: SidebarTab;
   sidebarTabs: SidebarTab[];
   onSidebarTabChange: (newValue: SidebarTab) => void;
+
+  slidersPanelActive: boolean;
+  onSlidersPanelToggle: (on: boolean) => void;
 }
 
 const AppMenubar = ({
   sidebarTab,
   sidebarTabs,
   onSidebarTabChange,
+
+  slidersPanelActive,
+  onSlidersPanelToggle,
 }: AppMenubarProps) => {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -96,7 +103,18 @@ const AppMenubar = ({
               </MenubarRadioItem>
             ))}
           </MenubarRadioGroup>
+
           <MenubarSeparator />
+
+          <MenubarCheckboxItem
+            checked={slidersPanelActive}
+            onCheckedChange={onSlidersPanelToggle}
+          >
+            Sliders
+          </MenubarCheckboxItem>
+
+          <MenubarSeparator />
+
           <MenubarItem
             name="toggle theme (TEMPORARY)"
             onSelect={() => {

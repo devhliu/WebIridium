@@ -1,7 +1,9 @@
 import clsx from "clsx";
-import { Menubar as RadixMenubar } from "radix-ui";
-import DotFilledIcon from "@/assets/icons/DotFilledIcon.svg?react";
 import styles from "./Menubar.module.css";
+import { Menubar as RadixMenubar } from "radix-ui";
+
+import DotFilledIcon from "@/assets/icons/DotFilledIcon.svg?react";
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
 export const MenubarRoot = ({
   children,
@@ -91,6 +93,29 @@ export const MenubarRadioItem = ({
       </RadixMenubar.ItemIndicator>
       {children}
     </RadixMenubar.RadioItem>
+  );
+};
+
+export const MenubarCheckboxItem = ({
+  checked,
+  onCheckedChange,
+  children,
+}: {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  children: React.ReactNode;
+}) => {
+  return (
+    <RadixMenubar.CheckboxItem
+      className={styles.item}
+      checked={checked}
+      onCheckedChange={onCheckedChange}
+    >
+      <RadixMenubar.ItemIndicator className={styles.itemIndicator}>
+        <CheckIcon />
+      </RadixMenubar.ItemIndicator>
+      {children}
+    </RadixMenubar.CheckboxItem>
   );
 };
 
