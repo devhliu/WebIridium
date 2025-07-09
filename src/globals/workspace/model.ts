@@ -6,7 +6,7 @@ import type {
   SettableVariable,
 } from "@/features/simulation/Simulator";
 import { WorkerTermination } from "@/features/workerPool";
-import { generateDefaultCustomPalette } from "@/features/colors";
+import { getDefaultColorForIndex } from "@/features/colors";
 
 import { type VariableSettings } from "./settings";
 import { simulatorAtom } from "./simulation";
@@ -38,8 +38,8 @@ const patchVariablesSettings = (
   currentVariablesSettings: Record<string, VariableSettings>,
   newVariables: Variable[],
 ): Record<string, VariableSettings> => {
+  let count = Object.keys(currentVariablesSettings).length;
   const adding: Record<string, VariableSettings> = {};
-  const colorGenerator = generateDefaultCustomPalette();
 
   const isPriorityVariable = (variable: Variable) =>
     variable.category === "Species" || variable.category === "Time";
@@ -53,10 +53,11 @@ const patchVariablesSettings = (
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
-        color: colorGenerator.next().value!,
+        color: getDefaultColorForIndex(count),
         lineStyle: "solid",
         width: 2,
       };
+      count += 1;
     }
   }
 
@@ -69,10 +70,11 @@ const patchVariablesSettings = (
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: false,
-        color: colorGenerator.next().value!,
+        color: getDefaultColorForIndex(count),
         width: 2,
         lineStyle: "solid",
       };
+      count += 1;
     }
   }
 

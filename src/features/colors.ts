@@ -33,17 +33,9 @@ export const PALETTES = {
   OceanBlue: { start: "#1E90FF", end: "#4682B4" },
 } as const;
 
-/**
- * Infinite generator that gives you colors from
- * the default palette.
- */
-// eslint-disable-next-line
-export function* generateDefaultCustomPalette() {
-  let i = 0;
-  while (true) {
-    yield DEFAULT_CUSTOM_PALETTE[i++ % DEFAULT_CUSTOM_PALETTE.length];
-  }
-}
+export const getDefaultColorForIndex = (index: number): string => {
+  return DEFAULT_CUSTOM_PALETTE[index % DEFAULT_CUSTOM_PALETTE.length];
+};
 
 /** Color gradient for a variable when you use custom color palette. */
 export const getDefaultParameterScanColor = (
