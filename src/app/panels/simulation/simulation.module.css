@@ -10,13 +10,35 @@
   overflow-y: auto;
 }
 
-.panel-title {
+.title-section {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.title-text {
   font-size: var(--font-size-base);
   font-weight: bold;
   color: var(--color-primary-foreground-dim);
   margin-block: var(--spacing-2);
 }
 
-.mode-toggle-group {
+.sliders-button {
+  color: var(--color-primary-foreground-very-dim);
+  line-height: 0;
+  background-color: transparent;
+  border: none;
+  font-size: calc(1.5 * var(--font-size-big));
+  aspect-ratio: 1 / 1;
+  padding: 0;
+  cursor: pointer;
+
+  &[aria-pressed="true"] {
+    color: var(--color-primary-accent);
+  }
+}
+
+.parameter-scan-mode-toggle-group {
   margin-bottom: var(--spacing-2);
 }

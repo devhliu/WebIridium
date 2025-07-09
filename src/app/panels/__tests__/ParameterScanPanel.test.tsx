@@ -21,7 +21,11 @@ describe("run button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <ParameterScanPanel visible />
+          <ParameterScanPanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <PlotPanel />
         </div>,
       );
@@ -36,7 +40,11 @@ describe("run button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <ParameterScanPanel visible />
+          <ParameterScanPanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,

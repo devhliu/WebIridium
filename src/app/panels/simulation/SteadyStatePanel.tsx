@@ -1,9 +1,10 @@
 import { useAtomValue, useSetAtom } from "jotai";
 
-import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
-import CancellableButton from "@/components/CancellableButton";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
+import CancellableButton from "@/components/CancellableButton";
+import SimulationPanel from "./SimulationPanel";
+
 import {
   cancelSimulationAtom,
   computeSteadyStateAtom,
@@ -14,9 +15,16 @@ import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface SteadyStatePanelProps {
   visible: boolean;
+
+  slidersPanelActive: boolean;
+  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
+export const SteadyStatePanel = ({
+  visible,
+  slidersPanelActive,
+  onSlidersPanelToggle,
+}: SteadyStatePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
   const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
@@ -40,12 +48,13 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
   };
 
   return (
-    <div
+    <SimulationPanel
+      title="Compute Steady State"
+      visible={visible}
+      slidersPanelActive={slidersPanelActive}
+      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="steadyStatePanel"
-      className={styles.simulationPanel}
-      style={visible ? {} : { display: "none" }}
     >
-      <h1 className={styles.panelTitle}>Compute Steady State</h1>
       <CancellableButton
         icon={<PlayIcon />}
         disabled={modelStatus.type === "loading"}
@@ -56,7 +65,7 @@ export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
       >
         Compute
       </CancellableButton>
-    </div>
+    </SimulationPanel>
   );
 };
 

@@ -35,6 +35,11 @@
   );
   --color-primary-foreground: #f2f5f7;
   --color-primary-foreground-dim: #f2f5f7af;
+  --color-primary-foreground-very-dim: color-mix(
+    in hsl,
+    var(--color-primary-foreground-dim) 70%,
+    transparent
+  );
   --color-primary-border: #2c2d33; /* #212226; */
   --border-primary-solid: 1px solid var(--color-primary-border);
 
@@ -119,6 +124,11 @@
   );
   --color-primary-foreground: #080808;
   --color-primary-foreground-dim: #0808087f;
+  --color-primary-foreground-very-dim: color-mix(
+    in hsl,
+    var(--color-primary-foreground-dim) 70%,
+    transparent
+  );
   --color-primary-border: #d1d1d1;
   --border-primary-solid: 1px solid var(--color-primary-border);
 

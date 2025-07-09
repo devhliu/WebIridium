@@ -11,11 +11,7 @@
 }
 
 .trigger {
-  color: color-mix(
-    in hsl,
-    var(--color-primary-foreground-dim) 50%,
-    transparent
-  );
+  color: var(--color-primary-foreground-very-dim);
   position: relative;
   background-color: transparent;
   border: none;

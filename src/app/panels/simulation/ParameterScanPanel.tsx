@@ -3,6 +3,28 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import styles from "./simulation.module.css";
+
+import { useToast } from "@/components/Toast";
+import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
+
+import CancellableButton from "@/components/CancellableButton";
+import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
+import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
+import PropertyList from "@/components/property-list/PropertyList";
+
+import BooleanProperty from "@/components/property-list/BooleanProperty";
+import NumericProperty from "@/components/property-list/NumericProperty";
+import SelectProperty from "@/components/property-list/SelectProperty";
+import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
+import TimeCoursePropertyList from "./TimeCoursePropertyList";
+import {
+  ToggleGroupButton,
+  ToggleGroupContainer,
+} from "@/components/input/ToggleGroup";
+import SimulationPanel from "./SimulationPanel";
+
+import { groupVariablesForSelectComponent } from "@/features/category";
+
 import {
   cancelSimulationAtom,
   isSimulatingAtom,
@@ -13,32 +35,20 @@ import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
-
-import { useToast } from "@/components/Toast";
-import CancellableButton from "@/components/CancellableButton";
-import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
-
-import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
-import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
-import PropertyList from "@/components/property-list/PropertyList";
-
-import BooleanProperty from "@/components/property-list/BooleanProperty";
-import NumericProperty from "@/components/property-list/NumericProperty";
-import SelectProperty from "@/components/property-list/SelectProperty";
-import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
-import { groupVariablesForSelectComponent } from "@/features/category";
-import TimeCoursePropertyList from "./TimeCoursePropertyList";
-import {
-  ToggleGroupButton,
-  ToggleGroupContainer,
-} from "@/components/input/ToggleGroup";
 import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
+
+  slidersPanelActive: boolean;
+  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
+const ParameterScanPanel = ({
+  visible,
+  slidersPanelActive,
+  onSlidersPanelToggle,
+}: ParameterScanPanelProps) => {
   const { toast } = useToast();
 
   const variables = useAtomValue(variablesAtom);
@@ -77,12 +87,13 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   };
 
   return (
-    <div
+    <SimulationPanel
+      title="Parameter Scan"
+      visible={visible}
+      slidersPanelActive={slidersPanelActive}
+      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="parameterScanPanel"
-      className={styles.simulationPanel}
-      style={visible ? {} : { display: "none" }}
     >
-      <h1 className={styles.panelTitle}>Parameter Scan</h1>
       <CancellableButton
         icon={<PlayIcon />}
         disabled={modelStatus.type === "loading"}
@@ -99,7 +110,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       >
         <PropertyAccordionItem title="Simulation">
           <ToggleGroupContainer
-            className={styles.modeToggleGroup}
+            className={styles.parameterScanModeToggleGroup}
             value={parameterScanOptions.mode}
             onValueChange={handleChangeFor("mode")}
           >
@@ -166,7 +177,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           <UncontrolledVariableList />
         </PropertyAccordionItem>
       </PropertyAccordion>
-    </div>
+    </SimulationPanel>
   );
 };
 

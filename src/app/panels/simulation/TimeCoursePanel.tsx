@@ -2,7 +2,6 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
 import { timeCourseParametersAtom } from "@/globals/workspace/settings";
 
-import styles from "./simulation.module.css";
 import { useToast } from "@/components/Toast";
 import CancellableButton from "@/components/CancellableButton";
 import PlayIcon from "@/assets/icons//PlayIcon.svg?react";
@@ -13,6 +12,7 @@ import PropertyAccordionItem from "@/components/property-accordion/PropertyAccor
 import UncontrolledVariableList from "@/app/variable-list/UncontrolledVariableList";
 import IndependentVariableSelector from "@/app/IndependentVariableSelector";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
+import SimulationPanel from "./SimulationPanel";
 
 import {
   simulateTimeCourseAtom,
@@ -24,9 +24,16 @@ import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
+
+  slidersPanelActive: boolean;
+  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
+export const TimeCoursePanel = ({
+  visible,
+  slidersPanelActive,
+  onSlidersPanelToggle,
+}: TimeCoursePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
   const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
@@ -53,12 +60,13 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   };
 
   return (
-    <div
+    <SimulationPanel
+      title="Time Course Simulation"
+      visible={visible}
+      slidersPanelActive={slidersPanelActive}
+      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="timeCoursePanel"
-      className={styles.simulationPanel}
-      style={visible ? {} : { display: "none" }}
     >
-      <h1 className={styles.panelTitle}>Time Course Simulation</h1>
       <CancellableButton
         icon={<PlayIcon />}
         disabled={modelStatus.type === "loading"}
@@ -92,7 +100,7 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
           <UncontrolledVariableList />
         </PropertyAccordionItem>
       </PropertyAccordion>
-    </div>
+    </SimulationPanel>
   );
 };
 

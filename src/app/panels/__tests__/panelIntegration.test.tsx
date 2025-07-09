@@ -24,9 +24,21 @@ afterEach(() => {
 test("panels should all be cancellable when a simulation is running", async () => {
   await renderWithinWorkspace(
     <div>
-      <TimeCoursePanel visible />
-      <SteadyStatePanel visible />
-      <ParameterScanPanel visible />
+      <TimeCoursePanel
+        visible
+        slidersPanelActive={false}
+        onSlidersPanelToggle={vi.fn()}
+      />
+      <SteadyStatePanel
+        visible
+        slidersPanelActive={false}
+        onSlidersPanelToggle={vi.fn()}
+      />
+      <ParameterScanPanel
+        visible
+        slidersPanelActive={false}
+        onSlidersPanelToggle={vi.fn()}
+      />
     </div>,
   );
 

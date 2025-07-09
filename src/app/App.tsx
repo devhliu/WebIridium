@@ -70,9 +70,12 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const AppContent = () => {
+  const simulationResult = useAtomValue(simulationResultAtom);
+
   const tabs: SidebarTab[] = ["Time Course", "Steady State", "Parameter Scan"];
   const [tab, setTab] = useState<SidebarTab>("Time Course");
-  const simulationResult = useAtomValue(simulationResultAtom);
+
+  const [slidersPanelActive, setSlidersPanelActive] = useState(false);
 
   return (
     <div className={styles.app}>
@@ -93,14 +96,20 @@ const AppContent = () => {
               <TimeCoursePanel
                 key="timeCourse"
                 visible={tab === "Time Course"}
+                slidersPanelActive={slidersPanelActive}
+                onSlidersPanelToggle={setSlidersPanelActive}
               />
               <ParameterScanPanel
                 key="parameterScan"
                 visible={tab === "Parameter Scan"}
+                slidersPanelActive={slidersPanelActive}
+                onSlidersPanelToggle={setSlidersPanelActive}
               />
               <SteadyStatePanel
                 key="steadyState"
                 visible={tab === "Steady State"}
+                slidersPanelActive={slidersPanelActive}
+                onSlidersPanelToggle={setSlidersPanelActive}
               />
             </Allotment.Pane>
 
@@ -110,7 +119,10 @@ const AppContent = () => {
                   <AntimonyEditorPanel />
                 </Allotment.Pane>
 
-                <Allotment.Pane preferredSize={250}>
+                <Allotment.Pane
+                  visible={slidersPanelActive}
+                  preferredSize={250}
+                >
                   <SlidersPanel />
                 </Allotment.Pane>
               </Allotment>

@@ -22,7 +22,11 @@ describe("compute button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <SteadyStatePanel visible />
+          <SteadyStatePanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <PlotPanel />
         </div>,
       );
@@ -38,7 +42,11 @@ describe("compute button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <SteadyStatePanel visible />
+          <SteadyStatePanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,

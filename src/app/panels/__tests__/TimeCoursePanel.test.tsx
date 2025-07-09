@@ -22,7 +22,11 @@ describe("simulation button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <TimeCoursePanel visible />
+          <TimeCoursePanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <PlotPanel />
         </div>,
       );
@@ -38,7 +42,11 @@ describe("simulation button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <TimeCoursePanel visible />
+          <TimeCoursePanel
+            visible
+            slidersPanelActive={false}
+            onSlidersPanelToggle={vi.fn()}
+          />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,
