@@ -15,6 +15,7 @@ import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
 } from "./settings";
+import { variableSliderStatesAtom } from "./slider";
 
 export type ModelStatus =
   | { type: "loading" }
@@ -70,6 +71,7 @@ const patchVariablesSettings = (
         visible: false,
         color: colorGenerator.next().value!,
         width: 2,
+        lineStyle: "solid",
       };
     }
   }
@@ -92,6 +94,7 @@ export const updateEditorContentAtom = atom(
     }: { content: string; skipDebounce?: boolean },
   ) => {
     const simulator = get(simulatorAtom);
+    const variableSliderStates = get(variableSliderStatesAtom);
     const prevAbortController = get(_updateAbortControllerAtom);
     if (prevAbortController) {
       prevAbortController.abort();
@@ -182,6 +185,24 @@ export const updateEditorContentAtom = atom(
       patchVariablesSettings(get(variableSettingssAtom), newVariables),
     );
     set(_modelStatusAtom, { type: "success" });
+
+    // TODO: unit test this
+    // remove slider states that are no longer valid
+    const newVariablesNameSet = new Set(newVariables.map((v) => v.name));
+    if (
+      Object.keys(variableSliderStates).some(
+        (name) => !newVariablesNameSet.has(name),
+      )
+    ) {
+      set(
+        variableSliderStatesAtom,
+        Object.fromEntries(
+          Object.entries(variableSliderStates).filter(([name, _]) =>
+            newVariablesNameSet.has(name),
+          ),
+        ),
+      );
+    }
   },
 );
 
