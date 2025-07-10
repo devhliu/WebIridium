@@ -136,7 +136,11 @@ const AppContent = () => {
                   visible={slidersPanelActive}
                   preferredSize={250}
                 >
-                  {slidersPanelActive && <SlidersPanel />}
+                  {slidersPanelActive && (
+                    <SlidersPanel
+                      onClose={() => setSlidersPanelActive(false)}
+                    />
+                  )}
                 </Allotment.Pane>
               </Allotment>
             </Allotment.Pane>

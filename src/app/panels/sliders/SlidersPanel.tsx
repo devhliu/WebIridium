@@ -20,6 +20,7 @@ import Button from "@/components/Button";
 
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
@@ -54,7 +55,11 @@ const getInitialSliderState = (
   return result;
 };
 
-const SlidersPanel = () => {
+export interface SlidersPanelProps {
+  onClose: () => void;
+}
+
+const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const variables = useAtomValue(variablesAtom);
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const [variableSliderStates, setVariableSliderStates] = useAtom(
@@ -141,6 +146,16 @@ const SlidersPanel = () => {
             <EyeIcon width="1em" height="1em" />
           )}
           {showingInactive ? "Hide Inactive" : "Show Inactive"}
+        </Button>
+
+        <Button
+          className={styles.close}
+          aria-label="Close"
+          onClick={onClose}
+          style="ghostText"
+          iconOnly
+        >
+          <CrossIcon width="1em" height="1em" aria-hidden />
         </Button>
       </div>
 
