@@ -62,7 +62,6 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const setTimeCourseParameters = useSetAtom(timeCourseParametersAtom);
-  const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const setWorkspaceName = useSetAtom(nameAtom);
 
   const { toast } = useToast();

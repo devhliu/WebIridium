@@ -41,7 +41,10 @@ const VariableItem = memo(
         <div className={styles.itemStrip}>
           <div className={styles.itemActionList}>
             <button
-              className={styles.itemAction}
+              className={clsx(
+                styles.itemAction,
+                !settings.visible && styles.dim,
+              )}
               onClick={handleVisiblityToggle}
             >
               {/* TODO: add aria stuff to this */}
