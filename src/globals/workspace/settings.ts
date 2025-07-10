@@ -29,8 +29,20 @@ export interface AxisSettings {
   useDefaultTitle: boolean;
   title: string;
   showMajorTicks: boolean;
-  showMinorTicks: boolean;
   color: string;
+}
+
+export interface GridSettings {
+  enabled: {
+    x: boolean;
+    y: boolean;
+  };
+  xColor: string;
+  yColor: string;
+  xWidth: number;
+  yWidth: number;
+  numXGrids: number;
+  numYGrids: number;
 }
 
 export interface GraphSettings {
@@ -56,6 +68,9 @@ export interface GraphSettings {
 
   xAxis: AxisSettings;
   yAxis: AxisSettings;
+
+  majorGrid: GridSettings;
+  minorGrid: GridSettings;
 }
 
 export interface VariableSettings {
@@ -121,7 +136,6 @@ export const graphSettingsAtom = atom<GraphSettings>({
     useDefaultTitle: true,
     title: "Time",
     showMajorTicks: true,
-    showMinorTicks: false,
     color: "#000",
   },
 
@@ -130,8 +144,27 @@ export const graphSettingsAtom = atom<GraphSettings>({
     useDefaultTitle: true,
     title: "Concentrations",
     showMajorTicks: true,
-    showMinorTicks: false,
     color: "#000",
+  },
+
+  majorGrid: {
+    enabled: { x: false, y: false },
+    xColor: "#888",
+    yColor: "#888",
+    xWidth: 0.5,
+    yWidth: 0.5,
+    numXGrids: 4,
+    numYGrids: 4,
+  },
+
+  minorGrid: {
+    enabled: { x: false, y: false },
+    xColor: "#888",
+    yColor: "#888",
+    xWidth: 0.5,
+    yWidth: 0.5,
+    numXGrids: 4,
+    numYGrids: 4,
   },
 });
 

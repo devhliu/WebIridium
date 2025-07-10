@@ -1,5 +1,4 @@
 import { useAtomValue } from "jotai";
-import { useEffect, useReducer } from "react";
 import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
@@ -17,6 +16,20 @@ import {
   getPaletteColor,
 } from "@/features/colors";
 
+const RANGE_ROUND_PERCENT = 0.05;
+
+/**
+ * Calculates min and max for a list of values.
+ */
+const calculateBounds = (values: number[]): [number, number] => {
+  const min = values.reduce((acc, current) => Math.min(acc, current), Infinity);
+  const max = values.reduce(
+    (acc, current) => Math.max(acc, current),
+    -Infinity,
+  );
+  return [min, max];
+};
+
 export interface ResultsPlotProps {
   result: SimulationResult;
   width: number;
@@ -27,7 +40,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const scanPalette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
-  const independentVariable = useAtomValue(independentVariableAtom);
+  const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const {
     backgroundColor,
     drawingAreaColor,
@@ -45,105 +58,51 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     margin,
     xAxis,
     yAxis,
+    majorGrid,
+    minorGrid,
   } = useAtomValue(graphSettingsAtom);
 
-  // For whatever reason, plotly gets messed up whenever
-  // we update some of the properties.
-  //
-  // So, we have to use a key to forcefully re-render the plot
-  // every time these properties update.
-  // TODO: FIND A BETTER SOLUTION??? This seems to an issue with the autoscale
-  //       so we might have to do that manually
-  const [key, incrementKey] = useReducer((prevKey) => prevKey + 1, 0);
-  useEffect(() => {
-    incrementKey();
-  }, [xAxis, yAxis]);
+  // variable name -> column values
+  const columns: {
+    variableName: string;
+    values: number[];
 
-  const plotData = [];
+    // only used in parameter scan results
+    scanPercent?: number;
+    parameterValue?: number;
+  }[] = [];
+  let independentVariableName: string = "";
 
-  // if we do undefined, plotly autoscales for us
-  const rangeX = isAutoscaledX ? undefined : [minX, maxX];
-  const rangeY = isAutoscaledY ? undefined : [minY, maxY];
-
-  let xAxisTitle = xAxis.useDefaultTitle ? "Time" : xAxis.title;
-  const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
-
+  // Collect columns
   if (result.type === "timeCourse") {
-    // axis titles
-    if (xAxis.useDefaultTitle) {
-      xAxisTitle =
-        variableSettingss[independentVariable!]?.displayName ?? xAxisTitle;
-    }
+    independentVariableName = timeCourseIndependentVariable ?? "";
 
-    // columns
-    const independentVariableColumn =
-      result.columns.find((c) => c.title === independentVariable) ?? [];
     for (const { title, values } of result.columns) {
-      if (title === independentVariable) continue;
-      const settings = variableSettingss[title];
-      if (!settings?.visible) continue;
-
-      plotData.push({
-        x: independentVariableColumn.values,
-        y: values,
-        type: "scatter",
-        mode: "lines",
-        marker: { color: settings.color },
-        line: { width: settings.width, dash: settings.lineStyle },
-        name: settings?.displayName ?? title,
-      });
+      columns.push({ variableName: title, values });
     }
   } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
-    // axis titles
-    if (xAxis.useDefaultTitle) {
-      xAxisTitle =
-        variableSettingss[scanIndependentVariable]?.displayName ?? xAxisTitle;
-    }
+    independentVariableName = scanIndependentVariable;
 
-    // columns
     for (const scan of result.scans) {
-      const independentVariableColumn =
-        scan.columns.find((c) => c.title === scanIndependentVariable) ?? [];
       for (const { title, values } of scan.columns) {
-        if (title === scanIndependentVariable) continue;
-        const settings = variableSettingss[title];
-        if (!settings?.visible) continue;
-
-        let finalColor: string;
-        if (scanPalette !== "Custom") {
-          finalColor = "red"; // it will get set later
-        } else {
-          finalColor = getDefaultParameterScanColor(
-            settings.color,
-            scan.scanPercent,
-          );
-        }
-
-        plotData.push({
-          x: independentVariableColumn.values,
-          y: values,
-          type: "scatter",
-          mode: "lines",
-          marker: { color: finalColor },
-          line: { width: settings.width, dash: settings.lineStyle },
-          name: getParameterScanTitle(
-            settings.displayName,
-            result.parameter,
-            scan.parameterValue,
-          ),
+        columns.push({
+          variableName: title,
+          parameterValue: scan.parameterValue,
+          scanPercent: scan.scanPercent,
+          values,
         });
       }
     }
   } else if (result.type === "parameterScan" && result.mode === "steadyState") {
-    // axis titles
-    if (xAxis.useDefaultTitle) {
-      xAxisTitle =
-        variableSettingss[result.parameter]?.displayName ?? xAxisTitle;
-    }
+    independentVariableName = result.parameter;
+    columns.push({
+      variableName: result.parameter,
+      values: result.scans.map((s) => s.parameterValue),
+    });
 
-    // column
-    const parameterValues = result.scans.map((s) => s.parameterValue);
     const concentrationsMap = new Map<string, number[]>();
+
+    // transpose
     for (const scan of result.scans) {
       for (const { name, value } of scan.concentrations) {
         if (!concentrationsMap.has(name)) {
@@ -155,19 +114,94 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     }
 
     for (const [variableName, concentrations] of concentrationsMap.entries()) {
-      const settings = variableSettingss[variableName];
-      if (!settings?.visible) continue;
-
-      plotData.push({
-        x: parameterValues,
-        y: concentrations,
-        type: "scatter",
-        mode: "lines",
-        marker: { color: settings.color },
-        line: { width: settings.width, dash: settings.lineStyle },
-        name: settings.displayName,
-      });
+      columns.push({ variableName, values: concentrations });
     }
+  }
+
+  const plotData = [];
+  const independentVariableColumn = columns.find(
+    (c) => c.variableName === independentVariableName,
+  )!;
+  const parameterSettings =
+    result.type === "parameterScan"
+      ? variableSettingss[result.parameter]
+      : null;
+
+  const xAxisTitle = xAxis.useDefaultTitle
+    ? variableSettingss[independentVariableName].displayName
+    : xAxis.title;
+  const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
+
+  // if we do undefined, plotly autoscales for us
+  const [rangeMinX, rangeMaxX] = isAutoscaledX
+    ? calculateBounds(independentVariableColumn.values)
+    : [minX, maxX];
+  const [rangeMinY, rangeMaxY] = isAutoscaledY
+    ? calculateBounds(
+        columns
+          .filter((c) => c.variableName !== independentVariableName)
+          .map((c) => c.values)
+          .flat(),
+      )
+    : [minY, maxY];
+  const yPadding = (rangeMaxY - rangeMinY) * RANGE_ROUND_PERCENT;
+
+  const xMajorGridSettings = {
+    gridcolor: majorGrid.xColor,
+    gridwidth: majorGrid.xWidth,
+    dtick: (rangeMaxX - rangeMinX) / (majorGrid.numXGrids + 1),
+    showgrid: majorGrid.enabled.x,
+    showticklabels: xAxis.showMajorTicks,
+  };
+  const yMajorGridSettings = {
+    gridcolor: majorGrid.yColor,
+    gridwidth: majorGrid.yWidth,
+    dtick: (rangeMaxY - rangeMinY) / (majorGrid.numYGrids + 1),
+    showgrid: majorGrid.enabled.y,
+    showticklabels: yAxis.showMajorTicks,
+  };
+  const xMinorGridSettings = {
+    gridcolor: minorGrid.xColor,
+    gridwidth: minorGrid.xWidth,
+    dtick: xMajorGridSettings.dtick / (minorGrid.numXGrids + 1),
+    showgrid: minorGrid.enabled.x,
+  };
+  const yMinorGridSettings = {
+    gridcolor: minorGrid.yColor,
+    gridwidth: minorGrid.yWidth,
+    dtick: yMajorGridSettings.dtick / (minorGrid.numYGrids + 1),
+    showgrid: minorGrid.enabled.y,
+  };
+
+  for (const { variableName, values, parameterValue, scanPercent } of columns) {
+    if (variableName === independentVariableName) continue;
+
+    const settings = variableSettingss[variableName];
+    if (!settings.visible) continue;
+    let finalColor: string = "red";
+    if (scanPalette === "Custom") {
+      if (result.type === "parameterScan" && result.mode === "timeCourse") {
+        finalColor = getDefaultParameterScanColor(settings.color, scanPercent!);
+      } else {
+        finalColor = settings.color;
+      }
+    } // otherwise the color will get overwritten later
+
+    plotData.push({
+      x: independentVariableColumn.values,
+      y: values,
+      type: "scatter",
+      mode: "lines",
+      marker: { color: finalColor },
+      line: { width: settings.width, dash: settings.lineStyle },
+      name: parameterValue
+        ? getParameterScanTitle(
+            settings.displayName,
+            parameterSettings!.displayName,
+            parameterValue,
+          )
+        : settings.displayName,
+    });
   }
 
   if (scanPalette !== "Custom") {
@@ -182,7 +216,6 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   return (
     <Plot
       data-testid="results-plot"
-      key={key}
       data={plotData as unknown as Data[]}
       style={{ position: "relative" }}
       layout={{
@@ -198,17 +231,17 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         plot_bgcolor: drawingAreaColor,
         xaxis: {
           title: !xAxis.includeTitle ? undefined : { text: xAxisTitle },
-          range: rangeX,
+          range: [rangeMinX, rangeMaxX],
           color: xAxis.color,
-          autorange: isAutoscaledX,
-          showticklabels: xAxis.showMajorTicks,
+          minor: xMinorGridSettings,
+          ...xMajorGridSettings,
         },
         yaxis: {
           title: !yAxis.includeTitle ? undefined : { text: yAxisTitle },
-          range: rangeY,
+          range: [rangeMinY - yPadding, rangeMaxY + yPadding],
           color: yAxis.color,
-          autorange: isAutoscaledY,
-          showticklabels: yAxis.showMajorTicks,
+          minor: yMinorGridSettings,
+          ...yMajorGridSettings,
         },
         margin: {
           l: margin,

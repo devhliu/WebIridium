@@ -2,12 +2,15 @@ import { ToggleGroup as RadixToggleGroup } from "radix-ui";
 import styles from "./ToggleGroup.module.css";
 import clsx from "clsx";
 
-export interface ToggleGroupProps {
+export interface ToggleGroupButtonProps {
   value: string;
   children: React.ReactNode;
 }
 
-export const ToggleGroupButton = ({ value, children }: ToggleGroupProps) => {
+export const ToggleGroupButton = ({
+  value,
+  children,
+}: ToggleGroupButtonProps) => {
   return (
     <RadixToggleGroup.Item className={styles.button} value={value}>
       {children}
@@ -15,19 +18,19 @@ export const ToggleGroupButton = ({ value, children }: ToggleGroupProps) => {
   );
 };
 
-export interface ToggleGroupContainerProps {
+export interface ToggleGroupProps {
   value: string;
   onValueChange: (newValue: string) => void;
   children: React.ReactNode;
   className?: string;
 }
 
-export const ToggleGroupContainer = ({
+export const ToggleGroup = ({
   value,
   onValueChange,
   children,
   className,
-}: ToggleGroupContainerProps) => {
+}: ToggleGroupProps) => {
   const handleValueChange = (value: string) => {
     if (value) {
       onValueChange(value);

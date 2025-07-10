@@ -17,10 +17,7 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import UncontrolledVariableList from "@/app/panels/simulation/variable-list/UncontrolledVariableList";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
-import {
-  ToggleGroupButton,
-  ToggleGroupContainer,
-} from "@/components/input/ToggleGroup";
+import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import SimulationPanel from "./SimulationPanel";
 
 import { groupVariablesForSelectComponent } from "@/features/category";
@@ -109,7 +106,7 @@ const ParameterScanPanel = ({
         defaultOpen={["Simulation", "First Parameter", "Variables"]}
       >
         <PropertyAccordionItem title="Simulation">
-          <ToggleGroupContainer
+          <ToggleGroup
             className={styles.parameterScanModeToggleGroup}
             value={parameterScanOptions.mode}
             onValueChange={handleChangeFor("mode")}
@@ -120,7 +117,7 @@ const ParameterScanPanel = ({
             <ToggleGroupButton value="steadyState">
               Steady State
             </ToggleGroupButton>
-          </ToggleGroupContainer>
+          </ToggleGroup>
 
           {parameterScanOptions.mode === "timeCourse" && (
             <TimeCoursePropertyList

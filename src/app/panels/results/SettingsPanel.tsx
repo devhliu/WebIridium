@@ -14,10 +14,7 @@ import SelectProperty from "@/components/property-list/SelectProperty";
 import PropertyList from "@/components/property-list/PropertyList";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
-import {
-  ToggleGroupButton,
-  ToggleGroupContainer,
-} from "@/components/input/ToggleGroup";
+import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 
 const SettingsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
@@ -25,6 +22,11 @@ const SettingsPanel = () => {
 
   const [selectedAxis, setSelectedAxis] = useState<"xAxis" | "yAxis">("xAxis");
   const axisSettings = graphSettings[selectedAxis];
+
+  const [selectedGrid, setSelectedGrid] = useState<"majorGrid" | "minorGrid">(
+    "majorGrid",
+  );
+  const gridSettings = graphSettings[selectedGrid];
 
   const handleChangeFor = (
     setting: keyof typeof graphSettings,
@@ -42,6 +44,20 @@ const SettingsPanel = () => {
         ...graphSettings,
         [selectedAxis]: {
           ...axisSettings,
+          [setting]: newValue,
+        },
+      });
+    };
+  };
+
+  const handleGridChangeFor = (
+    setting: keyof typeof gridSettings,
+  ): ((newValue: unknown) => void) => {
+    return (newValue) => {
+      setGraphSettings({
+        ...graphSettings,
+        [selectedGrid]: {
+          ...gridSettings,
           [setting]: newValue,
         },
       });
@@ -167,13 +183,13 @@ const SettingsPanel = () => {
 
         <PropertyAccordionItem title="Axes">
           <PropertyList alignment="center">
-            <ToggleGroupContainer
+            <ToggleGroup
               value={selectedAxis}
               onValueChange={setSelectedAxis as (val: string) => void}
             >
               <ToggleGroupButton value="xAxis">X-Axis</ToggleGroupButton>
               <ToggleGroupButton value="yAxis">Y-Axis</ToggleGroupButton>
-            </ToggleGroupContainer>
+            </ToggleGroup>
 
             <BooleanProperty
               name="Include Axis Title"
@@ -208,11 +224,98 @@ const SettingsPanel = () => {
               value={axisSettings["showMajorTicks"]}
               onChange={handleAxisChangeFor("showMajorTicks")}
             />
-            <BooleanProperty
-              name="Show Minor Ticks"
-              value={axisSettings["showMinorTicks"]}
-              onChange={handleAxisChangeFor("showMinorTicks")}
+          </PropertyList>
+        </PropertyAccordionItem>
+
+        <PropertyAccordionItem title="Grids">
+          <PropertyList alignment="center">
+            <ToggleGroup
+              value={selectedGrid}
+              onValueChange={setSelectedGrid as (val: string) => void}
+            >
+              <ToggleGroupButton value="majorGrid">Major</ToggleGroupButton>
+              <ToggleGroupButton value="minorGrid">Minor</ToggleGroupButton>
+            </ToggleGroup>
+
+            <ToggleGroup
+              value={
+                gridSettings.enabled.x && gridSettings.enabled.y
+                  ? "xy"
+                  : gridSettings.enabled.x
+                    ? "x"
+                    : gridSettings.enabled.y
+                      ? "y"
+                      : "none"
+              }
+              onValueChange={(value) => {
+                const handleEnabledChange = handleGridChangeFor("enabled");
+                if (value === "none")
+                  handleEnabledChange({ x: false, y: false });
+                else
+                  handleEnabledChange({
+                    x: value.includes("x"),
+                    y: value.includes("y"),
+                  });
+              }}
+            >
+              <ToggleGroupButton value="none">None</ToggleGroupButton>
+              <ToggleGroupButton value="x">X</ToggleGroupButton>
+              <ToggleGroupButton value="y">Y</ToggleGroupButton>
+              <ToggleGroupButton value="xy">XY</ToggleGroupButton>
+            </ToggleGroup>
+
+            <NumericSliderProperty
+              name="Number of X Grids"
+              value={gridSettings.numXGrids}
+              min={1}
+              max={50}
+              step={1}
+              onChange={handleGridChangeFor("numXGrids")}
             />
+            <NumericSliderProperty
+              name="Number of Y Grids"
+              value={gridSettings.numYGrids}
+              min={1}
+              max={50}
+              step={1}
+              onChange={handleGridChangeFor("numYGrids")}
+            />
+
+            {gridSettings.enabled.x && (
+              <ColorProperty
+                name={`X Color`}
+                value={gridSettings.xColor}
+                onChange={handleGridChangeFor("xColor")}
+              />
+            )}
+            {gridSettings.enabled.x && (
+              <NumericSliderProperty
+                name={`X Width`}
+                value={gridSettings.xWidth}
+                min={0.5}
+                max={25}
+                step={0.5}
+                onChange={handleGridChangeFor("xWidth")}
+              />
+            )}
+
+            {gridSettings.enabled.y && (
+              <ColorProperty
+                name={`Y Color`}
+                value={gridSettings.yColor}
+                onChange={handleGridChangeFor("yColor")}
+              />
+            )}
+            {gridSettings.enabled.y && (
+              <NumericSliderProperty
+                name={`Y Width`}
+                value={gridSettings.yWidth}
+                min={0.5}
+                max={25}
+                step={0.5}
+                onChange={handleGridChangeFor("yWidth")}
+              />
+            )}
           </PropertyList>
         </PropertyAccordionItem>
       </PropertyAccordion>

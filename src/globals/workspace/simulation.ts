@@ -135,7 +135,7 @@ export const simulateTimeCourseAtom = atom(null, async (get, set) => {
             ...get(timeCourseParametersAtom),
             includedVariables: variables.filter(
               (v) =>
-                v.name !== independentVariable &&
+                v.name === independentVariable ||
                 variableSettings[v.name].visible,
             ),
           },
@@ -199,7 +199,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
           ...parameterScanOptions.timeCourseParameters,
           includedVariables: variables.filter(
             (v) =>
-              v.name !== simulator.scanIndependentVariableName &&
+              v.name === simulator.scanIndependentVariableName ||
               variableSettingss[v.name].visible,
           ),
         };
