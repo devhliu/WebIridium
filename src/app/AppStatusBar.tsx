@@ -83,6 +83,14 @@ const MissingDataStatusItem = () => {
     }
   }
 
+  const isSteadyState =
+    simulatorResult.type === "steadyState" ||
+    (simulatorResult.type === "parameterScan" &&
+      simulatorResult.mode === "steadyState");
+  if (isSteadyState) {
+    return null;
+  }
+
   const missing = variables
     .filter((v) => variableSettingss[v.name]?.visible)
     .filter((v) => !haveSet.has(v.name));
