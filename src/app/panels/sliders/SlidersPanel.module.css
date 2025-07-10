@@ -72,7 +72,6 @@
 
 .slider-title-main-label {
   flex-grow: 1;
-  pointer-events: none;
 }
 
 .slider-number-box {
