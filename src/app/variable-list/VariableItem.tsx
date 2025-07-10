@@ -39,12 +39,20 @@ const VariableItem = memo(
         data-expanded={settingsActive ? true : undefined}
       >
         <div className={styles.itemStrip}>
-          <div className={styles.itemActionList}>
+          <div className={styles.actionList}>
             <button
-              className={clsx(
-                styles.itemAction,
-                !settings.visible && styles.dim,
-              )}
+              className={clsx(styles.action, !settingsActive && styles.dim)}
+              onClick={handleSettingsToggle}
+            >
+              <SettingsIcon height={ICON_DIMS} width={ICON_DIMS} />
+            </button>
+          </div>
+
+          <span className={styles.itemName}>{settings.displayName}</span>
+
+          <div className={styles.actionList}>
+            <button
+              className={clsx(styles.action, !settings.visible && styles.dim)}
               onClick={handleVisiblityToggle}
             >
               {/* TODO: add aria stuff to this */}
@@ -53,17 +61,6 @@ const VariableItem = memo(
               ) : (
                 <ClosedEyeIcon height="1em" width="1em" />
               )}
-            </button>
-          </div>
-
-          <span className={styles.itemName}>{settings.displayName}</span>
-
-          <div className={styles.itemActionList}>
-            <button
-              className={clsx(styles.itemAction, !settingsActive && styles.dim)}
-              onClick={handleSettingsToggle}
-            >
-              <SettingsIcon height={ICON_DIMS} width={ICON_DIMS} />
             </button>
           </div>
         </div>

@@ -5,16 +5,8 @@ import { groupVariables } from "@/features/category";
 import { type VariableSettings } from "@/globals/workspace/settings";
 import { type Variable } from "@/features/simulation/Simulator";
 
-import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
-import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
-
 import VariableGroup from "./VariableGroup";
 import SearchBox from "@/components/input/SearchBox";
-import Button from "@/components/Button";
-
-const DEFAULT_OPEN_GROUPS = {
-  ["Floating Species"]: true,
-};
 
 export interface VariableListProps {
   variables: Variable[];
@@ -31,8 +23,6 @@ const VariableList = ({
   variableSettingss,
   onVariableSettingsChange,
 }: VariableListProps) => {
-  const [openGroups, setOpenGroups] =
-    useState<Record<string, boolean>>(DEFAULT_OPEN_GROUPS);
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter(
     (variable) =>
@@ -41,36 +31,6 @@ const VariableList = ({
         .includes(searchTerm.toLowerCase()) ||
       variable.category.toLowerCase().includes(searchTerm.toLowerCase()),
   );
-
-  const areAllVisible = variables.every(
-    (v) => variableSettingss[v.name].visible,
-  );
-
-  const toggleAllVisible = () => {
-    for (const variable of variables) {
-      onVariableSettingsChange(variable.name, {
-        ...variableSettingss[variable.name],
-        visible: !areAllVisible,
-      });
-    }
-
-    const groups = new Set<string>();
-    for (const v of variables) {
-      groups.add(v.category);
-    }
-    setOpenGroups(
-      Object.fromEntries(
-        Array.from(groups.keys()).map((group) => [group, true]),
-      ),
-    );
-  };
-
-  const toggleGroupOpen = (group: string, open: boolean) => {
-    setOpenGroups({
-      ...openGroups,
-      [group]: open,
-    });
-  };
 
   return (
     <div className={styles.container}>
@@ -82,15 +42,6 @@ const VariableList = ({
           value={searchTerm}
           onChange={setSearchTerm}
         />
-
-        <Button onClick={toggleAllVisible}>
-          {areAllVisible ? (
-            <ClosedEyeIcon width="1em" height="1em" />
-          ) : (
-            <EyeIcon width="1em" height="1em" />
-          )}
-          {areAllVisible ? "Hide All" : "Show All"}
-        </Button>
       </div>
       {filteredVariables.length > 0 ? (
         <div className={styles.list}>
@@ -102,8 +53,6 @@ const VariableList = ({
               variableSettingss={variableSettingss}
               onVariableSettingsChange={onVariableSettingsChange}
               isSearching={searchTerm.length > 0}
-              open={openGroups[group]}
-              onOpenChange={(open) => toggleGroupOpen(group, open)}
             />
           ))}
         </div>
