@@ -115,24 +115,19 @@ export const updateEditorContentAtom = atom(
     let newVariables: Variable[];
     try {
       // wait a bit in case the user is still typing
-      if (skipDebounce) {
-        newVariables = await simulator.loadModel(
-          content,
-          currentAbortController.signal,
-        );
-      } else {
-        newVariables = await new Promise((resolve) =>
+      if (!skipDebounce) {
+        await new Promise((resolve) =>
           setTimeout(resolve, MODEL_LOAD_DEBOUNCE),
-        )
-          .then(() => {
-            if (currentAbortController.signal.aborted) {
-              throw new WorkerTermination();
-            }
-          })
-          .then(() =>
-            simulator.loadModel(content, currentAbortController.signal),
-          );
+        );
+        if (currentAbortController.signal.aborted) {
+          throw new WorkerTermination();
+        }
       }
+
+      newVariables = await simulator.loadModel(
+        content,
+        currentAbortController.signal,
+      );
     } catch (err) {
       if (err instanceof WorkerTermination) {
         return false;
