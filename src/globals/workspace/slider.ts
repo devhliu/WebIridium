@@ -30,7 +30,9 @@ export type UpdateVariableSliderValueOptions = {
 };
 
 const getModelDebounceTime = (variables: Variable[]): number => {
-  const speciesCount = variables.filter((v) => v.category === "Species").length;
+  const speciesCount = variables.filter(
+    (v) => v.category === "Floating Species",
+  ).length;
   if (speciesCount > 16) {
     return 250;
   } else if (speciesCount > 10) {

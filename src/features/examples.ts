@@ -2,7 +2,6 @@ import type { EditableTimeCourseParameters } from "@/globals/workspace/settings"
 
 export interface ExamplePreset {
   parameters: EditableTimeCourseParameters;
-  hideVariables?: string[];
 }
 
 const examplesRaw: Record<string, string> = import.meta.glob(
@@ -108,7 +107,6 @@ export const examplePresets: Record<string, ExamplePreset> = {
       endTime: 100,
       numberOfPoints: 500,
     },
-    hideVariables: ["Xo"],
   },
   "twenty-step-mass-action-pathway.txt": {
     parameters: {

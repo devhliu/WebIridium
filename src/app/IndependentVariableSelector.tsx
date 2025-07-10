@@ -8,7 +8,7 @@ import { variablesAtom } from "@/globals/workspace/model";
 import { groupVariablesForSelectComponent } from "@/features/category";
 import Select from "@/components/input/Select";
 
-const INDEPENDENT_VARIABLE_CATEGORIES = new Set(["Time", "Species"]);
+const INDEPENDENT_VARIABLE_CATEGORIES = new Set(["Time", "Floating Species"]);
 
 const IndependentVariableSelector = () => {
   const [indepedentVariable, setIndependentVariable] = useAtom(

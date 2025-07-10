@@ -18,6 +18,7 @@ const loadLibraries = () => {
 };
 
 let cachedModelInfo = null;
+let cachedBoundarySpeciesNames = null;
 const handleMessage = async (e) => {
   await loadLibraries();
 
@@ -37,6 +38,7 @@ const handleMessage = async (e) => {
 
     copasi.loadModel(sbmlConversion.getResult());
     cachedModelInfo = copasi.modelInfo;
+    cachedBoundarySpeciesNames = copasi.boundarySpeciesNames;
   }
 
   switch (action.type) {
@@ -143,7 +145,10 @@ const handleMessage = async (e) => {
     case "loadModel": {
       self.postMessage({
         id: action.id,
-        data: cachedModelInfo,
+        data: {
+          modelInfo: cachedModelInfo,
+          boundarySpeciesNames: cachedBoundarySpeciesNames,
+        },
       });
       break;
     }

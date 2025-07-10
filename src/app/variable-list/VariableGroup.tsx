@@ -5,7 +5,7 @@ import VariableItem from "./VariableItem";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
 import type { VariableSettings } from "@/globals/workspace/settings";
 
-const DEFAULT_OPEN_GROUPS = new Set(["Species"]);
+const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
 
 export interface VariableGroupProps {
   group: string;

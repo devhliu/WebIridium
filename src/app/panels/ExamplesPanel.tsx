@@ -96,18 +96,6 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
       setWorkspaceName(exampleFormattedNames[example]);
       if (preset) {
         setTimeCourseParameters(preset.parameters);
-        if (preset.hideVariables) {
-          setVariableSettingss((old) => {
-            const oldCopy = { ...old };
-            for (const variableName of preset.hideVariables!) {
-              oldCopy[variableName] = {
-                ...oldCopy[variableName],
-                visible: false,
-              };
-            }
-            return oldCopy;
-          });
-        }
       }
 
       const timeCourseResult = await simulateTimeCourse();

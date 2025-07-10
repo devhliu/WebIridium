@@ -94,12 +94,14 @@ export class CopasiSimulator extends Simulator {
     antimonyCode: string,
     abortSignal?: AbortSignal,
   ): Promise<Variable[]> {
-    const modelInfo = (await this.#workerPool.queueTask(
-      "loadModel",
-      null,
-      antimonyCode,
-      abortSignal,
-    )) as ModelInfo;
+    const { modelInfo, boundarySpeciesNames } =
+      (await this.#workerPool.queueTask(
+        "loadModel",
+        null,
+        antimonyCode,
+        abortSignal,
+      )) as { modelInfo: ModelInfo; boundarySpeciesNames: string[] };
+    const boundarySpeciesSet = new Set(boundarySpeciesNames);
 
     const variables: Variable[] = [];
 
@@ -111,24 +113,36 @@ export class CopasiSimulator extends Simulator {
     });
 
     for (const specie of modelInfo.species) {
-      // TODO!IMPORTANT: only do this for floating species, not boundary species?
-      //                 how to determine if a species is a boundary species?
-      variables.push({
-        type: "normal",
-        defaultDisplayName: `${specie.name}'`,
-        name: `${specie.name}.Rate`,
-        category: "Rate of Changes",
-      });
+      if (boundarySpeciesSet.has(specie.name)) {
+        variables.push({
+          type: "settable",
+          defaultDisplayName: specie.name,
+          name: specie.name,
+          category: "Boundary Species",
 
-      variables.push({
-        type: "settable",
-        defaultDisplayName: specie.name,
-        name: specie.name,
-        category: "Species",
+          setName: `[${specie.name}]_0`,
+          defaultValue: specie.initial_concentration,
+        });
+      } else {
+        // TODO!IMPORTANT: only do this for floating species, not boundary species?
+        //                 how to determine if a species is a boundary species?
+        variables.push({
+          type: "normal",
+          defaultDisplayName: `${specie.name}'`,
+          name: `${specie.name}.Rate`,
+          category: "Rate of Changes",
+        });
 
-        setName: `[${specie.name}]_0`,
-        defaultValue: specie.initial_concentration,
-      });
+        variables.push({
+          type: "settable",
+          defaultDisplayName: specie.name,
+          name: specie.name,
+          category: "Floating Species",
+
+          setName: `[${specie.name}]_0`,
+          defaultValue: specie.initial_concentration,
+        });
+      }
     }
 
     for (const param of modelInfo.global_parameters) {

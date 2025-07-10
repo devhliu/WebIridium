@@ -21,7 +21,11 @@ import Button from "@/components/Button";
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 
-const SLIDER_CATEGORY_ORDER = ["Parameters", "Species"];
+const SLIDER_CATEGORY_ORDER = [
+  "Parameters",
+  "Floating Species",
+  "Boundary Species",
+];
 
 const getInitialSliderState = (
   variable: SettableVariable,

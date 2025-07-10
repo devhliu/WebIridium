@@ -42,7 +42,7 @@ const patchVariablesSettings = (
   const adding: Record<string, VariableSettings> = {};
 
   const isPriorityVariable = (variable: Variable) =>
-    variable.category === "Species" || variable.category === "Time";
+    variable.category === "Floating Species" || variable.category === "Time";
 
   // first pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {

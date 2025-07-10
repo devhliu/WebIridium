@@ -4,7 +4,12 @@ import type { VariableSettings } from "@/globals/workspace/settings";
 import type { Variable } from "./simulation/Simulator";
 import type { SelectGroupedProps } from "@/components/input/Select";
 
-export const CATEGORY_ORDER = ["Species", "Rate of Changes", "Parameters"];
+export const CATEGORY_ORDER = [
+  "Floating Species",
+  "Boundary Species",
+  "Rate of Changes",
+  "Parameters",
+];
 
 /**
  * Groups variables into categories, following the pre-defined category order.
