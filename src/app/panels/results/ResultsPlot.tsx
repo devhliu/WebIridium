@@ -116,6 +116,8 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     for (const [variableName, concentrations] of concentrationsMap.entries()) {
       columns.push({ variableName, values: concentrations });
     }
+  } else {
+    return null;
   }
 
   const plotData = [];

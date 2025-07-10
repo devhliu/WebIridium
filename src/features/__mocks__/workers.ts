@@ -18,7 +18,7 @@ export const createWorker = (type: WorkerType) => {
               return {
                 num_variables: 2,
                 recorded_steps: 10,
-                titles: ["Time", "Mock"],
+                titles: ["Time", "A"],
                 columns: [
                   [1, 2, 3, 4, 5],
                   [0, 1, 2, 3, 4],

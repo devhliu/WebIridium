@@ -30,7 +30,6 @@ describe("compute button", () => {
 
   itShouldDisableWhenStartingSimulation(testButtonOptions);
   itShouldBeCancellable(testButtonOptions);
-  itShouldDisplayPlot(testButtonOptions);
   itShouldDisplayToasts(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
     ...testButtonOptions,
