@@ -43,7 +43,7 @@ export class CopasiSimulator extends Simulator {
       {
         parameters: {
           ...parameters,
-          selectionList: parameters.includeVariables.map((v) => v.name),
+          selectionList: parameters.includedVariables.map((v) => v.name),
         },
         variableValues,
         ...parameterScanOptions,
@@ -124,8 +124,6 @@ export class CopasiSimulator extends Simulator {
           defaultValue: specie.initial_concentration,
         });
       } else {
-        // TODO!IMPORTANT: only do this for floating species, not boundary species?
-        //                 how to determine if a species is a boundary species?
         variables.push({
           type: "normal",
           defaultDisplayName: `${specie.name}'`,

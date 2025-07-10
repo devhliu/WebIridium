@@ -4,7 +4,6 @@ import type {
   ParameterScanResult,
   SimulationResult,
   Simulator,
-  Variable,
 } from "@/features/simulation/Simulator";
 import {
   getLinearDistribution,
@@ -18,7 +17,6 @@ import {
   parameterScanOptionsAtom,
   timeCourseParametersAtom,
   variableSettingssAtom,
-  type VariableSettings,
 } from "./settings";
 import { WorkerTermination } from "@/features/workerPool";
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
@@ -54,17 +52,6 @@ export const isSimulatingAtom = atom((get) =>
 );
 
 // exported simulation action atoms
-
-const getIncludeVariableList = (
-  variables: Variable[],
-  variableSettingss: Record<string, VariableSettings>,
-  usingIndependentVariable: string | null,
-) => {
-  return variables.filter(
-    (v) =>
-      v.name === usingIndependentVariable || variableSettingss[v.name]?.visible,
-  );
-};
 
 const getVariableValues = (
   sliderStates: Record<string, VariableSliderState>,
@@ -138,16 +125,19 @@ export const simulateTimeCourseAtom = atom(null, async (get, set) => {
     get,
     set,
     async (abortSignal: AbortSignal) => {
+      const variables = get(variablesAtom);
+      const variableSettings = get(variableSettingssAtom);
+      const independentVariable = get(independentVariableAtom);
       return await get(simulatorAtom).simulateTimeCourse(
         get(editorContentAtom),
         {
           parameters: {
-            includeVariables: getIncludeVariableList(
-              get(variablesAtom),
-              get(variableSettingssAtom),
-              get(independentVariableAtom),
-            ),
             ...get(timeCourseParametersAtom),
+            includedVariables: variables.filter(
+              (v) =>
+                v.name !== independentVariable &&
+                variableSettings[v.name].visible,
+            ),
           },
           variableValues: getVariableValues(get(variableSliderStatesAtom)),
         },
@@ -166,7 +156,7 @@ export const computeSteadyStateAtom = atom(null, async (get, set) => {
       return await get(simulatorAtom).computeSteadyState(
         get(editorContentAtom),
         {
-          parameters: {},
+          parameters: null,
           variableValues: getVariableValues(get(variableSliderStatesAtom)),
         },
         abortSignal,
@@ -206,12 +196,12 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
 
       if (parameterScanOptions.mode === "timeCourse") {
         const scanTimeCourseParameters = {
-          includeVariables: getIncludeVariableList(
-            variables,
-            variableSettingss,
-            simulator.scanIndependentVariableName,
-          ),
           ...parameterScanOptions.timeCourseParameters,
+          includedVariables: variables.filter(
+            (v) =>
+              v.name !== simulator.scanIndependentVariableName &&
+              variableSettingss[v.name].visible,
+          ),
         };
 
         for (const value of scanValues) {
@@ -254,7 +244,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
             simulator.computeSteadyState(
               editorContent,
               {
-                parameters: {},
+                parameters: null,
                 variableValues,
                 parameterScanOptions: {
                   varyingParameter: parameter,

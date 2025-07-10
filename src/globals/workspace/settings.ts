@@ -11,7 +11,7 @@ import type {
 /** Time course parameters that are editable by the user manually. */
 export type EditableTimeCourseParameters = Omit<
   TimeCourseParameters,
-  "includeVariables"
+  "includedVariables"
 >;
 
 export interface ParameterScanOptions {

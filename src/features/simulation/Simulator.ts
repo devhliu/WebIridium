@@ -4,10 +4,11 @@ export type TimeCourseParameters = {
   numberOfPoints: number;
 
   /** List of variables you want to include in the results. */
-  includeVariables: Variable[];
+  includedVariables: Variable[];
 };
 
-export type SteadyStateParameters = {};
+// nothing for now...
+export type SteadyStateParameters = null;
 
 export type ParameterScanOptions = {
   varyingParameter: string;
