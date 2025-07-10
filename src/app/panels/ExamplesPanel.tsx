@@ -24,7 +24,6 @@ import { simulateTimeCourseAtom } from "@/globals/workspace/simulation";
 import {
   nameAtom,
   timeCourseParametersAtom,
-  variableSettingssAtom,
 } from "@/globals/workspace/settings";
 
 const ExampleButton = ({

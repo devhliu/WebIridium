@@ -12,6 +12,10 @@ import VariableGroup from "./VariableGroup";
 import SearchBox from "@/components/input/SearchBox";
 import Button from "@/components/Button";
 
+const DEFAULT_OPEN_GROUPS = {
+  ["Floating Species"]: true,
+};
+
 export interface VariableListProps {
   variables: Variable[];
   variableSettingss: Record<string, VariableSettings>;
@@ -27,6 +31,8 @@ const VariableList = ({
   variableSettingss,
   onVariableSettingsChange,
 }: VariableListProps) => {
+  const [openGroups, setOpenGroups] =
+    useState<Record<string, boolean>>(DEFAULT_OPEN_GROUPS);
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter(
     (variable) =>
@@ -47,6 +53,23 @@ const VariableList = ({
         visible: !areAllVisible,
       });
     }
+
+    const groups = new Set<string>();
+    for (const v of variables) {
+      groups.add(v.category);
+    }
+    setOpenGroups(
+      Object.fromEntries(
+        Array.from(groups.keys()).map((group) => [group, true]),
+      ),
+    );
+  };
+
+  const toggleGroupOpen = (group: string, open: boolean) => {
+    setOpenGroups({
+      ...openGroups,
+      [group]: open,
+    });
   };
 
   return (
@@ -79,6 +102,8 @@ const VariableList = ({
               variableSettingss={variableSettingss}
               onVariableSettingsChange={onVariableSettingsChange}
               isSearching={searchTerm.length > 0}
+              open={openGroups[group]}
+              onOpenChange={(open) => toggleGroupOpen(group, open)}
             />
           ))}
         </div>

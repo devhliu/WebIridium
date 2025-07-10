@@ -1,42 +1,41 @@
-import { useState } from "react";
 import styles from "./VariableList.module.css";
 import { type Variable } from "@/features/simulation/Simulator";
 import VariableItem from "./VariableItem";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
 import type { VariableSettings } from "@/globals/workspace/settings";
 
-const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
-
 export interface VariableGroupProps {
   group: string;
   variables: Variable[];
   variableSettingss: Record<string, VariableSettings>;
-  isSearching: boolean;
   onVariableSettingsChange: (
     variableName: string,
     newSettings: VariableSettings,
   ) => void;
+  isSearching: boolean;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
 const VariableGroup = ({
   group,
   variables,
   variableSettingss,
-  isSearching,
   onVariableSettingsChange,
+  isSearching,
+  open,
+  onOpenChange,
 }: VariableGroupProps) => {
-  const [open, setOpen] = useState(() => DEFAULT_OPEN_GROUPS.has(group));
-
-  const handleClick = () => {
+  const handleToggle = () => {
     if (!isSearching) {
-      setOpen((prev) => !prev);
+      onOpenChange(!open);
     }
   };
 
   // TODO: add accessibility stuff like aria-controlled by, etc.
   return (
     <div className={styles.groupContainer} data-open={open || null}>
-      <button className={styles.groupTrigger} onClick={handleClick}>
+      <button className={styles.groupTrigger} onClick={handleToggle}>
         {!isSearching && (
           <ChevronDownIcon className={styles.groupTriggerIcon} />
         )}
