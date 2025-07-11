@@ -1,0 +1,114 @@
+import { useRef, useState, type CSSProperties } from "react";
+import styles from "./DraggableLegend.module.css";
+import type { LegendSettings } from "@/globals/workspace/settings";
+import type { LineStyle } from "@/features/lineStyle";
+
+const dashArrays: Record<LineStyle, string> = {
+  solid: "",
+  dash: "5,5",
+  dot: "2,2",
+  dashdot: "5,5,2,5",
+  longdash: "10,5",
+  longdashdot: "10,5,2,5",
+};
+
+export interface LegendDataItem {
+  title: string;
+  color: string;
+  dash: LineStyle;
+}
+
+export interface DraggableLegendProps {
+  settings: LegendSettings;
+  data: LegendDataItem[];
+}
+
+const LegendItem = ({
+  settings,
+  data,
+}: {
+  settings: LegendSettings;
+  data: LegendDataItem;
+}) => {
+  return (
+    <div className={styles.item}>
+      <svg className={styles.line} width={settings.lineLength} height="10">
+        <line
+          x1="0"
+          y1="5"
+          x2={settings.lineLength}
+          y2="5"
+          stroke={data.color}
+          strokeWidth="2"
+          strokeDasharray={dashArrays[data.dash]}
+        />
+      </svg>
+      {data.title}
+    </div>
+  );
+};
+
+type Position = {
+  x: number;
+  y: number;
+};
+
+// TODO: add some tests for this? (snapshot)
+// TODO: add clamping
+const DraggableLegend = ({ settings, data }: DraggableLegendProps) => {
+  const dragStartPosition = useRef<Position | null>(null);
+  const [position, setPosition] = useState<Position | null>(null);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    dragStartPosition.current = {
+      // add the original position in case it was already dragged to account for the offset
+      x: e.pageX - (position?.x ?? 0),
+      y: e.pageY - (position?.y ?? 0),
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (dragStartPosition.current) {
+      setPosition({
+        x: e.pageX - dragStartPosition.current.x,
+        y: e.pageY - dragStartPosition.current.y,
+      });
+    }
+  };
+
+  const handleMouseUp = (e: MouseEvent) => {
+    handleMouseMove(e);
+    dragStartPosition.current = null;
+
+    document.removeEventListener("mousemove", handleMouseMove);
+    document.removeEventListener("mouseup", handleMouseUp);
+  };
+
+  const style: CSSProperties & {
+    ["--drag-x"]?: string;
+    ["--drag-y"]?: string;
+  } = {
+    backgroundColor: settings.backgroundColor,
+    border: `${settings.borderThickness}px solid ${settings.borderColor}`,
+    padding: `${settings.padding}px`,
+  };
+
+  if (position) {
+    style["--drag-x"] = position.x + "px";
+    style["--drag-y"] = position.y + "px";
+  }
+
+  return (
+    <div className={styles.legend} onMouseDown={handleMouseDown} style={style}>
+      {data.map((dataItem) => (
+        <LegendItem key={dataItem.title} settings={settings} data={dataItem} />
+      ))}
+    </div>
+  );
+};
+
+export default DraggableLegend;

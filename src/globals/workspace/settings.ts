@@ -45,6 +45,15 @@ export interface GridSettings {
   numYGrids: number;
 }
 
+export interface LegendSettings {
+  visible: boolean;
+  backgroundColor: string;
+  padding: number;
+  lineLength: number;
+  borderColor: string;
+  borderThickness: number;
+}
+
 export interface GraphSettings {
   backgroundColor: string;
   drawingAreaColor: string;
@@ -71,6 +80,8 @@ export interface GraphSettings {
 
   majorGrid: GridSettings;
   minorGrid: GridSettings;
+
+  legend: LegendSettings;
 }
 
 export interface VariableSettings {
@@ -165,6 +176,15 @@ export const graphSettingsAtom = atom<GraphSettings>({
     yWidth: 0.5,
     numXGrids: 4,
     numYGrids: 4,
+  },
+
+  legend: {
+    visible: true,
+    backgroundColor: "#fff",
+    padding: 15,
+    lineLength: 50,
+    borderColor: "#000",
+    borderThickness: 1,
   },
 });
 

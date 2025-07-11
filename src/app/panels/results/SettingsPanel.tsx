@@ -1,7 +1,14 @@
 import { useAtom } from "jotai";
 import { useState } from "react";
 import styles from "./results.module.css";
-import { graphSettingsAtom, paletteAtom } from "@/globals/workspace/settings";
+import {
+  graphSettingsAtom,
+  paletteAtom,
+  type AxisSettings,
+  type GraphSettings,
+  type GridSettings,
+  type LegendSettings,
+} from "@/globals/workspace/settings";
 import { PALETTES, type Palette } from "@/features/colors";
 
 import BooleanProperty from "@/components/property-list/BooleanProperty";
@@ -29,7 +36,7 @@ const SettingsPanel = () => {
   const gridSettings = graphSettings[selectedGrid];
 
   const handleChangeFor = (
-    setting: keyof typeof graphSettings,
+    setting: keyof GraphSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({ ...graphSettings, [setting]: newValue });
@@ -37,7 +44,7 @@ const SettingsPanel = () => {
   };
 
   const handleAxisChangeFor = (
-    setting: keyof typeof axisSettings,
+    setting: keyof AxisSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({
@@ -51,13 +58,27 @@ const SettingsPanel = () => {
   };
 
   const handleGridChangeFor = (
-    setting: keyof typeof gridSettings,
+    setting: keyof GridSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({
         ...graphSettings,
         [selectedGrid]: {
           ...gridSettings,
+          [setting]: newValue,
+        },
+      });
+    };
+  };
+
+  const handleLegendChangeFor = (
+    setting: keyof LegendSettings,
+  ): ((newValue: unknown) => void) => {
+    return (newValue) => {
+      setGraphSettings({
+        ...graphSettings,
+        legend: {
+          ...graphSettings.legend,
           [setting]: newValue,
         },
       });
@@ -315,6 +336,54 @@ const SettingsPanel = () => {
                 step={0.5}
                 onChange={handleGridChangeFor("yWidth")}
               />
+            )}
+          </PropertyList>
+        </PropertyAccordionItem>
+
+        <PropertyAccordionItem title="Legend">
+          <PropertyList alignment="center">
+            <BooleanProperty
+              name="Visible"
+              value={graphSettings.legend.visible}
+              onChange={handleLegendChangeFor("visible")}
+            />
+            {graphSettings.legend.visible && (
+              <>
+                <ColorProperty
+                  name="Background Color"
+                  value={graphSettings.legend.backgroundColor}
+                  onChange={handleLegendChangeFor("backgroundColor")}
+                />
+                <NumericSliderProperty
+                  name="Padding"
+                  value={graphSettings.legend.padding}
+                  min={0}
+                  max={100}
+                  step={1}
+                  onChange={handleLegendChangeFor("padding")}
+                />
+                <NumericSliderProperty
+                  name="Line Length"
+                  value={graphSettings.legend.lineLength}
+                  min={1}
+                  max={100}
+                  step={1}
+                  onChange={handleLegendChangeFor("lineLength")}
+                />
+                <ColorProperty
+                  name="Border Color"
+                  value={graphSettings.legend.borderColor}
+                  onChange={handleLegendChangeFor("borderColor")}
+                />
+                <NumericSliderProperty
+                  name="Border Thickness"
+                  value={graphSettings.legend.borderThickness}
+                  min={0}
+                  max={25}
+                  step={0.5}
+                  onChange={handleLegendChangeFor("borderThickness")}
+                />
+              </>
             )}
           </PropertyList>
         </PropertyAccordionItem>

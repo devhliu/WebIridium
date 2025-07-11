@@ -5,7 +5,6 @@ import PlotPanel from "../results/PlotPanel.tsx";
 import {
   itShouldDisableWhenStartingSimulation,
   itShouldBeCancellable,
-  itShouldDisplayPlot,
   itShouldDisplayToasts,
   itShouldBeLoadingWhenModelIsLoading,
   ForceModelUpdateButton,

@@ -2,6 +2,8 @@ import { useAtomValue } from "jotai";
 import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
+import DraggableLegend, { type LegendDataItem } from "./DraggableLegend";
+
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   graphSettingsAtom,
@@ -60,6 +62,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     yAxis,
     majorGrid,
     minorGrid,
+    legend: legendSettings,
   } = useAtomValue(graphSettingsAtom);
 
   // variable name -> column values
@@ -121,6 +124,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   }
 
   const plotData = [];
+  const legendData: LegendDataItem[] = [];
   const independentVariableColumn = columns.find(
     (c) => c.variableName === independentVariableName,
   )!;
@@ -189,6 +193,14 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       }
     } // otherwise the color will get overwritten later
 
+    const title = parameterValue
+      ? getParameterScanTitle(
+          settings.displayName,
+          parameterSettings!.displayName,
+          parameterValue,
+        )
+      : settings.displayName;
+
     plotData.push({
       x: independentVariableColumn.values,
       y: values,
@@ -196,13 +208,13 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       mode: "lines",
       marker: { color: finalColor },
       line: { width: settings.width, dash: settings.lineStyle },
-      name: parameterValue
-        ? getParameterScanTitle(
-            settings.displayName,
-            parameterSettings!.displayName,
-            parameterValue,
-          )
-        : settings.displayName,
+      name: title,
+    });
+
+    legendData.push({
+      title,
+      color: finalColor,
+      dash: settings.lineStyle,
     });
   }
 
@@ -216,61 +228,66 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   }
 
   return (
-    <Plot
-      data-testid="results-plot"
-      data={plotData as unknown as Data[]}
-      style={{ position: "relative" }}
-      layout={{
-        width,
-        height,
-        title: !includeTitle
-          ? undefined
-          : {
-              text: title,
-            },
-        showlegend: false,
-        paper_bgcolor: backgroundColor,
-        plot_bgcolor: drawingAreaColor,
-        xaxis: {
-          title: !xAxis.includeTitle ? undefined : { text: xAxisTitle },
-          range: [rangeMinX, rangeMaxX],
-          color: xAxis.color,
-          minor: xMinorGridSettings,
-          ...xMajorGridSettings,
-        },
-        yaxis: {
-          title: !yAxis.includeTitle ? undefined : { text: yAxisTitle },
-          range: [rangeMinY - yPadding, rangeMaxY + yPadding],
-          color: yAxis.color,
-          minor: yMinorGridSettings,
-          ...yMajorGridSettings,
-        },
-        margin: {
-          l: margin,
-          r: margin,
-          b: margin,
-          t: margin,
-        },
-        shapes: !includeBorder
-          ? undefined
-          : [
-              {
-                type: "rect",
-                xref: "paper",
-                yref: "paper",
-                x0: 0,
-                y0: 0,
-                x1: 1,
-                y1: 1,
-                line: {
-                  color: borderColor,
-                  width: borderThickness,
-                },
+    <>
+      {legendSettings.visible && (
+        <DraggableLegend settings={legendSettings} data={legendData} />
+      )}
+      <Plot
+        data-testid="results-plot"
+        data={plotData as unknown as Data[]}
+        style={{ position: "relative" }}
+        layout={{
+          width,
+          height,
+          title: !includeTitle
+            ? undefined
+            : {
+                text: title,
               },
-            ],
-      }}
-      config={{ responsive: true, displayModeBar: false }}
-    />
+          showlegend: false,
+          paper_bgcolor: backgroundColor,
+          plot_bgcolor: drawingAreaColor,
+          xaxis: {
+            title: !xAxis.includeTitle ? undefined : { text: xAxisTitle },
+            range: [rangeMinX, rangeMaxX],
+            color: xAxis.color,
+            minor: xMinorGridSettings,
+            ...xMajorGridSettings,
+          },
+          yaxis: {
+            title: !yAxis.includeTitle ? undefined : { text: yAxisTitle },
+            range: [rangeMinY - yPadding, rangeMaxY + yPadding],
+            color: yAxis.color,
+            minor: yMinorGridSettings,
+            ...yMajorGridSettings,
+          },
+          margin: {
+            l: margin,
+            r: margin,
+            b: margin,
+            t: margin,
+          },
+          shapes: !includeBorder
+            ? undefined
+            : [
+                {
+                  type: "rect",
+                  xref: "paper",
+                  yref: "paper",
+                  x0: 0,
+                  y0: 0,
+                  x1: 1,
+                  y1: 1,
+                  line: {
+                    color: borderColor,
+                    width: borderThickness,
+                  },
+                },
+              ],
+        }}
+        config={{ responsive: true, displayModeBar: false }}
+      />
+    </>
   );
 };
 

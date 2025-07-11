@@ -1,0 +1,26 @@
+.legend {
+  /* Thsese are set in the JS */
+  --drag-x: 0px;
+  --drag-y: 0px;
+  position: absolute;
+  top: calc(25px + var(--drag-y));
+  right: calc(25px - var(--drag-x));
+
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-height: 300px;
+  overflow: auto;
+  z-index: 999;
+  cursor: move;
+}
+
+.item {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.line {
+  padding-right: 7px;
+}
