@@ -125,9 +125,10 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
 
   const plotData = [];
   const legendData: LegendDataItem[] = [];
+  // note that independent variable column might be null for time course if data was not collected for it
   const independentVariableColumn = columns.find(
     (c) => c.variableName === independentVariableName,
-  )!;
+  );
   const parameterSettings =
     result.type === "parameterScan"
       ? variableSettingss[result.parameter]
@@ -139,9 +140,10 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
 
   // if we do undefined, plotly autoscales for us
-  const [rangeMinX, rangeMaxX] = isAutoscaledX
-    ? calculateBounds(independentVariableColumn.values)
-    : [minX, maxX];
+  const [rangeMinX, rangeMaxX] =
+    isAutoscaledX && independentVariableColumn
+      ? calculateBounds(independentVariableColumn.values)
+      : [minX, maxX];
   const [rangeMinY, rangeMaxY] = isAutoscaledY
     ? calculateBounds(
         columns
@@ -179,43 +181,53 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     showgrid: minorGrid.enabled.y,
   };
 
-  for (const { variableName, values, parameterValue, scanPercent } of columns) {
-    if (variableName === independentVariableName) continue;
+  if (independentVariableColumn) {
+    for (const {
+      variableName,
+      values,
+      parameterValue,
+      scanPercent,
+    } of columns) {
+      if (variableName === independentVariableName) continue;
 
-    const settings = variableSettingss[variableName];
-    if (!settings.visible) continue;
-    let finalColor: string = "red";
-    if (scanPalette === "Custom") {
-      if (result.type === "parameterScan" && result.mode === "timeCourse") {
-        finalColor = getDefaultParameterScanColor(settings.color, scanPercent!);
-      } else {
-        finalColor = settings.color;
-      }
-    } // otherwise the color will get overwritten later
+      const settings = variableSettingss[variableName];
+      if (!settings.visible) continue;
+      let finalColor: string = "red";
+      if (scanPalette === "Custom") {
+        if (result.type === "parameterScan" && result.mode === "timeCourse") {
+          finalColor = getDefaultParameterScanColor(
+            settings.color,
+            scanPercent!,
+          );
+        } else {
+          finalColor = settings.color;
+        }
+      } // otherwise the color will get overwritten later
 
-    const title = parameterValue
-      ? getParameterScanTitle(
-          settings.displayName,
-          parameterSettings!.displayName,
-          parameterValue,
-        )
-      : settings.displayName;
+      const title = parameterValue
+        ? getParameterScanTitle(
+            settings.displayName,
+            parameterSettings!.displayName,
+            parameterValue,
+          )
+        : settings.displayName;
 
-    plotData.push({
-      x: independentVariableColumn.values,
-      y: values,
-      type: "scatter",
-      mode: "lines",
-      marker: { color: finalColor },
-      line: { width: settings.width, dash: settings.lineStyle },
-      name: title,
-    });
+      plotData.push({
+        x: independentVariableColumn?.values,
+        y: values,
+        type: "scatter",
+        mode: "lines",
+        marker: { color: finalColor },
+        line: { width: settings.width, dash: settings.lineStyle },
+        name: title,
+      });
 
-    legendData.push({
-      title,
-      color: finalColor,
-      dash: settings.lineStyle,
-    });
+      legendData.push({
+        title,
+        color: finalColor,
+        dash: settings.lineStyle,
+      });
+    }
   }
 
   if (scanPalette !== "Custom") {
@@ -229,7 +241,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
 
   return (
     <>
-      {legendSettings.visible && (
+      {legendSettings.visible && legendData.length > 0 && (
         <DraggableLegend settings={legendSettings} data={legendData} />
       )}
       <Plot

@@ -10,7 +10,10 @@ import ErrorIcon from "@/assets/icons/ErrorIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
 
 import { variablesAtom, modelStatusAtom } from "@/globals/workspace/model";
-import { variableSettingssAtom } from "@/globals/workspace/settings";
+import {
+  independentVariableAtom,
+  variableSettingssAtom,
+} from "@/globals/workspace/settings";
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 const ModelStatusItem = () => {
@@ -54,6 +57,7 @@ const MissingDataStatusItem = () => {
   const simulatorResult = useAtomValue(simulationResultAtom);
   const variables = useAtomValue(variablesAtom);
   const variableSettingss = useAtomValue(variableSettingssAtom);
+  const independentVariable = useAtomValue(independentVariableAtom);
 
   if (!simulatorResult) {
     return null;
@@ -91,10 +95,12 @@ const MissingDataStatusItem = () => {
     return null;
   }
 
-  const missing = variables
+  const missingVariables = variables
     .filter((v) => variableSettingss[v.name]?.visible)
     .filter((v) => !haveSet.has(v.name));
-  if (missing.length > 0) {
+  const misingIndependent =
+    simulatorResult.type === "timeCourse" && !haveSet.has(independentVariable);
+  if (missingVariables.length > 0 || misingIndependent) {
     return (
       <StatusBarItem>
         <WarningIcon className={styles.warningIcon} width="1em" height="1em" />
