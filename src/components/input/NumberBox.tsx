@@ -49,6 +49,12 @@ const NumberBox = ({
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      (e.target as HTMLInputElement).blur();
+    }
+  };
+
   return (
     <input
       id={name}
@@ -58,6 +64,7 @@ const NumberBox = ({
       value={workingValue}
       onChange={handleWorkingChange}
       onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
     />
   );
 };
