@@ -44,16 +44,12 @@ export const groupVariables = <TVar extends Variable>(
 export const groupVariablesForSelectComponent = <TVar extends Variable>(
   variables: TVar[],
   variableSettingss: Record<string, VariableSettings>,
-  nameSelector: (v: TVar) => string,
 ): SelectGroupedProps["groups"] => {
   return groupVariables(variables).reduce((acc, [category, variables]) => {
     return {
       ...acc,
       [category]: Object.fromEntries(
-        variables.map((v) => [
-          variableSettingss[v.name].displayName,
-          nameSelector(v),
-        ]),
+        variables.map((v) => [variableSettingss[v.name].displayName, v.name]),
       ),
     };
   }, {});

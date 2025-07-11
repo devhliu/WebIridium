@@ -142,7 +142,6 @@ const ParameterScanPanel = ({
                 groups={groupVariablesForSelectComponent(
                   variables.filter((v) => v.type === "settable"),
                   variableSettingss,
-                  (v) => v.setName,
                 )}
               />
             )}

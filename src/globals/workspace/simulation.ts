@@ -2,8 +2,10 @@ import { atom, type Getter } from "jotai";
 
 import type {
   ParameterScanResult,
+  SettableVariable,
   SimulationResult,
   Simulator,
+  Variable,
 } from "@/features/simulation/Simulator";
 import {
   getLinearDistribution,
@@ -11,15 +13,20 @@ import {
 } from "@/features/distribution";
 
 import type { Setter } from "jotai";
-import { editorContentAtom, modelStatusAtom, variablesAtom } from "./model";
+import {
+  editorContentAtom,
+  modelStatusAtom,
+  variablesAtom,
+  variablesMapAtom,
+} from "./model";
 import {
   independentVariableAtom,
   parameterScanOptionsAtom,
   timeCourseParametersAtom,
   variableSettingssAtom,
 } from "./settings";
-import { WorkerTermination } from "@/features/workerPool";
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
+import { WorkerTermination } from "@/features/workerPool";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -55,11 +62,12 @@ export const isSimulatingAtom = atom((get) =>
 
 const getVariableValues = (
   sliderStates: Record<string, VariableSliderState>,
+  variableMap: Map<string, Variable>,
 ) => {
   return Object.entries(sliderStates).reduce(
     (acc, [name, state]) => ({
       ...acc,
-      [name]: state.value,
+      [(variableMap.get(name) as SettableVariable).setName]: state.value,
     }),
     {},
   );
@@ -139,7 +147,10 @@ export const simulateTimeCourseAtom = atom(null, async (get, set) => {
                 variableSettings[v.name].visible,
             ),
           },
-          variableValues: getVariableValues(get(variableSliderStatesAtom)),
+          variableValues: getVariableValues(
+            get(variableSliderStatesAtom),
+            get(variablesMapAtom),
+          ),
         },
         abortSignal,
       );
@@ -157,7 +168,10 @@ export const computeSteadyStateAtom = atom(null, async (get, set) => {
         get(editorContentAtom),
         {
           parameters: null,
-          variableValues: getVariableValues(get(variableSliderStatesAtom)),
+          variableValues: getVariableValues(
+            get(variableSliderStatesAtom),
+            get(variablesMapAtom),
+          ),
         },
         abortSignal,
       );
@@ -171,6 +185,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
   const variables = get(variablesAtom);
   const variableSettingss = get(variableSettingssAtom);
   const editorContent = get(editorContentAtom);
+  const variablesMap = get(variablesMapAtom);
 
   return await runSimulation(
     "parameterScan",
@@ -192,7 +207,12 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
         parameterScanOptions.numberOfValues,
       );
 
-      const variableValues = getVariableValues(get(variableSliderStatesAtom));
+      const parameterSetName = (variablesMap.get(parameter) as SettableVariable)
+        .setName;
+      const variableValues = getVariableValues(
+        get(variableSliderStatesAtom),
+        get(variablesMapAtom),
+      );
 
       if (parameterScanOptions.mode === "timeCourse") {
         const scanTimeCourseParameters = {
@@ -212,7 +232,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
                 parameters: scanTimeCourseParameters,
                 variableValues,
                 parameterScanOptions: {
-                  varyingParameter: parameter,
+                  varyingParameter: parameterSetName,
                   varyingParameterValue: value,
                 },
               },
@@ -247,7 +267,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
                 parameters: null,
                 variableValues,
                 parameterScanOptions: {
-                  varyingParameter: parameter,
+                  varyingParameter: parameterSetName,
                   varyingParameterValue: value,
                 },
               },

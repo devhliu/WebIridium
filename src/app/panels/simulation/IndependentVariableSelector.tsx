@@ -27,7 +27,6 @@ const IndependentVariableSelector = () => {
       groups={groupVariablesForSelectComponent(
         filteredVariables,
         variableSettingss,
-        (v) => v.name,
       )}
       onChange={(name) => setIndependentVariable(name)}
       className={styles.select}

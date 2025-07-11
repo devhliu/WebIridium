@@ -16,6 +16,7 @@ import {
   variableSettingssAtom,
 } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
+import type { Atom } from "jotai";
 
 export type ModelStatus =
   | { type: "loading" }
@@ -32,6 +33,9 @@ const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
 export const editorContentAtom = atom((get) => get(_editorContentAtom));
 export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
 export const variablesAtom = atom((get) => get(_variablesAtom));
+export const variablesMapAtom: Atom<Map<string, Variable>> = atom(
+  (get) => new Map(get(variablesAtom).map((v) => [v.name, v])),
+);
 
 // TODO: unit test this?
 const patchVariablesSettings = (
@@ -164,11 +168,12 @@ export const updateEditorContentAtom = atom(
       !parameterScanOptions.varyingParameter ||
       !newVariables.some(
         (v) =>
-          "setName" in v && v.setName === parameterScanOptions.varyingParameter,
+          v.type === "settable" &&
+          v.setName === parameterScanOptions.varyingParameter,
       )
     ) {
       const firstAvailableParameter = newVariables.find(
-        (v) => "setName" in v && v.category === "Parameters",
+        (v) => v.type === "settable" && v.category === "Parameters",
       ) as SettableVariable;
       set(parameterScanOptionsAtom, {
         ...parameterScanOptions,
@@ -176,7 +181,7 @@ export const updateEditorContentAtom = atom(
           // first try to use the first parameter
           firstAvailableParameter?.setName ??
           // if no parameteres found, use the first available
-          newVariables.find((v) => "setName" in v)?.setName,
+          newVariables.find((v) => v.type === "settable")?.setName,
       });
     }
 
@@ -218,5 +223,6 @@ export const modelAtoms = [
   editorContentAtom,
   modelStatusAtom,
   variablesAtom,
+  variablesMapAtom,
   updateEditorContentAtom,
 ];
