@@ -264,7 +264,8 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
           scans.push({
             parameterValue: scanValues[i],
             // special case if there is only one value, have scan percent be 0% instead of 100% since it looks better for Custom palette
-            scanPercent: scanValues.length === 1 ? 0 : i / (scanValues.length - 1),
+            scanPercent:
+              scanValues.length === 1 ? 0 : i / (scanValues.length - 1),
             ...result,
           });
         }
