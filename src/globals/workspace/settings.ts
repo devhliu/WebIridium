@@ -17,11 +17,17 @@ export type EditableTimeCourseParameters = Omit<
 export interface ParameterScanOptions {
   mode: ParameterScanResult["mode"];
   varyingParameter: string | null | undefined;
+  timeCourseParameters: EditableTimeCourseParameters;
+
+  // range properties
   min: number;
   max: number;
   numberOfValues: number;
   useLogarithmicDistribution: boolean;
-  timeCourseParameters: EditableTimeCourseParameters;
+
+  // list properties
+  useNumberList: boolean;
+  numberList: string;
 }
 
 export interface AxisSettings {
@@ -110,15 +116,19 @@ export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
 export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
   mode: "timeCourse",
   varyingParameter: null,
-  min: 0.1,
-  max: 1,
-  numberOfValues: 16,
-  useLogarithmicDistribution: false,
   timeCourseParameters: {
     startTime: 0,
     endTime: 10,
     numberOfPoints: 100,
   },
+
+  min: 0.1,
+  max: 1,
+  numberOfValues: 16,
+  useLogarithmicDistribution: false,
+
+  useNumberList: false,
+  numberList: "1 2 3 4 5",
 });
 
 export const graphSettingsAtom = atom<GraphSettings>({

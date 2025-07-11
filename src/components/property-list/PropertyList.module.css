@@ -54,6 +54,22 @@
   }
 }
 
+/* See the comment in StringProperty for more about this. */
+.long-property {
+  flex-direction: column;
+  gap: var(--spacing-3);
+
+  & > .property-name {
+    flex-grow: 1;
+    width: 100%;
+  }
+
+  & > .property-input {
+    align-self: stretch;
+    width: 100%;
+  }
+}
+
 .property-input {
   flex-grow: 1;
   width: 0;

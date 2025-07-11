@@ -31,8 +31,10 @@ import { modelStatusAtom, variablesAtom } from "@/globals/workspace/model";
 import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
+  type ParameterScanOptions,
 } from "@/globals/workspace/settings";
 import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
+import StringProperty from "@/components/property-list/StringProperty";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -74,7 +76,7 @@ const ParameterScanPanel = ({
     cancelSimulation();
   };
 
-  const handleChangeFor = (property: keyof typeof parameterScanOptions) => {
+  const handleChangeFor = (property: keyof ParameterScanOptions) => {
     return (newValue: unknown) => {
       setParameterScanOptions({
         ...parameterScanOptions,
@@ -145,26 +147,49 @@ const ParameterScanPanel = ({
                 )}
               />
             )}
-            <NumericProperty
-              name="Min"
-              value={parameterScanOptions.min}
-              onChange={handleChangeFor("min")}
-            />
-            <NumericProperty
-              name="Max"
-              value={parameterScanOptions.max}
-              onChange={handleChangeFor("max")}
-            />
-            <NumericProperty
-              name="Number of Values"
-              value={parameterScanOptions.numberOfValues}
-              onChange={handleChangeFor("numberOfValues")}
-            />
+
+            {!parameterScanOptions.useNumberList && (
+              <>
+                <NumericProperty
+                  name="Min"
+                  value={parameterScanOptions.min}
+                  onChange={handleChangeFor("min")}
+                />
+                <NumericProperty
+                  name="Max"
+                  value={parameterScanOptions.max}
+                  onChange={handleChangeFor("max")}
+                />
+                <NumericProperty
+                  name="Number of Values"
+                  value={parameterScanOptions.numberOfValues}
+                  onChange={handleChangeFor("numberOfValues")}
+                />
+                <BooleanProperty
+                  asideMode
+                  name="Use logarithmic distribution"
+                  value={parameterScanOptions.useLogarithmicDistribution}
+                  onChange={handleChangeFor("useLogarithmicDistribution")}
+                />
+              </>
+            )}
+
+            {parameterScanOptions.useNumberList && (
+              <>
+                <StringProperty
+                  name="Numbers (separate by spaces)"
+                  value={parameterScanOptions.numberList}
+                  onChange={handleChangeFor("numberList")}
+                  longMode
+                />
+              </>
+            )}
+
             <BooleanProperty
               asideMode
-              name="Use logarithmic distribution"
-              value={parameterScanOptions.useLogarithmicDistribution}
-              onChange={handleChangeFor("useLogarithmicDistribution")}
+              name="Use number list"
+              value={parameterScanOptions.useNumberList}
+              onChange={handleChangeFor("useNumberList")}
             />
           </PropertyList>
         </PropertyAccordionItem>

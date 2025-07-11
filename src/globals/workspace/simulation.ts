@@ -197,15 +197,32 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
         throw new Error("select parameter to scan with");
       }
 
+      let scanValues: number[];
       const resultPromises = [];
-      const getDistribution = parameterScanOptions.useLogarithmicDistribution
-        ? getLogarithmicDistribution
-        : getLinearDistribution;
-      const scanValues = getDistribution(
-        parameterScanOptions.min,
-        parameterScanOptions.max,
-        parameterScanOptions.numberOfValues,
-      );
+
+      if (parameterScanOptions.useNumberList) {
+        // TODO: unit test this path
+        const numbers = parameterScanOptions.numberList
+          .split(" ")
+          .filter((n) => n.trim().length > 0)
+          .map((n) => +n.trim());
+        if (numbers.length === 0 || numbers.some((n) => isNaN(n))) {
+          throw new Error(
+            "Number list should be a list of numbers separate by spaces.",
+          );
+        }
+
+        scanValues = numbers;
+      } else {
+        const getDistribution = parameterScanOptions.useLogarithmicDistribution
+          ? getLogarithmicDistribution
+          : getLinearDistribution;
+        scanValues = getDistribution(
+          parameterScanOptions.min,
+          parameterScanOptions.max,
+          parameterScanOptions.numberOfValues,
+        );
+      }
 
       const parameterSetName = (variablesMap.get(parameter) as SettableVariable)
         .setName;

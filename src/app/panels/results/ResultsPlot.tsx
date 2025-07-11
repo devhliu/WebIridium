@@ -204,13 +204,14 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         }
       } // otherwise the color will get overwritten later
 
-      const title = parameterValue
-        ? getParameterScanTitle(
-            settings.displayName,
-            parameterSettings!.displayName,
-            parameterValue,
-          )
-        : settings.displayName;
+      const title =
+        parameterValue !== undefined
+          ? getParameterScanTitle(
+              settings.displayName,
+              parameterSettings!.displayName,
+              parameterValue,
+            )
+          : settings.displayName;
 
       plotData.push({
         x: independentVariableColumn?.values,
