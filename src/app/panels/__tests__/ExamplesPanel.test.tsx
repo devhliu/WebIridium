@@ -85,6 +85,6 @@ it("should make run the latest clicked example when multiple are clicked", async
 
   await waitFor(() => {
     expect(janaWolfButton).toBeEnabled();
-    expect(bistableButton).toBeDisabled();
   });
+  expect(bistableButton).toBeDisabled();
 });
