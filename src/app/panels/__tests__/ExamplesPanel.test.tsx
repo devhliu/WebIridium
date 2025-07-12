@@ -81,10 +81,10 @@ it("should make run the latest clicked example when multiple are clicked", async
   expect(janaWolfButton).toBeDisabled();
   expect(bistableButton).toBeEnabled();
 
-  setWorkerResponseDelay(1000); // make sure the simulation never stops
-
   await userEvent.click(bistableButton);
 
-  expect(janaWolfButton).toBeEnabled();
-  expect(bistableButton).toBeDisabled();
+  await waitFor(() => {
+    expect(janaWolfButton).toBeEnabled();
+    expect(bistableButton).toBeDisabled();
+  });
 });
