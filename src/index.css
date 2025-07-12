@@ -69,6 +69,7 @@
 
   --color-error: #f2291b;
   --color-success: #22e369;
+  --color-success-foreground: #000;
   --color-warning: #e0c216;
   --color-info: #0eb0e6;
 
@@ -99,7 +100,7 @@
   --spacing-panel: 10px;
 
   --border-radius: 3px;
-  --border-radius-large: 6px;
+  --border-radius-big: 6px;
 
   /* Misc. */
   --transition-fast: 0.1s;
@@ -158,6 +159,7 @@
 
   --color-error: #bc1f14;
   --color-success: #18ab4e;
+  --color-success-foreground: #fff;
   --color-warning: #b69d10;
   --color-info: #1398c4;
 }

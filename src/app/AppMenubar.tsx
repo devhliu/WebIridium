@@ -23,6 +23,7 @@ import {
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
 import { useSetAtom } from "jotai";
+import ShareButton from "./ShareButton";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab | null;
@@ -130,7 +131,9 @@ const AppMenubar = ({
         <WorkspaceBar />
       </div>
 
-      <div className={styles.menubarRight}>{/* empty for now */}</div>
+      <div className={styles.menubarRight}>
+        <ShareButton />
+      </div>
     </div>
   );
 };

@@ -224,4 +224,20 @@ describe("parsing", () => {
       }),
     ).toSatisfy(isSuccessResult);
   });
+
+  it("should not retain extra fields", () => {
+    expect(
+      parseShareData({
+        ...goodShareWorkspaceData,
+        EXTRA_FIELD: 123,
+        simulation: {
+          type: "timeCourse",
+          parameters: {
+            ...goodShareWorkspaceData.simulation.parameters,
+            EXTRA_FIELD: 123,
+          },
+        },
+      }),
+    ).toEqual({ type: "success", data: goodShareWorkspaceData });
+  });
 });

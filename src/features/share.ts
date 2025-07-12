@@ -40,19 +40,20 @@ export const getShareUrlFragment = async (
       new CompressionStream("deflate-raw"),
     );
 
-    const reader = compressedStream
-      .pipeThrough(new TextDecoderStream())
-      .getReader();
+    const reader = compressedStream.getReader();
     while (true) {
       const result = await reader.read();
+      if (result.done) break;
       if (!result.value)
         return { type: "error", message: "Failed to compress" };
 
-      base64Array.push(btoa(result.value));
-
-      if (result.done) {
-        break;
-      }
+      // https://stackoverflow.com/questions/12710001/how-to-convert-uint8-array-to-base64-encoded-string
+      const base64Url: string = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(new Blob([result.value]));
+      });
+      base64Array.push(base64Url.slice(base64Url.indexOf(",") + 1));
     }
   } catch (e) {
     return { type: "error", message: String(e) };
@@ -75,9 +76,18 @@ export const readShareUrlFragment = async (
 
   const stringArray = [];
   try {
-    const dataStream = new Blob([
-      fragment.slice(SHARE_URL_PREFIX.length + 1),
-    ]).stream();
+    const dataStream = new ReadableStream({
+      start: (controller) => {
+        const binaryString = atob(fragment.slice(SHARE_URL_PREFIX.length));
+        const bytes = new Uint8Array(binaryString.length);
+        for (let i = 0; i < binaryString.length; i++) {
+          bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        controller.enqueue(bytes);
+        controller.close();
+      },
+    });
     const decompressedStream = dataStream.pipeThrough(
       new DecompressionStream("deflate-raw"),
     );
@@ -87,14 +97,11 @@ export const readShareUrlFragment = async (
       .getReader();
     while (true) {
       const result = await reader.read();
+      if (result.done) break;
       if (!result.value)
-        return { type: "error", message: "Failed to decompress" };
+        return { type: "error", message: "Failed to compress" };
 
-      stringArray.push(atob(result.value));
-
-      if (result.done) {
-        break;
-      }
+      stringArray.push(result.value);
     }
   } catch (e) {
     return { type: "error", message: String(e) };
@@ -163,14 +170,41 @@ export const parseShareData = (data: unknown): ReadShareUrlFragmentResult => {
         message: "Invalid time course number of points.",
       };
     }
+
+    return {
+      type: "success",
+      data: {
+        version: data.version,
+        name: data.name,
+        code: data.code,
+        simulation: {
+          type: data.simulation.type,
+          parameters: {
+            startTime: data.simulation.parameters.startTime,
+            endTime: data.simulation.parameters.endTime,
+            numberOfPoints: data.simulation.parameters.numberOfPoints,
+          },
+        },
+      },
+    };
   } else if (data.simulation.type === "steadyState") {
     if (data.simulation.parameters !== null) {
       return { type: "error", message: "Invalid steady state parameters." };
     }
+
+    return {
+      type: "success",
+      data: {
+        version: data.version,
+        name: data.name,
+        code: data.code,
+        simulation: {
+          type: data.simulation.type,
+          parameters: data.simulation.parameters,
+        },
+      },
+    };
   } else {
     return { type: "error", message: "Invalid simulation type." };
   }
-
-  // might contain extra parameters, but that is OK
-  return { type: "success", data: data as unknown as ShareWorkspaceData };
 };
