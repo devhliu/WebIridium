@@ -70,18 +70,6 @@ test("panels should all be cancellable when a simulation is running", async () =
   expect(runParameterScanButton).toBeEnabled();
 });
 
-test("results panel should only be visible after simulating", async () => {
-  await renderFlush(<App />);
-
-  // the view as table button should not be there yet
-  expect(screen.queryByText("Table")).not.toBeInTheDocument();
-
-  const simulateButton = screen.getByText("Simulate");
-  await userEvent.click(simulateButton);
-
-  expect(screen.getByText("Table")).toBeInTheDocument();
-});
-
 test("clicking sliders button should toggle sliders panel", async () => {
   await renderFlush(<App />);
 

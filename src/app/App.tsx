@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import "allotment/dist/style.css";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useAtomValue } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
@@ -30,9 +30,12 @@ import SlidersPanel from "./panels/sliders/SlidersPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
+  const didIntialLoadRef = useRef(false);
   return (
     <ToastProvider>
-      <WorkspaceProvider>{children}</WorkspaceProvider>
+      <WorkspaceProvider didInitialLoadRef={didIntialLoadRef}>
+        {children}
+      </WorkspaceProvider>
     </ToastProvider>
   );
 };
@@ -64,7 +67,7 @@ const ResultTabbedPanel = () => {
   }
 
   if (simulationResult) {
-    return <TabbedPanel tabs={tabs} />;
+    return <TabbedPanel tabs={tabs} data-testid="results-panel" />;
   } else {
     return null;
   }

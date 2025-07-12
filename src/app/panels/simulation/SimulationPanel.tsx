@@ -23,26 +23,26 @@ const SimulationPanel = ({
   children,
   ["data-testid"]: testId,
 }: SimulationPanelProps) => {
-  return (
-    <div
-      data-testid={testId}
-      className={styles.simulationPanel}
-      style={visible ? {} : { display: "none" }}
-    >
-      <PanelTitle title={title}>
-        <button
-          className={styles.slidersButton}
-          aria-label="Sliders"
-          aria-pressed={slidersPanelActive}
-          onClick={() => onSlidersPanelToggle(!slidersPanelActive)}
-        >
-          <SlidersIcon aria-hidden width="1em" height="1em" />
-        </button>
-      </PanelTitle>
+  if (!visible) {
+    return null;
+  } else {
+    return (
+      <div data-testid={testId} className={styles.simulationPanel}>
+        <PanelTitle title={title}>
+          <button
+            className={styles.slidersButton}
+            aria-label="Sliders"
+            aria-pressed={slidersPanelActive}
+            onClick={() => onSlidersPanelToggle(!slidersPanelActive)}
+          >
+            <SlidersIcon aria-hidden width="1em" height="1em" />
+          </button>
+        </PanelTitle>
 
-      {children}
-    </div>
-  );
+        {children}
+      </div>
+    );
+  }
 };
 
 export default SimulationPanel;

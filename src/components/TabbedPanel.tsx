@@ -10,9 +10,10 @@ export interface TabInfo {
 
 export interface TabbedPanelProps {
   tabs: TabInfo[];
+  ["data-testid"]?: string;
 }
 
-const TabbedPanel = ({ tabs }: TabbedPanelProps) => {
+const TabbedPanel = ({ tabs, "data-testid": testId }: TabbedPanelProps) => {
   const [tab, setTab] = useState(tabs[0].name);
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
   if (!tabs.find((t) => t.name === tab)) {
@@ -21,7 +22,7 @@ const TabbedPanel = ({ tabs }: TabbedPanelProps) => {
   }
 
   return (
-    <div className={styles.panel}>
+    <div className={styles.panel} data-testid={testId}>
       <RadixTabs.Root
         className={styles.tabRoot}
         value={tab}
