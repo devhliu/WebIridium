@@ -20,7 +20,7 @@ import { ToastProvider } from "@/components/Toast";
 
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
 import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
-import AntimonyEditorPanel from "./panels/AntimonyEditorPanel";
+import EditorPanel from "./panels/EditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import PlotPanel from "./panels/results/PlotPanel";
 import TablePanel from "./panels/results/TablePanel";
@@ -132,7 +132,7 @@ const AppContent = () => {
             <Allotment.Pane priority={LayoutPriority.High}>
               <Allotment vertical>
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  <AntimonyEditorPanel />
+                  <EditorPanel />
                 </Allotment.Pane>
 
                 <Allotment.Pane

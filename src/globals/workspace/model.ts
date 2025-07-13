@@ -102,7 +102,9 @@ export const updateEditorContentAtom = atom(
       content,
       skipDebounce = false,
     }: { content: string; skipDebounce?: boolean },
-  ) => {
+  ): Promise<boolean> => {
+    if (get(editorContentAtom) === content) return true;
+
     const simulator = get(simulatorAtom);
     const variableSliderStates = get(variableSliderStatesAtom);
     const prevAbortController = get(_updateAbortControllerAtom);

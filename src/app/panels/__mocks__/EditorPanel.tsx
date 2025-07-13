@@ -1,6 +1,5 @@
 import { useAtomValue, useSetAtom } from "jotai";
 
-import styles from "./AntimonyEditorPanel.module.css";
 import ToastTest from "@/app/ToastTest";
 import {
   editorContentAtom,
@@ -25,12 +24,12 @@ const models: Record<string, string> = {
   insulin: insulinModel,
 };
 
-export const AntimonyEditorPanel = () => {
+export const EditorPanel = () => {
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
 
   return (
-    <div className={styles.antimonyEditorPanel}>
+    <div>
       <ToastTest />
       <select
         onChange={(e) =>
@@ -55,4 +54,4 @@ export const AntimonyEditorPanel = () => {
   );
 };
 
-export default AntimonyEditorPanel;
+export default EditorPanel;
