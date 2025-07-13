@@ -22,7 +22,7 @@ const IndependentVariableSelector = () => {
 
   return (
     <Select
-      name="Variable"
+      name="independent-variable"
       value={indepedentVariable ?? "???"}
       groups={groupVariablesForSelectComponent(
         filteredVariables,
@@ -30,6 +30,7 @@ const IndependentVariableSelector = () => {
       )}
       onChange={(name) => setIndependentVariable(name)}
       className={styles.select}
+      aria-label="Independent Variable Value" // TODO: THIS IS A HORIBBLE NAME, BUT IT CONFLICTS WITH THE ACCORDION (SEE THE ExamplesPanel.test.tsx)
     />
   );
 };

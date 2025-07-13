@@ -53,7 +53,9 @@ const ShareButton = () => {
         description: result.message,
       });
     } else {
-      setUrl(`${location.origin}${location.pathname}#${encodeURIComponent(result.fragment)}`);
+      setUrl(
+        `${location.origin}${location.pathname}#${encodeURIComponent(result.fragment)}`,
+      );
     }
 
     setComputing(false);

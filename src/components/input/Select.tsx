@@ -9,6 +9,8 @@ export type SelectBaseProps = {
   value: string;
   onChange: (newValue: string) => void;
   className?: string;
+
+  "aria-label"?: string;
 };
 
 export type SelectFlatProps = SelectBaseProps & {
@@ -41,13 +43,15 @@ const SelectItem = ({
 };
 
 const Select = (props: SelectProps) => {
-  const { name, value, onChange, className } = props;
+  const { name, value, onChange, className, "aria-label": ariaLabel } = props;
 
   return (
     <RadixSelect.Root value={value} onValueChange={onChange}>
       <RadixSelect.Trigger
         id={name}
         className={clsx(className, styles.trigger)}
+        aria-label={ariaLabel}
+        data-value={value} // this is used for testing b/c I couldn't find any other way to get the value externally
       >
         <RadixSelect.Value placeholder={name} />
         <RadixSelect.Icon className={styles.triggerIcon}>

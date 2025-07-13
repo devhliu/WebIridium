@@ -2,6 +2,7 @@ import type { EditableTimeCourseParameters } from "@/globals/workspace/settings"
 
 export interface ExamplePreset {
   parameters: EditableTimeCourseParameters;
+  independentVariable?: string;
 }
 
 const examplesRaw: Record<string, string> = import.meta.glob(
@@ -69,9 +70,10 @@ export const examplePresets: Record<string, ExamplePreset> = {
   "lorenz-attractor": {
     parameters: {
       startTime: 0,
-      endTime: 5,
-      numberOfPoints: 200,
+      endTime: 20,
+      numberOfPoints: 2000,
     },
+    independentVariable: "u",
   },
   "relaxation-oscillator:-from-heinrich-1997-review": {
     parameters: {

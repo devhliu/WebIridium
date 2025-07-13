@@ -17,6 +17,8 @@ const JANA_WOLF_PRESETS = examplePresets[JANA_WOLF_MODEL_NAME];
 
 const BISTABLE_MODEL_NAME = "simple-bistable-model";
 
+const LORENZ_NAME = "lorenz-attractor";
+
 afterEach(() => {
   resetWorkerResponseDelay();
 });
@@ -87,4 +89,23 @@ it("should make run the latest clicked example when multiple are clicked", async
     expect(janaWolfButton).toBeEnabled();
   });
   expect(bistableButton).toBeDisabled();
+});
+
+it("should update independent variable if preset says so", async () => {
+  await renderExamples();
+
+  const lorenzButton = screen.getByRole("button", {
+    name: exampleFormattedNames[LORENZ_NAME],
+  });
+
+  await userEvent.click(lorenzButton);
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole("combobox", { name: "Independent Variable Value" }),
+    ).toHaveAttribute(
+      "data-value",
+      examplePresets[LORENZ_NAME].independentVariable,
+    );
+  });
 });
