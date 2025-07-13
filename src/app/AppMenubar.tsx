@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import styles from "./AppMenubar.module.css";
 
 import {
@@ -14,16 +14,15 @@ import {
 import type { SidebarTab } from "./Sidebar";
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
+import ShareButton from "./ShareButton";
 
 import { promptDownloadFile } from "@/features/promptDownloadFile";
-import { getTheme, setTheme } from "@/features/theme";
+import { toggleThemeAtom } from "@/globals/ui";
 import { nameAtom } from "@/globals/workspace/settings";
 import {
   editorContentAtom,
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
-import { useSetAtom } from "jotai";
-import ShareButton from "./ShareButton";
 
 export interface AppMenubarProps {
   sidebarTab: SidebarTab | null;
@@ -43,10 +42,12 @@ const AppMenubar = ({
   onSlidersPanelToggle,
 }: AppMenubarProps) => {
   const { toast } = useToast();
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  const toggleTheme = useSetAtom(toggleThemeAtom);
   const workspaceName = useAtomValue(nameAtom);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDownload = () => {
     promptDownloadFile(`${workspaceName}.ant`, editorContent, "ant");
@@ -116,14 +117,7 @@ const AppMenubar = ({
 
           <MenubarSeparator />
 
-          <MenubarItem
-            name="toggle theme (TEMPORARY)"
-            onSelect={() => {
-              if (getTheme() === "dark")
-                setTheme("light", { applyTransition: true });
-              else setTheme("dark", { applyTransition: true });
-            }}
-          />
+          <MenubarItem name="toggle theme (TEMPORARY)" onSelect={toggleTheme} />
         </MenubarMenu>
       </MenubarRoot>
 

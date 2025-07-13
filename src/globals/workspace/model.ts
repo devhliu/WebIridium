@@ -103,7 +103,9 @@ export const updateEditorContentAtom = atom(
       skipDebounce = false,
     }: { content: string; skipDebounce?: boolean },
   ): Promise<boolean> => {
-    if (get(editorContentAtom) === content) return true;
+    // the !skipDebounce is for initial loads
+    // if infinite loading errors on app initialization are experienced, check here
+    if (get(editorContentAtom) === content && !skipDebounce) return true;
 
     const simulator = get(simulatorAtom);
     const variableSliderStates = get(variableSliderStatesAtom);

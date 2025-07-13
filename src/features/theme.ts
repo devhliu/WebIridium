@@ -18,19 +18,12 @@ export const getTheme = () => {
   return document.documentElement.dataset.theme;
 };
 
-export const setTheme = (
-  theme: Theme,
-  { applyTransition = false }: { applyTransition?: boolean } = {},
-) => {
-  if (applyTransition) {
-    document.documentElement.classList.add(TRANSITION_CLASS);
-  }
+export const setTheme = (theme: Theme) => {
+  document.documentElement.classList.add(TRANSITION_CLASS);
 
   document.documentElement.dataset.theme = theme;
 
-  if (applyTransition) {
-    setTimeout(() => {
-      document.documentElement.classList.remove(TRANSITION_CLASS);
-    }, 600);
-  }
+  setTimeout(() => {
+    document.documentElement.classList.remove(TRANSITION_CLASS);
+  }, 600);
 };

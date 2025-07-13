@@ -32,7 +32,6 @@ const EditorPanel = () => {
       });
 
       editorRef.current = editor;
-
       return () => {
         event.dispose();
         editor.dispose();

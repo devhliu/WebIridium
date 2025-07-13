@@ -4,9 +4,6 @@ import { createRoot } from "react-dom/client";
 import "./monacoSetup.ts";
 
 import App from "@/app/App.tsx";
-import { getPreferredTheme, setTheme } from "./features/theme";
-
-setTheme(getPreferredTheme());
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
