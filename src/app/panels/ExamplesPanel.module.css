@@ -21,6 +21,8 @@
   align-items: center;
   text-align: left;
   width: 100%;
+
+  padding: var(--spacing-3);
 }
 
 .item-text {

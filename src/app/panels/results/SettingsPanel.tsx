@@ -1,6 +1,5 @@
 import { useAtom } from "jotai";
 import { useState } from "react";
-import styles from "./results.module.css";
 import {
   graphSettingsAtom,
   paletteAtom,
@@ -86,7 +85,7 @@ const SettingsPanel = () => {
   };
 
   return (
-    <div className={styles.settingsContainer}>
+    <div>
       <PropertyAccordion defaultOpen={["Bounds"]}>
         <PropertyAccordionItem title="Bounds">
           <PropertyList alignment="center">

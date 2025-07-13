@@ -5,6 +5,7 @@
   cursor: pointer;
   transition-duration: var(--transition-fast);
 
+  font-size: var(--font-size-small);
   color: var(--color-input-foreground);
   background-color: var(--color-input-background);
 

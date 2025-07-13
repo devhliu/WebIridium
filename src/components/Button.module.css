@@ -1,15 +1,20 @@
+.base {
+  --button-spacing: var(--spacing-2);
+  font-size: var(--font-size-small);
+}
+
 .default {
   color: var(--color-secondary-accent-foreground);
   background-color: var(--color-secondary-accent);
   border: var(--border-secondary-accent-solid);
   border-radius: var(--border-radius);
-  padding: var(--spacing-2);
+  padding: var(--button-spacing);
   cursor: pointer;
 
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: var(--spacing-2);
+  gap: var(--button-spacing);
 
   &.disabled {
     color: color-mix(
@@ -33,7 +38,7 @@
   background-color: transparent;
   border: none;
   border-radius: var(--border-radius);
-  padding: var(--spacing-2);
+  padding: var(--button-spacing);
   cursor: pointer;
 
   &:hover {

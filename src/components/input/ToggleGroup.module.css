@@ -3,9 +3,11 @@
   flex-direction: row;
   border: var(--border-secondary-accent-solid);
   border-radius: calc(var(--border-radius) + 1px);
+  font-size: var(--font-size-small);
 }
 
 .button {
+  font-size: 1em;
   color: var(--color-secondary-accent-foreground);
   background-color: var(--color-secondary-accent);
   border: none;

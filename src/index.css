@@ -170,6 +170,10 @@
   box-sizing: inherit;
 }
 
+body {
+  font-size: var(--font-size-base);
+}
+
 /* This style is temporarily applied to create the theme transition effect. */
 /* https://mwichary.medium.com/dark-theme-in-a-day-3518dde2955a */
 .theme-in-transition,

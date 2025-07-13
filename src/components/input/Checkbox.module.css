@@ -3,8 +3,8 @@
   place-items: center;
   justify-content: center;
   font-size: inherit;
-  height: 1.25em;
-  width: 1.25em;
+  height: 1.5em;
+  width: 1.5em;
   background-color: var(--color-input-background);
   border: var(--border-input-solid);
   border-radius: var(--border-radius);

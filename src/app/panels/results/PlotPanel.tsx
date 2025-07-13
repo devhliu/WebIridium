@@ -3,8 +3,8 @@ import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
 import styles from "./results.module.css";
 import ResultsPlot from "./ResultsPlot";
-import SettingsPanel from "./SettingsPanel.tsx";
 import { Allotment } from "allotment";
+import PlotQuickActionsPanel from "./PlotQuickActionsPanel.tsx";
 
 export const PlotPanel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,9 +47,7 @@ export const PlotPanel = () => {
     <div className={styles.panel}>
       <Allotment vertical>
         <div className={styles.plotContainer} ref={containerRef}>
-          {!simulationResults ? (
-            <span className={styles.nothingYetLabel}>"nothing yet..."</span>
-          ) : (
+          {simulationResults && (
             <ResultsPlot
               result={simulationResults}
               height={height}
@@ -59,7 +57,7 @@ export const PlotPanel = () => {
         </div>
 
         <Allotment.Pane preferredSize={200}>
-          <SettingsPanel />
+          <PlotQuickActionsPanel />
         </Allotment.Pane>
       </Allotment>
     </div>
