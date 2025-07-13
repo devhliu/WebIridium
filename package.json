@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "jotai": "^2.12.4",
     "jotai-scope": "^0.7.3",
+    "monaco-editor": "^0.52.2",
     "plotly.js": "^3.0.1",
     "radix-ui": "^1.4.2",
     "react": "^19.1.0",
