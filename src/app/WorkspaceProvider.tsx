@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSetAtom } from "jotai";
 import { ScopeProvider } from "jotai-scope";
 
-import defaultModel from "@/assets/models/default.ant?raw";
+import defaultModel from "@/assets/default.ant?raw";
 
 import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";

@@ -164,7 +164,7 @@ self.onmessage = async (e) => {
   try {
     await handleMessage(e);
   } catch (err) {
-    console.error(err);
+    console.error(err, err?.stack);
     self.postMessage({ id: e.data.id, errorMessage: err.message });
   }
 };

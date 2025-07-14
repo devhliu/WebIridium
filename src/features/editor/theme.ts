@@ -46,7 +46,7 @@ export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
 };
 
 const LIGHT_KEYWORD_COLOR = "#038286";
-const LIGHT_KEYWORD2_COLOR = "#2a7a4a";
+const LIGHT_KEYWORD2_COLOR = "#248457";
 
 export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs",
@@ -84,7 +84,7 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
 
     // { token: 'other', foreground: KEYWORD_COLOR },
     { token: "react-remov", foreground: "#01856c" },
-    { token: "comment", foreground: "#128741" },
+    { token: "comment", foreground: "#6d7870" },
     { token: "string", foreground: "#80780a" },
     { token: "number", foreground: "#b2610a" },
   ],

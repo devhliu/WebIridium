@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 
-import defaultModel from "@/assets/models/default.ant?raw";
+import defaultModel from "@/assets/default.ant?raw";
 import type {
   Variable,
   SettableVariable,

@@ -1,4 +1,3 @@
-// from https://tellurium.readthedocs.io/en/latest/notebooks.html
 S1 -> S2; k1*S1/(Km1 + S1);
 S2 -> S1; k2*S2/(Km2 + S2);
 
