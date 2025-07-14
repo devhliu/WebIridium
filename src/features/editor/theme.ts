@@ -2,6 +2,7 @@ import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
 
 const DARK_KEYWORD_COLOR = "#77dce0";
 const DARK_KEYWORD2_COLOR = "#5adb8e";
+const DARK_SPECIAL_COLOR = "#7cebe7";
 
 export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs-dark",
@@ -15,6 +16,8 @@ export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
   },
   rules: [
     { token: "species", foreground: DARK_KEYWORD_COLOR },
+
+    { token: "boundarySpecies", foreground: DARK_SPECIAL_COLOR },
 
     { token: "compartment", foreground: DARK_KEYWORD_COLOR },
 
@@ -47,6 +50,7 @@ export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
 
 const LIGHT_KEYWORD_COLOR = "#038286";
 const LIGHT_KEYWORD2_COLOR = "#248457";
+const LIGHT_SPECIAL_COLOR = "#13817d";
 
 export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs",
@@ -60,6 +64,8 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
   },
   rules: [
     { token: "species", foreground: LIGHT_KEYWORD_COLOR },
+
+    { token: "boundarySpecies", foreground: LIGHT_SPECIAL_COLOR },
 
     { token: "compartment", foreground: LIGHT_KEYWORD_COLOR },
 

@@ -10,6 +10,7 @@ export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
       [/=|:=/, "assign"],
       ["\\-|\\+|\\*|\\/|\\^|\\;", "operator"],
       ["\\b(at|in|import|has)\\b", "keywords"],
+      ["\\$[A-Za-z0-9_]+\\b", "boundarySpecies"],
       [
         /(?:creator\d+|modified|created|identity|isVersionOf|isDerivedFrom|isEncodedBy|isHomologTo|isPropertyOf|isPartOf|isDescribedBy|is|model_source|biological_entity_is|hasPart|parthood|part|hypernym|biological_system|hasVersion|version|homolog|description|publication|encoder|encodes|encodement|occursIn|container|hasProperty|propertyBearer|property|hasTaxon|taxon|sboTerm|model_entity_is|origin|hasInstance|instance|notes)/,
         "annotation",
@@ -27,7 +28,6 @@ export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
             model: "model",
             end: "end",
             compartment: "compartment",
-            "@default": "other",
           },
         },
       ],
