@@ -123,6 +123,8 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     return null;
   }
 
+  // Format data
+
   const plotData = [];
   const legendData: LegendDataItem[] = [];
   // note that independent variable column might be null for time course if data was not collected for it
@@ -138,48 +140,6 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     ? variableSettingss[independentVariableName].displayName
     : xAxis.title;
   const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
-
-  // if we do undefined, plotly autoscales for us
-  const [rangeMinX, rangeMaxX] =
-    isAutoscaledX && independentVariableColumn
-      ? calculateBounds(independentVariableColumn.values)
-      : [minX, maxX];
-  const [rangeMinY, rangeMaxY] = isAutoscaledY
-    ? calculateBounds(
-        columns
-          .filter((c) => c.variableName !== independentVariableName)
-          .map((c) => c.values)
-          .flat(),
-      )
-    : [minY, maxY];
-  const yPadding = (rangeMaxY - rangeMinY) * RANGE_ROUND_PERCENT;
-
-  const xMajorGridSettings = {
-    gridcolor: majorGrid.xColor,
-    gridwidth: majorGrid.xWidth,
-    dtick: (rangeMaxX - rangeMinX) / (majorGrid.numXGrids + 1),
-    showgrid: majorGrid.enabled.x,
-    showticklabels: xAxis.showMajorTicks,
-  };
-  const yMajorGridSettings = {
-    gridcolor: majorGrid.yColor,
-    gridwidth: majorGrid.yWidth,
-    dtick: (rangeMaxY - rangeMinY) / (majorGrid.numYGrids + 1),
-    showgrid: majorGrid.enabled.y,
-    showticklabels: yAxis.showMajorTicks,
-  };
-  const xMinorGridSettings = {
-    gridcolor: minorGrid.xColor,
-    gridwidth: minorGrid.xWidth,
-    dtick: xMajorGridSettings.dtick / (minorGrid.numXGrids + 1),
-    showgrid: minorGrid.enabled.x,
-  };
-  const yMinorGridSettings = {
-    gridcolor: minorGrid.yColor,
-    gridwidth: minorGrid.yWidth,
-    dtick: yMajorGridSettings.dtick / (minorGrid.numYGrids + 1),
-    showgrid: minorGrid.enabled.y,
-  };
 
   if (independentVariableColumn) {
     for (const {
@@ -239,6 +199,44 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       );
     }
   }
+
+  // Other settings
+
+  const [rangeMinX, rangeMaxX] =
+    isAutoscaledX && independentVariableColumn
+      ? calculateBounds(independentVariableColumn.values)
+      : [minX, maxX];
+  const [rangeMinY, rangeMaxY] = isAutoscaledY
+    ? calculateBounds(plotData.map((data) => data.y).flat())
+    : [minY, maxY];
+  const yPadding = (rangeMaxY - rangeMinY) * RANGE_ROUND_PERCENT;
+
+  const xMajorGridSettings = {
+    gridcolor: majorGrid.xColor,
+    gridwidth: majorGrid.xWidth,
+    dtick: (rangeMaxX - rangeMinX) / (majorGrid.numXGrids + 1),
+    showgrid: majorGrid.enabled.x,
+    showticklabels: xAxis.showMajorTicks,
+  };
+  const yMajorGridSettings = {
+    gridcolor: majorGrid.yColor,
+    gridwidth: majorGrid.yWidth,
+    dtick: (rangeMaxY - rangeMinY) / (majorGrid.numYGrids + 1),
+    showgrid: majorGrid.enabled.y,
+    showticklabels: yAxis.showMajorTicks,
+  };
+  const xMinorGridSettings = {
+    gridcolor: minorGrid.xColor,
+    gridwidth: minorGrid.xWidth,
+    dtick: xMajorGridSettings.dtick / (minorGrid.numXGrids + 1),
+    showgrid: minorGrid.enabled.x,
+  };
+  const yMinorGridSettings = {
+    gridcolor: minorGrid.yColor,
+    gridwidth: minorGrid.yWidth,
+    dtick: yMajorGridSettings.dtick / (minorGrid.numYGrids + 1),
+    showgrid: minorGrid.enabled.y,
+  };
 
   return (
     <>
