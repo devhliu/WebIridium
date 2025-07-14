@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styles from "./AppMenubar.module.css";
 
 import {
@@ -11,13 +11,15 @@ import {
   MenubarRadioGroup,
   MenubarSeparator,
 } from "@/components/Menubar";
-import type { SidebarTab } from "./Sidebar";
+
+import { SIDEBAR_TABS, currentSidebarTabAtom } from "@/globals/sidebar";
+
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
 import ShareButton from "./ShareButton";
 
 import { promptDownloadFile } from "@/features/promptDownloadFile";
-import { toggleThemeAtom } from "@/globals/ui";
+import { toggleThemeAtom } from "@/globals/theme";
 import { nameAtom } from "@/globals/workspace/settings";
 import {
   editorContentAtom,
@@ -25,19 +27,11 @@ import {
 } from "@/globals/workspace/model";
 
 export interface AppMenubarProps {
-  sidebarTab: SidebarTab | null;
-  sidebarTabs: SidebarTab[];
-  onSidebarTabChange: (newValue: SidebarTab) => void;
-
   slidersPanelActive: boolean;
   onSlidersPanelToggle: (on: boolean) => void;
 }
 
 const AppMenubar = ({
-  sidebarTab,
-  sidebarTabs,
-  onSidebarTabChange,
-
   slidersPanelActive,
   onSlidersPanelToggle,
 }: AppMenubarProps) => {
@@ -46,6 +40,7 @@ const AppMenubar = ({
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const toggleTheme = useSetAtom(toggleThemeAtom);
   const workspaceName = useAtomValue(nameAtom);
+  const [sidebarTab, setSidebarTab] = useAtom(currentSidebarTabAtom);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -97,9 +92,9 @@ const AppMenubar = ({
         <MenubarMenu name="View">
           <MenubarRadioGroup
             value={sidebarTab}
-            onValueChange={onSidebarTabChange as (newValue: string) => void}
+            onValueChange={setSidebarTab as (newValue: string) => void}
           >
-            {sidebarTabs.map((tab) => (
+            {SIDEBAR_TABS.map((tab) => (
               <MenubarRadioItem key={tab} value={tab}>
                 {tab}
               </MenubarRadioItem>

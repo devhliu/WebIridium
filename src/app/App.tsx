@@ -13,7 +13,7 @@ import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 import WorkspaceProvider from "./WorkspaceProvider";
-import Sidebar, { type SidebarTab } from "./Sidebar";
+import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
 import { ToastProvider } from "@/components/Toast";
@@ -28,6 +28,7 @@ import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import SlidersPanel from "./panels/sliders/SlidersPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
+import { currentSidebarTabAtom } from "@/globals/sidebar";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const didIntialLoadRef = useRef(false);
@@ -76,57 +77,48 @@ const ResultTabbedPanel = () => {
 const AppContent = () => {
   const simulationResult = useAtomValue(simulationResultAtom);
 
-  const tabs: SidebarTab[] = [
-    "Time Course",
-    "Steady State",
-    "Parameter Scan",
-    "Examples",
-  ];
-  const [tab, setTab] = useState<SidebarTab | null>("Time Course");
+  const currentTab = useAtomValue(currentSidebarTabAtom);
 
   const [slidersPanelActive, setSlidersPanelActive] = useState(false);
 
   return (
     <div className={styles.app}>
       <AppMenubar
-        sidebarTab={tab}
-        sidebarTabs={tabs}
-        onSidebarTabChange={setTab}
         slidersPanelActive={slidersPanelActive}
         onSlidersPanelToggle={setSlidersPanelActive}
       />
 
       <div className={styles.appMain}>
-        <Sidebar tabs={tabs} currentTab={tab} onTabChange={setTab} />
+        <Sidebar />
 
         <div className={styles.allotmentContainer}>
           <Allotment>
             <Allotment.Pane
               minSize={290}
               preferredSize={290}
-              visible={tab !== null}
+              visible={currentTab !== null}
             >
               {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
                       Adding the `key` fixed that. */}
               <TimeCoursePanel
                 key="timeCourse"
-                visible={tab === "Time Course"}
+                visible={currentTab === "Time Course"}
                 slidersPanelActive={slidersPanelActive}
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
               <ParameterScanPanel
                 key="parameterScan"
-                visible={tab === "Parameter Scan"}
+                visible={currentTab === "Parameter Scan"}
                 slidersPanelActive={slidersPanelActive}
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
               <SteadyStatePanel
                 key="steadyState"
-                visible={tab === "Steady State"}
+                visible={currentTab === "Steady State"}
                 slidersPanelActive={slidersPanelActive}
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
-              <ExamplesPanel visible={tab === "Examples"} />
+              <ExamplesPanel visible={currentTab === "Examples"} />
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>

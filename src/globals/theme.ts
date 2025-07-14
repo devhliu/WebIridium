@@ -3,6 +3,8 @@ import * as monaco from "monaco-editor";
 
 import { getPreferredTheme, setTheme, type Theme } from "@/features/theme";
 
+// theme
+
 const doThemeUpdate = (theme: Theme) => {
   if (theme === "light") {
     monaco.editor.setTheme("iridiumLight");

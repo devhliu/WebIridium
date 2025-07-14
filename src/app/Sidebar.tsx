@@ -1,16 +1,19 @@
 // TODO: https://www.w3.org/WAI/ARIA/apg/patterns/tabs/
 
 import styles from "./Sidebar.module.css";
+
+import {
+  SIDEBAR_TABS,
+  TOP_SIDEBAR_TABS,
+  currentSidebarTabAtom,
+  type SidebarTab,
+} from "@/globals/sidebar";
+
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 import NotebookIcon from "@/assets/icons/NotebookIcon.svg?react";
-
-export type SidebarTab =
-  | "Time Course"
-  | "Parameter Scan"
-  | "Steady State"
-  | "Examples";
+import { useAtom } from "jotai";
 
 const sidebarTabIcons: Record<
   SidebarTab,
@@ -21,14 +24,6 @@ const sidebarTabIcons: Record<
   "Steady State": SteadyStateIcon,
   Examples: NotebookIcon,
 } as const;
-
-// these items appear on the top.
-// every other item appears on the bottom
-const topItems = new Set<SidebarTab>([
-  "Time Course",
-  "Parameter Scan",
-  "Steady State",
-]);
 
 interface SidebarItemProps {
   tab: SidebarTab;
@@ -50,48 +45,38 @@ const SidebarItem = ({ tab, isActive, onClick }: SidebarItemProps) => {
   );
 };
 
-export interface SidebarProps {
-  // TOOD: should this be moved out to some global constant?
-  tabs: SidebarTab[];
-  currentTab: SidebarTab | null;
-  onTabChange: (tab: SidebarTab | null) => void;
-}
-
-const Sidebar = ({ tabs, currentTab, onTabChange }: SidebarProps) => {
+const Sidebar = () => {
+  const [currentTab, setCurrentTab] = useAtom(currentSidebarTabAtom);
   const handleTabClick = (tab: SidebarTab) => {
     if (currentTab === tab) {
-      onTabChange(null);
+      setCurrentTab(null);
     } else {
-      onTabChange(tab);
+      setCurrentTab(tab);
     }
   };
 
   return (
     <div className={styles.root}>
       <div className={styles.list}>
-        {tabs
-          .filter((t) => topItems.has(t))
-          .map((tab) => (
-            <SidebarItem
-              key={tab}
-              tab={tab}
-              isActive={currentTab === tab}
-              onClick={() => handleTabClick(tab)}
-            />
-          ))}
+        {SIDEBAR_TABS.filter((t) => TOP_SIDEBAR_TABS.has(t)).map((tab) => (
+          <SidebarItem
+            key={tab}
+            tab={tab}
+            isActive={currentTab === tab}
+            onClick={() => handleTabClick(tab)}
+          />
+        ))}
       </div>
 
       <div className={styles.list}>
-        {tabs
-          .filter((t) => !topItems.has(t))
-          .map((tab) => (
-            <SidebarItem
-              key={tab}
-              tab={tab}
-              isActive={currentTab === tab}
-              onClick={() => handleTabClick(tab)}
-            />
-          ))}
+        {SIDEBAR_TABS.filter((t) => !TOP_SIDEBAR_TABS.has(t)).map((tab) => (
+          <SidebarItem
+            key={tab}
+            tab={tab}
+            isActive={currentTab === tab}
+            onClick={() => handleTabClick(tab)}
+          />
+        ))}
       </div>
     </div>
   );
