@@ -63,6 +63,9 @@
   flex-direction: column;
   margin: 0;
   padding: var(--spacing-2);
+
+  overflow-y: auto;
+  max-height: 50vh;
 }
 
 .autocomplete-group {
@@ -97,6 +100,16 @@
   font-weight: normal;
 }
 
-.biomodel-description {
+.biomodel-synopsis {
   color: var(--color-tertiary-foreground-dim);
+  /* TODO: make this even smaller */
+  font-size: var(--font-size-small);
+  font-style: italic;
+  padding-block: var(--spacing-2);
+}
+
+.biomodel-extra {
+  color: var(--color-tertiary-foreground-dim);
+  /* TODO: make this even smaller */
+  font-size: var(--font-size-small);
 }

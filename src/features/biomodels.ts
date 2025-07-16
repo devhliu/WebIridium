@@ -1,4 +1,6 @@
-export interface ModelInfo {
+import { useRef, useState } from "react";
+
+export interface BiomodelInfo {
   name: string;
   authors: string[];
   url: string;
@@ -21,30 +23,29 @@ const GITHUB_HEADERS = {
   "X-GitHub-Api-Version": "2022-11-28",
 };
 
-// Promise that will resolve to the cache. Should not be used directly,
-// use `loadCache` instead.
-let cachePromise: Promise<Record<string, ModelInfo>> | null = null;
+let cacheData: BiomodelInfo[] | null = null;
 
 /**
  * @returns the biomodel cache
  */
-const loadCache = (): Promise<Record<string, ModelInfo>> => {
-  if (!cachePromise) {
-    cachePromise = import("@/assets/biomodelsCache.json").then((result) =>
-      Object.values(result.default).map((info) => ({
-        name: info.name,
-        authors: info.authors,
-        url: info.url,
-        id: info.model_id,
-        title: info.title,
-        synopsis: info.synopsis,
-        citation: info.citation,
-        date: info.date,
-        journal: info.journal,
-      })),
-    ) as unknown as Promise<Record<string, ModelInfo>>;
+const loadCache = async (): Promise<BiomodelInfo[]> => {
+  if (!cacheData) {
+    const cacheRaw = (await import("@/assets/biomodelsCache.json")).default;
+    cacheData = Object.values(cacheRaw).map((info) => ({
+      name: info.name,
+      authors: info.authors,
+      url: info.url,
+      id: info.model_id,
+      title: info.title,
+      synopsis: info.synopsis,
+      citation: info.citation,
+      date: info.date,
+      journal: info.journal,
+    }));
+    return cacheData;
+  } else {
+    return cacheData;
   }
-  return cachePromise;
 };
 
 const getSearchTypeFromSearchTerm = (term: string): SearchType => {
@@ -58,7 +59,7 @@ const getSearchTypeFromSearchTerm = (term: string): SearchType => {
 /** make sure to normalize search term before use for best results */
 const doesModelMatchTerm = (
   searchTerm: string,
-  modelInfo: ModelInfo,
+  modelInfo: BiomodelInfo,
 ): boolean => {
   // cbeck authors
   if (
@@ -84,28 +85,30 @@ const doesModelMatchTerm = (
  * @param term - the search term
  * @param limit - max number of results to return
  * @param signal - use this to abort the search
+ *
  * @returns biomodels matching the search term
+ * @throws AbortError if aborted
  */
-export const searchModels = async (
+export const searchBiomodels = async (
   term: string,
   limit: number,
   signal?: AbortSignal,
-): Promise<ModelInfo[]> => {
-  const results: ModelInfo[] = [];
+): Promise<BiomodelInfo[]> => {
+  const results: BiomodelInfo[] = [];
   const cache = await loadCache();
   const searchType = getSearchTypeFromSearchTerm(term);
   const normalizedTerm = term.toLowerCase().trim();
 
   // might've been aborted while loading the cache
   if (signal?.aborted) {
-    return results;
+    throw new DOMException("Aborted", "AbortError");
   }
 
   // pretty much the same code except for the if statement to check if the term matches
   // but I split it up into two paths as a micro-optimization to avoid an if check for the
   // searchType
   if (searchType === "id") {
-    for (const modelInfo of Object.values(cache)) {
+    for (const modelInfo of cache) {
       if (results.length >= limit) {
         break;
       }
@@ -115,7 +118,7 @@ export const searchModels = async (
       }
     }
   } else {
-    for (const modelInfo of Object.values(cache)) {
+    for (const modelInfo of cache) {
       if (results.length >= limit) {
         break;
       }
@@ -129,7 +132,7 @@ export const searchModels = async (
   return results;
 };
 
-const getModelContentUrl = (modelInfo: ModelInfo): string =>
+const getBiomodelContentUrl = (modelInfo: BiomodelInfo): string =>
   `https://api.github.com/repos/sys-bio/BiomodelsStore/contents/biomodels/${modelInfo.id}`;
 
 /**
@@ -137,10 +140,10 @@ const getModelContentUrl = (modelInfo: ModelInfo): string =>
  * @throws Error - whenever the biomodel fails to load for whatever reason
  */
 export const loadModelSbml = async (
-  modelInfo: ModelInfo,
+  modelInfo: BiomodelInfo,
   signal?: AbortSignal,
 ): Promise<string> => {
-  const infoResult = await fetch(getModelContentUrl(modelInfo), {
+  const infoResult = await fetch(getBiomodelContentUrl(modelInfo), {
     signal,
     headers: GITHUB_HEADERS,
   });
@@ -180,4 +183,58 @@ export const loadModelSbml = async (
   }
 
   return sbmlResult.text();
+};
+
+/**
+ * Hook for easily searching biomodels.
+ */
+export const useSearchBiomodels = () => {
+  const [biomodels, setBiomodels] = useState<BiomodelInfo[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+
+  const searchBiomodelsInternal = async (term: string, limit: number) => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    setIsLoading(true);
+
+    const abortController = new AbortController();
+    abortControllerRef.current = abortController;
+
+    try {
+      const result = await searchBiomodels(term, limit, abortController.signal);
+      setBiomodels(result);
+      setError(null);
+      setIsLoading(false);
+      abortControllerRef.current = null;
+    } catch (e) {
+      if (e instanceof DOMException && e.name === "AbortError") {
+        return;
+      }
+
+      setError(String(e));
+      setIsLoading(false);
+      throw e;
+    }
+  };
+
+  const cancelSearch = () => {
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    setIsLoading(false);
+    setError(null);
+  };
+
+  return {
+    biomodels,
+    isLoading,
+    error,
+    searchBiomodels: searchBiomodelsInternal,
+    cancelSearch,
+  };
 };

@@ -12,7 +12,8 @@ const loadLibraries = () => {
   loadedPromise = Promise.all([
     createCpsModule().then((module) => (copasi = new COPASI(module))),
     libantimony().then((module) => (antimony = new AntimonyWrapper(module))),
-  ]);
+    // if the load fails, reset the promise and try again next time
+  ]).catch(() => (loadedPromise = null));
 
   return loadedPromise;
 };
