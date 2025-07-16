@@ -34,7 +34,7 @@ it("should rename the workspace", async () => {
 
   await clickRename();
 
-  const input = screen.getByRole("textbox");
+  const input = screen.getByRole("searchbox");
   await userEvent.clear(input);
   await userEvent.type(input, "new name[Enter]");
 
@@ -49,7 +49,7 @@ it("should cancel rename on escape", async () => {
 
   await clickRename();
 
-  const input = screen.getByRole("textbox");
+  const input = screen.getByRole("searchbox");
   await userEvent.clear(input);
   await userEvent.type(input, "new name[Escape]");
 
@@ -64,7 +64,7 @@ it("should cancel rename when clicking somewhere else", async () => {
 
   await clickRename();
 
-  const input = screen.getByRole("textbox");
+  const input = screen.getByRole("searchbox");
   await userEvent.clear(input);
   await userEvent.type(input, "new name");
 

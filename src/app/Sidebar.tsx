@@ -23,6 +23,9 @@ const sidebarTabIcons: Record<
   "Parameter Scan": ParameterScanIcon,
   "Steady State": SteadyStateIcon,
   Examples: NotebookIcon,
+
+  // these don't really matter, just need it to typecheck
+  "Plot Settings": NotebookIcon,
 } as const;
 
 interface SidebarItemProps {
