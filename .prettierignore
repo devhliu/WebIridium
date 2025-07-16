@@ -1,3 +1,4 @@
 .github/
 public/**/*
 !public/*Worker*.js
+src/assets/**/*.json
