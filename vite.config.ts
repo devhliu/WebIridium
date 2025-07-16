@@ -28,7 +28,7 @@ export default defineConfig({
   },
 
   test: {
-    setupFiles: ["./src/vitest-setup.ts"],
+    setupFiles: ["./src/vitestSetup.ts"],
     environment: "jsdom",
     coverage: {
       include: ["src"],

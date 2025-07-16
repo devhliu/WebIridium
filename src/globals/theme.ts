@@ -1,17 +1,10 @@
 import { atom } from "jotai";
-import * as monaco from "monaco-editor";
 
 import { getPreferredTheme, setTheme, type Theme } from "@/features/theme";
 
 // theme
 
 const doThemeUpdate = (theme: Theme) => {
-  if (theme === "light") {
-    monaco.editor.setTheme("iridiumLight");
-  } else {
-    monaco.editor.setTheme("iridiumDark");
-  }
-
   setTheme(theme);
 };
 

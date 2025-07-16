@@ -7,13 +7,24 @@ import {
   editorContentAtom,
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
+import { themeAtom } from "@/globals/theme";
+import type { Theme } from "@/features/theme";
 
 const EditorPanel = () => {
+  const theme = useAtomValue(themeAtom);
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+
+  const updateTheme = (themeName: Theme) => {
+    if (themeName === "light") {
+      monaco.editor.setTheme("iridiumLight");
+    } else {
+      monaco.editor.setTheme("iridiumDark");
+    }
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -30,6 +41,8 @@ const EditorPanel = () => {
       const event = editor.onDidChangeModelContent(() => {
         void updateEditorContent({ content: editor.getValue() });
       });
+
+      updateTheme(theme);
 
       editorRef.current = editor;
       return () => {
@@ -49,6 +62,10 @@ const EditorPanel = () => {
       }
     }
   }, [editorContent]);
+
+  useEffect(() => {
+    updateTheme(theme);
+  }, [theme]);
 
   return (
     <div className={styles.panel}>
