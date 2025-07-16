@@ -11,6 +11,7 @@ import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { currentSidebarTabAtom } from "@/globals/sidebar";
 
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
@@ -28,7 +29,7 @@ import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import SlidersPanel from "./panels/sliders/SlidersPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
-import { currentSidebarTabAtom } from "@/globals/sidebar";
+import PlotSettingsPanel from "./panels/PlotSettingsPanel";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const didIntialLoadRef = useRef(false);
@@ -119,6 +120,7 @@ const AppContent = () => {
                 onSlidersPanelToggle={setSlidersPanelActive}
               />
               <ExamplesPanel visible={currentTab === "Examples"} />
+              {currentTab === "Plot Settings" && <PlotSettingsPanel />}
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>

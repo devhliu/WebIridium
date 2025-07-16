@@ -8,6 +8,8 @@ import {
   type GridSettings,
   type LegendSettings,
 } from "@/globals/workspace/settings";
+
+import styles from "./PlotSettingsPanel.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
 
 import BooleanProperty from "@/components/property-list/BooleanProperty";
@@ -21,8 +23,9 @@ import PropertyList from "@/components/property-list/PropertyList";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
+import PanelTitle from "./PanelTitle";
 
-const SettingsPanel = () => {
+const PlotSettingsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
   const [scanPalette, setScanPalette] = useAtom(paletteAtom);
 
@@ -85,10 +88,13 @@ const SettingsPanel = () => {
   };
 
   return (
-    <div>
-      <PropertyAccordion defaultOpen={["Bounds"]}>
+    <div className={styles.panel}>
+      <PanelTitle title="Plot Settings" />
+      <PropertyAccordion
+        defaultOpen={["Bounds", "Graph", "Series", "Axes", "Grids", "Legend"]}
+      >
         <PropertyAccordionItem title="Bounds">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <BooleanProperty
               name="Autoscale X"
               value={graphSettings.isAutoscaledX}
@@ -136,7 +142,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Graph">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <ColorProperty
               name="Background Color"
               value={graphSettings.backgroundColor}
@@ -187,7 +193,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Series">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <SelectProperty
               name="Palette"
               value={scanPalette}
@@ -202,7 +208,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Axes">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <ToggleGroup
               value={selectedAxis}
               onValueChange={setSelectedAxis as (val: string) => void}
@@ -248,7 +254,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Grids">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <ToggleGroup
               value={selectedGrid}
               onValueChange={setSelectedGrid as (val: string) => void}
@@ -340,7 +346,7 @@ const SettingsPanel = () => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Legend">
-          <PropertyList alignment="center">
+          <PropertyList alignment="leftSmall">
             <BooleanProperty
               name="Visible"
               value={graphSettings.legend.visible}
@@ -391,4 +397,4 @@ const SettingsPanel = () => {
   );
 };
 
-export default SettingsPanel;
+export default PlotSettingsPanel;

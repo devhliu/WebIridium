@@ -4,7 +4,10 @@ export type SidebarTab =
   | "Time Course"
   | "Steady State"
   | "Parameter Scan"
-  | "Examples";
+  | "Examples"
+
+  // these ones are not included in the sidebar or view tab since they must be opened in some other place
+  | "Plot Settings";
 
 export const SIDEBAR_TABS: SidebarTab[] = [
   "Time Course",

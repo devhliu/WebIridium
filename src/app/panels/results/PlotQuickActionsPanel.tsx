@@ -1,4 +1,4 @@
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 
 import styles from "./results.module.css";
 
@@ -6,16 +6,19 @@ import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 
+import Button from "@/components/Button";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 
 import {
   graphSettingsAtom,
   type GraphSettings,
 } from "@/globals/workspace/settings";
-import Button from "@/components/Button";
+import { currentSidebarTabAtom } from "@/globals/sidebar";
 
 const PlotQuickActionsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
+
+  const setSidebarTab = useSetAtom(currentSidebarTabAtom);
 
   const handleChangeFor = (
     setting: keyof GraphSettings,
@@ -28,7 +31,10 @@ const PlotQuickActionsPanel = () => {
   return (
     <div className={styles.quickActionsContainer}>
       <div className={styles.quickActionsButtons}>
-        <Button className={styles.quickActionsButton}>
+        <Button
+          className={styles.quickActionsButton}
+          onClick={() => setSidebarTab("Plot Settings")}
+        >
           <PencilIcon width="1em" height="1em" />
           Edit Graph
         </Button>
