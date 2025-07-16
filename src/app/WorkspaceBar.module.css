@@ -52,6 +52,7 @@
   border: var(--border-tertiary-solid);
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-1);
+  list-style: none;
 
   position: absolute;
   top: calc(100% + 8px);
@@ -83,12 +84,17 @@
 
 .autocomplete-item {
   font-size: var(--font-size-base) !important;
+  text-align: left;
+  width: 100%;
+}
+
+.autocomplete-simple-item-name {
+  padding-right: var(--spacing-2);
 }
 
 .autocomplete-biomodel-item {
   display: flex;
   flex-direction: column;
-  text-align: left;
 }
 
 .autocomplete-loading-item {
@@ -112,4 +118,10 @@
   color: var(--color-tertiary-foreground-dim);
   /* TODO: make this even smaller */
   font-size: var(--font-size-small);
+}
+
+.no-results {
+  color: var(--color-tertiary-foreground);
+  font-size: var(--font-size-base);
+  margin: 0;
 }

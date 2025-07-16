@@ -226,6 +226,7 @@ export const useSearchBiomodels = () => {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
     }
+    setBiomodels([]);
     setIsLoading(false);
     setError(null);
   };

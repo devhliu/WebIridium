@@ -9,8 +9,11 @@ export interface ButtonProps {
   disabled?: boolean;
   /* this makes the aspect ratio square and the font-size larger */
   iconOnly?: boolean;
+  /** this makes it look like its being hoverd */
+  active?: boolean;
   children?: React.ReactNode;
   className?: string;
+  ref?: React.RefObject<HTMLButtonElement | null>;
 }
 
 const Button = ({
@@ -18,11 +21,14 @@ const Button = ({
   onClick,
   disabled = false,
   iconOnly,
+  active = false,
   children,
   className,
+  ref,
 }: ButtonProps) => {
   return (
     <button
+      ref={ref}
       className={clsx(
         styles[style],
         styles.base,
@@ -32,6 +38,7 @@ const Button = ({
       )}
       onClick={onClick}
       disabled={disabled}
+      data-active={active}
     >
       {children}
     </button>
