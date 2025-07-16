@@ -192,6 +192,19 @@ export const createWorker = (type: WorkerType) => {
       );
       break;
     }
+
+    case "antimony": {
+      worker.port.addEventListener(
+        "message",
+        createMockWorkerMessageHandler(worker, (action) => {
+          switch (action.type) {
+            case "convertSbmlToAntimony":
+              return "fake antimony code";
+          }
+        }),
+      );
+      break;
+    }
   }
 
   return worker;

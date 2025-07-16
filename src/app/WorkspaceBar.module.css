@@ -7,8 +7,9 @@
   justify-content: center;
   gap: var(--spacing-3);
   width: 100%;
-  padding: 3px var(--spacing-3);
+  height: 22px;
   margin: var(--spacing-1);
+  padding-inline: var(--spacing-2);
 
   font-size: var(--font-size-base);
   color: var(--color-input-foreground);

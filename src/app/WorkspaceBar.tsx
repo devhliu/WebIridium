@@ -1,15 +1,26 @@
 import clsx from "clsx";
 import { useState, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
+
 import styles from "./WorkspaceBar.module.css";
 
-import { useSearchBiomodels, type BiomodelInfo } from "@/features/biomodels";
+import { convertSbmlToAntimony } from "@/features/antimony";
+
+import {
+  loadBiomodelSbml,
+  useSearchBiomodels,
+  type BiomodelInfo,
+} from "@/features/biomodels";
 
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 
-import { nameAtom } from "@/globals/workspace/settings";
 import Button from "@/components/Button";
 import PulseLoader from "@/components/PulseLoader";
+import { useToast } from "@/components/Toast";
+
+import { nameAtom } from "@/globals/workspace/settings";
+import { useSetAtom } from "jotai";
+import { updateEditorContentAtom } from "@/globals/workspace/model";
 
 type AutocompleteItems = { [group: string]: AutocompleteItem[] };
 
@@ -49,7 +60,7 @@ const decrementIndexFromItems = (
 };
 
 const incrementIndexFromItems = (
-  items: Record<string, AutocompleteItem[]>,
+  items: AutocompleteItems,
   index: number,
 ): number => {
   const flattenedItems = Object.values(items)
@@ -59,28 +70,38 @@ const incrementIndexFromItems = (
 };
 
 export const WorkspaceBar = () => {
-  const [open, setOpen] = useState(false);
+  const { toast } = useToast();
   const [workspaceName, setWorkspaceName] = useAtom(nameAtom);
+  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+
+  const [open, setOpen] = useState(false);
   const [typing, setTyping] = useState("");
+  const [isLoadingBiomodel, setIsLoadingBiomodel] = useState(false);
 
   const [selectedIndex, setSelectedIndex] = useState(0);
 
-  const { biomodels, isLoading, searchBiomodels, cancelSearch } =
-    useSearchBiomodels();
+  const {
+    biomodels,
+    isLoading: isLoadingSearch,
+    searchBiomodels,
+    cancelSearch,
+  } = useSearchBiomodels();
 
   const renameItem = {
     type: "simple",
     name: "Rename model to",
     value: typing,
   } as const;
-  const items: Record<string, AutocompleteItem[]> = !typing
+  const items: AutocompleteItems = !typing
     ? {}
     : {
         [ACTIONS_GROUP_NAME]: isNameValid(typing) ? [renameItem] : [],
-        Biomodels: isLoading
+        Biomodels: isLoadingSearch
           ? [{ type: "loading" }]
           : biomodels.map((info) => ({ type: "biomodel", info })),
       };
+
+  const selected = getSelectedAutocompleteItemFromIndex(items, selectedIndex);
 
   const openInput = () => {
     setOpen(true);
@@ -95,13 +116,43 @@ export const WorkspaceBar = () => {
 
   const handleInputBlur = cancelInput;
 
-  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const rename = (name: string) => {
+    if (isNameValid(name)) {
+      setOpen(false);
+      setWorkspaceName(name);
+    } else {
+      cancelInput();
+    }
+  };
+
+  const loadBiomodel = async (modelInfo: BiomodelInfo) => {
+    setIsLoadingBiomodel(true);
+    cancelInput();
+    try {
+      const sbml = await loadBiomodelSbml(modelInfo);
+      const antimony = await convertSbmlToAntimony(sbml);
+      setWorkspaceName(modelInfo.name);
+      await updateEditorContent({ content: antimony, skipDebounce: true });
+    } catch (e) {
+      console.error(e);
+      toast({
+        type: "error",
+        title: "Failed to load model",
+        description: e instanceof Error ? e.message : "Unexpected error",
+      });
+    } finally {
+      setIsLoadingBiomodel(false);
+    }
+  };
+
+  const handleInputKeyDown = async (
+    e: React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     if (e.key === "Enter") {
-      if (isNameValid(typing)) {
-        setOpen(false);
-        setWorkspaceName(typing);
-      } else {
-        cancelInput();
+      if (selected === renameItem) {
+        rename(typing);
+      } else if (selected.type === "biomodel") {
+        await loadBiomodel(selected.info);
       }
     } else if (e.key === "Escape") {
       cancelInput();
@@ -122,9 +173,25 @@ export const WorkspaceBar = () => {
 
   if (!open) {
     return (
-      <button className={styles.main} onClick={openInput}>
-        <SearchIcon className={styles.searchIcon} width="1em" height="1em" />
-        {workspaceName}
+      <button
+        className={styles.main}
+        onClick={openInput}
+        disabled={isLoadingBiomodel}
+      >
+        {isLoadingBiomodel ? (
+          <div>
+            <PulseLoader color="var(--color-input-foreground-dim)" size="6px" />
+          </div>
+        ) : (
+          <>
+            <SearchIcon
+              className={styles.searchIcon}
+              width="1em"
+              height="1em"
+            />
+            {workspaceName}
+          </>
+        )}
       </button>
     );
   } else {
@@ -150,10 +217,7 @@ export const WorkspaceBar = () => {
         {typing.length > 0 && (
           <AutocompletePopup
             id={AUTOCOMPLETE_POPUP_ID}
-            selected={getSelectedAutocompleteItemFromIndex(
-              items,
-              selectedIndex,
-            )}
+            selected={selected}
             items={items}
           />
         )}
@@ -174,7 +238,7 @@ const AutocompletePopup = ({
 }: {
   id: string;
   selected: AutocompleteItem;
-  items: Record<string, AutocompleteItem[]>;
+  items: AutocompleteItems;
 }) => {
   const isEmpty = Object.values(items).every(
     (groupItems) => groupItems.length === 0,

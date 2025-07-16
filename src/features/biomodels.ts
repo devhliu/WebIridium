@@ -135,11 +135,12 @@ export const searchBiomodels = async (
 const getBiomodelContentUrl = (modelInfo: BiomodelInfo): string =>
   `https://api.github.com/repos/sys-bio/BiomodelsStore/contents/biomodels/${modelInfo.id}`;
 
+// TODO: unit test this
 /**
  * @returns SBML for the given model.
  * @throws Error - whenever the biomodel fails to load for whatever reason
  */
-export const loadModelSbml = async (
+export const loadBiomodelSbml = async (
   modelInfo: BiomodelInfo,
   signal?: AbortSignal,
 ): Promise<string> => {
@@ -166,13 +167,13 @@ export const loadModelSbml = async (
   }
 
   if (
-    !("download_url" in sbmlFileInfo) ||
-    typeof sbmlFileInfo.download_url !== "string"
+    !("git_url" in sbmlFileInfo) ||
+    typeof sbmlFileInfo.git_url !== "string"
   ) {
     throw new Error("Missing download url");
   }
 
-  const sbmlResult = await fetch(sbmlFileInfo.download_url, {
+  const sbmlResult = await fetch(sbmlFileInfo.git_url, {
     signal,
     headers: GITHUB_HEADERS,
   });
@@ -182,7 +183,24 @@ export const loadModelSbml = async (
     );
   }
 
-  return sbmlResult.text();
+  const sbmlJson: unknown = await sbmlResult.json();
+  if (typeof sbmlJson !== "object" || sbmlJson === null) {
+    throw new Error("Unexpected response from GitHub for git_url.");
+  }
+
+  if (!("encoding" in sbmlJson && typeof sbmlJson.encoding === "string")) {
+    throw new Error("Missing encoding in response.");
+  }
+
+  if (sbmlJson.encoding !== "base64") {
+    throw new Error("Encoding was not base64");
+  }
+
+  if (!("content" in sbmlJson && typeof sbmlJson.content === "string")) {
+    throw new Error("Missing content.");
+  }
+
+  return atob(sbmlJson.content);
 };
 
 /**
