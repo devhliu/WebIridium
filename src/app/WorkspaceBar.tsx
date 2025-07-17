@@ -134,7 +134,8 @@ export const WorkspaceBar = () => {
       const sbml = await loadBiomodelSbml(modelInfo);
       const antimony = await convertSbmlToAntimony(sbml);
       setWorkspaceName(modelInfo.name);
-      await updateEditorContent({ content: antimony, skipDebounce: true });
+
+      void updateEditorContent({ content: antimony, skipDebounce: true });
     } catch (e) {
       console.error(e);
       toast({
