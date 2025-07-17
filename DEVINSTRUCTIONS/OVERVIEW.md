@@ -26,17 +26,21 @@ Please write tests for any changes you make, as much as is reasonable.
 ## organization
 
 ### React Layer
+
 - `src/app`: Specific UI components
 - `src/components`: Generic UI components
 - `src/assets`: Non-code assets
+
 ###
+
 - `src/globals`: Global state and actions
 - `src/globals/workspace`: the "workspace" is basically anything to do with the current model the user is editing
 
 ### Non-React Layer
+
 - `src/features`: Everything else that doesn't have to deal with the UI or global state
 - `public`: Stuff that should not be processed during the build
-    - includes worker scripts
+  - includes worker scripts
 
 # specific stuff
 
