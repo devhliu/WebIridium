@@ -207,7 +207,7 @@ export const WorkspaceBar = () => {
               width="1em"
               height="1em"
             />
-            {workspaceName}
+            <span className={styles.name}>{workspaceName}</span>
           </>
         )}
       </button>
@@ -215,7 +215,7 @@ export const WorkspaceBar = () => {
   } else {
     return (
       <div className={clsx(styles.main, styles.active)}>
-        <SearchIcon className={styles.searchIcon} />
+        <SearchIcon className={styles.searchIcon} width="1em" height="1em" />
         <input
           id="workspaceBar"
           type="text"

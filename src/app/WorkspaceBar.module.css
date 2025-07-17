@@ -32,6 +32,12 @@
   }
 }
 
+.name {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 .input {
   flex-grow: 1;
   font-size: var(--font-size-base);
@@ -45,6 +51,7 @@
 }
 
 .search-icon {
+  flex-shrink: 0;
   color: var(--color-input-foreground-dim);
 }
 
