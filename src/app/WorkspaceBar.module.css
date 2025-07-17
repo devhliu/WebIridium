@@ -75,6 +75,8 @@
 
   overflow-y: auto;
   max-height: 50vh;
+
+  animation: show var(--transition-very-fast) ease-in;
 }
 
 .autocomplete-group {
@@ -132,4 +134,15 @@
   color: var(--color-tertiary-foreground);
   font-size: var(--font-size-base);
   margin: 0;
+}
+
+@keyframes show {
+  from {
+    transform: translate(0, -4px);
+    opacity: 0.5;
+  }
+  to {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
 }
