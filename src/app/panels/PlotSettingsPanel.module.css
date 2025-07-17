@@ -9,3 +9,8 @@
 
   overflow-y: auto;
 }
+
+.series-accordion-item {
+  max-height: 400px;
+  overflow-y: auto;
+}

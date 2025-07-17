@@ -24,10 +24,11 @@ import PropertyAccordion from "@/components/property-accordion/PropertyAccordion
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import PanelTitle from "./PanelTitle";
+import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
 
 const PlotSettingsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
-  const [scanPalette, setScanPalette] = useAtom(paletteAtom);
+  const [palette, setPalette] = useAtom(paletteAtom);
 
   const [selectedAxis, setSelectedAxis] = useState<"xAxis" | "yAxis">("xAxis");
   const axisSettings = graphSettings[selectedAxis];
@@ -192,18 +193,22 @@ const PlotSettingsPanel = () => {
           </PropertyList>
         </PropertyAccordionItem>
 
-        <PropertyAccordionItem title="Series">
+        <PropertyAccordionItem
+          title="Series"
+          className={styles.seriesAccordionItem}
+        >
           <PropertyList alignment="leftSmall">
             <SelectProperty
               name="Palette"
-              value={scanPalette}
+              value={palette}
               options={Object.fromEntries(
                 ["Custom"]
                   .concat(Object.keys(PALETTES))
                   .map((name) => [name, name]),
               )}
-              onChange={(sp) => setScanPalette(sp as Palette)}
+              onChange={(sp) => setPalette(sp as Palette)}
             />
+            {palette === "Custom" && <UncontrolledVariableList />}
           </PropertyList>
         </PropertyAccordionItem>
 
