@@ -86,3 +86,5 @@ it("should not rename when name is invalid", async () => {
     screen.queryByText(getWorkspaceNameLabelText("      ")),
   ).not.toBeInTheDocument();
 });
+
+// TODO: add more tests

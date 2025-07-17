@@ -149,17 +149,17 @@
   --color-ghost-button-disabled-fg: var(--color-layer1-fg-dim);
   --color-ghost-button-disabled-bg: transparent;
 
-  --color_ghost-text-button: color-mix(
+  --color-ghost-text-button: color-mix(
     in oklch,
     var(--color-layer1-fg) 80%,
     var(--color-layer1-bg)
   );
-  --color_ghost-text-button-hover: color-mix(
+  --color-ghost-text-button-hover: color-mix(
     in oklch,
     var(--color-layer1-fg) 87.5%,
     var(--color-layer1-bg)
   );
-  --color_ghost-text-button-active: color-mix(
+  --color-ghost-text-button-active: color-mix(
     in oklch,
     var(--color-layer1-fg) 92.5%,
     var(--color-layer1-bg)

@@ -11,7 +11,7 @@
 }
 
 .sliders-button {
-  color: var(--color-layer1-fg-very-dim);
+  color: var(--color-ghost-text-button);
   line-height: 0;
   background-color: transparent;
   border: none;
@@ -19,6 +19,14 @@
   aspect-ratio: 1 / 1;
   padding: 0;
   cursor: pointer;
+
+  &:hover {
+    color: var(--color-ghost-text-button-hover);
+  }
+
+  &:active {
+    color: var(--color-ghost-text-button-active);
+  }
 
   &[aria-pressed="true"] {
     color: var(--color-accent);
