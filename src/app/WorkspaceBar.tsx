@@ -159,7 +159,9 @@ export const WorkspaceBar = () => {
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      await activate(selected);
+      if (selected) {
+        await activate(selected);
+      }
     } else if (e.key === "Escape") {
       cancelInput();
     } else if (e.key === "ArrowDown") {

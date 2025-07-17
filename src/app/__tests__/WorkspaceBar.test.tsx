@@ -35,7 +35,6 @@ it("should rename the workspace", async () => {
   await clickRename();
 
   const input = screen.getByRole("textbox");
-  await userEvent.clear(input);
   await userEvent.type(input, "new name[Enter]");
 
   expect(input).not.toHaveFocus();
@@ -50,7 +49,6 @@ it("should cancel rename on escape", async () => {
   await clickRename();
 
   const input = screen.getByRole("textbox");
-  await userEvent.clear(input);
   await userEvent.type(input, "new name[Escape]");
 
   expect(input).not.toHaveFocus();
@@ -65,7 +63,6 @@ it("should cancel rename when clicking somewhere else", async () => {
   await clickRename();
 
   const input = screen.getByRole("textbox");
-  await userEvent.clear(input);
   await userEvent.type(input, "new name");
 
   await userEvent.pointer({ keys: "[MouseLeft]" });
@@ -73,5 +70,19 @@ it("should cancel rename when clicking somewhere else", async () => {
   expect(input).not.toHaveFocus();
   expect(
     screen.queryByText(getWorkspaceNameLabelText("new name")),
+  ).not.toBeInTheDocument();
+});
+
+it("should not rename when name is invalid", async () => {
+  await renderWorkspaceBar();
+
+  await clickRename();
+
+  const input = screen.getByRole("textbox");
+  await userEvent.type(input, "      [Enter]");
+
+  expect(input).toHaveFocus();
+  expect(
+    screen.queryByText(getWorkspaceNameLabelText("      ")),
   ).not.toBeInTheDocument();
 });
