@@ -3,8 +3,8 @@
   grid-template-columns: 1fr 30% 1fr;
   align-items: center;
 
-  background-color: var(--color-primary-background);
-  border-bottom: var(--border-primary-solid);
+  background-color: var(--color-layer1-bg);
+  border-bottom: var(--border-layer1);
 }
 
 .menubar-left {

@@ -16,7 +16,7 @@
 }
 
 .property-name {
-  color: var(--color-secondary-foreground);
+  color: var(--color-layer2-fg);
   text-align: start;
   font-size: 1em;
   width: 60%;
@@ -33,7 +33,7 @@
 }
 
 .heading {
-  color: var(--color-secondary-foreground-dim);
+  color: var(--color-layer2-fg-dim);
   font-size: 1em;
   font-weight: bold;
   margin: 0;
@@ -77,11 +77,11 @@
   width: 0;
   padding: var(--spacing-2);
   font-size: 1em;
-  color: var(--color-input-foreground);
-  background-color: var(--color-input-background);
-  border: var(--border-input-solid);
+  color: var(--color-input-fg);
+  background-color: var(--color-input-bg);
+  border: var(--border-input);
   border-radius: var(--border-radius);
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
 }
 
 /* used for stuff like slider where you this is the secondary form of input */
@@ -95,29 +95,29 @@
 }
 
 .property-input:focus {
-  border: 1px solid var(--color-primary-accent);
-  outline: var(--border-input-solid-focused);
+  border: 1px solid var(--color-accent);
+  outline: var(--border-input-focused);
 }
 
 /* Color Picker */
 
 .color-button {
   cursor: pointer;
-  border: var(--border-input-solid);
+  border: var(--border-input);
   align-self: stretch;
   border-radius: var(--border-radius);
   width: 0;
 }
 
 .color-popup {
-  background-color: var(--color-tertiary-background);
-  border: var(--border-tertiary-solid);
+  background-color: var(--color-layer3-bg);
+  border: var(--border-layer3);
   padding: var(--spacing-4);
   margin: var(--spacing-3);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-medium);
 
-  animation-duration: var(--transition-fast);
+  animation-duration: var(--timing-fast);
   &[data-state="open"][data-side="top"] {
     animation-name: slideDownAndFade;
   }

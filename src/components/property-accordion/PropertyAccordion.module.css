@@ -11,20 +11,20 @@
   gap: var(--spacing-4);
   width: 100%;
 
-  color: var(--color-secondary-foreground);
-  background-color: var(--color-secondary-background);
+  color: var(--color-layer2-fg);
+  background-color: var(--color-layer2-bg);
   border-radius: var(--border-radius);
-  border: var(--border-secondary-solid);
+  border: var(--border-layer2);
 
   flex-grow: 1;
   text-align: left;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
   padding: var(--spacing-4);
   margin: 0;
   cursor: pointer;
 
   & > svg {
-    transition-duration: var(--transition-fast);
+    transition-duration: var(--timing-fast);
   }
 
   &[data-state="open"] {
@@ -38,9 +38,9 @@
 }
 
 .item-content {
-  color: var(--color-secondary-foreground);
-  background-color: var(--color-secondary-background);
-  border: var(--border-secondary-solid);
+  color: var(--color-layer2-fg);
+  background-color: var(--color-layer2-bg);
+  border: var(--border-layer2);
   border-top: none;
   border-radius: var(--border-radius);
   border-top-right-radius: 0;
@@ -50,11 +50,11 @@
   height: auto;
 
   &[data-state="open"] {
-    animation: fold-open var(--transition-fast) ease;
+    animation: fold-open var(--timing-fast) ease;
   }
 
   &[data-state="closed"] {
-    animation: fold-close var(--transition-fast) ease;
+    animation: fold-close var(--timing-fast) ease;
   }
 }
 

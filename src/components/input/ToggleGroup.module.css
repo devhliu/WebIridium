@@ -1,23 +1,23 @@
 .container {
   display: flex;
   flex-direction: row;
-  border: var(--border-secondary-accent-solid);
+  border: var(--border-button);
   border-radius: calc(var(--border-radius) + 1px);
   font-size: var(--font-size-small);
 }
 
 .button {
   font-size: 1em;
-  color: var(--color-secondary-accent-foreground);
-  background-color: var(--color-secondary-accent);
+  color: var(--color-button-fg);
+  background-color: var(--color-button-bg);
   border: none;
   flex-grow: 1;
   padding: var(--spacing-2);
   cursor: pointer;
 
   &[data-state="on"] {
-    color: var(--color-primary-accent-foreground);
-    background-color: var(--color-primary-accent);
+    color: var(--color-accent-fg);
+    background-color: var(--color-accent);
   }
 
   &:first-child {

@@ -11,7 +11,7 @@
 }
 
 .sliders-button {
-  color: var(--color-primary-foreground-very-dim);
+  color: var(--color-layer1-fg-very-dim);
   line-height: 0;
   background-color: transparent;
   border: none;
@@ -21,7 +21,7 @@
   cursor: pointer;
 
   &[aria-pressed="true"] {
-    color: var(--color-primary-accent);
+    color: var(--color-accent);
   }
 }
 

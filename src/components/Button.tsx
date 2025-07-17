@@ -9,7 +9,7 @@ export interface ButtonProps {
   disabled?: boolean;
   /* this makes the aspect ratio square and the font-size larger */
   iconOnly?: boolean;
-  /** this makes it look like its being hoverd */
+  /** this makes it look like its being hovered. TODO: rename this to "focused"? */
   active?: boolean;
   children?: React.ReactNode;
   className?: string;
@@ -32,7 +32,6 @@ const Button = ({
       className={clsx(
         styles[style],
         styles.base,
-        disabled && styles.disabled,
         iconOnly && styles.iconOnly,
         className,
       )}

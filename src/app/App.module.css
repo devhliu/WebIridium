@@ -20,10 +20,10 @@
 
 .allotment-container {
   flex-grow: 1;
-  background-color: var(--color-primary-background);
+  background-color: var(--color-layer1-bg);
 }
 
 :root {
-  --focus-border: var(--color-primary-accent);
-  --separator-border: var(--color-primary-border);
+  --focus-border: var(--color-accent);
+  --separator-border: var(--color-layer1-border);
 }

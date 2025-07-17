@@ -3,30 +3,30 @@
   flex-direction: row;
   align-items: center;
 
-  background-color: var(--color-input-background);
-  border: var(--border-input-solid);
+  background-color: var(--color-input-bg);
+  border: var(--border-input);
   border-radius: var(--border-radius);
 
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
 
   &:focus-within {
-    border: var(--border-input-solid-focused);
-    outline: var(--border-input-solid-focused);
+    border: var(--border-input-focused);
+    outline: var(--border-input-focused);
 
     & > .search-icon {
-      color: var(--color-input-foreground);
+      color: var(--color-input-fg);
     }
   }
 }
 
 .icon {
-  color: var(--color-input-foreground-dim);
+  color: var(--color-input-fg-dim);
   margin: var(--spacing-2);
 }
 
 .input {
   font-size: var(--font-size-small);
-  color: var(--color-input-foreground);
+  color: var(--color-input-fg);
   background: transparent;
   border: none;
   flex-grow: 1;

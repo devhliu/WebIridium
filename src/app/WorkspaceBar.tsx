@@ -202,7 +202,7 @@ export const WorkspaceBar = () => {
       >
         {isLoadingBiomodel ? (
           <div>
-            <PulseLoader color="var(--color-input-foreground-dim)" size="6px" />
+            <PulseLoader color="var(--color-input-fg-dim)" size="6px" />
           </div>
         ) : (
           <>

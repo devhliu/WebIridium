@@ -11,10 +11,10 @@
   margin: var(--spacing-1);
   padding-inline: var(--spacing-2);
 
-  font-size: var(--font-size-base);
-  color: var(--color-input-foreground);
-  background-color: var(--color-input-background);
-  outline: var(--border-input-solid);
+  font-size: var(--font-size-medium);
+  color: var(--color-input-fg);
+  background-color: var(--color-input-bg);
+  outline: var(--border-input);
   border: none;
   border-radius: var(--border-radius);
   cursor: pointer;
@@ -22,13 +22,13 @@
   &:not(.active):hover {
     background-color: color-mix(
       in hsl,
-      var(--color-input-background) 95%,
-      var(--color-input-foreground)
+      var(--color-input-bg) 95%,
+      var(--color-input-fg)
     );
   }
 
   &:focus-within {
-    outline: 2px solid var(--color-primary-accent);
+    outline: 2px solid var(--color-accent);
   }
 }
 
@@ -40,7 +40,7 @@
 
 .input {
   flex-grow: 1;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
   color: inherit;
   outline: none;
   background-color: transparent;
@@ -52,14 +52,14 @@
 
 .search-icon {
   flex-shrink: 0;
-  color: var(--color-input-foreground-dim);
+  color: var(--color-input-fg-dim);
 }
 
 .autocomplete-popup {
-  background-color: var(--color-tertiary-background);
-  border: var(--border-tertiary-solid);
+  background-color: var(--color-layer3-bg);
+  border: var(--border-layer3);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-medium);
   list-style: none;
 
   position: absolute;
@@ -76,7 +76,7 @@
   overflow-y: auto;
   max-height: 50vh;
 
-  animation: show var(--transition-very-fast) ease-in;
+  animation: show var(--timing-very-fast) ease-in;
 }
 
 .autocomplete-group {
@@ -85,7 +85,7 @@
 }
 
 .autocomplete-group-title {
-  color: var(--color-tertiary-foreground-dim);
+  color: var(--color-layer3-fg-dim);
   font-size: var(--font-size-small);
   font-weight: bold;
   margin: 0;
@@ -93,7 +93,7 @@
 }
 
 .autocomplete-item {
-  font-size: var(--font-size-base) !important;
+  font-size: var(--font-size-medium) !important;
   text-align: left;
   width: 100%;
 }
@@ -108,7 +108,7 @@
 }
 
 .autocomplete-loading-item {
-  color: var(--color-tertiary-foreground-dim);
+  color: var(--color-layer3-fg-dim);
   padding: var(--spacing-2);
 }
 
@@ -117,7 +117,7 @@
 }
 
 .biomodel-synopsis {
-  color: var(--color-tertiary-foreground-dim);
+  color: var(--color-layer3-fg-dim);
   /* TODO: make this even smaller */
   font-size: var(--font-size-small);
   font-style: italic;
@@ -125,14 +125,14 @@
 }
 
 .biomodel-extra {
-  color: var(--color-tertiary-foreground-dim);
+  color: var(--color-layer3-fg-dim);
   /* TODO: make this even smaller */
   font-size: var(--font-size-small);
 }
 
 .no-results {
-  color: var(--color-tertiary-foreground);
-  font-size: var(--font-size-base);
+  color: var(--color-layer3-fg);
+  font-size: var(--font-size-medium);
   margin: 0;
 }
 

@@ -2,33 +2,33 @@
   background-color: rgba(0, 0, 0, 0.6);
   position: fixed;
   inset: 0;
-  animation: overlayShow var(--transition-fast) ease-in;
+  animation: overlayShow var(--timing-fast) ease-in;
 }
 
 .content {
-  font-size: var(--font-size-base);
-  color: var(--color-primary-foreground);
-  background-color: var(--color-primary-background);
-  border: var(--border-primary-solid);
-  border-radius: var(--border-radius-big);
-  box-shadow: var(--shadow-1);
+  font-size: var(--font-size-medium);
+  color: var(--color-layer1-fg);
+  background-color: var(--color-layer1-bg);
+  border: var(--border-layer1);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--shadow-medium);
   position: fixed;
   top: 50%;
   left: 50%;
   width: max(25vw, 300px);
   transform: translate(-50%, -50%);
   padding: var(--spacing-panel);
-  animation: contentShow var(--transition-fast) ease-in;
+  animation: contentShow var(--timing-fast) ease-in;
 }
 
 .title {
   margin: 0;
-  color: var(--color-primary-foreground-dim);
+  color: var(--color-layer1-fg-dim);
   font-size: var(--font-size-big);
 }
 
 .description {
-  color: var(--color-primary-foreground);
+  color: var(--color-layer1-fg);
   font-size: var(--font-size);
   margin: 0;
   padding-block: var(--spacing-5);
@@ -38,7 +38,7 @@
   position: absolute;
   background-color: transparent;
   border: none;
-  color: var(--color-primary-foreground-dim);
+  color: var(--color-layer1-fg-dim);
   top: var(--spacing-panel);
   right: var(--spacing-panel);
   padding: 0;
@@ -52,18 +52,18 @@
 }
 
 .url {
-  font-size: var(--font-size-base);
-  background-color: var(--color-input-background);
-  color: var(--color-input-foreground);
-  border: var(--border-input-solid);
+  font-size: var(--font-size-medium);
+  background-color: var(--color-input-bg);
+  color: var(--color-input-fg);
+  border: var(--border-input);
   border-radius: var(--border-radius);
   padding: var(--spacing-3);
   flex-grow: 1;
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
 
   &:focus {
-    border: var(--border-input-solid-focused);
-    outline: var(--border-input-solid-focused);
+    border: var(--border-input-focused);
+    outline: var(--border-input-focused);
   }
 }
 
@@ -71,7 +71,7 @@
   padding-inline: var(--spacing-5);
 
   &.copied {
-    color: var(--color-success-foreground);
+    color: var(--color-success-fg);
     background-color: var(--color-success);
     border: 1px solid var(--color-success);
   }

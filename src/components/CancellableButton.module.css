@@ -30,11 +30,11 @@
 
   padding: var(--spacing-3);
   margin: 0;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
 
   cursor: pointer;
 
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
 }
 
 /* If the cancel button is also there, we want to disable the right rounded corners
@@ -56,49 +56,37 @@
 
   cursor: pointer;
 
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
 }
 
 .primary {
-  --button-foreground: var(--color-primary-accent-foreground);
-  --button-background: var(--color-primary-accent);
+  --button-foreground: var(--color-accent-fg);
+  --button-background: var(--color-accent);
 }
 
 .primary:hover {
   --button-foreground: color-mix(
     in hsl,
-    var(--color-primary-accent-foreground) 95%,
+    var(--color-accent-fg) 95%,
     transparent
   );
-  --button-background: color-mix(
-    in hsl,
-    var(--color-primary-accent) 93%,
-    transparent
-  );
+  --button-background: color-mix(in hsl, var(--color-accent) 93%, transparent);
 }
 
 .primary:active {
   --button-foreground: color-mix(
     in hsl,
-    var(--color-primary-accent-foreground) 97%,
+    var(--color-accent-fg) 97%,
     transparent
   );
-  --button-background: color-mix(
-    in hsl,
-    var(--color-primary-accent) 92%,
-    transparent
-  );
+  --button-background: color-mix(in hsl, var(--color-accent) 92%, transparent);
 }
 
 .disabled > .primary {
   --button-foreground: color-mix(
     in hsl,
-    var(--color-primary-accent-foreground) 60%,
+    var(--color-accent-fg) 60%,
     transparent
   );
-  --button-background: color-mix(
-    in hsl,
-    var(--color-primary-accent) 60%,
-    transparent
-  );
+  --button-background: color-mix(in hsl, var(--color-accent) 60%, transparent);
 }

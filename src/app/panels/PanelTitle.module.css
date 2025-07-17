@@ -6,8 +6,8 @@
 }
 
 .title-text {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
   font-weight: bold;
-  color: var(--color-primary-foreground-dim);
+  color: var(--color-layer1-fg-dim);
   margin-block: var(--spacing-2);
 }

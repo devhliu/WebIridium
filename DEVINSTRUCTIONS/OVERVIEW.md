@@ -29,6 +29,7 @@ Please write tests for any changes you make, as much as is reasonable.
 
 # specific stuff
 
-- [global state management](./GLOBALS.md) (RECOMMENDED READING)
+- [styling](./STYLING.md)
+- [global state management](./GLOBALS.md)
 - [simulation + copasi/antimony](./SIMULATION.md)
 - [icons](./ICONS.md)

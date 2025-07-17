@@ -1,3 +1,6 @@
+@import "@/light.css";
+@import "@/dark.css";
+
 :root {
   box-sizing: border-box;
 
@@ -7,78 +10,8 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* Colors */
-
-  /* FAQ
-   * # What is the difference between --color-primary and --color-accent-primay?
-   * `color-accent` is for things that stand out like buttons.
-   * `color` is for the base color of each layer. primary is the first layer, secondary the secondary layer, ...
-   *  (basically the background color)
-   * This is only the case for the colors with primary/secondary/tertiary in them though, to differentiate their roles.
-   * For example, `color-input` does not include `accent`.
-   */
-
-  --color-primary-accent: #248f8f;
-  --color-primary-accent-foreground: #fff;
-
-  --color-secondary-accent: #35383b;
-  --color-secondary-accent-foreground: #f0f3f5;
-  --color-secondary-accent-border: #494a4c;
-  --border-secondary-accent-solid: 1px solid
-    var(--color-secondary-accent-border);
-
-  --color-primary-background: #101112;
-  --color-primary-background-translucent: color-mix(
-    in hsl,
-    var(--color-primary-foreground) 10%,
-    transparent
-  );
-  --color-primary-foreground: #f2f5f7;
-  --color-primary-foreground-dim: #f2f5f7af;
-  --color-primary-foreground-very-dim: color-mix(
-    in hsl,
-    var(--color-primary-foreground-dim) 70%,
-    transparent
-  );
-  --color-primary-border: #393a40; /* #212226; */
-  --border-primary-solid: 1px solid var(--color-primary-border);
-
-  --color-secondary-background: #252729;
-  --color-secondary-foreground: #f0f3f5;
-  --color-secondary-foreground-dim: #f0f3f59f;
-  --color-secondary-border: #43444d;
-  --border-secondary-solid: 1px solid var(--color-secondary-border);
-
-  --color-tertiary-background: #38393b;
-  --color-tertiary-foreground: #ebeef0;
-  --color-tertiary-foreground-dim: #ebeef0af;
-  --color-tertiary-border: #56575c;
-  --border-tertiary-solid: 1px solid var(--color-tertiary-border);
-
-  --color-input-background: #1f2021;
-  --color-input-background-translucent: color-mix(
-    in hsl,
-    var(--color-input-foreground) 7%,
-    var(--color-input-background)
-  );
-  --color-input-foreground: var(--color-secondary-foreground);
-  --color-input-foreground-dim: var(--color-secondary-foreground-dim);
-  --color-input-border: #494a4c;
-  --border-input-solid: 1px solid var(--color-input-border);
-  --border-input-solid-focused: 1px solid var(--color-primary-accent);
-
-  --color-error: #f2291b;
-  --color-success: #22e369;
-  --color-success-foreground: #000;
-  --color-warning: #e0c216;
-  --color-info: #0eb0e6;
-
-  --color-data-table-foreground: #000;
-  --color-data-table-neutral: #f2f2f2;
-  --color-data-table-positive: #fa5757;
-  --color-data-table-negative: #52e365;
-
   /* Sizing */
+
   --size-0: 2px;
   --size-1: 8px;
   --size-2: 16px;
@@ -89,7 +22,7 @@
   --size-7: 52px;
 
   --font-size-small: 0.75rem;
-  --font-size-base: 0.875rem;
+  --font-size-medium: 0.875rem;
   --font-size-big: 1.125rem;
 
   --spacing-1: 2px;
@@ -100,69 +33,142 @@
   --spacing-panel: 10px;
 
   --border-radius: 3px;
-  --border-radius-big: 6px;
+  --border-radius-large: 6px;
 
   /* Misc. */
-  --transition-very-fast: 0.05s;
-  --transition-fast: 0.1s;
 
-  --shadow-1: 0px 15px 25px -15px rgba(0, 0, 0, 0.75);
-}
+  --timing-very-fast: 0.05s;
+  --timing-fast: 0.1s;
 
-:root[data-theme="light"] {
-  /* Colors */
+  --shadow-medium: 0px 15px 25px -15px rgba(0, 0, 0, 0.75);
 
-  --color-secondary-accent: #ededed;
-  --color-secondary-accent-foreground: #080808;
-  --color-secondary-accent-border: #aeaeae;
-  --border-secondary-accent-solid: 1px solid
-    var(--color-secondary-accent-border);
+  /* Base Colors (more defined in individual theme files */
 
-  --color-primary-background: #f7f7f7;
-  --color-primary-background-translucent: color-mix(
-    in hsl,
-    var(--color-primary-foreground) 10%,
+  --color-accent: #248f8f;
+  --color-accent-fg: #fff;
+
+  --color-data-table-fg: #000;
+  --color-data-table-neutral: #f2f2f2;
+  --color-data-table-positive: #fa5757;
+  --color-data-table-negative: #52e365;
+
+  /* Colors & Borders (derived from colors defined in individual themes */
+
+  --color-button-bg-translucent: oklch(
+    from var(--color-button-fg) l c h / var(--opacity-translucent)
+  );
+  --color-input-bg-translucent: oklch(
+    from var(--color-input-fg) l c h / var(--opacity-translucent)
+  );
+  --color-layer1-bg-translucent: oklch(
+    from var(--color-layer1-fg) l c h / var(--opacity-translucent)
+  );
+  --color-layer2-bg-translucent: oklch(
+    from var(--color-layer2-fg) l c h / var(--opacity-translucent)
+  );
+  --color-layer3-bg-translucent: oklch(
+    from var(--color-layer3-fg) l c h / var(--opacity-translucent)
+  );
+
+  --color-button-fg-dim: oklch(
+    from var(--color-button-fg) l c h / var(--opacity-dim)
+  );
+  --color-input-fg-dim: oklch(
+    from var(--color-input-fg) l c h / var(--opacity-dim)
+  );
+  --color-layer1-fg-dim: oklch(
+    from var(--color-layer1-fg) l c h / var(--opacity-dim)
+  );
+  --color-layer2-fg-dim: oklch(
+    from var(--color-layer2-fg) l c h / var(--opacity-dim)
+  );
+  --color-layer3-fg-dim: oklch(
+    from var(--color-layer3-fg) l c h / var(--opacity-dim)
+  );
+
+  --color-button-fg-very-dim: oklch(
+    from var(--color-button-fg) l c h / var(--opacity-very-dim)
+  );
+  --color-input-fg-very-dim: oklch(
+    from var(--color-input-fg) l c h / var(--opacity-very-dim)
+  );
+  --color-layer1-fg-very-dim: oklch(
+    from var(--color-layer1-fg) l c h / var(--opacity-very-dim)
+  );
+  --color-layer2-fg-very-dim: oklch(
+    from var(--color-layer2-fg) l c h / var(--opacity-very-dim)
+  );
+  --color-layer3-fg-very-dim: oklch(
+    from var(--color-layer3-fg) l c h / var(--opacity-very-dim)
+  );
+
+  --border-button: 1px solid var(--color-button-border);
+  --border-layer1: 1px solid var(--color-layer1-border);
+  --border-layer2: 1px solid var(--color-layer2-border);
+  --border-layer3: 1px solid var(--color-layer3-border);
+  --border-input: 1px solid var(--color-input-border);
+  --border-input-focused: 1px solid var(--color-accent);
+
+  /* Colors for interactive elements */
+
+  --color-button-bg-hover: color-mix(
+    in oklch,
+    var(--color-button-bg) 95%,
+    var(--color-button-fg)
+  );
+  --color-button-bg-active: color-mix(
+    in oklch,
+    var(--color-button-bg) 90%,
+    var(--color-button-fg)
+  );
+  --color-button-bg-disabled: color-mix(
+    in oklch,
+    var(--color-button-bg) 60%,
+    var(--color-layer1-bg)
+  );
+  --color-button-fg-disabled: color-mix(
+    in oklch,
+    var(--color-button-fg) 70%,
+    var(--color-layer1-bg)
+  );
+
+  /* Button types */
+
+  --color-ghost-button-fg: var(--color-layer1-fg);
+  --color-ghost-button-bg: transparent;
+  --color-ghost-button-hover-bg: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 10%,
     transparent
   );
-  --color-primary-foreground: #080808;
-  --color-primary-foreground-dim: #0808087f;
-  --color-primary-foreground-very-dim: color-mix(
-    in hsl,
-    var(--color-primary-foreground-dim) 70%,
+  --color-ghost-button-active-bg: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 15%,
     transparent
   );
-  --color-primary-border: #d1d1d1;
-  --border-primary-solid: 1px solid var(--color-primary-border);
+  --color-ghost-button-disabled-fg: var(--color-layer1-fg-dim);
+  --color-ghost-button-disabled-bg: transparent;
 
-  --color-secondary-background: #e7e7e7;
-  --color-secondary-foreground: #080808;
-  --color-secondary-foreground-dim: #0808087f;
-  --color-secondary-border: #a6a6a6;
-  --border-secondary-solid: 1px solid var(--color-secondary-border);
-
-  --color-tertiary-background: #f0f0f0;
-  --color-tertiary-foreground: #080808;
-  --color-tertiary-foreground-dim: #0808087f;
-  --color-tertiary-border: #8b8b8b;
-  --border-tertiary-solid: 1px solid var(--color-tertiary-border);
-
-  --color-input-background: #ededed;
-  --color-input-background-translucent: color-mix(
-    in hsl,
-    var(--color-input-foreground) 7%,
-    var(--color-input-background)
+  --color_ghost-text-button: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 80%,
+    var(--color-layer1-bg)
   );
-  --color-input-foreground: var(--color-secondary-foreground);
-  --color-input-foreground-dim: var(--color-secondary-foreground-dim);
-  --color-input-border: #aeaeae;
-  --border-input-solid: 1px solid var(--color-input-border);
-  --border-input-solid-focused: 1px solid var(--color-primary-accent);
-
-  --color-error: #bc1f14;
-  --color-success: #18ab4e;
-  --color-success-foreground: #fff;
-  --color-warning: #b69d10;
-  --color-info: #1398c4;
+  --color_ghost-text-button-hover: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 87.5%,
+    var(--color-layer1-bg)
+  );
+  --color_ghost-text-button-active: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 92.5%,
+    var(--color-layer1-bg)
+  );
+  --color-ghost-text-button-disabled: color-mix(
+    in oklch,
+    var(--color-layer1-fg) 50%,
+    var(--color-layer1-bg)
+  );
 }
 
 *,
@@ -172,7 +178,7 @@
 }
 
 body {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
 }
 
 /* This style is temporarily applied to create the theme transition effect. */

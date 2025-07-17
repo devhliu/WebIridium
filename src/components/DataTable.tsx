@@ -49,7 +49,7 @@ const DataTable = memo(({ columns, decimalPlaces }: DataTableProps) => {
                       key={colIndex}
                       className={styles.cell}
                       style={{
-                        color: "var(--color-data-table-foreground)",
+                        color: "var(--color-data-table-fg)",
                         backgroundColor: `color-mix(in hsl, ${targetColor} ${maxPercent}%, var(--color-data-table-neutral))`,
                       }}
                     >

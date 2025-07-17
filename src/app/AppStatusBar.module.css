@@ -1,16 +1,16 @@
 .item-loading {
-  color: var(--color-primary-foreground-dim);
-  background-color: var(--color-tertiary-background);
+  color: var(--color-layer1-fg-dim);
+  background-color: var(--color-layer3-bg);
 }
 
 .item-success {
-  color: var(--color-primary-accent-foreground);
-  background-color: var(--color-primary-accent);
+  color: var(--color-accent-fg);
+  background-color: var(--color-accent);
 }
 
 .item-fail {
-  color: var(--color-primary-foreground-dim);
-  background-color: var(--color-tertiary-background);
+  color: var(--color-layer1-fg-dim);
+  background-color: var(--color-layer3-bg);
 }
 
 .error-icon {

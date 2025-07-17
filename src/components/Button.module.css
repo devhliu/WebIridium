@@ -4,9 +4,9 @@
 }
 
 .default {
-  color: var(--color-secondary-accent-foreground);
-  background-color: var(--color-secondary-accent);
-  border: var(--border-secondary-accent-solid);
+  color: var(--color-button-fg);
+  background-color: var(--color-button-bg);
+  border: var(--border-button);
   border-radius: var(--border-radius);
   padding: var(--button-spacing);
   cursor: pointer;
@@ -16,17 +16,17 @@
   align-items: center;
   gap: var(--button-spacing);
 
-  &.disabled {
-    color: color-mix(
-      in hsl,
-      var(--color-secondary-accent-foreground) 50%,
-      transparent
-    );
-    background-color: color-mix(
-      in hsl,
-      var(--color-secondary-accent) 50%,
-      transparent
-    );
+  &:hover {
+    background-color: var(--color-button-bg-hover);
+  }
+
+  &:active {
+    background-color: var(--color-button-bg-active);
+  }
+
+  &:disabled {
+    color: var(--color-button-fg-disabled);
+    background-color: var(--color-button-bg-disabled);
   }
 }
 
@@ -34,7 +34,7 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  color: var(--color-primary-foreground);
+  color: var(--color-ghost-button-fg);
   background-color: transparent;
   border: none;
   border-radius: var(--border-radius);
@@ -43,19 +43,16 @@
 
   &:hover,
   &[data-active="true"] {
-    background-color: color-mix(
-      in hsl,
-      var(--color-primary-foreground) 10%,
-      transparent
-    );
+    background-color: var(--color-ghost-button-hover-bg);
   }
 
   &:active {
-    background-color: color-mix(
-      in hsl,
-      var(--color-primary-foreground) 15%,
-      transparent
-    );
+    background-color: var(--color-ghost-button-active-bg);
+  }
+
+  &:disabled {
+    color: var(--color-ghost-button-disable-fg);
+    background-color: var(--color-ghost-button-disable-bg);
   }
 }
 
@@ -68,12 +65,20 @@
 
   background: transparent;
   border: none;
-  color: color-mix(in hsl, var(--color-primary-foreground) 80%, transparent);
+  color: var(--color-ghost-text-button);
 
   cursor: pointer;
 
   &:hover {
-    color: var(--color-primary-foreground);
+    color: var(--color-ghost-text-button-hover);
+  }
+
+  &:active {
+    color: var(--color-ghost-text-button-active);
+  }
+
+  &:disabled {
+    color: var(--color-ghost-text-button-disabled);
   }
 }
 

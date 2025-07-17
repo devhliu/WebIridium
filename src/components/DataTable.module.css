@@ -7,17 +7,17 @@
 
 .table {
   min-width: 100%;
-  background-color: var(--color-secondary-background);
-  border: var(--border-secondary-solid);
+  background-color: var(--color-layer2-bg);
+  border: var(--border-layer2);
   border-collapse: collapse;
   border-spacing: 0;
 }
 
 .cell {
-  color: var(--color-primary-foreground);
+  color: var(--color-layer1-fg);
   font-size: var(--font-size-small);
   min-width: 80px;
   text-align: start;
   padding: var(--spacing-2);
-  border: var(--border-secondary-solid);
+  border: var(--border-layer2);
 }

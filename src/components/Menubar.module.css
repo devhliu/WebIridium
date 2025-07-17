@@ -1,13 +1,13 @@
 .root {
   display: flex;
   padding: var(--spacing-1);
-  background-color: var(--color-primary-background);
+  background-color: var(--color-layer1-bg);
   align-items: center;
 }
 
 .trigger {
-  color: var(--color-primary-foreground);
-  font-size: var(--font-size-base);
+  color: var(--color-layer1-fg);
+  font-size: var(--font-size-medium);
   background: none;
   border: none;
   padding: var(--spacing-2) var(--spacing-4);
@@ -17,16 +17,16 @@
 
   &[data-highlighted],
   &[data-state="open"] {
-    background-color: var(--color-primary-background-translucent);
+    background-color: var(--color-layer1-bg-translucent);
   }
 }
 
 .content {
-  background-color: var(--color-secondary-background);
-  border: var(--border-secondary-solid);
+  background-color: var(--color-layer2-bg);
+  border: var(--border-layer2);
   border-radius: var(--border-radius);
   padding: var(--spacing-2);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-medium);
 }
 
 .item {
@@ -35,9 +35,9 @@
 
   background: none;
   border: none;
-  color: var(--color-primary-foreground);
+  color: var(--color-layer1-fg);
 
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
   border-radius: var(--border-radius);
   min-width: 200px;
   cursor: pointer;
@@ -46,8 +46,8 @@
   padding-left: 20px;
 
   &[data-highlighted] {
-    background-color: var(--color-primary-accent);
-    color: var(--color-primary-accent-foreground);
+    background-color: var(--color-accent);
+    color: var(--color-accent-fg);
   }
 }
 
@@ -62,5 +62,5 @@
 
 .separator {
   height: 1px;
-  background-color: var(--color-tertiary-border);
+  background-color: var(--color-layer3-border);
 }

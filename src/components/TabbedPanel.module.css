@@ -6,7 +6,7 @@
 }
 
 .tab-root {
-  border-bottom: var(--border-primary-solid);
+  border-bottom: var(--border-layer1);
 }
 
 .tab-list {
@@ -15,29 +15,29 @@
 }
 
 .tab-trigger {
-  color: var(--color-primary-foreground);
+  color: var(--color-layer1-fg);
   display: flex;
   position: relative;
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-3);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
   background-color: transparent;
   border: none;
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
   cursor: pointer;
   padding: var(--spacing-2) var(--spacing-4);
   margin: var(--spacing-3);
   border-radius: var(--border-radius);
 
   &:hover {
-    background-color: var(--color-primary-background-translucent);
+    background-color: var(--color-layer1-bg-translucent);
   }
 
   &[data-state="active"]::after {
     content: "";
     position: absolute;
-    background-color: var(--color-primary-accent);
+    background-color: var(--color-accent);
     height: var(--size-0);
     width: 100%;
     left: 0;
@@ -46,7 +46,7 @@
 }
 
 .tab-icon {
-  color: var(--color-primary-foreground-dim);
+  color: var(--color-layer1-fg-dim);
   display: flex;
 }
 

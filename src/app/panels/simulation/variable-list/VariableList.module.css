@@ -18,8 +18,8 @@
 .list {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-input-background);
-  border: var(--border-input-solid);
+  background-color: var(--color-input-bg);
+  border: var(--border-input);
   border-radius: var(--border-radius);
   padding: var(--spacing-1);
 }
@@ -49,7 +49,7 @@
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-1);
-  color: var(--color-input-foreground-dim);
+  color: var(--color-input-fg-dim);
   font-size: var(--font-size-small);
   padding: var(--spacing-2);
   flex-grow: 1;
@@ -58,7 +58,7 @@
 }
 
 .group-container:not([data-open]) .group-trigger-icon {
-  color: var(--color-input-foreground-dim);
+  color: var(--color-input-fg-dim);
   transform: rotate(-90deg);
 }
 
@@ -75,10 +75,10 @@
   margin-inline: var(--spacing-1);
 
   &[data-expanded] {
-    background-color: var(--color-tertiary-background);
-    outline: var(--border-tertiary-solid);
+    background-color: var(--color-layer3-bg);
+    outline: var(--border-layer3);
     margin-block: var(--spacing-2);
-    box-shadow: var(--shadow-1);
+    box-shadow: var(--shadow-medium);
   }
 }
 
@@ -95,7 +95,7 @@
 }
 
 .item:not([data-expanded]):hover {
-  background-color: var(--color-input-background-translucent);
+  background-color: var(--color-input-bg-translucent);
 }
 
 .item-name {
@@ -109,7 +109,7 @@
 }
 
 .action {
-  color: var(--color-input-foreground);
+  color: var(--color-input-fg);
   display: flex;
   box-sizing: border-box;
   padding: 0;
@@ -118,7 +118,7 @@
   cursor: pointer;
 
   &.dim {
-    color: var(--color-input-foreground-dim);
+    color: var(--color-input-fg-dim);
   }
 }
 

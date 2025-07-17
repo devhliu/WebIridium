@@ -5,22 +5,22 @@
   font-size: inherit;
   height: 1.5em;
   width: 1.5em;
-  background-color: var(--color-input-background);
-  border: var(--border-input-solid);
+  background-color: var(--color-input-bg);
+  border: var(--border-input);
   border-radius: var(--border-radius);
-  transition-duration: var(--transition-fast);
+  transition-duration: var(--timing-fast);
   cursor: pointer;
 
   &[data-state="checked"],
   &[data-state="indeterminate"] {
-    color: var(--color-primary-foreground);
-    background-color: var(--color-primary-accent);
-    border-color: var(--color-primary-accent);
+    color: var(--color-layer1-fg);
+    background-color: var(--color-accent);
+    border-color: var(--color-accent);
   }
 }
 
 .indicator {
-  color: var(--color-primary-accent-foreground);
+  color: var(--color-accent-fg);
   pointer-events: none;
   display: flex;
   padding: 0;

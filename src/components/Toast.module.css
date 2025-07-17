@@ -16,12 +16,12 @@
 
 .root {
   position: relative;
-  color: var(--color-secondary-foreground);
-  background-color: var(--color-secondary-background);
-  border: var(--border-secondary-solid);
+  color: var(--color-layer2-fg);
+  background-color: var(--color-layer2-bg);
+  border: var(--border-layer2);
   border-radius: var(--border-radius);
   padding: var(--spacing-4);
-  box-shadow: var(--shadow-1);
+  box-shadow: var(--shadow-medium);
 
   &[data-state="open"] {
     animation: slideIn 100ms ease-in;
@@ -46,7 +46,7 @@
   display: flex;
   align-items: center;
   font-weight: bold;
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
 }
 
 .icon {
@@ -69,11 +69,11 @@
 }
 
 .description {
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-medium);
 }
 
 .close {
-  color: var(--color-secondary-foreground-dim);
+  color: var(--color-layer2-fg-dim);
   position: absolute;
   top: var(--spacing-3);
   right: var(--spacing-3);
