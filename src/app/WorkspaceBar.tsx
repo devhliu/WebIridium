@@ -164,8 +164,10 @@ export const WorkspaceBar = () => {
       cancelInput();
     } else if (e.key === "ArrowDown") {
       setSelectedIndex((prev) => incrementIndexFromItems(items, prev));
+      e.preventDefault();
     } else if (e.key === "ArrowUp") {
       setSelectedIndex((prev) => decrementIndexFromItems(items, prev));
+      e.preventDefault();
     }
   };
 
