@@ -74,6 +74,8 @@ export const WorkspaceBar = () => {
   const [workspaceName, setWorkspaceName] = useAtom(nameAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
 
+  const popupRef = useRef<HTMLElement | null>(null);
+
   const [open, setOpen] = useState(false);
   const [typing, setTyping] = useState("");
   const [isLoadingBiomodel, setIsLoadingBiomodel] = useState(false);
@@ -114,8 +116,7 @@ export const WorkspaceBar = () => {
     cancelSearch();
   };
 
-  const handleInputBlur = cancelInput;
-
+  /** Rename workspace and close input. */
   const rename = (name: string) => {
     if (isNameValid(name)) {
       setOpen(false);
@@ -125,6 +126,7 @@ export const WorkspaceBar = () => {
     }
   };
 
+  /** Load biomodel and update loading state. */
   const loadBiomodel = async (modelInfo: BiomodelInfo) => {
     setIsLoadingBiomodel(true);
     cancelInput();
@@ -145,15 +147,18 @@ export const WorkspaceBar = () => {
     }
   };
 
-  const handleInputKeyDown = async (
-    e: React.KeyboardEvent<HTMLInputElement>,
-  ) => {
+  /** Runs command action associated with given autocomplete item. */
+  const activate = async (item: AutocompleteItem) => {
+    if (item === renameItem) {
+      rename(typing);
+    } else if (item.type === "biomodel") {
+      await loadBiomodel(item.info);
+    }
+  };
+
+  const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
-      if (selected === renameItem) {
-        rename(typing);
-      } else if (selected.type === "biomodel") {
-        await loadBiomodel(selected.info);
-      }
+      await activate(selected);
     } else if (e.key === "Escape") {
       cancelInput();
     } else if (e.key === "ArrowDown") {
@@ -169,6 +174,18 @@ export const WorkspaceBar = () => {
     setSelectedIndex(0);
 
     await searchBiomodels(newTyping, BIOMODELS_SEARCH_LIMIT);
+  };
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    // don't cancel if the user clicked on the popup
+    // (note: the blur still goes through since this gets called again with
+    // relatedTarget as null, but its OK because we only need to make sure
+    // there's enough time for the autocomplete item clicks to go through)
+    if (popupRef.current && popupRef.current.contains(e.relatedTarget)) {
+      return;
+    }
+
+    cancelInput();
   };
 
   if (!open) {
@@ -205,8 +222,8 @@ export const WorkspaceBar = () => {
           autoFocus
           value={typing}
           placeholder="Rename your model or search for one"
-          onBlur={handleInputBlur}
-          onKeyDown={handleInputKeyDown}
+          onBlur={handleBlur}
+          onKeyDown={handleKeyDown}
           onChange={handleChange}
           autoComplete="off"
           aria-autocomplete="list"
@@ -217,8 +234,10 @@ export const WorkspaceBar = () => {
         {typing.length > 0 && (
           <AutocompletePopup
             id={AUTOCOMPLETE_POPUP_ID}
+            ref={popupRef}
             selected={selected}
             items={items}
+            onClick={activate}
           />
         )}
       </div>
@@ -233,25 +252,39 @@ type AutocompleteItem =
 
 const AutocompletePopup = ({
   id,
+  ref,
   selected,
   items,
+  onClick,
 }: {
   id: string;
+  ref: React.RefObject<HTMLElement | null>;
   selected: AutocompleteItem;
   items: AutocompleteItems;
+  onClick: (item: AutocompleteItem) => void;
 }) => {
   const isEmpty = Object.values(items).every(
     (groupItems) => groupItems.length === 0,
   );
   if (isEmpty) {
     return (
-      <ul id={id} className={styles.autocompletePopup} role="listbox">
+      <ul
+        id={id}
+        ref={ref as React.RefObject<HTMLUListElement>}
+        className={styles.autocompletePopup}
+        role="listbox"
+      >
         <p className={styles.noResults}>No results.</p>
       </ul>
     );
   } else {
     return (
-      <ul id={id} className={styles.autocompletePopup} role="listbox">
+      <ul
+        id={id}
+        ref={ref as React.RefObject<HTMLUListElement>}
+        className={styles.autocompletePopup}
+        role="listbox"
+      >
         {Object.entries(items).map(([group, groupItems]) =>
           groupItems.length === 0 ? null : (
             <div key={group} className={styles.autocompleteGroup}>
@@ -263,15 +296,16 @@ const AutocompletePopup = ({
                 item.type === "simple" ? (
                   <AutocompleteSimpleItem
                     key={item.value}
-                    name={item.name}
-                    value={item.value}
+                    item={item}
                     selected={selected === item}
+                    onClick={onClick}
                   />
                 ) : item.type === "biomodel" ? (
                   <AutocompleteBiomodelItem
                     key={item.info.id}
-                    info={item.info}
+                    item={item}
                     selected={selected === item}
+                    onClick={onClick}
                   />
                 ) : item.type === "loading" ? (
                   <AutocompleteLoadingItem key={group} />
@@ -299,13 +333,13 @@ const useFocusOnSelected = (
 };
 
 const AutocompleteSimpleItem = ({
-  name,
-  value,
+  item,
   selected,
+  onClick,
 }: {
-  name: string;
-  value: string;
+  item: Extract<AutocompleteItem, { type: "simple" }>;
   selected: boolean;
+  onClick: (item: AutocompleteItem) => void;
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   useFocusOnSelected(buttonRef, selected);
@@ -317,40 +351,48 @@ const AutocompleteSimpleItem = ({
         className={styles.autocompleteItem}
         style="ghost"
         active={selected}
+        onClick={() => onClick(item)}
       >
-        <b className={styles.autocompleteSimpleItemName}>{name}:</b>
-        {value}
+        <b className={styles.autocompleteSimpleItemName}>{item.name}:</b>
+        {item.value}
       </Button>
     </li>
   );
 };
 
 const AutocompleteBiomodelItem = ({
-  info,
+  item,
   selected,
+  onClick,
 }: {
-  info: BiomodelInfo;
+  item: Extract<AutocompleteItem, { type: "biomodel" }>;
   selected: boolean;
+  onClick: (item: AutocompleteItem) => void;
 }) => {
   const buttonRef = useRef<HTMLButtonElement>(null);
   useFocusOnSelected(buttonRef, selected);
 
   return (
     <li>
-      <Button ref={buttonRef} style="ghost" active={selected}>
+      <Button
+        ref={buttonRef}
+        style="ghost"
+        active={selected}
+        onClick={() => onClick(item)}
+      >
         <div
           className={clsx(
             styles.autocompleteItem,
             styles.autocompleteBiomodelItem,
           )}
         >
-          <strong className={styles.biomodelName}>{info.name}</strong>
+          <strong className={styles.biomodelName}>{item.info.name}</strong>
           <span className={styles.biomodelSynopsis}>
-            {getFirstSentence(info.synopsis)}
+            {getFirstSentence(item.info.synopsis)}
           </span>
           <span className={styles.biomodelExtra}>
-            {info.id} | Authors: {info.authors.join(", ")} | Date: {info.date} |
-            Journal: {info.journal}
+            {item.info.id} | Authors: {item.info.authors.join(", ")} | Date:{" "}
+            {item.info.date} | Journal: {item.info.journal}
           </span>
         </div>
       </Button>
