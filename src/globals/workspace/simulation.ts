@@ -64,14 +64,17 @@ export const isSimulatingAtom = atom((get) =>
 const getVariableValues = (
   sliderStates: Record<string, VariableSliderState>,
   variableMap: Map<string, Variable>,
-) => {
-  return Object.entries(sliderStates).reduce(
-    (acc, [name, state]) => ({
-      ...acc,
-      [(variableMap.get(name) as SettableVariable).setName]: state.value,
-    }),
-    {},
-  );
+): Record<string, number> => {
+  const values: Record<string, number> = {};
+  for (const [name, state] of Object.entries(sliderStates)) {
+    const variable = variableMap.get(name) as SettableVariable;
+    if (state.value === variable.defaultValue) {
+      // ignore it if the value is the same
+      continue;
+    }
+    values[variable.setName] = state.value;
+  }
+  return values;
 };
 
 const runSimulation = async (
