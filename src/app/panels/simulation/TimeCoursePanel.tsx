@@ -1,4 +1,5 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
 
 import { timeCourseParametersAtom } from "@/globals/workspace/settings";
 
@@ -21,6 +22,7 @@ import {
 } from "@/globals/workspace/simulation";
 import { modelStatusAtom } from "@/globals/workspace/model";
 import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
+import BooleanProperty from "@/components/property-list/BooleanProperty";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
@@ -37,8 +39,10 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
     timeCourseParametersAtom,
   );
 
+  const [resetInitialConditions, setResetInitialConditions] = useState(true);
+
   const handleSimulateClick = async () => {
-    const result = await simulateTimeCourse();
+    const result = await simulateTimeCourse({ resetInitialConditions });
     if (result.type === "failure") {
       toast({
         type: "error",
@@ -68,6 +72,13 @@ export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
       >
         Simulate
       </CancellableButton>
+
+      <BooleanProperty
+        name="Reset initial conditions"
+        value={resetInitialConditions}
+        onChange={setResetInitialConditions}
+        asideMode
+      />
 
       <PropertyAccordion
         defaultOpen={[

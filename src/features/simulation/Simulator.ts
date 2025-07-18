@@ -2,7 +2,7 @@ export type TimeCourseParameters = {
   startTime: number;
   endTime: number;
   numberOfPoints: number;
-
+  resetInitialConditions: boolean;
   /** List of variables you want to include in the results. */
   includedVariables: Variable[];
 };

@@ -5,6 +5,7 @@ import type {
   SettableVariable,
   SimulationResult,
   Simulator,
+  TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
 import {
@@ -127,36 +128,49 @@ const runSimulation = async (
   }
 };
 
-export const simulateTimeCourseAtom = atom(null, async (get, set) => {
-  return await runSimulation(
-    "timeCourse",
+export interface SimulateTimeCourseOptions {
+  /* default: true */
+  resetInitialConditions?: boolean;
+}
+
+export const simulateTimeCourseAtom = atom(
+  null,
+  async (
     get,
     set,
-    async (abortSignal: AbortSignal) => {
-      const variables = get(variablesAtom);
-      const variableSettings = get(variableSettingssAtom);
-      const independentVariable = get(independentVariableAtom);
-      return await get(simulatorAtom).simulateTimeCourse(
-        get(editorContentAtom),
-        {
-          parameters: {
-            ...get(timeCourseParametersAtom),
-            includedVariables: variables.filter(
-              (v) =>
-                v.name === independentVariable ||
-                variableSettings[v.name].visible,
+    { resetInitialConditions = true }: SimulateTimeCourseOptions = {},
+  ) => {
+    return await runSimulation(
+      "timeCourse",
+      get,
+      set,
+      async (abortSignal: AbortSignal) => {
+        const variables = get(variablesAtom);
+        const variableSettings = get(variableSettingssAtom);
+        const independentVariable = get(independentVariableAtom);
+        return await get(simulatorAtom).simulateTimeCourse(
+          get(editorContentAtom),
+          {
+            parameters: {
+              ...get(timeCourseParametersAtom),
+              resetInitialConditions,
+              includedVariables: variables.filter(
+                (v) =>
+                  v.name === independentVariable ||
+                  variableSettings[v.name].visible,
+              ),
+            },
+            variableValues: getVariableValues(
+              get(variableSliderStatesAtom),
+              get(variablesMapAtom),
             ),
           },
-          variableValues: getVariableValues(
-            get(variableSliderStatesAtom),
-            get(variablesMapAtom),
-          ),
-        },
-        abortSignal,
-      );
-    },
-  );
-});
+          abortSignal,
+        );
+      },
+    );
+  },
+);
 
 export const computeSteadyStateAtom = atom(null, async (get, set) => {
   return await runSimulation(
@@ -232,8 +246,9 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
       );
 
       if (parameterScanOptions.mode === "timeCourse") {
-        const scanTimeCourseParameters = {
+        const scanTimeCourseParameters: TimeCourseParameters = {
           ...parameterScanOptions.timeCourseParameters,
+          resetInitialConditions: true,
           includedVariables: variables.filter(
             (v) =>
               v.name === simulator.scanIndependentVariableName ||

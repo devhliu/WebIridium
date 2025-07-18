@@ -51,7 +51,9 @@ const handleMessage = async (e) => {
         varyingParameterValue,
       } = action.payload;
 
-      copasi.resetAll();
+      if (parameters.resetInitialConditions) {
+        copasi.resetAll();
+      }
 
       // for parameter scan
       if (varyingParameter) {
