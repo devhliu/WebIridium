@@ -15,16 +15,9 @@ import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface SteadyStatePanelProps {
   visible: boolean;
-
-  slidersPanelActive: boolean;
-  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-export const SteadyStatePanel = ({
-  visible,
-  slidersPanelActive,
-  onSlidersPanelToggle,
-}: SteadyStatePanelProps) => {
+export const SteadyStatePanel = ({ visible }: SteadyStatePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
   const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
@@ -51,8 +44,6 @@ export const SteadyStatePanel = ({
     <SimulationPanel
       title="Compute Steady State"
       visible={visible}
-      slidersPanelActive={slidersPanelActive}
-      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="steadyStatePanel"
     >
       <CancellableButton

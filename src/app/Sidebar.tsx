@@ -2,40 +2,38 @@
 
 import styles from "./Sidebar.module.css";
 
-import {
-  SIDEBAR_TABS,
-  TOP_SIDEBAR_TABS,
-  currentSidebarTabAtom,
-  type SidebarTab,
-} from "@/globals/sidebar";
+import { type LeftPanel } from "@/globals/layout";
 
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 import NotebookIcon from "@/assets/icons/NotebookIcon.svg?react";
-import { useAtom } from "jotai";
 
-const sidebarTabIcons: Record<
-  SidebarTab,
+const PANEL_ICONS: Record<
+  LeftPanel,
   React.ComponentType<{ width: string; height: string }>
 > = {
   "Time Course": TimeCourseIcon,
   "Parameter Scan": ParameterScanIcon,
   "Steady State": SteadyStateIcon,
   Examples: NotebookIcon,
-
-  // these don't really matter, just need it to typecheck
-  "Plot Settings": NotebookIcon,
 } as const;
 
+// These one's appear the at the top, the rest appear at the bottom of the bar
+const TOP_PANELS = new Set<LeftPanel>([
+  "Time Course",
+  "Parameter Scan",
+  "Steady State",
+]);
+
 interface SidebarItemProps {
-  tab: SidebarTab;
+  panel: LeftPanel;
   isActive: boolean;
   onClick: () => void;
 }
 
-const SidebarItem = ({ tab, isActive, onClick }: SidebarItemProps) => {
-  const TabIcon = sidebarTabIcons[tab];
+const SidebarItem = ({ panel: tab, isActive, onClick }: SidebarItemProps) => {
+  const TabIcon = PANEL_ICONS[tab];
   return (
     <button
       className={styles.trigger}
@@ -48,38 +46,47 @@ const SidebarItem = ({ tab, isActive, onClick }: SidebarItemProps) => {
   );
 };
 
-const Sidebar = () => {
-  const [currentTab, setCurrentTab] = useAtom(currentSidebarTabAtom);
-  const handleTabClick = (tab: SidebarTab) => {
-    if (currentTab === tab) {
-      setCurrentTab(null);
+export interface SidebarProps {
+  panels: readonly LeftPanel[];
+  currentPanel: LeftPanel | null;
+  onPanelChange: (panel: LeftPanel | null) => void;
+}
+
+const Sidebar = ({ panels, currentPanel, onPanelChange }: SidebarProps) => {
+  const handleTabClick = (panel: LeftPanel) => {
+    if (currentPanel === panel) {
+      onPanelChange(null);
     } else {
-      setCurrentTab(tab);
+      onPanelChange(panel);
     }
   };
 
   return (
     <div className={styles.root}>
       <div className={styles.list}>
-        {SIDEBAR_TABS.filter((t) => TOP_SIDEBAR_TABS.has(t)).map((tab) => (
-          <SidebarItem
-            key={tab}
-            tab={tab}
-            isActive={currentTab === tab}
-            onClick={() => handleTabClick(tab)}
-          />
-        ))}
+        {panels
+          .filter((t) => TOP_PANELS.has(t))
+          .map((panel) => (
+            <SidebarItem
+              key={panel}
+              panel={panel}
+              isActive={currentPanel === panel}
+              onClick={() => handleTabClick(panel)}
+            />
+          ))}
       </div>
 
       <div className={styles.list}>
-        {SIDEBAR_TABS.filter((t) => !TOP_SIDEBAR_TABS.has(t)).map((tab) => (
-          <SidebarItem
-            key={tab}
-            tab={tab}
-            isActive={currentTab === tab}
-            onClick={() => handleTabClick(tab)}
-          />
-        ))}
+        {panels
+          .filter((t) => !TOP_PANELS.has(t))
+          .map((panel) => (
+            <SidebarItem
+              key={panel}
+              panel={panel}
+              isActive={currentPanel === panel}
+              onClick={() => handleTabClick(panel)}
+            />
+          ))}
       </div>
     </div>
   );

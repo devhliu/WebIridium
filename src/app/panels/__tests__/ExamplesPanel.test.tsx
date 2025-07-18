@@ -1,4 +1,4 @@
-import { it, expect, vi, afterEach } from "vitest";
+import { it, expect, afterEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 
 import { renderWithinWorkspace } from "@/testing-utils/render";
@@ -26,11 +26,7 @@ afterEach(() => {
 const renderExamples = async () => {
   await renderWithinWorkspace(
     <div>
-      <TimeCoursePanel
-        visible
-        slidersPanelActive={false}
-        onSlidersPanelToggle={vi.fn()}
-      />
+      <TimeCoursePanel visible />
       <ExamplesPanel visible />
     </div>,
   );

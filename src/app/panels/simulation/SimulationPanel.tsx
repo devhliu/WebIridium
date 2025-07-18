@@ -1,14 +1,15 @@
-import PanelTitle from "../PanelTitle";
+import { useAtom } from "jotai";
+
 import styles from "./simulation.module.css";
 
+import PanelTitle from "../PanelTitle";
 import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
+
+import { currentBottomPanelAtom } from "@/globals/layout";
 
 export interface SimulationPanelProps {
   title: string;
   visible: boolean;
-
-  slidersPanelActive: boolean;
-  onSlidersPanelToggle: (on: boolean) => void;
 
   children: React.ReactNode;
 
@@ -18,11 +19,21 @@ export interface SimulationPanelProps {
 const SimulationPanel = ({
   title,
   visible,
-  slidersPanelActive,
-  onSlidersPanelToggle,
   children,
   ["data-testid"]: testId,
 }: SimulationPanelProps) => {
+  const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
+    currentBottomPanelAtom,
+  );
+
+  const toggleSliders = () => {
+    if (currentBottomPanel === "Sliders") {
+      setCurrentBottomPanel(null);
+    } else {
+      setCurrentBottomPanel("Sliders");
+    }
+  };
+
   if (!visible) {
     return null;
   } else {
@@ -32,8 +43,8 @@ const SimulationPanel = ({
           <button
             className={styles.slidersButton}
             aria-label="Sliders"
-            aria-pressed={slidersPanelActive}
-            onClick={() => onSlidersPanelToggle(!slidersPanelActive)}
+            aria-pressed={currentBottomPanel === "Sliders"}
+            onClick={toggleSliders}
           >
             <SlidersIcon aria-hidden width="1em" height="1em" />
           </button>

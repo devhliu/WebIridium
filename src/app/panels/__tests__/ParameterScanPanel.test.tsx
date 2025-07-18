@@ -1,4 +1,4 @@
-import { describe, vi } from "vitest";
+import { describe } from "vitest";
 import { renderWithinWorkspace } from "@/testing-utils/render.tsx";
 import PlotPanel from "../results/PlotPanel.tsx";
 import {
@@ -16,11 +16,7 @@ describe("run button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <ParameterScanPanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <ParameterScanPanel visible />
           <PlotPanel />
         </div>,
       );
@@ -35,11 +31,7 @@ describe("run button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <ParameterScanPanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <ParameterScanPanel visible />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,

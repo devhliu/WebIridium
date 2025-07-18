@@ -1,4 +1,4 @@
-import { describe, vi } from "vitest";
+import { describe } from "vitest";
 import { renderWithinWorkspace } from "@/testing-utils/render.tsx";
 import TimeCoursePanel from "../simulation/TimeCoursePanel.tsx";
 import PlotPanel from "../results/PlotPanel.tsx";
@@ -17,11 +17,7 @@ describe("simulation button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <TimeCoursePanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <TimeCoursePanel visible />
           <PlotPanel />
         </div>,
       );
@@ -37,11 +33,7 @@ describe("simulation button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <TimeCoursePanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <TimeCoursePanel visible />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,

@@ -1,4 +1,4 @@
-import { describe, vi } from "vitest";
+import { describe } from "vitest";
 import { renderWithinWorkspace } from "@/testing-utils/render.tsx";
 import SteadyStatePanel from "../simulation/SteadyStatePanel.tsx";
 import PlotPanel from "../results/PlotPanel.tsx";
@@ -16,11 +16,7 @@ describe("compute button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <SteadyStatePanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <SteadyStatePanel visible />
           <PlotPanel />
         </div>,
       );
@@ -35,11 +31,7 @@ describe("compute button", () => {
     render: async () => {
       await renderWithinWorkspace(
         <div>
-          <SteadyStatePanel
-            visible
-            slidersPanelActive={false}
-            onSlidersPanelToggle={vi.fn()}
-          />
+          <SteadyStatePanel visible />
           <ForceModelUpdateButton />
           <PlotPanel />
         </div>,

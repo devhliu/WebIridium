@@ -14,6 +14,7 @@ export interface ButtonProps {
   children?: React.ReactNode;
   className?: string;
   ref?: React.RefObject<HTMLButtonElement | null>;
+  ["aria-label"]?: string;
 }
 
 const Button = ({
@@ -25,6 +26,7 @@ const Button = ({
   children,
   className,
   ref,
+  "aria-label": ariaLabel,
 }: ButtonProps) => {
   return (
     <button
@@ -38,6 +40,7 @@ const Button = ({
       onClick={onClick}
       disabled={disabled}
       data-active={active}
+      aria-label={ariaLabel}
     >
       {children}
     </button>

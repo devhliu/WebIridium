@@ -12,6 +12,8 @@ import {
 import styles from "./PlotSettingsPanel.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
 
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
+
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
@@ -25,8 +27,13 @@ import PropertyAccordionItem from "@/components/property-accordion/PropertyAccor
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import PanelTitle from "./PanelTitle";
 import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
+import Button from "@/components/Button";
 
-const PlotSettingsPanel = () => {
+export interface PlotSettingsPanelProps {
+  onClose: () => void;
+}
+
+const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
   const [palette, setPalette] = useAtom(paletteAtom);
 
@@ -90,7 +97,12 @@ const PlotSettingsPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <PanelTitle title="Plot Settings" />
+      <PanelTitle title="Plot Settings">
+        <Button style="ghostText" iconOnly onClick={onClose} aria-label="Close">
+          <CrossIcon width="1em" height="1em" aria-hidden />
+        </Button>
+      </PanelTitle>
+
       <PropertyAccordion
         defaultOpen={["Bounds", "Graph", "Series", "Axes", "Grids", "Legend"]}
       >

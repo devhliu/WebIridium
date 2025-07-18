@@ -24,16 +24,9 @@ import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
 
 export interface TimeCoursePanelProps {
   visible: boolean;
-
-  slidersPanelActive: boolean;
-  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-export const TimeCoursePanel = ({
-  visible,
-  slidersPanelActive,
-  onSlidersPanelToggle,
-}: TimeCoursePanelProps) => {
+export const TimeCoursePanel = ({ visible }: TimeCoursePanelProps) => {
   const { toast } = useToast();
   const isSimulating = useAtomValue(isSimulatingAtom);
   const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
@@ -63,8 +56,6 @@ export const TimeCoursePanel = ({
     <SimulationPanel
       title="Time Course Simulation"
       visible={visible}
-      slidersPanelActive={slidersPanelActive}
-      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="timeCoursePanel"
     >
       <CancellableButton

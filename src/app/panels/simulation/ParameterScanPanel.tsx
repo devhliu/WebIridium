@@ -38,16 +38,9 @@ import StringProperty from "@/components/property-list/StringProperty";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
-
-  slidersPanelActive: boolean;
-  onSlidersPanelToggle: (on: boolean) => void;
 }
 
-const ParameterScanPanel = ({
-  visible,
-  slidersPanelActive,
-  onSlidersPanelToggle,
-}: ParameterScanPanelProps) => {
+const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const { toast } = useToast();
 
   const variables = useAtomValue(variablesAtom);
@@ -89,8 +82,6 @@ const ParameterScanPanel = ({
     <SimulationPanel
       title="Parameter Scan"
       visible={visible}
-      slidersPanelActive={slidersPanelActive}
-      onSlidersPanelToggle={onSlidersPanelToggle}
       data-testid="parameterScanPanel"
     >
       <CancellableButton

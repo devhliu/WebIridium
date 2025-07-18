@@ -12,7 +12,11 @@ import {
   MenubarSeparator,
 } from "@/components/Menubar";
 
-import { SIDEBAR_TABS, currentSidebarTabAtom } from "@/globals/sidebar";
+import {
+  LEFT_PANELS,
+  currentLeftPanelAtom,
+  currentBottomPanelAtom,
+} from "@/globals/layout";
 
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
@@ -26,21 +30,16 @@ import {
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
 
-export interface AppMenubarProps {
-  slidersPanelActive: boolean;
-  onSlidersPanelToggle: (on: boolean) => void;
-}
-
-const AppMenubar = ({
-  slidersPanelActive,
-  onSlidersPanelToggle,
-}: AppMenubarProps) => {
+const AppMenubar = () => {
   const { toast } = useToast();
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const toggleTheme = useSetAtom(toggleThemeAtom);
   const workspaceName = useAtomValue(nameAtom);
-  const [sidebarTab, setSidebarTab] = useAtom(currentSidebarTabAtom);
+  const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
+  const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
+    currentBottomPanelAtom,
+  );
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -91,12 +90,12 @@ const AppMenubar = ({
 
         <MenubarMenu name="View">
           <MenubarRadioGroup
-            value={sidebarTab}
-            onValueChange={setSidebarTab as (newValue: string) => void}
+            value={currentLeftPanel}
+            onValueChange={setCurrentLeftPanel as (newValue: string) => void}
           >
-            {SIDEBAR_TABS.map((tab) => (
-              <MenubarRadioItem key={tab} value={tab}>
-                {tab}
+            {LEFT_PANELS.map((panel) => (
+              <MenubarRadioItem key={panel} value={panel}>
+                {panel}
               </MenubarRadioItem>
             ))}
           </MenubarRadioGroup>
@@ -104,8 +103,12 @@ const AppMenubar = ({
           <MenubarSeparator />
 
           <MenubarCheckboxItem
-            checked={slidersPanelActive}
-            onCheckedChange={onSlidersPanelToggle}
+            checked={currentBottomPanel === "Sliders"}
+            onCheckedChange={(checked) =>
+              checked
+                ? setCurrentBottomPanel("Sliders")
+                : setCurrentBottomPanel(null)
+            }
           >
             Sliders
           </MenubarCheckboxItem>

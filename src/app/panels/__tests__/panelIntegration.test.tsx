@@ -1,4 +1,4 @@
-import { test, expect, afterEach, vi } from "vitest";
+import { test, expect, afterEach } from "vitest";
 import { screen, within } from "@testing-library/react";
 import { renderFlush, renderWithinWorkspace } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
@@ -20,21 +20,9 @@ afterEach(() => {
 test("panels should all be cancellable when a simulation is running", async () => {
   await renderWithinWorkspace(
     <div>
-      <TimeCoursePanel
-        visible
-        slidersPanelActive={false}
-        onSlidersPanelToggle={vi.fn()}
-      />
-      <SteadyStatePanel
-        visible
-        slidersPanelActive={false}
-        onSlidersPanelToggle={vi.fn()}
-      />
-      <ParameterScanPanel
-        visible
-        slidersPanelActive={false}
-        onSlidersPanelToggle={vi.fn()}
-      />
+      <TimeCoursePanel visible />
+      <SteadyStatePanel visible />
+      <ParameterScanPanel visible />
     </div>,
   );
 

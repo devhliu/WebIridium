@@ -13,12 +13,12 @@ import {
   graphSettingsAtom,
   type GraphSettings,
 } from "@/globals/workspace/settings";
-import { currentSidebarTabAtom } from "@/globals/sidebar";
+import { currentVeryRightPanelAtom } from "@/globals/layout";
 
 const PlotQuickActionsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
 
-  const setSidebarTab = useSetAtom(currentSidebarTabAtom);
+  const setCurrentVeryRightPanel = useSetAtom(currentVeryRightPanelAtom);
 
   const handleChangeFor = (
     setting: keyof GraphSettings,
@@ -33,7 +33,7 @@ const PlotQuickActionsPanel = () => {
       <div className={styles.quickActionsButtons}>
         <Button
           className={styles.quickActionsButton}
-          onClick={() => setSidebarTab("Plot Settings")}
+          onClick={() => setCurrentVeryRightPanel("Plot Settings")}
         >
           <PencilIcon width="1em" height="1em" />
           Edit Graph
