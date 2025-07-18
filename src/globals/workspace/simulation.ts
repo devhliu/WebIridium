@@ -89,12 +89,6 @@ const runSimulation = async (
   } else if (modelStatus.type === "error") {
     return { type: "failure", message: modelStatus.message };
   } else {
-    // cancel the current simulaton if any
-    const prevInternalState = get(_simulationInternalStateAtom);
-    if (prevInternalState) {
-      prevInternalState.abortController.abort();
-    }
-
     const abortController = new AbortController();
     set(_simulationInternalStateAtom, {
       type: simulationType,

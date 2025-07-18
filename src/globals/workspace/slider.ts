@@ -5,8 +5,6 @@ import {
   simulateTimeCourseAtom,
   simulationResultAtom,
 } from "./simulation";
-import type { Variable } from "@/features/simulation/Simulator";
-import { variablesAtom } from "./model";
 
 export interface VariableSliderState {
   value: number;
@@ -29,20 +27,7 @@ export type UpdateVariableSliderValueOptions = {
   value: number;
 };
 
-const getModelDebounceTime = (variables: Variable[]): number => {
-  const speciesCount = variables.filter(
-    (v) => v.category === "Floating Species",
-  ).length;
-  if (speciesCount > 16) {
-    return 250;
-  } else if (speciesCount > 10) {
-    return 100;
-  } else if (speciesCount > 7) {
-    return 25;
-  } else {
-    return 10;
-  }
-};
+const SLIDER_CHANGE_DEBOUNCE_TIME = 10;
 
 export const updateVariableSliderValueAtom = atom(
   null,
@@ -57,31 +42,31 @@ export const updateVariableSliderValueAtom = atom(
     });
 
     // queue up a simulation
-    if (!get(_queuedSliderSimulationIdAtom)) {
-      const timeoutId = setTimeout(
-        async () => {
-          if (get(_queuedSliderSimulationIdAtom) === timeoutId) {
-            set(_queuedSliderSimulationIdAtom, null);
-          }
-
-          switch (get(simulationResultAtom)?.type) {
-            case "steadyState":
-              await set(computeSteadyStateAtom);
-              break;
-            case "parameterScan":
-              await set(runParameterScanAtom);
-              break;
-            case "timeCourse":
-            default:
-              await set(simulateTimeCourseAtom);
-              break;
-          }
-        },
-        getModelDebounceTime(get(variablesAtom)),
-      ) as unknown as number;
-
-      set(_queuedSliderSimulationIdAtom, timeoutId);
+    const oldTimeoutId = get(_queuedSliderSimulationIdAtom);
+    if (oldTimeoutId) {
+      clearTimeout(oldTimeoutId);
     }
+
+    const timeoutId = setTimeout(async () => {
+      if (get(_queuedSliderSimulationIdAtom) === timeoutId) {
+        set(_queuedSliderSimulationIdAtom, null);
+      }
+
+      switch (get(simulationResultAtom)?.type) {
+        case "steadyState":
+          await set(computeSteadyStateAtom);
+          break;
+        case "parameterScan":
+          await set(runParameterScanAtom);
+          break;
+        case "timeCourse":
+        default:
+          await set(simulateTimeCourseAtom);
+          break;
+      }
+    }, SLIDER_CHANGE_DEBOUNCE_TIME) as unknown as number;
+
+    set(_queuedSliderSimulationIdAtom, timeoutId);
   },
 );
 
