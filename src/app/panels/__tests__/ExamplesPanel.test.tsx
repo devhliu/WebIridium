@@ -79,12 +79,16 @@ it("should make run the latest clicked example when multiple are clicked", async
   expect(janaWolfButton).toBeDisabled();
   expect(bistableButton).toBeEnabled();
 
+  setWorkerResponseDelay(500);
+
   await userEvent.click(bistableButton);
 
   await waitFor(() => {
     expect(janaWolfButton).toBeEnabled();
   });
-  expect(bistableButton).toBeDisabled();
+  await waitFor(() => {
+    expect(bistableButton).toBeDisabled();
+  });
 });
 
 it("should update independent variable if preset says so", async () => {
