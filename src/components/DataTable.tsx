@@ -50,10 +50,12 @@ const DataTable = memo(({ columns, decimalPlaces }: DataTableProps) => {
                       className={styles.cell}
                       style={{
                         color: "var(--color-data-table-fg)",
-                        backgroundColor: `color-mix(in hsl, ${targetColor} ${maxPercent}%, var(--color-data-table-neutral))`,
+                        backgroundColor: `color-mix(in oklch, ${targetColor} ${maxPercent}%, var(--color-data-table-neutral))`,
                       }}
                     >
-                      {cellValue.toFixed(decimalPlaces)}
+                      {cellValue === 0
+                        ? "0.0"
+                        : cellValue.toFixed(decimalPlaces)}
                     </td>
                   );
                 } else {
