@@ -25,6 +25,7 @@ const simulateTimeCourseGeneric = async (abortSignal?: AbortSignal) => {
         startTime: 0,
         endTime: 10,
         numberOfPoints: 200,
+        resetInitialConditions: true,
         includedVariables: [
           makeGenericVariable("A"),
           makeGenericVariable("B"),
