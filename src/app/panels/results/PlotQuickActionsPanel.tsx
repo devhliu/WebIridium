@@ -1,4 +1,4 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 
 import styles from "./results.module.css";
 
@@ -7,6 +7,7 @@ import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 
 import Button from "@/components/Button";
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 
 import {
@@ -18,7 +19,9 @@ import { currentVeryRightPanelAtom } from "@/globals/layout";
 const PlotQuickActionsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
 
-  const setCurrentVeryRightPanel = useSetAtom(currentVeryRightPanelAtom);
+  const [currentVeryRightPanel, setCurrentVeryRightPanel] = useAtom(
+    currentVeryRightPanelAtom,
+  );
 
   const handleChangeFor = (
     setting: keyof GraphSettings,
@@ -31,13 +34,23 @@ const PlotQuickActionsPanel = () => {
   return (
     <div className={styles.quickActionsContainer}>
       <div className={styles.quickActionsButtons}>
-        <Button
-          className={styles.quickActionsButton}
-          onClick={() => setCurrentVeryRightPanel("Plot Settings")}
-        >
-          <PencilIcon width="1em" height="1em" />
-          Edit Graph
-        </Button>
+        {currentVeryRightPanel === "Plot Settings" ? (
+          <Button
+            className={styles.quickActionsButton}
+            onClick={() => setCurrentVeryRightPanel(null)}
+          >
+            <CrossIcon width="1em" height="1em" />
+            Close Settings
+          </Button>
+        ) : (
+          <Button
+            className={styles.quickActionsButton}
+            onClick={() => setCurrentVeryRightPanel("Plot Settings")}
+          >
+            <PencilIcon width="1em" height="1em" />
+            Edit Graph
+          </Button>
+        )}
       </div>
 
       <div className={styles.quickActionsSettings}>
