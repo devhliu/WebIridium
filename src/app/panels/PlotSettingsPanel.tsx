@@ -107,7 +107,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         defaultOpen={["Bounds", "Graph", "Series", "Axes", "Grids", "Legend"]}
       >
         <PropertyAccordionItem title="Bounds">
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <BooleanProperty
               name="Autoscale X"
               value={graphSettings.isAutoscaledX}
@@ -155,7 +155,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Graph">
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <ColorProperty
               name="Background Color"
               value={graphSettings.backgroundColor}
@@ -209,7 +209,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
           title="Series"
           className={styles.seriesAccordionItem}
         >
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <SelectProperty
               name="Palette"
               value={palette}
@@ -225,7 +225,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Axes">
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <ToggleGroup
               value={selectedAxis}
               onValueChange={setSelectedAxis as (val: string) => void}
@@ -271,7 +271,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Grids">
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <ToggleGroup
               value={selectedGrid}
               onValueChange={setSelectedGrid as (val: string) => void}
@@ -363,7 +363,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         </PropertyAccordionItem>
 
         <PropertyAccordionItem title="Legend">
-          <PropertyList alignment="leftSmall">
+          <PropertyList alignment="center">
             <BooleanProperty
               name="Visible"
               value={graphSettings.legend.visible}
