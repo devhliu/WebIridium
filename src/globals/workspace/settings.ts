@@ -133,7 +133,7 @@ export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
 
 export const graphSettingsAtom = atom<GraphSettings>({
   backgroundColor: "#ffffff",
-  drawingAreaColor: "#e1d5ed",
+  drawingAreaColor: "#f1e7f4",
 
   includeTitle: true,
   title: "Transition of substances in chemical reaction",
