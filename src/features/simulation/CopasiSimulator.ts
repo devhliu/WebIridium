@@ -13,8 +13,8 @@ import { WorkerPool } from "@/features/workerPool.ts";
 import { createWorker } from "@/features/workers.ts";
 
 export class CopasiSimulator extends Simulator {
-  defaultIndependentVariableName = "Time";
-  scanIndependentVariableName = "Time";
+  defaultIndependentVariableId = "Time";
+  scanIndependentVariableId = "Time";
 
   #workerPool: WorkerPool;
 
@@ -155,7 +155,6 @@ export class CopasiSimulator extends Simulator {
       });
     }
 
-    console.log(variables);
     return variables;
   }
 }

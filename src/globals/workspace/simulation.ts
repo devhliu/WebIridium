@@ -248,7 +248,7 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
           resetInitialConditions: true,
           includedVariables: variables.filter(
             (v) =>
-              v.id === simulator.scanIndependentVariableName ||
+              v.id === simulator.scanIndependentVariableId ||
               variableSettingss[v.id].visible,
           ),
         };

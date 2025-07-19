@@ -3,5 +3,5 @@ import { simulatorAtom } from "@/globals/workspace/simulation";
 
 export const useScanIndependentVariable = (): string => {
   const simulator = useAtomValue(simulatorAtom);
-  return simulator.scanIndependentVariableName;
+  return simulator.scanIndependentVariableId;
 };
