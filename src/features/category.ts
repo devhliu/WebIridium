@@ -49,7 +49,7 @@ export const groupVariablesForSelectComponent = <TVar extends Variable>(
     return {
       ...acc,
       [category]: Object.fromEntries(
-        variables.map((v) => [variableSettingss[v.name].displayName, v.name]),
+        variables.map((v) => [variableSettingss[v.id].displayName, v.id]),
       ),
     };
   }, {});

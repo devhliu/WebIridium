@@ -96,8 +96,8 @@ const MissingDataStatusItem = () => {
   }
 
   const missingVariables = variables
-    .filter((v) => variableSettingss[v.name]?.visible)
-    .filter((v) => !haveSet.has(v.name));
+    .filter((v) => variableSettingss[v.id]?.visible)
+    .filter((v) => !haveSet.has(v.id));
   const misingIndependent =
     simulatorResult.type === "timeCourse" && !haveSet.has(independentVariable);
   if (missingVariables.length > 0 || misingIndependent) {

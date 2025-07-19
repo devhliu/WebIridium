@@ -153,8 +153,8 @@ export const simulateTimeCourseAtom = atom(
               resetInitialConditions,
               includedVariables: variables.filter(
                 (v) =>
-                  v.name === independentVariable ||
-                  variableSettings[v.name].visible,
+                  v.id === independentVariable ||
+                  variableSettings[v.id].visible,
               ),
             },
             variableValues: getVariableValues(
@@ -248,8 +248,8 @@ export const runParameterScanAtom = atom(null, async (get, set) => {
           resetInitialConditions: true,
           includedVariables: variables.filter(
             (v) =>
-              v.name === simulator.scanIndependentVariableName ||
-              variableSettingss[v.name].visible,
+              v.id === simulator.scanIndependentVariableName ||
+              variableSettingss[v.id].visible,
           ),
         };
 

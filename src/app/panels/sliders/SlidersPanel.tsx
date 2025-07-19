@@ -71,11 +71,11 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const [showingInactive, setShowingInactive] = useState(true);
 
   const filteredVariables = variables
-    .filter((v) => showingInactive || variableSliderStates[v.name])
+    .filter((v) => showingInactive || variableSliderStates[v.id])
     .filter((v) => v.type === "settable")
     .filter(
       (v) =>
-        variableSettingss[v.name].displayName
+        variableSettingss[v.id].displayName
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -95,7 +95,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
       updateVariableSliderValue({
-        variableName: variable.name,
+        variableName: variable.id,
         value: newValue,
       });
     },
@@ -108,10 +108,10 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
         if (on) {
           return {
             ...old,
-            [variable.name]: getInitialSliderState(variable),
+            [variable.id]: getInitialSliderState(variable),
           };
         } else {
-          const { [variable.name]: _, ...rest } = old;
+          const { [variable.id]: _, ...rest } = old;
           return rest;
         }
       });
@@ -123,7 +123,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
     (variable: SettableVariable, newState: VariableSliderState) => {
       setVariableSliderStates((old) => ({
         ...old,
-        [variable.name]: newState,
+        [variable.id]: newState,
       }));
     },
     [setVariableSliderStates],
@@ -167,8 +167,8 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
             const unfilteredVars = unfilteredGroups.get(group)!;
             // prettier-ignore
             const checkboxState =
-              unfilteredVars.every((v) => variableSliderStates[v.name]) ? true
-              : unfilteredVars.some((v) => variableSliderStates[v.name]) ? "indeterminate"
+              unfilteredVars.every((v) => variableSliderStates[v.id]) ? true
+              : unfilteredVars.some((v) => variableSliderStates[v.id]) ? "indeterminate"
               : false;
 
             const handleGroupToggle = (on: boolean) => {
@@ -191,10 +191,10 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
                 </h3>
                 {vars.map((v) => (
                   <VariableSlider
-                    key={v.name}
+                    key={v.id}
                     variable={v}
-                    settings={variableSettingss[v.name]}
-                    sliderState={variableSliderStates[v.name]}
+                    settings={variableSettingss[v.id]}
+                    sliderState={variableSliderStates[v.id]}
                     onToggle={handleToggle}
                     onValueChange={handleValueChange}
                     onStateChange={handleStateChange}
