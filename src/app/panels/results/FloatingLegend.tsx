@@ -1,5 +1,5 @@
 import { useRef, useState, type CSSProperties } from "react";
-import styles from "./DraggableLegend.module.css";
+import styles from "./FloatingLegend.module.css";
 import type { LegendSettings } from "@/globals/workspace/settings";
 import type { LineStyle } from "@/features/lineStyle";
 
@@ -18,7 +18,7 @@ export interface LegendDataItem {
   dash: LineStyle;
 }
 
-export interface DraggableLegendProps {
+export interface FloatingLegendProps {
   settings: LegendSettings;
   data: LegendDataItem[];
 }
@@ -55,7 +55,7 @@ type Position = {
 
 // TODO: add some tests for this? (snapshot)
 // TODO: add clamping
-const DraggableLegend = ({ settings, data }: DraggableLegendProps) => {
+const FloatingLegend = ({ settings, data }: FloatingLegendProps) => {
   const dragStartPosition = useRef<Position | null>(null);
   const [position, setPosition] = useState<Position | null>(null);
 
@@ -111,4 +111,4 @@ const DraggableLegend = ({ settings, data }: DraggableLegendProps) => {
   );
 };
 
-export default DraggableLegend;
+export default FloatingLegend;

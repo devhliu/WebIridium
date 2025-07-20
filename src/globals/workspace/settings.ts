@@ -53,11 +53,14 @@ export interface GridSettings {
 
 export interface LegendSettings {
   visible: boolean;
+  isFloating: boolean;
+
+  // Floating only
   backgroundColor: string;
-  padding: number;
-  lineLength: number;
   borderColor: string;
   borderThickness: number;
+  padding: number;
+  lineLength: number;
 }
 
 export interface GraphSettings {
@@ -190,11 +193,13 @@ export const graphSettingsAtom = atom<GraphSettings>({
 
   legend: {
     visible: true,
+    isFloating: true,
+
     backgroundColor: "#fff",
-    padding: 15,
-    lineLength: 50,
     borderColor: "#000",
     borderThickness: 1,
+    padding: 15,
+    lineLength: 50,
   },
 });
 

@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
-import DraggableLegend, { type LegendDataItem } from "./DraggableLegend";
+import FloatingLegend, { type LegendDataItem } from "./FloatingLegend";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
@@ -240,9 +240,11 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
 
   return (
     <>
-      {legendSettings.visible && legendData.length > 0 && (
-        <DraggableLegend settings={legendSettings} data={legendData} />
-      )}
+      {legendSettings.visible &&
+        legendSettings.isFloating &&
+        legendData.length > 0 && (
+          <FloatingLegend settings={legendSettings} data={legendData} />
+        )}
       <Plot
         data-testid="results-plot"
         data={plotData as unknown as Data[]}
@@ -255,7 +257,6 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
             : {
                 text: title,
               },
-          showlegend: false,
           paper_bgcolor: backgroundColor,
           plot_bgcolor: drawingAreaColor,
           xaxis: {
@@ -295,6 +296,14 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
                   },
                 },
               ],
+          showlegend:
+            legendSettings.visible &&
+            !legendSettings.isFloating &&
+            legendData.length > 0,
+          legend: {
+            // disable click toggling the item in the view since we want to control variable visibility manually
+            itemclick: false,
+          },
         }}
         config={{ responsive: true, displayModeBar: false }}
       />

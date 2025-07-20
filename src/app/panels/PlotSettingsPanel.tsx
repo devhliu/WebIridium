@@ -370,43 +370,51 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
               onChange={handleLegendChangeFor("visible")}
             />
             {graphSettings.legend.visible && (
-              <>
-                <ColorProperty
-                  name="Background Color"
-                  value={graphSettings.legend.backgroundColor}
-                  onChange={handleLegendChangeFor("backgroundColor")}
-                />
-                <NumericSliderProperty
-                  name="Padding"
-                  value={graphSettings.legend.padding}
-                  min={0}
-                  max={100}
-                  step={1}
-                  onChange={handleLegendChangeFor("padding")}
-                />
-                <NumericSliderProperty
-                  name="Line Length"
-                  value={graphSettings.legend.lineLength}
-                  min={1}
-                  max={100}
-                  step={1}
-                  onChange={handleLegendChangeFor("lineLength")}
-                />
-                <ColorProperty
-                  name="Border Color"
-                  value={graphSettings.legend.borderColor}
-                  onChange={handleLegendChangeFor("borderColor")}
-                />
-                <NumericSliderProperty
-                  name="Border Thickness"
-                  value={graphSettings.legend.borderThickness}
-                  min={0}
-                  max={25}
-                  step={0.5}
-                  onChange={handleLegendChangeFor("borderThickness")}
-                />
-              </>
+              <BooleanProperty
+                name="Floating"
+                value={graphSettings.legend.isFloating}
+                onChange={handleLegendChangeFor("isFloating")}
+              />
             )}
+            {graphSettings.legend.visible &&
+              graphSettings.legend.isFloating && (
+                <>
+                  <ColorProperty
+                    name="Background Color"
+                    value={graphSettings.legend.backgroundColor}
+                    onChange={handleLegendChangeFor("backgroundColor")}
+                  />
+                  <NumericSliderProperty
+                    name="Padding"
+                    value={graphSettings.legend.padding}
+                    min={0}
+                    max={100}
+                    step={1}
+                    onChange={handleLegendChangeFor("padding")}
+                  />
+                  <NumericSliderProperty
+                    name="Line Length"
+                    value={graphSettings.legend.lineLength}
+                    min={1}
+                    max={100}
+                    step={1}
+                    onChange={handleLegendChangeFor("lineLength")}
+                  />
+                  <ColorProperty
+                    name="Border Color"
+                    value={graphSettings.legend.borderColor}
+                    onChange={handleLegendChangeFor("borderColor")}
+                  />
+                  <NumericSliderProperty
+                    name="Border Thickness"
+                    value={graphSettings.legend.borderThickness}
+                    min={0}
+                    max={25}
+                    step={0.5}
+                    onChange={handleLegendChangeFor("borderThickness")}
+                  />
+                </>
+              )}
           </PropertyList>
         </PropertyAccordionItem>
       </PropertyAccordion>
