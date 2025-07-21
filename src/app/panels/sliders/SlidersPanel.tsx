@@ -10,7 +10,10 @@ import {
   variableSliderStatesAtom,
   type VariableSliderState,
 } from "@/globals/workspace/slider";
-import { variableSettingssAtom } from "@/globals/workspace/settings";
+import {
+  parameterScanOptionsAtom,
+  variableSettingssAtom,
+} from "@/globals/workspace/settings";
 import { groupVariables } from "@/features/category";
 
 import VariableSlider from "./VariableSlider";
@@ -22,6 +25,7 @@ import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import IconButton from "@/components/IconButton";
+import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
@@ -67,6 +71,8 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
     variableSliderStatesAtom,
   );
   const updateVariableSliderValue = useSetAtom(updateVariableSliderValueAtom);
+  const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
+  const simulationResult = useAtomValue(simulationResultAtom);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showingInactive, setShowingInactive] = useState(true);
@@ -82,12 +88,6 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
-  const unfilteredGroups = new Map(
-    groupVariables(
-      variables.filter((v) => v.type === "settable"),
-      SLIDER_CATEGORY_ORDER,
-    ),
-  );
   const filteredGroups = groupVariables(
     filteredVariables,
     SLIDER_CATEGORY_ORDER,
@@ -159,15 +159,14 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           <p className={styles.noVariables}>No Variables</p>
         ) : (
           filteredGroups.map(([group, vars]) => {
-            const unfilteredVars = unfilteredGroups.get(group)!;
             // prettier-ignore
             const checkboxState =
-              unfilteredVars.every((v) => variableSliderStates[v.id]) ? true
-              : unfilteredVars.some((v) => variableSliderStates[v.id]) ? "indeterminate"
+              vars.every((v) => variableSliderStates[v.id]) ? true
+              : vars.some((v) => variableSliderStates[v.id]) ? "indeterminate"
               : false;
 
             const handleGroupToggle = (on: boolean) => {
-              for (const v of unfilteredVars) {
+              for (const v of vars) {
                 handleToggle(v, on);
               }
             };
@@ -190,6 +189,10 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
                     variable={v}
                     settings={variableSettingss[v.id]}
                     sliderState={variableSliderStates[v.id]}
+                    disabled={
+                      simulationResult?.type === "parameterScan" &&
+                      parameterScanOptions.varyingParameter === v.id
+                    }
                     onToggle={handleToggle}
                     onValueChange={handleValueChange}
                     onStateChange={handleStateChange}

@@ -7,6 +7,7 @@ export interface SliderProps {
   min: number;
   max: number;
   step?: number;
+  disabled?: boolean;
   onChange: (newValue: number) => void;
 
   className?: string;
@@ -17,6 +18,7 @@ const Slider = ({
   min,
   max,
   step,
+  disabled = false,
   onChange,
   className,
 }: SliderProps) => {
@@ -28,6 +30,7 @@ const Slider = ({
       min={min}
       max={max}
       step={step}
+      disabled={disabled}
     >
       <RadixSlider.Track className={styles.track}>
         <RadixSlider.Range className={styles.range} />

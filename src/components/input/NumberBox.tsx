@@ -5,6 +5,7 @@ import styles from "./NumberBox.module.css";
 export interface NumberBoxProps {
   name: string;
   value: number;
+  disabled?: boolean;
   onChange: (newValue: number) => void;
   /** checks for if the value the user is inputted is correct */
   validator?: (value: number) => void;
@@ -14,6 +15,7 @@ export interface NumberBoxProps {
 const NumberBox = ({
   name,
   value,
+  disabled = false,
   onChange,
   validator,
   className,
@@ -60,8 +62,9 @@ const NumberBox = ({
       id={name}
       className={clsx(styles.box, className)}
       type="number"
-      onFocus={handleFocus}
       value={workingValue}
+      disabled={disabled}
+      onFocus={handleFocus}
       onChange={handleWorkingChange}
       onBlur={handleBlur}
       onKeyDown={handleKeyDown}

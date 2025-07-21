@@ -26,6 +26,10 @@
   border-radius: 9999px;
   height: 100%;
   cursor: pointer;
+
+  &[data-disabled] {
+    background-color: var(--color-disabled);
+  }
 }
 
 .thumb {
@@ -35,4 +39,8 @@
   background-color: var(--color-layer1-fg);
   border-radius: 10px;
   cursor: pointer;
+
+  &[data-disabled] {
+    background-color: var(--color-disabled-fg);
+  }
 }

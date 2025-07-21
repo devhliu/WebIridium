@@ -6,6 +6,9 @@
 
   /* Interactions/Prominent Elements */
 
+  --color-disabled: oklch(0.35 0.0067 248.03);
+  --color-disabled-fg: oklch(0.6 0.0067 248.03);
+
   --color-button-bg: oklch(0.3389 0.0067 248.03);
   --color-button-fg: oklch(0.9624 0.0042 236.5);
   --color-button-border: oklch(0.4089 0.0036 264.52);

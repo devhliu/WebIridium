@@ -16,6 +16,7 @@ export interface VariableSliderProps {
   variable: SettableVariable;
   settings: VariableSettings;
   sliderState: VariableSliderState | undefined;
+  disabled?: boolean;
   onToggle: (variable: SettableVariable, on: boolean) => void;
   onStateChange: (
     variable: SettableVariable,
@@ -31,6 +32,7 @@ const VariableSlider = memo(
     variable,
     settings,
     sliderState,
+    disabled = false,
     onToggle,
     onValueChange,
     onStateChange,
@@ -71,6 +73,7 @@ const VariableSlider = memo(
             name={variable.id}
             value={Boolean(sliderState)}
             onChange={handleToggle}
+            disabled={disabled}
           />
           <label className={styles.sliderTitleMainLabel} htmlFor={variable.id}>
             {getVariableSetDisplayName(variable, settings)}
@@ -89,6 +92,7 @@ const VariableSlider = memo(
                 name={`${variable.id}-value`}
                 value={sliderState.value}
                 onChange={handleChangeFor("value")}
+                disabled={disabled}
               />
 
               <label
@@ -103,6 +107,7 @@ const VariableSlider = memo(
                 value={sliderState.min}
                 onChange={handleChangeFor("min")}
                 validator={(value) => value < sliderState.max}
+                disabled={disabled}
               />
 
               <label
@@ -117,6 +122,7 @@ const VariableSlider = memo(
                 value={sliderState.max}
                 onChange={handleChangeFor("max")}
                 validator={(value) => value > sliderState.min}
+                disabled={disabled}
               />
             </>
           )}
@@ -130,6 +136,7 @@ const VariableSlider = memo(
             step={(sliderState.max - sliderState.min) / SLIDER_TOTAL_STEPS}
             value={sliderState.value}
             onChange={handleChangeFor("value")}
+            disabled={disabled}
           />
         )}
       </div>

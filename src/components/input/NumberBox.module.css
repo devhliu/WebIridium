@@ -11,3 +11,8 @@
   border: 1px solid var(--color-accent);
   outline: var(--border-input-focused);
 }
+
+.box:disabled {
+  color: var(--color-disabled-fg);
+  background-color: var(--color-disabled);
+}

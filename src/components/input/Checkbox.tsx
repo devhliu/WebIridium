@@ -7,15 +7,23 @@ import DashIcon from "@/assets/icons/DashIcon.svg?react";
 export interface CheckboxProps {
   name: string;
   value: boolean | "indeterminate";
+  disabled?: boolean;
   onChange: (newValue: boolean) => void;
   className?: string;
 }
 
-const Checkbox = ({ name, value, onChange, className }: CheckboxProps) => {
+const Checkbox = ({
+  name,
+  value,
+  disabled = false,
+  onChange,
+  className,
+}: CheckboxProps) => {
   return (
     <RadixCheckbox.Root
       id={name}
       className={clsx(styles.root, className)}
+      disabled={disabled}
       checked={value}
       onCheckedChange={onChange}
     >
