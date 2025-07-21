@@ -9,7 +9,7 @@ vi.mock("@/app/panels/EditorPanel.tsx");
 vi.mock("@/components/Toast.tsx");
 vi.mock("@/features/workers");
 vi.mock("react-plotly.js");
-vi.mock("plotly.js");
+vi.mock("plotly.js-dist-min");
 
 afterEach(cleanup);
 

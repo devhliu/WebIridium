@@ -9,6 +9,7 @@ import PlotPanel from "./PlotPanel";
 import TablePanel from "./TablePanel";
 import SteadyStateResultPanel from "./SteadyStateResultPanel";
 import ExportPlotButton from "./exportButtons/ExportPlotButton";
+import ExportTableButton from "./exportButtons/ExportTableButton";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
@@ -35,6 +36,7 @@ const ResultTabbedPanel = () => {
         name: "Table",
         icon: <TableIcon width="20" height="20" />,
         render: () => <TablePanel />,
+        renderActions: () => <ExportTableButton />,
       },
     ];
   }
