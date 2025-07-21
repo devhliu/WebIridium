@@ -4,6 +4,7 @@
   gap: var(--spacing-3);
 
   padding: var(--spacing-panel);
+  padding-bottom: 128px; /* some extra so they can scroll down */
   height: 100%;
   width: 100%;
 
