@@ -6,9 +6,6 @@ import { useAtom, useAtomValue } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
-import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
-import TableIcon from "@/assets/icons/TableIcon.svg?react";
-import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import {
@@ -28,12 +25,9 @@ import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
 import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
 import EditorPanel from "./panels/EditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
-import PlotPanel from "./panels/results/PlotPanel";
-import TablePanel from "./panels/results/TablePanel";
-import SteadyStateResultPanel from "./panels/results/SteadyStateResultPanel";
-import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import SlidersPanel from "./panels/sliders/SlidersPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
+import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./panels/PlotSettingsPanel";
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
@@ -45,39 +39,6 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       </WorkspaceProvider>
     </ToastProvider>
   );
-};
-
-const ResultTabbedPanel = () => {
-  const simulationResult = useAtomValue(simulationResultAtom);
-  let tabs: TabInfo[];
-  if (simulationResult?.type === "steadyState") {
-    tabs = [
-      {
-        name: "Steady State",
-        icon: <SteadyStateIcon width="20" height="20" />,
-        render: () => <SteadyStateResultPanel />,
-      },
-    ];
-  } else {
-    tabs = [
-      {
-        name: "Plot",
-        icon: <GraphIcon width="20" height="20" />,
-        render: () => <PlotPanel />,
-      },
-      {
-        name: "Table",
-        icon: <TableIcon width="20" height="20" />,
-        render: () => <TablePanel />,
-      },
-    ];
-  }
-
-  if (simulationResult) {
-    return <TabbedPanel tabs={tabs} data-testid="results-panel" />;
-  } else {
-    return null;
-  }
 };
 
 const AppContent = () => {
