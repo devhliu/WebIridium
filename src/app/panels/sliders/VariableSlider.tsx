@@ -10,6 +10,7 @@ import type { VariableSliderState } from "@/globals/workspace/slider";
 import Slider from "@/components/input/Slider";
 import Checkbox from "@/components/input/Checkbox";
 import NumberBox from "@/components/input/NumberBox";
+import { getVariableSetDisplayName } from "@/features/simulation/getVariableSetDisplayName";
 
 export interface VariableSliderProps {
   variable: SettableVariable;
@@ -72,7 +73,7 @@ const VariableSlider = memo(
             onChange={handleToggle}
           />
           <label className={styles.sliderTitleMainLabel} htmlFor={variable.id}>
-            {settings.displayName}
+            {getVariableSetDisplayName(variable, settings)}
           </label>
 
           {sliderState && (

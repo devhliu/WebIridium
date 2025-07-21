@@ -21,6 +21,7 @@ import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import SimulationPanel from "./SimulationPanel";
 
 import { groupVariablesForSelectComponent } from "@/features/category";
+import { getVariableSetDisplayName } from "@/features/simulation/getVariableSetDisplayName";
 
 import {
   cancelSimulationAtom,
@@ -135,6 +136,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
                 groups={groupVariablesForSelectComponent(
                   variables.filter((v) => v.type === "settable"),
                   variableSettingss,
+                  getVariableSetDisplayName,
                 )}
               />
             )}
