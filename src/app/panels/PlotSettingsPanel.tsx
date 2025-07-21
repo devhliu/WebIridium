@@ -27,7 +27,7 @@ import PropertyAccordionItem from "@/components/property-accordion/PropertyAccor
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import PanelTitle from "./PanelTitle";
 import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
-import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 
 export interface PlotSettingsPanelProps {
   onClose: () => void;
@@ -98,9 +98,9 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   return (
     <div className={styles.panel}>
       <PanelTitle title="Plot Settings">
-        <Button style="ghostText" iconOnly onClick={onClose} aria-label="Close">
+        <IconButton onClick={onClose} label="Close">
           <CrossIcon width="1em" height="1em" aria-hidden />
-        </Button>
+        </IconButton>
       </PanelTitle>
 
       <PropertyAccordion

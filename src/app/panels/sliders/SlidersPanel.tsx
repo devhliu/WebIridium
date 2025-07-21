@@ -21,6 +21,7 @@ import Button from "@/components/Button";
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
+import IconButton from "@/components/IconButton";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
@@ -148,15 +149,9 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           {showingInactive ? "Hide Inactive" : "Show Inactive"}
         </Button>
 
-        <Button
-          className={styles.close}
-          aria-label="Close"
-          onClick={onClose}
-          style="ghostText"
-          iconOnly
-        >
+        <IconButton label="Close" onClick={onClose}>
           <CrossIcon width="1em" height="1em" aria-hidden />
-        </Button>
+        </IconButton>
       </div>
 
       <div className={styles.sliders}>

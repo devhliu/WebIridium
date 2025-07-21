@@ -81,8 +81,3 @@
     color: var(--color-ghost-text-button-disabled);
   }
 }
-
-.icon-only {
-  font-size: 1.25em;
-  aspect-ratio: 1 / 1;
-}

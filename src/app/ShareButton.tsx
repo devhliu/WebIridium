@@ -10,7 +10,7 @@ import { editorContentAtom } from "@/globals/workspace/model";
 
 import { getShareUrlFragment, type ShareWorkspaceData } from "@/features/share";
 
-import Button from "@/components/Button";
+import IconButton from "@/components/IconButton";
 import ShareIcon from "@/assets/icons/ShareIcon.svg?react";
 import ShareDialog from "./ShareDialog";
 import { useToast } from "@/components/Toast";
@@ -63,13 +63,14 @@ const ShareButton = () => {
 
   return (
     <>
-      <Button
-        style="ghostText"
+      <IconButton
+        label="Share"
         onClick={handleClick}
         disabled={Boolean(url) || computing}
+        size="small"
       >
-        <ShareIcon width="1.25em" height="1.25em" />
-      </Button>
+        <ShareIcon width="1.25em" height="1.25em" aria-hidden />
+      </IconButton>
       {url && <ShareDialog url={url} onClose={() => setUrl(null)} />}
     </>
   );
