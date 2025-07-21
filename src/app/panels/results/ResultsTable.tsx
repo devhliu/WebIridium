@@ -1,19 +1,25 @@
 import { memo } from "react";
 import { useAtomValue } from "jotai";
-import DataTable, { type DataTableProps } from "@/components/DataTable";
+import DataTable from "@/components/DataTable";
 import { getParameterScanTitle } from "./shared";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import { independentVariableAtom } from "@/globals/workspace/settings";
+import {
+  independentVariableAtom,
+  variableSettingssAtom,
+} from "@/globals/workspace/settings";
+import { getColumnsFromResult } from "./getColumnsFromResult";
 
 export interface ResultsTableProps {
   result: SimulationResult;
 }
 
 const ResultsTable = memo(({ result }: ResultsTableProps) => {
-  const independentVariable = useAtomValue(independentVariableAtom);
+  const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const scanIndepedentVariable = useScanIndependentVariable();
+  const variableSettingss = useAtomValue(variableSettingssAtom);
 
+  /*
   let columns: DataTableProps["columns"] = [];
   if (result.type === "timeCourse") {
     // move independent column to the start
@@ -70,8 +76,51 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
       });
     }
   }
+ */
 
-  return <DataTable columns={columns} decimalPlaces={2} />;
+  const [columns, independentVariableName] = getColumnsFromResult(
+    result,
+    timeCourseIndependentVariable,
+    scanIndepedentVariable,
+  );
+
+  const dataTableColumns = [];
+  const parameterSettings =
+    result.type === "parameterScan"
+      ? variableSettingss[result.parameter]
+      : null;
+
+  const independentVariableColumn = columns.find(
+    (c) => c.variableName === independentVariableName,
+  );
+
+  if (independentVariableColumn) {
+    const settings = variableSettingss[independentVariableName];
+    dataTableColumns.push({
+      title: settings.displayName,
+      values: independentVariableColumn.values,
+    });
+  }
+
+  for (const { variableName, values, parameterValue } of columns) {
+    if (variableName !== independentVariableName) {
+      const settings = variableSettingss[variableName];
+      if (!settings.visible) continue;
+
+      const title =
+        parameterValue !== undefined
+          ? getParameterScanTitle(
+              settings.displayName,
+              parameterSettings!.displayName,
+              parameterValue,
+            )
+          : settings.displayName;
+
+      dataTableColumns.push({ title, values });
+    }
+  }
+
+  return <DataTable columns={dataTableColumns} decimalPlaces={2} />;
 });
 
 ResultsTable.displayName = "ResultsTable";

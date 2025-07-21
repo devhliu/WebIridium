@@ -3,6 +3,7 @@ import Plot from "react-plotly.js";
 import type { Data } from "plotly.js";
 
 import FloatingLegend, { type LegendDataItem } from "./FloatingLegend";
+import { getColumnsFromResult } from "./getColumnsFromResult";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
@@ -65,63 +66,11 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     legend: legendSettings,
   } = useAtomValue(graphSettingsAtom);
 
-  // variable name -> column values
-  const columns: {
-    variableName: string;
-    values: number[];
-
-    // only used in parameter scan results
-    scanPercent?: number;
-    parameterValue?: number;
-  }[] = [];
-  let independentVariableName: string = "";
-
-  // Collect columns
-  if (result.type === "timeCourse") {
-    independentVariableName = timeCourseIndependentVariable ?? "";
-
-    for (const { title, values } of result.columns) {
-      columns.push({ variableName: title, values });
-    }
-  } else if (result.type === "parameterScan" && result.mode === "timeCourse") {
-    independentVariableName = scanIndependentVariable;
-
-    for (const scan of result.scans) {
-      for (const { title, values } of scan.columns) {
-        columns.push({
-          variableName: title,
-          parameterValue: scan.parameterValue,
-          scanPercent: scan.scanPercent,
-          values,
-        });
-      }
-    }
-  } else if (result.type === "parameterScan" && result.mode === "steadyState") {
-    independentVariableName = result.parameter;
-    columns.push({
-      variableName: result.parameter,
-      values: result.scans.map((s) => s.parameterValue),
-    });
-
-    const concentrationsMap = new Map<string, number[]>();
-
-    // transpose
-    for (const scan of result.scans) {
-      for (const { name, value } of scan.concentrations) {
-        if (!concentrationsMap.has(name)) {
-          concentrationsMap.set(name, [value]);
-        } else {
-          concentrationsMap.get(name)!.push(value);
-        }
-      }
-    }
-
-    for (const [variableName, concentrations] of concentrationsMap.entries()) {
-      columns.push({ variableName, values: concentrations });
-    }
-  } else {
-    return null;
-  }
+  const [columns, independentVariableName] = getColumnsFromResult(
+    result,
+    timeCourseIndependentVariable,
+    scanIndependentVariable,
+  );
 
   // Format data
 
@@ -248,7 +197,6 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       <Plot
         data-testid="results-plot"
         data={plotData as unknown as Data[]}
-        style={{ position: "relative" }}
         layout={{
           width,
           height,
