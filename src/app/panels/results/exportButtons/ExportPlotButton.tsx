@@ -10,6 +10,7 @@ import {
   variableSettingssAtom,
   paletteAtom,
   independentVariableAtom,
+  nameAtom,
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "../generatePlotParameters";
@@ -25,6 +26,7 @@ const ExportPlotButton = () => {
   const scanIndependentVariable = useScanIndependentVariable();
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const graphSettings = useAtomValue(graphSettingsAtom);
+  const workspaceName = useAtomValue(nameAtom);
 
   const handleClick = async () => {
     if (!result) return;
@@ -53,7 +55,7 @@ const ExportPlotButton = () => {
       width: WIDTH,
       height: HEIGHT,
     });
-    promptDownloadUrl("plot", imageUrl);
+    promptDownloadUrl(`Plot of ${workspaceName}`, imageUrl);
   };
 
   return <ExportButtonBase onClick={handleClick} />;

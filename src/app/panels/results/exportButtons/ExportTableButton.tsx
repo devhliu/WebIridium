@@ -6,6 +6,7 @@ import { simulationResultAtom } from "@/globals/workspace/simulation";
 import {
   variableSettingssAtom,
   independentVariableAtom,
+  nameAtom,
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generateTableParameters } from "../generateTableParameters";
@@ -17,6 +18,7 @@ const ExportTableButton = () => {
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
+  const workspaceName = useAtomValue(nameAtom);
 
   const handleClick = () => {
     if (!result) return;
@@ -51,7 +53,7 @@ const ExportTableButton = () => {
 
     const csv = lines.join("\n");
 
-    promptDownloadString("Table", csv, "text/csv");
+    promptDownloadString(`Table of ${workspaceName}`, csv, "text/csv");
   };
 
   return <ExportButtonBase onClick={handleClick} />;
