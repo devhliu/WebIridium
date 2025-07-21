@@ -20,8 +20,5 @@
   font-size: 12px;
   display: flex;
   align-items: center;
-}
-
-.line {
-  padding-right: 7px;
+  gap: 7px;
 }
