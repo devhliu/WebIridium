@@ -6,6 +6,7 @@ export interface TabInfo {
   name: string;
   icon?: React.ReactNode;
   render: () => React.ReactNode;
+  renderActions?: () => React.ReactNode;
 }
 
 export interface TabbedPanelProps {
@@ -15,8 +16,9 @@ export interface TabbedPanelProps {
 
 const TabbedPanel = ({ tabs, "data-testid": testId }: TabbedPanelProps) => {
   const [tab, setTab] = useState(tabs[0].name);
+  const currentTabInfo = tabs.find((t) => t.name === tab);
   // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
-  if (!tabs.find((t) => t.name === tab)) {
+  if (!currentTabInfo) {
     setTab(tabs[0].name);
     return;
   }
@@ -28,25 +30,29 @@ const TabbedPanel = ({ tabs, "data-testid": testId }: TabbedPanelProps) => {
         value={tab}
         onValueChange={setTab}
       >
-        <RadixTabs.List className={styles.tabList}>
-          {tabs.map((tabInfo) => (
-            <RadixTabs.Trigger
-              key={tabInfo.name}
-              className={styles.tabTrigger}
-              value={tabInfo.name}
-            >
-              {tabInfo.icon && (
-                <span className={styles.tabIcon}>{tabInfo.icon}</span>
-              )}
-              {tabInfo.name}
-            </RadixTabs.Trigger>
-          ))}
-        </RadixTabs.List>
+        <div className={styles.topList}>
+          <RadixTabs.List className={styles.tabList}>
+            {tabs.map((tabInfo) => (
+              <RadixTabs.Trigger
+                key={tabInfo.name}
+                className={styles.tabTrigger}
+                value={tabInfo.name}
+              >
+                {tabInfo.icon && (
+                  <span className={styles.tabIcon}>{tabInfo.icon}</span>
+                )}
+                {tabInfo.name}
+              </RadixTabs.Trigger>
+            ))}
+          </RadixTabs.List>
+
+          <div className={styles.actionList}>
+            {currentTabInfo.renderActions && currentTabInfo.renderActions()}
+          </div>
+        </div>
       </RadixTabs.Root>
 
-      <div className={styles.body}>
-        {tabs.find((t) => t.name === tab)!.render()}
-      </div>
+      <div className={styles.body}>{currentTabInfo.render()}</div>
     </div>
   );
 };

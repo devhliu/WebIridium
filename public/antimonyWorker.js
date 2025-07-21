@@ -28,7 +28,7 @@ const handleMessage = async (e) => {
       const antimonyConversion = antimony.convertSBMLToAntimony(sbml);
       // TODO: notify user about these warnings
       if (antimonyConversion.getWarnings()) {
-        console.warn(sbmlConversion.getWarnings());
+        console.warn(antimonyConversion.getWarnings());
       }
       if (!antimonyConversion.isSuccess()) {
         throw new Error(antimonyConversion.getResult());

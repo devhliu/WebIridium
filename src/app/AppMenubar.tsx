@@ -22,7 +22,7 @@ import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
 import ShareButton from "./ShareButton";
 
-import { promptDownloadFile } from "@/features/promptDownloadFile";
+import { promptDownloadString } from "@/features/download";
 import { toggleThemeAtom } from "@/globals/theme";
 import { nameAtom } from "@/globals/workspace/settings";
 import {
@@ -44,7 +44,7 @@ const AppMenubar = () => {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleDownload = () => {
-    promptDownloadFile(`${workspaceName}.ant`, editorContent, "ant");
+    promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
   };
 
   const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {

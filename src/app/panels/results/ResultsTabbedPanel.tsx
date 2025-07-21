@@ -8,6 +8,7 @@ import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
 import TablePanel from "./TablePanel";
 import SteadyStateResultPanel from "./SteadyStateResultPanel";
+import ExportPlotButton from "./exportButtons/ExportPlotButton";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
@@ -28,6 +29,7 @@ const ResultTabbedPanel = () => {
         name: "Plot",
         icon: <GraphIcon width="20" height="20" />,
         render: () => <PlotPanel />,
+        renderActions: () => <ExportPlotButton />,
       },
       {
         name: "Table",
