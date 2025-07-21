@@ -1,8 +1,11 @@
 import { useAtomValue } from "jotai";
 
+import styles from "./results.module.css";
+
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
+import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
@@ -12,8 +15,13 @@ import ExportPlotButton from "./exportButtons/ExportPlotButton";
 import ExportTableButton from "./exportButtons/ExportTableButton";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
+import IconButton from "@/components/IconButton";
 
-const ResultTabbedPanel = () => {
+export interface ResultTabbedPanelProps {
+  onClose: () => void;
+}
+
+const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
   const simulationResult = useAtomValue(simulationResultAtom);
   let tabs: TabInfo[];
   if (simulationResult?.type === "steadyState") {
@@ -22,6 +30,13 @@ const ResultTabbedPanel = () => {
         name: "Steady State",
         icon: <SteadyStateIcon width="20" height="20" />,
         render: () => <SteadyStateResultPanel />,
+        renderActions: () => (
+          <>
+            <IconButton label="Close" onClick={onClose}>
+              <CrossIcon width="1em" height="1em" />
+            </IconButton>
+          </>
+        ),
       },
     ];
   } else {
@@ -30,13 +45,27 @@ const ResultTabbedPanel = () => {
         name: "Plot",
         icon: <GraphIcon width="20" height="20" />,
         render: () => <PlotPanel />,
-        renderActions: () => <ExportPlotButton />,
+        renderActions: () => (
+          <>
+            <IconButton label="Close" onClick={onClose}>
+              <CrossIcon width="1em" height="1em" />
+            </IconButton>
+            <ExportPlotButton />
+          </>
+        ),
       },
       {
         name: "Table",
         icon: <TableIcon width="20" height="20" />,
         render: () => <TablePanel />,
-        renderActions: () => <ExportTableButton />,
+        renderActions: () => (
+          <>
+            <IconButton label="Close" onClick={onClose}>
+              <CrossIcon width="1em" height="1em" />
+            </IconButton>
+            <ExportTableButton />
+          </>
+        ),
       },
     ];
   }
@@ -44,7 +73,11 @@ const ResultTabbedPanel = () => {
   if (simulationResult) {
     return <TabbedPanel tabs={tabs} data-testid="results-panel" />;
   } else {
-    return null;
+    return (
+      <div className={styles.nothingContainer}>
+        <p className={styles.nothingLabel}>Nothing yet...</p>
+      </div>
+    );
   }
 };
 

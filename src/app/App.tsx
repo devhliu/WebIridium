@@ -2,18 +2,18 @@
 import "allotment/dist/style.css";
 
 import { useRef } from "react";
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
 import {
   currentLeftPanelAtom,
   currentBottomPanelAtom,
   currentVeryRightPanelAtom,
   LEFT_PANELS,
-} from "@/globals/layout";
+  currentRightPanelAtom,
+} from "@/globals/workspace/layout";
 
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
@@ -42,15 +42,18 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 };
 
 const AppContent = () => {
-  const simulationResult = useAtomValue(simulationResultAtom);
-
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
+  const [currentRightPanel, setCurrentRightPanel] = useAtom(
+    currentRightPanelAtom,
+  );
   const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
     currentBottomPanelAtom,
   );
   const [currentVeryRightPanel, setCurrentVeryRightPanel] = useAtom(
     currentVeryRightPanelAtom,
   );
+
+  console.log(currentRightPanel);
 
   return (
     <div className={styles.app}>
@@ -105,10 +108,12 @@ const AppContent = () => {
             </Allotment.Pane>
 
             <Allotment.Pane
-              visible={Boolean(simulationResult)}
+              visible={Boolean(currentRightPanel)}
               preferredSize={575}
             >
-              <ResultTabbedPanel />
+              {currentRightPanel === "Results" && (
+                <ResultTabbedPanel onClose={() => setCurrentRightPanel(null)} />
+              )}
             </Allotment.Pane>
 
             <Allotment.Pane

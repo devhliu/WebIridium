@@ -6,6 +6,7 @@ import defaultModel from "@/assets/default.ant?raw";
 
 import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
 import { sliderAtoms } from "@/globals/workspace/slider";
+import { layoutAtoms } from "@/globals/workspace/layout";
 import {
   nameAtom,
   settingsAtoms,
@@ -25,6 +26,7 @@ const allWorkspaceAtoms = [
   ...sliderAtoms,
   ...settingsAtoms,
   ...simulationAtoms,
+  ...layoutAtoms,
 ];
 
 // simulation from share link will not be run if they use more number of points

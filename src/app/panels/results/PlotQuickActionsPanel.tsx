@@ -14,7 +14,7 @@ import {
   graphSettingsAtom,
   type GraphSettings,
 } from "@/globals/workspace/settings";
-import { currentVeryRightPanelAtom } from "@/globals/layout";
+import { currentVeryRightPanelAtom } from "@/globals/workspace/layout";
 
 const PlotQuickActionsPanel = () => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);

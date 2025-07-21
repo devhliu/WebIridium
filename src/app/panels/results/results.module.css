@@ -1,3 +1,13 @@
+/* nothing */
+
+.nothing-container {
+  padding: var(--spacing-panel);
+}
+
+.nothing-label {
+  color: var(--color-layer1-fg);
+}
+
 /* plot */
 
 .plot-container {

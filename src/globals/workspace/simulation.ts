@@ -27,6 +27,7 @@ import {
   variableSettingssAtom,
 } from "./settings";
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
+import { currentRightPanelAtom } from "./layout";
 import { WorkerTermination } from "@/features/workerPool";
 
 export type SimulationOperationResult =
@@ -101,6 +102,7 @@ const runSimulation = async (
     try {
       const result = await run(abortController.signal);
       set(_simulationResultAtom, result);
+      set(currentRightPanelAtom, "Results");
       return { type: "success" };
     } catch (err) {
       if (err instanceof WorkerTermination) {

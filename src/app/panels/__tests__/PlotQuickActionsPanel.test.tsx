@@ -1,7 +1,7 @@
 import { it, expect } from "vitest";
 import { useAtomValue } from "jotai";
 
-import { currentVeryRightPanelAtom } from "@/globals/layout";
+import { currentVeryRightPanelAtom } from "@/globals/workspace/layout";
 import { renderWithinWorkspace } from "@/testing-utils/render";
 import PlotQuickActionsPanel from "../results/PlotQuickActionsPanel";
 import userEvent from "@testing-library/user-event";

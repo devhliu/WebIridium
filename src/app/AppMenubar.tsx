@@ -15,8 +15,9 @@ import {
 import {
   LEFT_PANELS,
   currentLeftPanelAtom,
+  currentRightPanelAtom,
   currentBottomPanelAtom,
-} from "@/globals/layout";
+} from "@/globals/workspace/layout";
 
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
@@ -37,6 +38,9 @@ const AppMenubar = () => {
   const toggleTheme = useSetAtom(toggleThemeAtom);
   const workspaceName = useAtomValue(nameAtom);
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
+  const [currentRightPanel, setCurrentRightPanel] = useAtom(
+    currentRightPanelAtom,
+  );
   const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
     currentBottomPanelAtom,
   );
@@ -111,6 +115,17 @@ const AppMenubar = () => {
             }
           >
             Sliders
+          </MenubarCheckboxItem>
+
+          <MenubarCheckboxItem
+            checked={currentRightPanel === "Results"}
+            onCheckedChange={(checked) =>
+              checked
+                ? setCurrentRightPanel("Results")
+                : setCurrentRightPanel(null)
+            }
+          >
+            Results
           </MenubarCheckboxItem>
 
           <MenubarSeparator />
