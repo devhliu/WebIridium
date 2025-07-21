@@ -132,6 +132,17 @@
     var(--color-layer1-bg)
   );
 
+  --color-input-bg-disabled: color-mix(
+    in oklch,
+    var(--color-input-bg) 60%,
+    var(--color-layer1-bg)
+  );
+  --color-input-fg-disabled: color-mix(
+    in oklch,
+    var(--color-input-fg) 70%,
+    var(--color-layer1-bg)
+  );
+
   /* Button types */
 
   --color-ghost-button-fg: var(--color-layer1-fg);
