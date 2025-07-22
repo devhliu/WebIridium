@@ -11,6 +11,6 @@ export const getVariableSetDisplayName = (
   settings: VariableSettings,
 ): string => {
   return variable.category === "Floating Species"
-    ? `init(${settings.displayName})`
+    ? `init([${settings.displayName}])`
     : settings.displayName;
 };
