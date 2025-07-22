@@ -53,8 +53,6 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
-  console.log(currentRightPanel);
-
   return (
     <div className={styles.app}>
       <AppMenubar />
@@ -73,18 +71,13 @@ const AppContent = () => {
               preferredSize={290}
               visible={currentLeftPanel !== null}
             >
-              {/* There was a bug where accordion animation would play if accordion was closed on one panel and open on another.
-                      Adding the `key` fixed that. */}
               <TimeCoursePanel
-                key="timeCourse"
                 visible={currentLeftPanel === "Time Course"}
               />
               <ParameterScanPanel
-                key="parameterScan"
                 visible={currentLeftPanel === "Parameter Scan"}
               />
               <SteadyStatePanel
-                key="steadyState"
                 visible={currentLeftPanel === "Steady State"}
               />
               <ExamplesPanel visible={currentLeftPanel === "Examples"} />

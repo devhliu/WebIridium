@@ -7,6 +7,7 @@ import { type LeftPanel } from "@/globals/workspace/layout";
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
+import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
 import NotebookIcon from "@/assets/icons/NotebookIcon.svg?react";
 
 const PANEL_ICONS: Record<
@@ -16,6 +17,7 @@ const PANEL_ICONS: Record<
   "Time Course": TimeCourseIcon,
   "Parameter Scan": ParameterScanIcon,
   "Steady State": SteadyStateIcon,
+  "History": HistoryIcon,
   Examples: NotebookIcon,
 } as const;
 

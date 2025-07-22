@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { searchBiomodels } from "../biomodels";
 
+// TODO: add more tests
+
 describe("searchModels", () => {
   it("should return 0 results when 0 are requested", async () => {
     const result = await searchBiomodels("", 0);

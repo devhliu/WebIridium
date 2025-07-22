@@ -4,6 +4,7 @@ export const LEFT_PANELS = [
   "Time Course",
   "Steady State",
   "Parameter Scan",
+  "History",
   "Examples",
 ] as const;
 
