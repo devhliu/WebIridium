@@ -65,8 +65,6 @@ it("should update simulation parameters with presets", async () => {
 it.skip("should make run the latest clicked example when multiple are clicked", async () => {
   await renderExamples();
 
-  setWorkerResponseDelay(50);
-
   const janaWolfButton = screen.getByRole("button", {
     name: exampleFormattedNames[JANA_WOLF_MODEL_NAME],
   });
@@ -75,12 +73,12 @@ it.skip("should make run the latest clicked example when multiple are clicked", 
     name: exampleFormattedNames[BISTABLE_MODEL_NAME],
   });
 
+  setWorkerResponseDelay(500);
+
   await userEvent.click(janaWolfButton);
 
   expect(janaWolfButton).toBeDisabled();
   expect(bistableButton).toBeEnabled();
-
-  setWorkerResponseDelay(500);
 
   await userEvent.click(bistableButton);
 

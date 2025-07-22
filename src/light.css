@@ -1,7 +1,7 @@
 :root[data-theme="light"] {
   --opacity-translucent: 10%;
-  --opacity-dim: 70%;
-  --opacity-very-dim: 50%;
+  --opacity-dim: 50%;
+  --opacity-very-dim: 30%;
 
   /* Interactions/Prominent Elements */
 
