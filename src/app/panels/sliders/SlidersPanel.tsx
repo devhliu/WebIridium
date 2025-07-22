@@ -18,7 +18,6 @@ import { groupVariables } from "@/features/category";
 
 import VariableSlider from "./VariableSlider";
 import SearchBox from "@/components/input/SearchBox";
-import Checkbox from "@/components/input/Checkbox";
 import Button from "@/components/Button";
 
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
@@ -159,11 +158,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           <p className={styles.noVariables}>No Variables</p>
         ) : (
           filteredGroups.map(([group, vars]) => {
-            // prettier-ignore
-            const checkboxState =
-              vars.every((v) => variableSliderStates[v.id]) ? true
-              : vars.some((v) => variableSliderStates[v.id]) ? "indeterminate"
-              : false;
+            const allActive = vars.every((v) => variableSliderStates[v.id]);
 
             const handleGroupToggle = (on: boolean) => {
               for (const v of vars) {
@@ -174,14 +169,12 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
             return (
               <div key={group} className={styles.group}>
                 <h3 className={styles.groupTitle}>
+                  {group}
                   {searchTerm.length === 0 && (
-                    <Checkbox
-                      name={`slider-group-${group}`}
-                      value={checkboxState}
-                      onChange={handleGroupToggle}
-                    />
+                    <Button onClick={() => handleGroupToggle(!allActive)}>
+                      {allActive ? <>Deactivate All</> : <>Activate All</>}
+                    </Button>
                   )}
-                  <label htmlFor={`slider-group-${group}`}>{group}</label>
                 </h3>
                 {vars.map((v) => (
                   <VariableSlider

@@ -41,6 +41,7 @@
 
 .group-title {
   display: flex;
+  align-items: center;
   color: var(--color-layer1-fg-dim);
   font-size: var(--font-size-small);
   margin-top: var(--spacing-5);
