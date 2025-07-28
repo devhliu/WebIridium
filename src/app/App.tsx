@@ -26,6 +26,7 @@ import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
 import EditorPanel from "./panels/EditorPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
 import SlidersPanel from "./panels/sliders/SlidersPanel";
+import HistoryPanel from "./panels/HistoryPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
 import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./panels/PlotSettingsPanel";
@@ -71,15 +72,12 @@ const AppContent = () => {
               preferredSize={290}
               visible={currentLeftPanel !== null}
             >
-              <TimeCoursePanel
-                visible={currentLeftPanel === "Time Course"}
-              />
+              <TimeCoursePanel visible={currentLeftPanel === "Time Course"} />
               <ParameterScanPanel
                 visible={currentLeftPanel === "Parameter Scan"}
               />
-              <SteadyStatePanel
-                visible={currentLeftPanel === "Steady State"}
-              />
+              <SteadyStatePanel visible={currentLeftPanel === "Steady State"} />
+              <HistoryPanel visible={currentLeftPanel === "History"} />
               <ExamplesPanel visible={currentLeftPanel === "Examples"} />
             </Allotment.Pane>
 

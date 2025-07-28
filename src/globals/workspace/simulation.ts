@@ -29,6 +29,7 @@ import {
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
 import { currentRightPanelAtom } from "./layout";
 import { WorkerTermination } from "@/features/workerPool";
+import { tryAddToHistoryAtom } from "./history";
 
 export type SimulationOperationResult =
   | { type: "success" }
@@ -42,13 +43,12 @@ type SimulationInternalState = {
   abortController: AbortController;
 };
 
-const _simulationResultAtom = atom<SimulationResult | null>(null);
 const _simulatorAtom = atom<Simulator>({} as Simulator);
 const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms
 
-export const simulationResultAtom = atom((get) => get(_simulationResultAtom));
+export const simulationResultAtom = atom<SimulationResult | null>(null);
 export const simulatorAtom = atom((get) => get(_simulatorAtom));
 export const updateSimulatorAtom = atom(
   null,
@@ -100,9 +100,13 @@ const runSimulation = async (
     });
 
     try {
+      const code = get(editorContentAtom);
+
       const result = await run(abortController.signal);
-      set(_simulationResultAtom, result);
+      set(simulationResultAtom, result);
       set(currentRightPanelAtom, "Results");
+      set(tryAddToHistoryAtom, { code, result });
+
       return { type: "success" };
     } catch (err) {
       if (err instanceof WorkerTermination) {
@@ -338,7 +342,6 @@ export const cancelSimulationAtom = atom(null, (get) => {
 });
 
 export const simulationAtoms = [
-  _simulationResultAtom,
   _simulatorAtom,
   _simulationInternalStateAtom,
 

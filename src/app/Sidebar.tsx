@@ -17,7 +17,7 @@ const PANEL_ICONS: Record<
   "Time Course": TimeCourseIcon,
   "Parameter Scan": ParameterScanIcon,
   "Steady State": SteadyStateIcon,
-  "History": HistoryIcon,
+  History: HistoryIcon,
   Examples: NotebookIcon,
 } as const;
 

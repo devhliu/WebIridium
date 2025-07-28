@@ -88,26 +88,30 @@ export type ParameterScanExtras = {
   scanPercent: number;
 };
 
+export type TimeCourseParameterScanResult = {
+  type: "parameterScan";
+  mode: "timeCourse";
+  parameter: string;
+  // parameter value -> result
+  scans: (TimeCourseResult & ParameterScanExtras)[];
+};
+
+export type SteadyStateParameterScanResult = {
+  type: "parameterScan";
+  mode: "steadyState";
+  parameter: string;
+  // parameter value -> result
+  scans: (ParameterScanExtras & {
+    concentrations: {
+      name: string;
+      value: number;
+    }[];
+  })[];
+};
+
 export type ParameterScanResult =
-  | {
-      type: "parameterScan";
-      mode: "timeCourse";
-      parameter: string;
-      // parameter value -> result
-      scans: (TimeCourseResult & ParameterScanExtras)[];
-    }
-  | {
-      type: "parameterScan";
-      mode: "steadyState";
-      parameter: string;
-      // parameter value -> result
-      scans: (ParameterScanExtras & {
-        concentrations: {
-          name: string;
-          value: number;
-        }[];
-      })[];
-    };
+  | TimeCourseParameterScanResult
+  | SteadyStateParameterScanResult;
 
 export type SimulationResult =
   | TimeCourseResult
