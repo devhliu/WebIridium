@@ -1,8 +1,10 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
 import styles from "./HistoryPanel.module.css";
 import PanelTitle from "./PanelTitle";
+
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
 import { historyAtom, type HistoryRecord } from "@/globals/workspace/history";
 import { millisecondsToText } from "@/features/timeUtils";
@@ -13,10 +15,12 @@ import { updateEditorContentAtom } from "@/globals/workspace/model";
 const HistoryItem = ({
   record,
   unixTimestampMs,
+  selected,
   onClick,
 }: {
   record: HistoryRecord;
   unixTimestampMs: number;
+  selected: boolean;
   onClick: (record: HistoryRecord) => void;
 }) => {
   const { simulationResult, unixTimestampMs: recordTimestampMs } = record;
@@ -34,9 +38,20 @@ const HistoryItem = ({
   });
 
   return (
-    <button className={styles.button} onClick={() => onClick(record)}>
-      <span className={styles.buttonTitle}>{title}</span>
-      <span className={styles.buttonTime}>{time + " ago"}</span>
+    <button
+      className={styles.button}
+      onClick={() => onClick(record)}
+      role="option"
+      aria-selected={selected}
+    >
+      <div className={styles.buttonMain}>
+        <span className={styles.buttonTitle}>{title}</span>
+        <span className={styles.buttonTime}>{time + " ago"}</span>
+      </div>
+
+      <div className={styles.buttonCheck}>
+        {selected && <CheckIcon width="1em" height="1em" aria-hidden />}
+      </div>
     </button>
   );
 };
@@ -48,7 +63,7 @@ export interface HistoryPanelProps {
 const HistoryPanel = ({ visible }: HistoryPanelProps) => {
   const history = useAtomValue(historyAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
-  const setSimulationResult = useSetAtom(simulationResultAtom);
+  const [simulationResult, setSimulationResult] = useAtom(simulationResultAtom);
   const setCurrentRightPanel = useSetAtom(currentRightPanelAtom);
   const [timestampMs, setTimestampMs] = useState(() => Date.now());
 
@@ -75,16 +90,17 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
         {history.length === 0 ? (
           <p className={styles.noHistory}>No history</p>
         ) : (
-          <div className={styles.list}>
+          <ul className={styles.list}>
             {history.toReversed().map((record) => (
               <HistoryItem
                 key={record.unixTimestampMs}
                 record={record}
                 unixTimestampMs={timestampMs}
+                selected={simulationResult === record.simulationResult}
                 onClick={handleRecordClick}
               />
             ))}
-          </div>
+          </ul>
         )}
       </div>
     );

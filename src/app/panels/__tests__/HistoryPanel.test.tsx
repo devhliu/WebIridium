@@ -99,9 +99,14 @@ describe("the panel", () => {
     ).toBeInTheDocument();
 
     // find the history record and click it
-    await userEvent.click(
-      within(historyPanel).getByText("Time Course Simulation"),
+    const firstRecord = within(historyPanel).getByText(
+      "Time Course Simulation",
     );
+    await userEvent.click(firstRecord);
+
+    expect(
+      within(historyPanel).getByRole("option", { selected: true }),
+    ).toHaveTextContent("Time Course Simulation");
 
     expect(
       screen.getByText(getResultTypeText("timeCourse")),
