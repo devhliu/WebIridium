@@ -9,6 +9,7 @@ import { renderWithinWorkspace } from "@/testing-utils/render";
 import HistoryPanel from "../HistoryPanel";
 import TimeCoursePanel from "../simulation/TimeCoursePanel";
 import SteadyStatePanel from "../simulation/SteadyStatePanel";
+import ParameterScanPanel from "../simulation/ParameterScanPanel";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import type { SimulationResult } from "@/features/simulation/Simulator";
@@ -201,6 +202,65 @@ describe("history", () => {
     ).toHaveLength(1);
     expect(
       within(historyPanel).queryAllByText("Steady State Simulation"),
+    ).toHaveLength(1);
+  });
+
+  it("should not add records when they are in quick succession and of the same mode (parameter scan)", async () => {
+    await renderWithinWorkspace(
+      <div>
+        <ParameterScanPanel visible />
+        <HistoryPanel visible />
+      </div>,
+    );
+
+    const historyPanel = screen.getByTestId("history-panel");
+
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(0);
+    await userEvent.click(screen.getByText("Run"));
+
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(1);
+
+    await userEvent.click(screen.getByText("Run"));
+
+    // another records should not be added
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(1);
+  });
+
+  it("should add records when they are in quick succession and of the different mode (parameter scan)", async () => {
+    await renderWithinWorkspace(
+      <div>
+        <ParameterScanPanel visible />
+        <HistoryPanel visible />
+      </div>,
+    );
+
+    const historyPanel = screen.getByTestId("history-panel");
+
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(0);
+    await userEvent.click(screen.getByText("Run"));
+
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(1);
+
+    // switch to steady state mode
+    await userEvent.click(screen.getByText("Steady State"));
+
+    await userEvent.click(screen.getByText("Run"));
+
+    expect(
+      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+    ).toHaveLength(1);
+    expect(
+      within(historyPanel).queryAllByText("Steady State Parameter Scan"),
     ).toHaveLength(1);
   });
 });

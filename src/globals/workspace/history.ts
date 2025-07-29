@@ -34,6 +34,9 @@ export const tryAddToHistoryAtom = atom(
     if (
       !lastRecord ||
       lastRecord.simulationResult.type !== result.type ||
+      (result.type === "parameterScan" &&
+        lastRecord.simulationResult.type === "parameterScan" &&
+        lastRecord.simulationResult.mode !== result.mode) ||
       record.unixTimestampMs - lastRecord.unixTimestampMs >=
         MIN_MILLISECONDS_BETWEEN_HISTORY_ITEMS
     ) {

@@ -29,7 +29,7 @@ Please write tests for any changes you make, as much as is reasonable.
 
 - `src/app`: Specific UI components
 - `src/components`: Generic UI components
-- `src/assets`: Non-code assets
+- `src/assets`: Non-code assets (usually interacts with `src/globals`)
 
 ###
 
