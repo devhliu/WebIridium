@@ -1,0 +1,15 @@
+model Test
+    A -> B; k1*A
+    B -> C; k2*B
+    k1 = 0.35; k2 = 0.2
+    B = 0; C = 0
+    A = 10
+
+    // Preset: test
+    /*
+    A = 20
+    B = 30
+    C = 40
+    */
+end
+

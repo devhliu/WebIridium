@@ -26,6 +26,7 @@ export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
             species: "species",
             function: "function",
             model: "model",
+            module: "model",
             end: "end",
             compartment: "compartment",
           },
