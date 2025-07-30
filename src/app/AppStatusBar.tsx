@@ -14,10 +14,14 @@ import {
   independentVariableAtom,
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import {
+  isSimulatingAtom,
+  simulationResultAtom,
+} from "@/globals/workspace/simulation";
 
 const ModelStatusItem = () => {
   const status = useAtomValue(modelStatusAtom);
+  const isSimulating = useAtomValue(isSimulatingAtom);
 
   switch (status.type) {
     case "loading":
@@ -29,12 +33,21 @@ const ModelStatusItem = () => {
       );
 
     case "success":
-      return (
-        <StatusBarItem className={styles.itemSuccess}>
-          <CheckIcon />
-          Model Loaded
-        </StatusBarItem>
-      );
+      if (isSimulating) {
+        return (
+          <StatusBarItem className={styles.itemSuccess}>
+            <PulseLoader size="4px" spacing="2px" />
+            Simulating
+          </StatusBarItem>
+        );
+      } else {
+        return (
+          <StatusBarItem className={styles.itemSuccess}>
+            <CheckIcon />
+            Model Loaded
+          </StatusBarItem>
+        );
+      }
 
     case "error":
       return (
