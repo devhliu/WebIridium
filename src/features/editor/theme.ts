@@ -15,6 +15,8 @@ export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
     "editor.selectionBackground": "#283e5e",
   },
   rules: [
+    { token: "invalid", foreground: "#ff0000" },
+
     { token: "species", foreground: DARK_KEYWORD_COLOR },
 
     { token: "boundarySpecies", foreground: DARK_SPECIAL_COLOR },
@@ -43,6 +45,7 @@ export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
     // { token: 'other', foreground: KEYWORD_COLOR },
     { token: "react-remov", foreground: "#a6f7e8" },
     { token: "comment", foreground: "#6b967c" },
+    { token: "comment.preset", foreground: "#6b967c", fontStyle: "bold" },
     { token: "string", foreground: "#e3df8a" },
     { token: "number", foreground: "#f7bd7e" },
   ],
@@ -63,6 +66,8 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
     "editor.selectionBackground": "#a7d4f2",
   },
   rules: [
+    { token: "invalid", foreground: "#ff0000" },
+
     { token: "species", foreground: LIGHT_KEYWORD_COLOR },
 
     { token: "boundarySpecies", foreground: LIGHT_SPECIAL_COLOR },
@@ -91,6 +96,7 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
     // { token: 'other', foreground: KEYWORD_COLOR },
     { token: "react-remov", foreground: "#01856c" },
     { token: "comment", foreground: "#6d7870" },
+    { token: "comment.preset", foreground: "#6d7870", fontStyle: "bold" },
     { token: "string", foreground: "#80780a" },
     { token: "number", foreground: "#b2610a" },
   ],

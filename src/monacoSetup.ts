@@ -18,3 +18,7 @@ monaco.languages.setMonarchTokensProvider(
   "antimony",
   antimonyMonarchDefinition,
 );
+
+monaco.languages.setLanguageConfiguration("antimony", {
+  brackets: [["(", ")"]],
+});

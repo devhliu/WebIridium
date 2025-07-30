@@ -33,6 +33,9 @@ const EditorPanel = () => {
         value: editorContent,
         language: "antimony",
         automaticLayout: true,
+        bracketPairColorization: { enabled: true },
+        matchBrackets: "always",
+        showFoldingControls: "always",
         minimap: {
           enabled: false,
         },

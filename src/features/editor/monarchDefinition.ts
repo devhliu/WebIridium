@@ -1,23 +1,102 @@
 import * as monaco from "monaco-editor";
 
 export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
+  // uncomment this when editing the syntax highlighting to see what isn't getting
+  // highlighted
+  // defaultToken: "invalid",
+
+  annotationKeywords: [
+    // decode model qualifiers
+    "is",
+    "identity",
+    "model_entity_is",
+    "model_source",
+    "isDescribedBy",
+    "description",
+    "publication",
+    "isDerivedFrom",
+    "origin",
+    "isInstanceOf",
+    "class",
+    "hasInstance",
+    "instance",
+    // encode model qualifiers
+    "model_source",
+    "publication",
+    "origin",
+    "class",
+    "instance",
+
+    // decode biol qualifiers
+    "is",
+    "identity",
+    "biological_entity_is",
+    "hasPart",
+    "part",
+    "isPartOf",
+    "parthood",
+    "isVersionOf",
+    "hypernym",
+    "biological_system",
+    "hasVersion",
+    "version",
+    "isHomologTo",
+    "homolog",
+    "isDescribedBy",
+    "description",
+    "isEncodedBy",
+    "encoder",
+    "encodes",
+    "encodement",
+    "occursIn",
+    "container",
+    "hasProperty",
+    "property",
+    "isPropertyOf",
+    "propertyBearer",
+    "hasTaxon",
+    "taxon",
+    // encode biol qualifiers
+    "identity",
+    "part",
+    "parthood",
+    "biological_system",
+    "version",
+    "homolog",
+    "description",
+    "encoder",
+    "encodement",
+    "container",
+    "property",
+    "propertyBearer",
+    "taxon",
+
+    // other
+    "notes",
+    "created",
+    "modified",
+  ],
+
   tokenizer: {
     root: [
-      [/\/\/.*/, "comment"],
-      [/"[^"]*"/, "string"], // Rule for anything surrounded by double quotation marks (")
+      // special case for Preset: comments
+      [/(\/\/)(\s*Preset:\s*)(.*)$/, ["comment", "comment.preset", "comment"]],
+      [/\/\/.*$/, "comment"],
+      [/#.*$/, "comment"],
+      [/\/\*/, "comment", "@blockComment"],
+      [/```/, "comment", "@modelNote"],
+
+      [/"/, "string", "@string"],
+
       [/=>|->/, "transform"],
-      [/```/, "comment", "@model_note"],
       [/=|:=/, "assign"],
       ["\\-|\\+|\\*|\\/|\\^|\\;", "operator"],
       ["\\b(at|in|import|has)\\b", "keywords"],
       ["\\$[A-Za-z][A-Za-z0-9_]*\\b", "boundarySpecies"],
-      [
-        /(?:creator\d+|modified|created|identity|isVersionOf|isDerivedFrom|isEncodedBy|isHomologTo|isPropertyOf|isPartOf|isDescribedBy|is|model_source|biological_entity_is|hasPart|parthood|part|hypernym|biological_system|hasVersion|version|homolog|description|publication|encoder|encodes|encodement|occursIn|container|hasProperty|propertyBearer|property|hasTaxon|taxon|sboTerm|model_entity_is|origin|hasInstance|instance|notes)/,
-        "annotation",
-      ],
       [/\b[a-zA-Z][a-zA-Z0-9_]*:/, "react-remov"], // reaction names
+      [/creator\d*/, "annotation"],
       [
-        /@?[a-zA-Z][\w$]*/,
+        /@?[a-zA-Z_][\w$]*/,
         {
           cases: {
             const: "const",
@@ -29,6 +108,7 @@ export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
             module: "model",
             end: "end",
             compartment: "compartment",
+            "@annotationKeywords": "annotation",
           },
         },
       ],
@@ -37,8 +117,19 @@ export const antimonyMonarchDefinition: monaco.languages.IMonarchLanguage = {
         "number",
       ], // Combined regex for various number formats
     ],
+
+    blockComment: [
+      [/\*\//, "comment", "@pop"],
+      [/./, "comment"],
+    ],
+
+    string: [
+      [/"/, "string", "@pop"],
+      [/./, "string"],
+    ],
+
     whitespace: [[/[ \t\r\n]+/, "white"]],
-    model_note: [
+    modelNote: [
       [/```/, "comment", "@pop"],
       [/./, "comment"],
     ],
