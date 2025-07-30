@@ -15,8 +15,10 @@ import {
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
 import { groupVariables } from "@/features/category";
+import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 import VariableSlider from "./VariableSlider";
+import AddAsCommentButton from "./AddAsCommentButton";
 import SearchBox from "@/components/input/SearchBox";
 import Button from "@/components/Button";
 
@@ -24,7 +26,6 @@ import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import IconButton from "@/components/IconButton";
-import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
@@ -139,6 +140,9 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           value={searchTerm}
           onChange={setSearchTerm}
         />
+
+        <AddAsCommentButton />
+
         <Button onClick={() => setShowingInactive(!showingInactive)}>
           {showingInactive ? (
             <ClosedEyeIcon width="1em" height="1em" />
