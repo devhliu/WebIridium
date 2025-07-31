@@ -16,6 +16,8 @@ export const convertSbmlToAntimony = async (sbml: string): Promise<string> => {
   return result;
 };
 
+const PRESET_PREFIX = "// Preset: ";
+
 const ANTIMONY_GENERATED_REGEX = /^\/\/ Created by libAntimony v[0-9.]+$/;
 // after this part, there are no more initializations, so we want to insert here
 const ANTIMONY_OTHER_DECLS_REGEX = /\/\/ Other declarations:/;
@@ -38,38 +40,26 @@ const getIndentationString = (line: string) => {
 };
 
 /**
- * Adds a slider variable presets to an antimony model as an appended multi-line comment.
+ * Adds a slider variable presets to an antimony model as a multi-line comment.
  *
  * @param code - the antimony code to add the preset to
  * @param presetName - name of the preset which will be added as a comment
- * @param presets - Record of variable name to value.
- * @returns a new antimony model with this format:
- * ```ant
- * model Name
- *  ...
- *
- *  // Preset: presetName
- *  /asterisk (multi-line comments can't be nested ??)
- *  var1: value
- *  var2: value
- *  ...
- *  varN: value
- *  asterisk/
- * end
- * ```
+ * @param presets - record of (variable name: value).
+ * @returns a tuple of the new antimony coded with the preset added as a comment and the
+ *          index and column the preset name starts at (line and column start at 0)
  */
 export const addVariablePresetsToModel = (
   code: string,
   presetName: string,
   presets: { [variable: string]: number },
-): string => {
+): [string, { line: number; column: number }] => {
   const lines = code.split("\n");
   const variablesLine = Object.entries(presets).map(
     ([name, value]) => `${name} = ${value}`,
   );
 
   const presetLines = [
-    `// Preset: ${presetName}`,
+    `${PRESET_PREFIX}${presetName}`,
     "/*",
     ...variablesLine,
     "*/",
@@ -94,9 +84,11 @@ export const addVariablePresetsToModel = (
 
         lines.splice(i, 0, ...splicing);
 
-        return lines.join("\n");
+        return [
+          lines.join("\n"),
+          { line: i + 1, column: indentation.length + PRESET_PREFIX.length },
+        ];
       } else if (isAntimonyGenerated && ANTIMONY_OTHER_DECLS_REGEX.test(line)) {
-        console.log("WHAT");
         // insert it before the "Other Declarations" generated portion
         const indentation = getIndentationString(lines[i - 2]);
         const splicing = [];
@@ -108,7 +100,10 @@ export const addVariablePresetsToModel = (
 
         lines.splice(i - 1, 0, ...splicing);
 
-        return lines.join("\n");
+        return [
+          lines.join("\n"),
+          { line: i, column: indentation.length + PRESET_PREFIX.length },
+        ];
       }
     } else {
       if (MODEL_START_REGEX.test(line)) {
@@ -120,12 +115,16 @@ export const addVariablePresetsToModel = (
   }
 
   // No model found, just append the preset
-  const indentation = getIndentationString(lines[lines.length - 1]);
+  const startLine = lines.length;
+  const indentation = getIndentationString(lines[startLine - 1]);
   lines.push("");
 
   for (const line of presetLines) {
     lines.push(indentation + line);
   }
 
-  return lines.join("\n");
+  return [
+    lines.join("\n"),
+    { line: startLine + 1, column: indentation.length + PRESET_PREFIX.length },
+  ];
 };

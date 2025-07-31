@@ -5,9 +5,25 @@ import {
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
 
+import {
+  editorActionsDispatcherAtom,
+  type EditorActionsDispatcher,
+} from "@/globals/workspace/editorActions";
+import { useEffect } from "react";
+
 export const EditorPanel = () => {
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
+
+  const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
+
+  useEffect(() => {
+    const dispatcher: EditorActionsDispatcher = {
+      addPresetsAsComment: () => undefined,
+    };
+
+    setEditorActionsDispatcher(dispatcher);
+  }, [setEditorActionsDispatcher]);
 
   return (
     <div>

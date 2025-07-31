@@ -43,7 +43,10 @@ type SimulationInternalState = {
   abortController: AbortController;
 };
 
+// pretend there is a Simulator since it will always be instantiated
+// when the App is created
 const _simulatorAtom = atom<Simulator>({} as Simulator);
+
 const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms

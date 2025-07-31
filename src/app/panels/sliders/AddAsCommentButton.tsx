@@ -1,4 +1,4 @@
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue } from "jotai";
 
 import { type SettableVariable } from "@/features/simulation/Simulator";
 
@@ -7,23 +7,20 @@ import Button from "@/components/Button";
 
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
-import {
-  editorContentAtom,
-  updateEditorContentAtom,
-  variablesMapAtom,
-} from "@/globals/workspace/model";
+import { variablesMapAtom } from "@/globals/workspace/model";
 import { variableSliderStatesAtom } from "@/globals/workspace/slider";
-import { addVariablePresetsToModel } from "@/features/antimony";
+import { editorActionsDispatcherAtom } from "@/globals/workspace/editorActions";
 
 const DEFAULT_PRESET_NAME = "Unnamed";
 
 // TODO: add unit tests for this
 const AddAsCommentButton = () => {
   const { toast } = useToast();
+
   const variablesMap = useAtomValue(variablesMapAtom);
   const variableSliderStates = useAtomValue(variableSliderStatesAtom);
-  const editorContent = useAtomValue(editorContentAtom);
-  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+
+  const editorActionsDispatcher = useAtomValue(editorActionsDispatcherAtom);
 
   const handleAddAsComment = () => {
     const presets: Record<string, number> = {};
@@ -50,14 +47,10 @@ const AddAsCommentButton = () => {
           "There is nothing to add. Your sliders are their default values. Move your sliders around then try again.",
       });
     } else {
-      void updateEditorContent({
-        content: addVariablePresetsToModel(
-          editorContent,
-          DEFAULT_PRESET_NAME,
-          presets,
-        ),
-        skipDebounce: true,
-      });
+      void editorActionsDispatcher?.addPresetsAsComment(
+        DEFAULT_PRESET_NAME,
+        presets,
+      );
     }
   };
 

@@ -18,15 +18,21 @@ describe("addVariablePresetsToModel", () => {
     C: 40,
   };
 
+  const COMMENT_REGEX = /\s*\/\/ Preset:/;
+
   for (const [name, content] of Object.entries(testFiles)) {
     if (name.endsWith("_expected.ant")) continue;
     const nameWithoutExtension = name.substring(0, name.length - 4);
     const expectedContent = testFiles[`${nameWithoutExtension}_expected.ant`];
 
     it(`should work for ${name}`, () => {
-      expect(
-        addVariablePresetsToModel(content.trim(), PRESET_NAME, PRESETS),
-      ).toBe(expectedContent.trim());
+      const [result, { line }] = addVariablePresetsToModel(
+        content.trim(),
+        PRESET_NAME,
+        PRESETS,
+      );
+      expect(result).toBe(expectedContent.trim());
+      expect(result.split("\n")[line]).toMatch(COMMENT_REGEX);
     });
   }
 });
