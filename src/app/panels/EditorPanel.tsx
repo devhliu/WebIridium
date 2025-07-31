@@ -6,6 +6,7 @@ import styles from "./EditorPanel.module.css";
 import {
   editorContentAtom,
   updateEditorContentAtom,
+  modelStatusAtom,
 } from "@/globals/workspace/model";
 import { themeAtom } from "@/globals/theme";
 import type { Theme } from "@/features/theme";
@@ -15,8 +16,14 @@ import {
 } from "@/globals/workspace/editorActions";
 import { addVariablePresetsToModel } from "@/features/antimony";
 
+// used for Monaco model
+const OWNER_NAME = "editorPanel";
+
+const MODEL_ERROR_REGEX = /Error in model string, line (\d+):(.+)/;
+
 const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
+  const modelStatus = useAtomValue(modelStatusAtom);
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
@@ -97,6 +104,7 @@ const EditorPanel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [containerRef, updateEditorContent, setEditorActionsDispatcher]);
 
+  // sychronize when editor content changes externally
   useEffect(() => {
     const editor = editorRef.current;
     if (editor) {
@@ -106,9 +114,40 @@ const EditorPanel = () => {
     }
   }, [editorContent]);
 
+  // synchronize theme
   useEffect(() => {
     updateTheme(theme);
   }, [theme]);
+
+  // synchronize errors
+  useEffect(() => {
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    const model = editor.getModel();
+    if (!model) return;
+
+    const markers: monaco.editor.IMarkerData[] = [];
+
+    if (modelStatus.type === "error") {
+      const match = modelStatus.message.match(MODEL_ERROR_REGEX);
+      if (match) {
+        const line = Number(match[1]);
+        const errorMessage = match[2].trim();
+
+        markers.push({
+          severity: monaco.MarkerSeverity.Error,
+          message: errorMessage,
+          startLineNumber: line,
+          startColumn: 1,
+          endLineNumber: line,
+          endColumn: 10000, // do the whole line
+        });
+      }
+    }
+
+    monaco.editor.setModelMarkers(model, OWNER_NAME, markers);
+  }, [editorRef, modelStatus]);
 
   return (
     <div className={styles.panel}>
