@@ -7,7 +7,7 @@ import { type SettableVariable } from "@/features/simulation/Simulator";
 import { variablesAtom } from "@/globals/workspace/model";
 import {
   getInitialSliderState,
-  updateAndSimulateVariableSlidersAtom,
+  updateSliderAndSimulateAtom,
   variableSliderStatesAtom,
   type VariableSliderState,
 } from "@/globals/workspace/slider";
@@ -43,9 +43,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const [variableSliderStates, setVariableSliderStates] = useAtom(
     variableSliderStatesAtom,
   );
-  const updateAndSimulateVariableSliders = useSetAtom(
-    updateAndSimulateVariableSlidersAtom,
-  );
+  const updateSliderAndSimulate = useSetAtom(updateSliderAndSimulateAtom);
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const simulationResult = useAtomValue(simulationResultAtom);
 
@@ -70,13 +68,9 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
 
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
-      updateAndSimulateVariableSliders({
-        patchIn: {
-          [variable.id]: newValue,
-        },
-      });
+      updateSliderAndSimulate({ id: variable.id, value: newValue });
     },
-    [updateAndSimulateVariableSliders],
+    [updateSliderAndSimulate],
   );
 
   const handleToggle = useCallback(

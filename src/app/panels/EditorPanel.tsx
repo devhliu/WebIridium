@@ -19,7 +19,7 @@ import {
   createTogglePresetCommandHandler,
   createTogglePresetProvider,
 } from "@/features/editor/togglePreset";
-import { updateAndSimulateVariableSlidersAtom } from "@/globals/workspace/slider";
+import { usePresetAndSimulateAtom } from "@/globals/workspace/slider";
 
 const OWNER_NAME = "editorPanel";
 
@@ -28,9 +28,7 @@ const MODEL_ERROR_REGEX = /Error in model string, line (\d+):(.+)/;
 const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
   const modelStatus = useAtomValue(modelStatusAtom);
-  const updateAndSimulateVariableSliders = useSetAtom(
-    updateAndSimulateVariableSlidersAtom,
-  );
+  const updateAndSimulateVariableSliders = useSetAtom(usePresetAndSimulateAtom);
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
@@ -71,10 +69,7 @@ const EditorPanel = () => {
       updateTheme(theme);
 
       const handlePresetToggle = (preset: Record<string, number>) => {
-        updateAndSimulateVariableSliders({
-          patchIn: preset,
-          skipDebounce: true,
-        });
+        updateAndSimulateVariableSliders(preset);
       };
 
       const togglePresetId = editor.addCommand(

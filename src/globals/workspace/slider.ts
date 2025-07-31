@@ -58,34 +58,20 @@ export const getInitialSliderState = (
   return result;
 };
 
-export const updateAndSimulateVariableSlidersAtom = atom(
+const _setSlidersAndSimulateAtom = atom(
   null,
   (
     get,
     set,
     {
-      patchIn: patchSliderStates,
+      sliderStates,
       skipDebounce = false,
-    }: { patchIn: Record<string, number>; skipDebounce?: boolean },
+    }: {
+      sliderStates: Record<string, VariableSliderState>;
+      skipDebounce?: boolean;
+    },
   ) => {
-    const variablesMap = get(variablesMapAtom);
-    const newSliderStates = { ...get(variableSliderStatesAtom) };
-
-    // patch in new values
-    for (const [name, value] of Object.entries(patchSliderStates)) {
-      if (newSliderStates[name]) {
-        newSliderStates[name] = { ...newSliderStates[name], value };
-      } else {
-        const variable = variablesMap.get(name);
-        if (variable) {
-          const state = getInitialSliderState(variable as SettableVariable);
-          state.value = value;
-          newSliderStates[name] = state;
-        }
-      }
-    }
-
-    set(variableSliderStatesAtom, newSliderStates);
+    set(variableSliderStatesAtom, sliderStates);
 
     // queue up a simulation
     const oldTimeoutId = get(_queuedSliderSimulationIdAtom);
@@ -126,8 +112,53 @@ export const updateAndSimulateVariableSlidersAtom = atom(
   },
 );
 
+export const updateSliderAndSimulateAtom = atom(
+  null,
+  (get, set, { id, value }: { id: string; value: number }) => {
+    const sliderStates = get(variableSliderStatesAtom);
+    set(_setSlidersAndSimulateAtom, {
+      sliderStates: {
+        ...sliderStates,
+        [id]: {
+          ...sliderStates[id],
+          value,
+        },
+      },
+      skipDebounce: false,
+    });
+  },
+);
+
+export const usePresetAndSimulateAtom = atom(
+  null,
+  (get, set, preset: Record<string, number>) => {
+    const variablesMap = get(variablesMapAtom);
+    const newSliderStates: Record<string, VariableSliderState> = {};
+
+    // patch in new values
+    for (const [id, value] of Object.entries(preset)) {
+      const variable = variablesMap.get(id);
+      if (variable) {
+        const state = getInitialSliderState(variable as SettableVariable);
+        state.value = value;
+        newSliderStates[id] = state;
+      }
+    }
+
+    set(_setSlidersAndSimulateAtom, {
+      sliderStates: newSliderStates,
+      skipDebounce: true,
+    });
+  },
+);
+
 export const sliderAtoms = [
   _queuedSliderSimulationIdAtom,
+  _setSlidersAndSimulateAtom,
+
   isSliderSimulationQueuedAtom,
   variableSliderStatesAtom,
+
+  updateSliderAndSimulateAtom,
+  usePresetAndSimulateAtom,
 ];
