@@ -45,8 +45,9 @@ const AddAsCommentButton = () => {
     if (!didAdd) {
       toast({
         type: "warning",
-        title: "Cannot add as comment",
-        description: "Your sliders are all their default values.",
+        title: "Sliders unchanged",
+        description:
+          "There is nothing to add. Your sliders are their default values. Move your sliders around then try again.",
       });
     } else {
       void updateEditorContent({
