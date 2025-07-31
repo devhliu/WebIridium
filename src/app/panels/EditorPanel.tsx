@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from "monaco-editor";
 
 import styles from "./EditorPanel.module.css";
 import {
@@ -14,9 +14,13 @@ import {
   editorActionsDispatcherAtom,
   type EditorActionsDispatcher,
 } from "@/globals/workspace/editorActions";
-import { addVariablePresetsToModel } from "@/features/antimony";
+import {
+  addVariablePresetToModel,
+  createTogglePresetCommandHandler,
+  createTogglePresetProvider,
+} from "@/features/editor/togglePreset";
+import { updateAndSimulateVariableSlidersAtom } from "@/globals/workspace/slider";
 
-// used for Monaco model
 const OWNER_NAME = "editorPanel";
 
 const MODEL_ERROR_REGEX = /Error in model string, line (\d+):(.+)/;
@@ -24,6 +28,9 @@ const MODEL_ERROR_REGEX = /Error in model string, line (\d+):(.+)/;
 const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
   const modelStatus = useAtomValue(modelStatusAtom);
+  const updateAndSimulateVariableSliders = useSetAtom(
+    updateAndSimulateVariableSlidersAtom,
+  );
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
@@ -54,6 +61,7 @@ const EditorPanel = () => {
         minimap: {
           enabled: false,
         },
+        codeLens: true,
       });
 
       const event = editor.onDidChangeModelContent(() => {
@@ -62,13 +70,33 @@ const EditorPanel = () => {
 
       updateTheme(theme);
 
+      const handlePresetToggle = (preset: Record<string, number>) => {
+        updateAndSimulateVariableSliders({
+          patchIn: preset,
+          skipDebounce: true,
+        });
+      };
+
+      const togglePresetId = editor.addCommand(
+        0,
+        createTogglePresetCommandHandler(
+          editor.getModel()!,
+          handlePresetToggle,
+        ),
+      );
+
+      const togglePreset = monaco.languages.registerCodeLensProvider(
+        "antimony",
+        createTogglePresetProvider(togglePresetId!),
+      );
+
       editorRef.current = editor;
 
       // dispatcher setup
 
       const dispatcher: EditorActionsDispatcher = {
-        addPresetsAsComment: (name, presets) => {
-          const [newContent, { line, column }] = addVariablePresetsToModel(
+        addPresetAsComment: (name, presets) => {
+          const [newContent, { line, column }] = addVariablePresetToModel(
             editor.getValue(),
             name,
             presets,
@@ -94,6 +122,7 @@ const EditorPanel = () => {
       return () => {
         event.dispose();
         editor.dispose();
+        togglePreset.dispose();
         editorRef.current = null;
 
         setEditorActionsDispatcher((prev) =>
@@ -102,7 +131,12 @@ const EditorPanel = () => {
       };
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [containerRef, updateEditorContent, setEditorActionsDispatcher]);
+  }, [
+    containerRef,
+    updateEditorContent,
+    setEditorActionsDispatcher,
+    updateAndSimulateVariableSliders,
+  ]);
 
   // sychronize when editor content changes externally
   useEffect(() => {

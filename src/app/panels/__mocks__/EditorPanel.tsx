@@ -19,7 +19,7 @@ export const EditorPanel = () => {
 
   useEffect(() => {
     const dispatcher: EditorActionsDispatcher = {
-      addPresetsAsComment: () => undefined,
+      addPresetAsComment: () => undefined,
     };
 
     setEditorActionsDispatcher(dispatcher);

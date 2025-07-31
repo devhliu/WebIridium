@@ -1,4 +1,4 @@
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
+import * as monaco from "monaco-editor";
 
 const DARK_KEYWORD_COLOR = "#77dce0";
 const DARK_KEYWORD2_COLOR = "#5adb8e";

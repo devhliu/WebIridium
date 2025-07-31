@@ -6,7 +6,7 @@
 import { atom } from "jotai";
 
 export interface EditorActionsDispatcher {
-  addPresetsAsComment: (
+  addPresetAsComment: (
     name: string,
     presets: { [variable: string]: number },
   ) => void;

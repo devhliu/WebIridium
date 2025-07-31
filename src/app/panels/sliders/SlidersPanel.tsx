@@ -6,7 +6,8 @@ import { type SettableVariable } from "@/features/simulation/Simulator";
 
 import { variablesAtom } from "@/globals/workspace/model";
 import {
-  updateVariableSliderValueAtom,
+  getInitialSliderState,
+  updateAndSimulateVariableSlidersAtom,
   variableSliderStatesAtom,
   type VariableSliderState,
 } from "@/globals/workspace/slider";
@@ -32,34 +33,6 @@ const SLIDER_CATEGORY_ORDER = [
   "Floating Species",
   "Boundary Species",
 ];
-
-const getInitialSliderState = (
-  variable: SettableVariable,
-): VariableSliderState => {
-  const baseScale = variable.defaultValue || 1;
-  let result;
-  if (variable.defaultValue >= 0) {
-    result = {
-      value: variable.defaultValue,
-      min: Math.round(100 * (0.1 * baseScale)) / 100,
-      max: Math.round(100 * (5 * baseScale)) / 100,
-    };
-  } else {
-    result = {
-      value: variable.defaultValue,
-      min: Math.round(100 * (5 * baseScale)) / 100,
-      max: Math.round(100 * (0.1 * baseScale)) / 100,
-    };
-  }
-
-  // sometimes the baseScale is so small, min and max get rounded to zero
-  if (result.min === result.max) {
-    result.max += 1;
-  }
-
-  return result;
-};
-
 export interface SlidersPanelProps {
   onClose: () => void;
 }
@@ -70,7 +43,9 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const [variableSliderStates, setVariableSliderStates] = useAtom(
     variableSliderStatesAtom,
   );
-  const updateVariableSliderValue = useSetAtom(updateVariableSliderValueAtom);
+  const updateAndSimulateVariableSliders = useSetAtom(
+    updateAndSimulateVariableSlidersAtom,
+  );
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const simulationResult = useAtomValue(simulationResultAtom);
 
@@ -95,12 +70,13 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
 
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
-      updateVariableSliderValue({
-        variableName: variable.id,
-        value: newValue,
+      updateAndSimulateVariableSliders({
+        patchIn: {
+          [variable.id]: newValue,
+        },
       });
     },
-    [updateVariableSliderValue],
+    [updateAndSimulateVariableSliders],
   );
 
   const handleToggle = useCallback(

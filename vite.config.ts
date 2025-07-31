@@ -28,6 +28,14 @@ export default defineConfig({
   },
 
   test: {
+    alias: [
+      // https://github.com/vitest-dev/vitest/discussions/1806
+      {
+        find: /^monaco-editor$/,
+        replacement:
+          __dirname + "/node_modules/monaco-editor/esm/vs/editor/editor.api",
+      },
+    ],
     setupFiles: ["./src/vitestSetup.ts"],
     environment: "jsdom",
     coverage: {

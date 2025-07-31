@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { addVariablePresetsToModel } from "../antimony";
+
+import { addVariablePresetToModel } from "../togglePreset";
 
 const testFiles: Record<string, string> = import.meta.glob(
   "./presetTests/*.ant",
@@ -26,7 +27,7 @@ describe("addVariablePresetsToModel", () => {
     const expectedContent = testFiles[`${nameWithoutExtension}_expected.ant`];
 
     it(`should work for ${name}`, () => {
-      const [result, { line }] = addVariablePresetsToModel(
+      const [result, { line }] = addVariablePresetToModel(
         content.trim(),
         PRESET_NAME,
         PRESETS,

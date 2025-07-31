@@ -10,6 +10,7 @@ vi.mock("@/components/Toast.tsx");
 vi.mock("@/features/workers");
 vi.mock("react-plotly.js");
 vi.mock("plotly.js-dist-min");
+vi.mock("monaco-editor");
 
 afterEach(cleanup);
 

@@ -23,7 +23,7 @@ const AddAsCommentButton = () => {
   const editorActionsDispatcher = useAtomValue(editorActionsDispatcherAtom);
 
   const handleAddAsComment = () => {
-    const presets: Record<string, number> = {};
+    const preset: Record<string, number> = {};
     let didAdd = false;
 
     for (const [name, state] of Object.entries(variableSliderStates)) {
@@ -35,7 +35,7 @@ const AddAsCommentButton = () => {
         continue;
       }
 
-      presets[variable.id] = state.value;
+      preset[variable.id] = state.value;
       didAdd = true;
     }
 
@@ -47,9 +47,9 @@ const AddAsCommentButton = () => {
           "There is nothing to add. Your sliders are their default values. Move your sliders around then try again.",
       });
     } else {
-      void editorActionsDispatcher?.addPresetsAsComment(
+      void editorActionsDispatcher?.addPresetAsComment(
         DEFAULT_PRESET_NAME,
-        presets,
+        preset,
       );
     }
   };
