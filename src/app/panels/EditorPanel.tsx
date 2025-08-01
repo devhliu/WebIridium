@@ -8,8 +8,7 @@ import {
   updateEditorContentAtom,
   modelStatusAtom,
 } from "@/globals/workspace/model";
-import { themeAtom } from "@/globals/theme";
-import type { Theme } from "@/features/theme";
+import { editorFontSizeAtom, themeAtom } from "@/globals/appearance";
 import {
   editorActionsDispatcherAtom,
   type EditorActionsDispatcher,
@@ -27,22 +26,18 @@ const MODEL_ERROR_REGEX = /Error in model string, line (\d+):(.+)/;
 
 const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
+  const fontSize = useAtomValue(editorFontSizeAtom);
+
   const modelStatus = useAtomValue(modelStatusAtom);
+
   const updateAndSimulateVariableSliders = useSetAtom(usePresetAndSimulateAtom);
+  const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
+
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
-  const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
-
-  const updateTheme = (themeName: Theme) => {
-    if (themeName === "light") {
-      monaco.editor.setTheme("iridiumLight");
-    } else {
-      monaco.editor.setTheme("iridiumDark");
-    }
-  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -60,13 +55,18 @@ const EditorPanel = () => {
           enabled: false,
         },
         codeLens: true,
+        fontSize,
       });
 
       const event = editor.onDidChangeModelContent(() => {
         void updateEditorContent({ content: editor.getValue() });
       });
 
-      updateTheme(theme);
+      if (theme === "Light") {
+        monaco.editor.setTheme("iridiumLight");
+      } else {
+        monaco.editor.setTheme("iridiumDark");
+      }
 
       const handlePresetToggle = (preset: Record<string, number>) => {
         updateAndSimulateVariableSliders(preset);
@@ -131,6 +131,8 @@ const EditorPanel = () => {
     updateEditorContent,
     setEditorActionsDispatcher,
     updateAndSimulateVariableSliders,
+    theme,
+    fontSize,
   ]);
 
   // sychronize when editor content changes externally
@@ -142,11 +144,6 @@ const EditorPanel = () => {
       }
     }
   }, [editorContent]);
-
-  // synchronize theme
-  useEffect(() => {
-    updateTheme(theme);
-  }, [theme]);
 
   // synchronize errors
   useEffect(() => {

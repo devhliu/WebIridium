@@ -1,3 +1,7 @@
+// This is distinct from the global settings because it only contains settings
+// specific to the current model. So it won't contain things like the UI theme,
+// but it will contain things like the plot background color.
+
 import { atom } from "jotai";
 
 import { type Palette } from "@/features/colors";

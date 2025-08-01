@@ -1,16 +1,19 @@
-export type Theme = "light" | "dark";
+export type Theme = (typeof THEMES)[number];
 
 const TRANSITION_CLASS = "theme-in-transition";
 
+export const themeMediaQuery = window.matchMedia(
+  "(prefers-color-scheme: dark)",
+);
+
+export const THEMES = ["Light", "Dark"] as const;
+
 export const getPreferredTheme = (): Theme => {
   // https://stackoverflow.com/questions/56393880/how-do-i-detect-dark-mode-using-javascript
-  if (
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches
-  ) {
-    return "dark";
+  if (themeMediaQuery.matches) {
+    return "Dark";
   } else {
-    return "light";
+    return "Light";
   }
 };
 

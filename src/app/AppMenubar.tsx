@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useState, useRef } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styles from "./AppMenubar.module.css";
 
@@ -24,19 +24,20 @@ import WorkspaceBar from "./WorkspaceBar";
 import ShareButton from "./ShareButton";
 
 import { promptDownloadString } from "@/features/download";
-import { toggleThemeAtom } from "@/globals/theme";
 import { nameAtom } from "@/globals/workspace/settings";
 import {
   editorContentAtom,
   updateEditorContentAtom,
 } from "@/globals/workspace/model";
+import GlobalSettingsDialog from "./panels/globalSettings/GlobalSettingsDialog";
 
 const AppMenubar = () => {
   const { toast } = useToast();
+
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
-  const toggleTheme = useSetAtom(toggleThemeAtom);
   const workspaceName = useAtomValue(nameAtom);
+
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
   const [currentRightPanel, setCurrentRightPanel] = useAtom(
     currentRightPanelAtom,
@@ -44,6 +45,8 @@ const AppMenubar = () => {
   const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
     currentBottomPanelAtom,
   );
+
+  const [isSettingsOpen, setSettingsOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -79,6 +82,10 @@ const AppMenubar = () => {
         onChange={handleFileOpen}
         accept=".ant,.txt"
       />
+
+      {isSettingsOpen && (
+        <GlobalSettingsDialog onClose={() => setSettingsOpen(false)} />
+      )}
 
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
@@ -130,7 +137,7 @@ const AppMenubar = () => {
 
           <MenubarSeparator />
 
-          <MenubarItem name="toggle theme (TEMPORARY)" onSelect={toggleTheme} />
+          <MenubarItem name="Settings" onSelect={() => setSettingsOpen(true)} />
         </MenubarMenu>
       </MenubarRoot>
 

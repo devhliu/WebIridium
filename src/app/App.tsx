@@ -1,8 +1,8 @@
 // eslint-disable-next-line
 import "allotment/dist/style.css";
 
-import { useRef } from "react";
-import { useAtom } from "jotai";
+import { useEffect, useRef } from "react";
+import { useAtom, useSetAtom } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
@@ -30,6 +30,9 @@ import HistoryPanel from "./panels/HistoryPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
 import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./panels/PlotSettingsPanel";
+import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
+import { setTheme, themeMediaQuery } from "@/features/theme";
+import { useAtomValue } from "jotai";
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -134,9 +137,31 @@ const AppContent = () => {
   );
 };
 
+const ThemeUpdater = () => {
+  const tryUpdateThemeIfAutomatic = useSetAtom(tryUpdateThemeIfAutomaticAtom);
+  const theme = useAtomValue(themeAtom);
+
+  useEffect(() => {
+    const handleChange = () => {
+      tryUpdateThemeIfAutomatic();
+    };
+
+    themeMediaQuery.addEventListener("change", handleChange);
+
+    return () => themeMediaQuery.removeEventListener("change", handleChange);
+  }, [tryUpdateThemeIfAutomatic]);
+
+  useEffect(() => {
+    setTheme(theme);
+  }, [theme]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <AppProvider>
+      <ThemeUpdater />
       <AppContent />
     </AppProvider>
   );

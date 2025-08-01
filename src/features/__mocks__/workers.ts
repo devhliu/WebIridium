@@ -104,6 +104,7 @@ export const createWorker = (type: WorkerType) => {
             case "loadModel":
               return {
                 boundarySpeciesNames: [],
+                reactionIds: ["_J0", "_J1"],
                 modelInfo: {
                   species: [
                     {

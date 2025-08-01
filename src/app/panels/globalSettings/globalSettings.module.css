@@ -1,0 +1,52 @@
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  height: 60%;
+  aspect-ratio: 1 / 0.85;
+  transform: translate(-50%, -50%);
+  color: var(--color-layer1-fg);
+  background-color: var(--color-layer1-bg);
+  border: var(--border-layer1);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-panel);
+  box-shadow: var(--shadow-medium);
+}
+
+.title {
+  margin: 0;
+  color: var(--color-layer1-fg-dim);
+  font-size: var(--font-size-big);
+}
+
+.close {
+  position: absolute;
+  background-color: transparent;
+  border: none;
+  color: var(--color-layer1-fg-dim);
+  top: var(--spacing-panel);
+  right: var(--spacing-panel);
+  padding: 0;
+  cursor: pointer;
+}
+
+.panel-container {
+  margin-top: var(--spacing-5);
+}
+
+.panel {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+
+  & > div {
+    font-size: var(--font-size-lag);
+    padding: 0;
+  }
+}

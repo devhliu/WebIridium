@@ -34,7 +34,7 @@ const ShareDialog = ({ url, onClose }: ShareDialogProps) => {
       }}
     >
       <RadixDialog.Portal>
-        <RadixDialog.Overlay className={styles.overlay} />
+        <RadixDialog.Overlay className="overlay" />
         <RadixDialog.Content className={styles.content}>
           <RadixDialog.Title className={styles.title}>Share</RadixDialog.Title>
           <RadixDialog.Description className={styles.description}>

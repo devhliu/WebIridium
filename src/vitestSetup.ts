@@ -53,3 +53,13 @@ window.PointerEvent = MockPointerEvent as any;
 window.HTMLElement.prototype.scrollIntoView = vi.fn();
 window.HTMLElement.prototype.releasePointerCapture = vi.fn();
 window.HTMLElement.prototype.hasPointerCapture = vi.fn();
+
+class MockMediaQueryList extends EventTarget {
+  get matches() {
+    return true;
+  }
+}
+
+window.matchMedia = vi.fn((_) => {
+  return new MockMediaQueryList() as MediaQueryList;
+});

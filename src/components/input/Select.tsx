@@ -15,12 +15,12 @@ export type SelectBaseProps = {
 
 export type SelectFlatProps = SelectBaseProps & {
   // display name -> value
-  options: { [name: string]: string };
+  readonly options: { [name: string]: string };
 };
 
 export type SelectGroupedProps = SelectBaseProps & {
   // group name -> display name -> value
-  groups: { [group: string]: { [name: string]: string } };
+  readonly groups: { [group: string]: { [name: string]: string } };
 };
 
 export type SelectProps = SelectFlatProps | SelectGroupedProps;
