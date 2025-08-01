@@ -45,7 +45,11 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
         max={100}
         step={1}
       />
-      <DataTable columns={columns} decimalPlaces={decimalPlaces} />
+      <DataTable
+        columns={columns}
+        decimalPlaces={decimalPlaces}
+        firstColumnIsIndependent
+      />
     </div>
   );
 });
