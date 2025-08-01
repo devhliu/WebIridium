@@ -101,3 +101,52 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
     { token: "number", foreground: "#b2610a" },
   ],
 };
+
+export const monokaiTheme: monaco.editor.IStandaloneThemeData = {
+  base: "vs-dark",
+  inherit: false,
+  colors: {
+    "editor.foreground": "#f8f8f2",
+    "editor.background": "#272822",
+    "editor.selectionBackground": "#49483E",
+    "editor.lineHighlightBackground": "#3E3D32",
+    "editorCursor.foreground": "#F8F8F0",
+    "editorWhitespace.foreground": "#3B3A32",
+    "editor.selectionHighlightBorder": "#222218",
+  },
+  rules: [
+    { token: "invalid", foreground: "#ff0000" },
+
+    { token: "species", foreground: "#f92672" },
+
+    { token: "boundarySpecies", foreground: "#f92672" },
+
+    { token: "compartment", foreground: "#f92672" },
+
+    { token: "const", foreground: "#a6e22e" },
+
+    { token: "unit", foreground: "#a6e22e" },
+
+    { token: "var", foreground: "#a6e22e" },
+
+    { token: "keywords", foreground: "#f92672" },
+    { token: "operator", foreground: "#bbb975" },
+
+    { token: "function", foreground: "#f92672" },
+    { token: "model", foreground: "#f92672" },
+    { token: "end", foreground: "#f92672" },
+
+    { token: "transform", foreground: "#bbb975" },
+
+    { token: "annotation", foreground: "#f92672" },
+
+    { token: "assign", foreground: "#bbb975" },
+
+    // { token: 'other', foreground: KEYWORD_COLOR },
+    { token: "react-remov", foreground: "#66d9ef" },
+    { token: "comment", foreground: "#75715e" },
+    { token: "comment.preset", foreground: "#75715e", fontStyle: "bold" },
+    { token: "string", foreground: "#e6db74" },
+    { token: "number", foreground: "#ae81ff" },
+  ],
+};

@@ -6,7 +6,7 @@ export const themeMediaQuery = window.matchMedia(
   "(prefers-color-scheme: dark)",
 );
 
-export const THEMES = ["Light", "Dark"] as const;
+export const THEMES = ["Light", "Dark", "Monokai"] as const;
 
 export const getPreferredTheme = (): Theme => {
   // https://stackoverflow.com/questions/56393880/how-do-i-detect-dark-mode-using-javascript

@@ -64,6 +64,8 @@ const EditorPanel = () => {
 
       if (theme === "Light") {
         monaco.editor.setTheme("iridiumLight");
+      } else if (theme === "Monokai") {
+        monaco.editor.setTheme("monokai");
       } else {
         monaco.editor.setTheme("iridiumDark");
       }
