@@ -29,7 +29,7 @@ export type UpdateVariableSliderValueOptions = {
   value: number;
 };
 
-const SLIDER_CHANGE_DEBOUNCE_TIME = 10;
+const SLIDER_CHANGE_DEBOUNCE_TIME = 25;
 
 export const getInitialSliderState = (
   variable: SettableVariable,
@@ -73,12 +73,6 @@ const _setSlidersAndSimulateAtom = atom(
   ) => {
     set(variableSliderStatesAtom, sliderStates);
 
-    // queue up a simulation
-    const oldTimeoutId = get(_queuedSliderSimulationIdAtom);
-    if (oldTimeoutId) {
-      clearTimeout(oldTimeoutId);
-    }
-
     let timeoutId: number | null = null;
     const simulate = async () => {
       if (get(_queuedSliderSimulationIdAtom) === timeoutId) {
@@ -101,7 +95,7 @@ const _setSlidersAndSimulateAtom = atom(
 
     if (skipDebounce) {
       void simulate();
-    } else {
+    } else if (!get(_queuedSliderSimulationIdAtom)) {
       timeoutId = setTimeout(
         simulate,
         SLIDER_CHANGE_DEBOUNCE_TIME,
