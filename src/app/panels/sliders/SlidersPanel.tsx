@@ -136,7 +136,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
 
             const handleGroupToggle = (on: boolean) => {
               for (const v of vars) {
-                if (!variableSliderStates[v.id]) {
+                if (!on || !variableSliderStates[v.id]) {
                   handleToggle(v, on);
                 }
               }
