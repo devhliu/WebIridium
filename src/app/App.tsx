@@ -31,6 +31,14 @@ import ExamplesPanel from "./panels/ExamplesPanel";
 import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./panels/PlotSettingsPanel";
 
+const getDefaultResultsPanelWidth = () => {
+  if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
+    return 1000;
+  } else {
+    return 575;
+  }
+};
+
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const didIntialLoadRef = useRef(false);
   return (
@@ -100,7 +108,7 @@ const AppContent = () => {
 
             <Allotment.Pane
               visible={Boolean(currentRightPanel)}
-              preferredSize={575}
+              preferredSize={getDefaultResultsPanelWidth()}
             >
               {currentRightPanel === "Results" && (
                 <ResultTabbedPanel onClose={() => setCurrentRightPanel(null)} />

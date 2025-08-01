@@ -88,6 +88,7 @@ const runSimulation = async (
   run: (abortSignal: AbortSignal) => Promise<SimulationResult>,
 ): Promise<SimulationOperationResult> => {
   const modelStatus = get(modelStatusAtom);
+
   if (modelStatus.type === "loading") {
     return {
       type: "failure",
