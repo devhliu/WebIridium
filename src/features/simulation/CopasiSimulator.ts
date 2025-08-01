@@ -94,13 +94,17 @@ export class CopasiSimulator extends Simulator {
     antimonyCode: string,
     abortSignal?: AbortSignal,
   ): Promise<Variable[]> {
-    const { modelInfo, boundarySpeciesNames } =
+    const { modelInfo, boundarySpeciesNames, reactionIds } =
       (await this.#workerPool.queueTask(
         "loadModel",
         null,
         antimonyCode,
         abortSignal,
-      )) as { modelInfo: ModelInfo; boundarySpeciesNames: string[] };
+      )) as {
+        modelInfo: ModelInfo;
+        boundarySpeciesNames: string[];
+        reactionIds: string[];
+      };
     const boundarySpeciesSet = new Set(boundarySpeciesNames);
 
     const variables: Variable[] = [];
@@ -152,6 +156,15 @@ export class CopasiSimulator extends Simulator {
 
         setName: param.name,
         defaultValue: param.initial_value,
+      });
+    }
+
+    for (const reactionId of reactionIds) {
+      variables.push({
+        type: "normal",
+        defaultDisplayName: reactionId,
+        id: reactionId,
+        category: "Reaction Rates",
       });
     }
 
