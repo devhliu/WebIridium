@@ -14,16 +14,15 @@ import { updateEditorContentAtom } from "@/globals/workspace/model";
 
 const HistoryItem = ({
   record,
-  unixTimestampMs,
   selected,
   onClick,
 }: {
   record: HistoryRecord;
-  unixTimestampMs: number;
   selected: boolean;
   onClick: (record: HistoryRecord) => void;
 }) => {
   const { simulationResult, unixTimestampMs: recordTimestampMs } = record;
+  const [timestampMs, setTimestampMs] = useState(() => Date.now());
 
   // prettier-ignore
   const title =
@@ -33,10 +32,18 @@ const HistoryItem = ({
     : simulationResult.type === "parameterScan" && simulationResult.mode === "steadyState" ? "Steady State Parameter Scan"
     : "Unknown";
 
-  const time = millisecondsToText(unixTimestampMs - recordTimestampMs, {
+  const time = millisecondsToText(timestampMs - recordTimestampMs, {
     ignoreSeconds: true,
     ago: true,
   }).replace(/^[a-z]/, (c) => c.toUpperCase());
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTimestampMs(Date.now());
+    }, 60 * 1_000);
+
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <button
@@ -66,15 +73,6 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
   const [simulationResult, setSimulationResult] = useAtom(simulationResultAtom);
   const setCurrentRightPanel = useSetAtom(currentRightPanelAtom);
-  const [timestampMs, setTimestampMs] = useState(() => Date.now());
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      setTimestampMs(Date.now());
-    }, 60 * 1_000);
-
-    return () => clearInterval(id);
-  }, []);
 
   const handleRecordClick = (record: HistoryRecord) => {
     setSimulationResult(record.simulationResult);
@@ -96,7 +94,6 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
               <HistoryItem
                 key={record.unixTimestampMs}
                 record={record}
-                unixTimestampMs={timestampMs}
                 selected={simulationResult === record.simulationResult}
                 onClick={handleRecordClick}
               />
