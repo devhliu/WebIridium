@@ -10,7 +10,7 @@
   left: 50%;
   width: max(25vw, 300px);
   transform: translate(-50%, -50%);
-  padding: var(--spacing-panel);
+  padding: var(--spacing-dialog);
   animation: contentShow var(--timing-fast) ease-in;
 }
 
@@ -32,8 +32,8 @@
   background-color: transparent;
   border: none;
   color: var(--color-layer1-fg-dim);
-  top: var(--spacing-panel);
-  right: var(--spacing-panel);
+  top: var(--spacing-dialog);
+  right: var(--spacing-dialog);
   padding: 0;
   cursor: pointer;
 }
