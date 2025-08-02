@@ -35,7 +35,8 @@ const HistoryItem = ({
 
   const time = millisecondsToText(unixTimestampMs - recordTimestampMs, {
     ignoreSeconds: true,
-  });
+    ago: true,
+  }).replace(/^[a-z]/, (c) => c.toUpperCase());
 
   return (
     <button
@@ -46,7 +47,7 @@ const HistoryItem = ({
     >
       <div className={styles.buttonMain}>
         <span className={styles.buttonTitle}>{title}</span>
-        <span className={styles.buttonTime}>{time + " ago"}</span>
+        <span className={styles.buttonTime}>{time}</span>
       </div>
 
       <div className={styles.buttonCheck}>

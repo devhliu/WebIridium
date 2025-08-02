@@ -6,11 +6,15 @@ const DAYS_MS = 24 * HOURS_MS;
 /**
  * @param ms - how many milliseconds (must be greater than 0)
  * @param ignoreSeconds - whether to count seconds in the output
+ * @param ago - whether to add "ago" to the end of the returned string
  * @returns string version of the milliseconds (e.g. "5 seconds")
  */
 export const millisecondsToText = (
   ms: number,
-  { ignoreSeconds = false }: { ignoreSeconds?: boolean } = {},
+  {
+    ignoreSeconds = false,
+    ago = false,
+  }: { ignoreSeconds?: boolean; ago?: boolean } = {},
 ) => {
   const days = Math.floor(ms / DAYS_MS);
   const hours = Math.floor((ms % DAYS_MS) / HOURS_MS);
@@ -46,12 +50,12 @@ export const millisecondsToText = (
   }
 
   if (chunks.length === 0) {
-    if (ignoreSeconds) {
-      return "1 minute";
-    } else {
-      return "1 second";
-    }
+    return "just now";
   } else {
+    if (ago) {
+      chunks.push("ago");
+    }
+
     return chunks.join(" ");
   }
 };

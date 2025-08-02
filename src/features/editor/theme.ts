@@ -119,7 +119,7 @@ export const monokaiTheme: monaco.editor.IStandaloneThemeData = {
 
     { token: "species", foreground: "#f92672" },
 
-    { token: "boundarySpecies", foreground: "#f92672" },
+    { token: "boundarySpecies", foreground: "#fd971f", fontStyle: "italic" },
 
     { token: "compartment", foreground: "#f92672" },
 

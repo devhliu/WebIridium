@@ -3,10 +3,10 @@ import { describe, it, expect } from "vitest";
 import { millisecondsToText } from "../timeUtils";
 
 describe("millisecondsToText", () => {
-  it("should say 1 second on <0 input", () => {
-    expect(millisecondsToText(1)).toBe("1 second");
-    expect(millisecondsToText(-1)).toBe("1 second");
-    expect(millisecondsToText(-100000)).toBe("1 second");
+  it("should say just now on <0 input", () => {
+    expect(millisecondsToText(1)).toBe("just now");
+    expect(millisecondsToText(-1)).toBe("just now");
+    expect(millisecondsToText(-100000)).toBe("just now");
   });
 
   it("should say the right amount of time", () => {
@@ -28,9 +28,9 @@ describe("millisecondsToText", () => {
   });
 
   it("should ignore seconds if told to", () => {
-    expect(millisecondsToText(1_500, { ignoreSeconds: true })).toBe("1 minute");
+    expect(millisecondsToText(1_500, { ignoreSeconds: true })).toBe("just now");
     expect(millisecondsToText(50_000, { ignoreSeconds: true })).toBe(
-      "1 minute",
+      "just now",
     );
     expect(millisecondsToText(60_000, { ignoreSeconds: true })).toBe(
       "1 minute",
@@ -62,5 +62,10 @@ describe("millisecondsToText", () => {
     expect(millisecondsToText(7373_000, { ignoreSeconds: true })).toBe(
       "2 hours 2 minutes",
     );
+  });
+
+  it("should add ago when specified", () => {
+    expect(millisecondsToText(0, { ago: true })).toBe("just now");
+    expect(millisecondsToText(30_000, { ago: true })).toBe("30 seconds ago");
   });
 });
