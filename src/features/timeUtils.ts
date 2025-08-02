@@ -4,22 +4,16 @@ const HOURS_MS = 60 * MINUTES_MS;
 const DAYS_MS = 24 * HOURS_MS;
 
 /**
- * @param ms - how many milliseconds (must be greater than 0)
- * @param ignoreSeconds - whether to count seconds in the output
- * @param ago - whether to add "ago" to the end of the returned string
- * @returns string version of the milliseconds (e.g. "5 seconds")
+ * Given a time span in milliseconds, returns a string
+ * saying "<that amount of time> ago"
+ *
+ * @param ms - how many milliseconds (should be greater than 0)
+ * @returns string in the format "[TIME] ago" or "Just now"
  */
-export const millisecondsToText = (
-  ms: number,
-  {
-    ignoreSeconds = false,
-    ago = false,
-  }: { ignoreSeconds?: boolean; ago?: boolean } = {},
-) => {
+export const timeToAgoText = (ms: number) => {
   const days = Math.floor(ms / DAYS_MS);
   const hours = Math.floor((ms % DAYS_MS) / HOURS_MS);
   const minutes = Math.floor((ms % HOURS_MS) / MINUTES_MS);
-  const seconds = Math.floor((ms % MINUTES_MS) / SECONDS_MS);
 
   const chunks = [];
 
@@ -41,21 +35,10 @@ export const millisecondsToText = (
     chunks.push(`${minutes} minutes`);
   }
 
-  if (!ignoreSeconds) {
-    if (seconds === 1) {
-      chunks.push("1 second");
-    } else if (seconds > 0) {
-      chunks.push(`${seconds} seconds`);
-    }
-  }
-
   if (chunks.length === 0) {
-    return "just now";
+    return "Just now";
   } else {
-    if (ago) {
-      chunks.push("ago");
-    }
-
+    chunks.push("ago");
     return chunks.join(" ");
   }
 };

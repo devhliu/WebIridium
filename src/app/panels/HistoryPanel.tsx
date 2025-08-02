@@ -7,7 +7,7 @@ import PanelTitle from "./PanelTitle";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
 import { historyAtom, type HistoryRecord } from "@/globals/workspace/history";
-import { millisecondsToText } from "@/features/timeUtils";
+import { timeToAgoText } from "@/features/timeUtils";
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import { currentRightPanelAtom } from "@/globals/workspace/layout";
 import { updateEditorContentAtom } from "@/globals/workspace/model";
@@ -32,10 +32,7 @@ const HistoryItem = ({
     : simulationResult.type === "parameterScan" && simulationResult.mode === "steadyState" ? "Steady State Parameter Scan"
     : "Unknown";
 
-  const time = millisecondsToText(timestampMs - recordTimestampMs, {
-    ignoreSeconds: true,
-    ago: true,
-  }).replace(/^[a-z]/, (c) => c.toUpperCase());
+  const time = timeToAgoText(timestampMs - recordTimestampMs);
 
   useEffect(() => {
     const id = setInterval(() => {
