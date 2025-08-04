@@ -43,7 +43,7 @@ const LegendItem = ({
           strokeDasharray={dashArrays[data.dash]}
         />
       </svg>
-      {data.title}
+      <span style={{ color: settings.textColor }}>{data.title}</span>
     </div>
   );
 };

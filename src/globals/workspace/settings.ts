@@ -60,6 +60,7 @@ export interface LegendSettings {
   isFloating: boolean;
 
   // Floating only
+  textColor: string;
   backgroundColor: string;
   borderColor: string;
   borderThickness: number;
@@ -73,6 +74,7 @@ export interface GraphSettings {
 
   includeTitle: boolean;
   title: string;
+  titleColor: string;
 
   includeBorder: boolean;
   borderColor: string;
@@ -144,6 +146,7 @@ export const graphSettingsAtom = atom<GraphSettings>({
 
   includeTitle: true,
   title: "Transition of substances in chemical reaction",
+  titleColor: "#000000",
 
   includeBorder: true,
   borderColor: "#000000",
@@ -199,6 +202,7 @@ export const graphSettingsAtom = atom<GraphSettings>({
     visible: true,
     isFloating: true,
 
+    textColor: "#000",
     backgroundColor: "#fff",
     borderColor: "#000",
     borderThickness: 1,

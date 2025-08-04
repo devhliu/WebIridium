@@ -48,6 +48,7 @@ export const generatePlotParameters = (
     drawingAreaColor,
     includeTitle,
     title,
+    titleColor,
     includeBorder,
     borderColor,
     borderThickness,
@@ -191,6 +192,9 @@ export const generatePlotParameters = (
         ? undefined
         : {
             text: title,
+            font: {
+              color: titleColor,
+            },
           },
       paper_bgcolor: backgroundColor,
       plot_bgcolor: drawingAreaColor,

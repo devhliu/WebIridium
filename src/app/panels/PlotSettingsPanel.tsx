@@ -179,6 +179,13 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
                 onChange={handleChangeFor("title")}
               />
             )}
+            {graphSettings.includeTitle && (
+              <ColorProperty
+                name="Title Color"
+                value={graphSettings.titleColor}
+                onChange={handleChangeFor("titleColor")}
+              />
+            )}
 
             <BooleanProperty
               name="Include Border"
@@ -379,6 +386,11 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
             {graphSettings.legend.visible &&
               graphSettings.legend.isFloating && (
                 <>
+                  <ColorProperty
+                    name="Text Color"
+                    value={graphSettings.legend.textColor}
+                    onChange={handleLegendChangeFor("textColor")}
+                  />
                   <ColorProperty
                     name="Background Color"
                     value={graphSettings.legend.backgroundColor}
