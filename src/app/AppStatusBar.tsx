@@ -6,7 +6,6 @@ import { StatusBar, StatusBarItem } from "@/components/StatusBar";
 
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
-import ErrorIcon from "@/assets/icons/ErrorIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
 
 import { variablesAtom, modelStatusAtom } from "@/globals/workspace/model";
@@ -55,10 +54,6 @@ const ModelStatusItem = () => {
           <StatusBarItem className={styles.itemFail}>
             <CrossIcon width="1em" height="1em" />
             Model Error
-          </StatusBarItem>
-          <StatusBarItem>
-            <ErrorIcon className={styles.errorIcon} width="1em" height="1em" />
-            {status.message}
           </StatusBarItem>
         </>
       );
