@@ -1,6 +1,6 @@
 import { useAtomValue } from "jotai";
 
-import ExportButtonBase from "./ExportButtonBase";
+import DownloadButtonBase from "./DownloadButtonBase";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import {
@@ -13,7 +13,7 @@ import { generateTableParameters } from "../generateTableParameters";
 import { promptDownloadString } from "@/features/download";
 import { escapeCsvCell } from "@/features/csv";
 
-const ExportTableButton = () => {
+const DownloadTableButton = () => {
   const result = useAtomValue(simulationResultAtom);
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const scanIndependentVariable = useScanIndependentVariable();
@@ -56,7 +56,7 @@ const ExportTableButton = () => {
     promptDownloadString(`Table of ${workspaceName}`, csv, "text/csv");
   };
 
-  return <ExportButtonBase onClick={handleClick} />;
+  return <DownloadButtonBase onClick={handleClick} />;
 };
 
-export default ExportTableButton;
+export default DownloadTableButton;

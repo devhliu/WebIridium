@@ -11,8 +11,8 @@ import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
 import TablePanel from "./TablePanel";
 import SteadyStateResultPanel from "./SteadyStateResultPanel";
-import ExportPlotButton from "./exportButtons/ExportPlotButton";
-import ExportTableButton from "./exportButtons/ExportTableButton";
+import DownloadPlotButton from "./downloadButtons/DownloadPlotButton";
+import DownloadTableButton from "./downloadButtons/DownloadTableButton";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import IconButton from "@/components/IconButton";
@@ -50,7 +50,7 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
             <IconButton label="Close" onClick={onClose}>
               <CrossIcon width="1em" height="1em" />
             </IconButton>
-            <ExportPlotButton />
+            <DownloadPlotButton />
           </>
         ),
       },
@@ -63,7 +63,7 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
             <IconButton label="Close" onClick={onClose}>
               <CrossIcon width="1em" height="1em" />
             </IconButton>
-            <ExportTableButton />
+            <DownloadTableButton />
           </>
         ),
       },

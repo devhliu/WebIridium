@@ -2,7 +2,7 @@ import { useAtomValue } from "jotai";
 
 import plotly from "plotly.js-dist-min";
 
-import ExportButtonBase from "./ExportButtonBase";
+import DownloadButtonBase from "./DownloadButtonBase";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 import {
@@ -20,7 +20,7 @@ import { promptDownloadUrl } from "@/features/download";
 const WIDTH = 800;
 const HEIGHT = 800;
 
-const ExportPlotButton = () => {
+const DownloadPlotButton = () => {
   const result = useAtomValue(simulationResultAtom);
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const palette = useAtomValue(paletteAtom);
@@ -63,7 +63,7 @@ const ExportPlotButton = () => {
     promptDownloadUrl(`Plot of ${workspaceName}`, imageUrl);
   };
 
-  return <ExportButtonBase onClick={handleClick} />;
+  return <DownloadButtonBase onClick={handleClick} />;
 };
 
-export default ExportPlotButton;
+export default DownloadPlotButton;
