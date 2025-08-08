@@ -34,7 +34,7 @@ export const editorContentAtom = atom((get) => get(_editorContentAtom));
 export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
 export const variablesAtom = atom((get) => get(_variablesAtom));
 export const variablesMapAtom: Atom<Map<string, Variable>> = atom(
-  (get) => new Map(get(variablesAtom).map((v) => [v.id, v])),
+  (get) => new Map(get(variablesAtom).map((v) => [v.name, v])),
 );
 
 // TODO: unit test this?
@@ -51,10 +51,10 @@ const patchVariablesSettings = (
   // first pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
     if (
-      !currentVariablesSettings[variable.id] &&
+      !currentVariablesSettings[variable.name] &&
       isPriorityVariable(variable)
     ) {
-      adding[variable.id] = {
+      adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
         color: getDefaultColorForIndex(count),
@@ -68,10 +68,10 @@ const patchVariablesSettings = (
   // second pass for everything else
   for (const variable of newVariables) {
     if (
-      !currentVariablesSettings[variable.id] &&
+      !currentVariablesSettings[variable.name] &&
       !isPriorityVariable(variable)
     ) {
-      adding[variable.id] = {
+      adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: false,
         color: getDefaultColorForIndex(count),
@@ -156,13 +156,13 @@ export const updateEditorContentAtom = atom(
     // if the independent variable no longer exists, fallback to time if possible
     if (
       !independentVariable ||
-      !newVariables.find((v) => v.id === independentVariable)
+      !newVariables.find((v) => v.name === independentVariable)
     ) {
       set(
         independentVariableAtom,
         newVariables.find(
-          (v) => v.id === simulator.defaultIndependentVariableId,
-        )?.id ?? null,
+          (v) => v.name === simulator.defaultIndependentVariableId,
+        )?.name ?? null,
       );
     }
 
@@ -198,7 +198,7 @@ export const updateEditorContentAtom = atom(
 
     // TODO: unit test this
     // remove slider states that are no longer valid
-    const newVariablesNameSet = new Set(newVariables.map((v) => v.id));
+    const newVariablesNameSet = new Set(newVariables.map((v) => v.name));
     if (
       Object.keys(variableSliderStates).some(
         (name) => !newVariablesNameSet.has(name),

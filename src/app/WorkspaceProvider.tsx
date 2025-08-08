@@ -22,6 +22,7 @@ import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 import { readShareUrlFragment } from "@/features/share";
 import { historyAtoms } from "@/globals/workspace/history";
 import { editorActionsAtoms } from "@/globals/workspace/editorActions";
+import { plotAtoms } from "@/globals/workspace/plot";
 
 const allWorkspaceAtoms = [
   ...modelAtoms,
@@ -31,6 +32,7 @@ const allWorkspaceAtoms = [
   ...layoutAtoms,
   ...historyAtoms,
   ...editorActionsAtoms,
+  ...plotAtoms,
 ];
 
 // simulation from share link will not be run if they use more number of points

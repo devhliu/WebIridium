@@ -19,7 +19,7 @@ type VariableBase = {
   /** Default display name. */
   defaultDisplayName: string;
   /** General name used internally by the simulator */
-  id: string;
+  name: string;
   category: string;
 };
 

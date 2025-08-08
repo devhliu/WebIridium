@@ -51,11 +51,11 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const [showingInactive, setShowingInactive] = useState(true);
 
   const filteredVariables = variables
-    .filter((v) => showingInactive || variableSliderStates[v.id])
+    .filter((v) => showingInactive || variableSliderStates[v.name])
     .filter((v) => v.type === "settable")
     .filter(
       (v) =>
-        variableSettingss[v.id].displayName
+        variableSettingss[v.name].displayName
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -68,7 +68,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
 
   const handleValueChange = useCallback(
     (variable: SettableVariable, newValue: number) => {
-      updateSliderAndSimulate({ id: variable.id, value: newValue });
+      updateSliderAndSimulate({ id: variable.name, value: newValue });
     },
     [updateSliderAndSimulate],
   );
@@ -79,10 +79,10 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
         if (on) {
           return {
             ...old,
-            [variable.id]: getInitialSliderState(variable),
+            [variable.name]: getInitialSliderState(variable),
           };
         } else {
-          const { [variable.id]: _, ...rest } = old;
+          const { [variable.name]: _, ...rest } = old;
           return rest;
         }
       });
@@ -94,7 +94,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
     (variable: SettableVariable, newState: VariableSliderState) => {
       setVariableSliderStates((old) => ({
         ...old,
-        [variable.id]: newState,
+        [variable.name]: newState,
       }));
     },
     [setVariableSliderStates],
@@ -132,11 +132,11 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           <p className={styles.noVariables}>No Variables</p>
         ) : (
           filteredGroups.map(([group, vars]) => {
-            const allActive = vars.every((v) => variableSliderStates[v.id]);
+            const allActive = vars.every((v) => variableSliderStates[v.name]);
 
             const handleGroupToggle = (on: boolean) => {
               for (const v of vars) {
-                if (!on || !variableSliderStates[v.id]) {
+                if (!on || !variableSliderStates[v.name]) {
                   handleToggle(v, on);
                 }
               }
@@ -154,13 +154,13 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
                 </h3>
                 {vars.map((v) => (
                   <VariableSlider
-                    key={v.id}
+                    key={v.name}
                     variable={v}
-                    settings={variableSettingss[v.id]}
-                    sliderState={variableSliderStates[v.id]}
+                    settings={variableSettingss[v.name]}
+                    sliderState={variableSliderStates[v.name]}
                     disabled={
                       simulationResult?.type === "parameterScan" &&
-                      parameterScanOptions.varyingParameter === v.id
+                      parameterScanOptions.varyingParameter === v.name
                     }
                     onToggle={handleToggle}
                     onValueChange={handleValueChange}

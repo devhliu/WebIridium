@@ -12,6 +12,7 @@ import {
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "./generatePlotParameters";
+import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
 
 export interface ResultsPlotProps {
   result: SimulationResult;
@@ -26,6 +27,8 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const graphSettings = useAtomValue(graphSettingsAtom);
   const legendSettings = graphSettings.legend;
+  const xAxisTitle = useAtomValue(xAxisTitleAtom);
+  const yAxisTitle = useAtomValue(yAxisTitleAtom);
 
   const { plotData, layout, legendData } = generatePlotParameters(
     width,
@@ -36,6 +39,8 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
     timeCourseIndependentVariable,
     scanIndependentVariable,
     palette,
+    xAxisTitle,
+    yAxisTitle,
   );
 
   return (

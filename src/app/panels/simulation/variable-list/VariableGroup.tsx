@@ -32,9 +32,13 @@ const VariableGroup = ({
 }: VariableGroupProps) => {
   const [open, setOpen] = useState(DEFAULT_OPEN_GROUPS.has(group));
 
-  const areAllVisible = variables.every((v) => variableSettingss[v.id].visible);
+  const areAllVisible = variables.every(
+    (v) => variableSettingss[v.name].visible,
+  );
 
-  const areSomeVisible = variables.some((v) => variableSettingss[v.id].visible);
+  const areSomeVisible = variables.some(
+    (v) => variableSettingss[v.name].visible,
+  );
 
   const handleToggleOpen = () => {
     if (!isSearching) {
@@ -45,8 +49,8 @@ const VariableGroup = ({
   const handleToggleAll = () => {
     setOpen(true);
     for (const v of variables) {
-      onVariableSettingsChange(v.id, {
-        ...variableSettingss[v.id],
+      onVariableSettingsChange(v.name, {
+        ...variableSettingss[v.name],
         visible: !areAllVisible,
       });
     }
@@ -81,11 +85,11 @@ const VariableGroup = ({
         <div className={styles.groupContent}>
           {variables?.map((v) => (
             <VariableItem
-              key={v.id}
+              key={v.name}
               variable={v}
-              settings={variableSettingss[v.id]}
+              settings={variableSettingss[v.name]}
               onVariableSettingsChange={(newSettings) =>
-                onVariableSettingsChange(v.id, newSettings)
+                onVariableSettingsChange(v.name, newSettings)
               }
             />
           ))}

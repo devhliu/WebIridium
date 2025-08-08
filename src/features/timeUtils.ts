@@ -5,7 +5,7 @@ const DAYS_MS = 24 * HOURS_MS;
 
 /**
  * Given a time span in milliseconds, returns a string
- * saying "<that amount of time> ago"
+ * saying "[that amount of time] ago"
  *
  * @param ms - how many milliseconds (should be greater than 0)
  * @returns string in the format "[TIME] ago" or "Just now"

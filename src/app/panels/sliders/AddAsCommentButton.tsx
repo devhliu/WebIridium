@@ -35,7 +35,7 @@ const AddAsCommentButton = () => {
         continue;
       }
 
-      preset[variable.id] = state.value;
+      preset[variable.name] = state.value;
       didAdd = true;
     }
 

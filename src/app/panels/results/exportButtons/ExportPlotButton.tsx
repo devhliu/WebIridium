@@ -13,6 +13,7 @@ import {
   nameAtom,
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
+import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
 import { generatePlotParameters } from "../generatePlotParameters";
 import { promptDownloadUrl } from "@/features/download";
 
@@ -27,6 +28,8 @@ const ExportPlotButton = () => {
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const graphSettings = useAtomValue(graphSettingsAtom);
   const workspaceName = useAtomValue(nameAtom);
+  const xAxisTitle = useAtomValue(xAxisTitleAtom);
+  const yAxisTitle = useAtomValue(yAxisTitleAtom);
 
   const handleClick = async () => {
     if (!result) return;
@@ -46,6 +49,8 @@ const ExportPlotButton = () => {
       timeCourseIndependentVariable,
       scanIndependentVariable,
       palette,
+      xAxisTitle,
+      yAxisTitle,
     );
 
     const fakeContainer = document.createElement("div");

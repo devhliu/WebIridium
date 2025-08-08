@@ -1,5 +1,6 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useState } from "react";
+
 import {
   graphSettingsAtom,
   paletteAtom,
@@ -8,6 +9,10 @@ import {
   type GridSettings,
   type LegendSettings,
 } from "@/globals/workspace/settings";
+import {
+  defaultXAxisTitleAtom,
+  defaultYAxisTitleAtom,
+} from "@/globals/workspace/plot";
 
 import styles from "./PlotSettingsPanel.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
@@ -36,6 +41,9 @@ export interface PlotSettingsPanelProps {
 const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
   const [palette, setPalette] = useAtom(paletteAtom);
+
+  const defaultXAxisTitle = useAtomValue(defaultXAxisTitleAtom);
+  const defaultYAxisTitle = useAtomValue(defaultYAxisTitleAtom);
 
   const [selectedAxis, setSelectedAxis] = useState<"xAxis" | "yAxis">("xAxis");
   const axisSettings = graphSettings[selectedAxis];
@@ -248,17 +256,14 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
             />
 
             {axisSettings.includeTitle && (
-              <BooleanProperty
-                name="Use Default Title"
-                value={axisSettings["useDefaultTitle"]}
-                onChange={handleAxisChangeFor("useDefaultTitle")}
-              />
-            )}
-
-            {axisSettings.includeTitle && !axisSettings.useDefaultTitle && (
               <StringProperty
                 name="Axis Title"
                 value={axisSettings["title"]}
+                placeholder={
+                  selectedAxis === "xAxis"
+                    ? defaultXAxisTitle
+                    : defaultYAxisTitle
+                }
                 onChange={handleAxisChangeFor("title")}
               />
             )}

@@ -43,7 +43,7 @@ export class CopasiSimulator extends Simulator {
       {
         parameters: {
           ...parameters,
-          selectionList: parameters.includedVariables.map((v) => v.id),
+          selectionList: parameters.includedVariables.map((v) => v.name),
         },
         variableValues,
         ...parameterScanOptions,
@@ -112,7 +112,7 @@ export class CopasiSimulator extends Simulator {
     variables.push({
       type: "normal",
       defaultDisplayName: "Time",
-      id: "Time",
+      name: "Time",
       category: "Time",
     });
 
@@ -121,7 +121,7 @@ export class CopasiSimulator extends Simulator {
         variables.push({
           type: "settable",
           defaultDisplayName: specie.name,
-          id: specie.id,
+          name: specie.id,
           category: "Boundary Species",
 
           setName: `[${specie.id}]_0`,
@@ -131,14 +131,14 @@ export class CopasiSimulator extends Simulator {
         variables.push({
           type: "normal",
           defaultDisplayName: `${specie.name}'`,
-          id: `${specie.id}.Rate`,
+          name: `${specie.id}.Rate`,
           category: "Rate of Changes",
         });
 
         variables.push({
           type: "settable",
           defaultDisplayName: specie.name,
-          id: specie.id,
+          name: specie.id,
           category: "Floating Species",
 
           setName: `[${specie.name}]_0`,
@@ -151,7 +151,7 @@ export class CopasiSimulator extends Simulator {
       variables.push({
         type: "settable",
         defaultDisplayName: param.name,
-        id: param.id,
+        name: param.id,
         category: "Parameters",
 
         setName: param.name,
@@ -163,7 +163,7 @@ export class CopasiSimulator extends Simulator {
       variables.push({
         type: "normal",
         defaultDisplayName: reactionId,
-        id: reactionId,
+        name: reactionId,
         category: "Reaction Rates",
       });
     }

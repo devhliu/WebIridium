@@ -36,7 +36,6 @@ export interface ParameterScanOptions {
 
 export interface AxisSettings {
   includeTitle: boolean;
-  useDefaultTitle: boolean;
   title: string;
   showMajorTicks: boolean;
   color: string;
@@ -114,7 +113,9 @@ export const independentVariableAtom = atom<string | null>(null);
 // note that variable settings will always be a superset of
 // variables because the settings are retained even if the
 // variables are no longer in the model.
-export const variableSettingssAtom = atom<Record<string, VariableSettings>>({});
+export const variableSettingssAtom = atom<{ [id: string]: VariableSettings }>(
+  {},
+);
 
 export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
   startTime: 0,
@@ -164,16 +165,14 @@ export const graphSettingsAtom = atom<GraphSettings>({
 
   xAxis: {
     includeTitle: true,
-    useDefaultTitle: true,
-    title: "Time",
+    title: "", // empty means use placeholder
     showMajorTicks: true,
     color: "#000",
   },
 
   yAxis: {
     includeTitle: true,
-    useDefaultTitle: true,
-    title: "Concentrations",
+    title: "", // empty means use placeholder
     showMajorTicks: true,
     color: "#000",
   },

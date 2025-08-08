@@ -62,8 +62,8 @@ export const groupVariablesForSelectComponent = <TVar extends Variable>(
       ...acc,
       [category]: Object.fromEntries(
         variables.map((v) => [
-          displayNameSelector(v, variableSettingss[v.id]),
-          v.id,
+          displayNameSelector(v, variableSettingss[v.name]),
+          v.name,
         ]),
       ),
     };

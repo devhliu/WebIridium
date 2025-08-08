@@ -4,6 +4,7 @@ import styles from "./PropertyList.module.css";
 export interface StringPropertyProps {
   name: string;
   value: string;
+  placeholder?: string;
   onChange: (newValue: string) => void;
 
   /**
@@ -14,6 +15,7 @@ export interface StringPropertyProps {
 const StringProperty = ({
   name,
   value,
+  placeholder,
   onChange,
   longMode: isLongMode = false,
 }: StringPropertyProps) => {
@@ -27,6 +29,7 @@ const StringProperty = ({
         id={name}
         className={styles.propertyInput}
         value={value}
+        placeholder={placeholder}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>

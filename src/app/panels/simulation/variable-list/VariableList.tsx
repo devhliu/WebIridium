@@ -26,7 +26,7 @@ const VariableList = ({
   const [searchTerm, setSearchTerm] = useState("");
   const filteredVariables = variables.filter(
     (variable) =>
-      variableSettingss[variable.id].displayName
+      variableSettingss[variable.name].displayName
         .toLowerCase()
         .includes(searchTerm.toLowerCase()) ||
       variable.category.toLowerCase().includes(searchTerm.toLowerCase()),

@@ -70,12 +70,15 @@ const VariableSlider = memo(
           {/* TODO: what should the checkbox's name/id really be? */}
           <Checkbox
             className={styles.sliderCheckbox}
-            name={variable.id}
+            name={variable.name}
             value={Boolean(sliderState)}
             onChange={handleToggle}
             disabled={disabled}
           />
-          <label className={styles.sliderTitleMainLabel} htmlFor={variable.id}>
+          <label
+            className={styles.sliderTitleMainLabel}
+            htmlFor={variable.name}
+          >
             {getVariableSetDisplayName(variable, settings)}
           </label>
 
@@ -83,13 +86,13 @@ const VariableSlider = memo(
             <>
               <label
                 className={styles.sliderTitleLabel}
-                htmlFor={`${variable.id}-value`}
+                htmlFor={`${variable.name}-value`}
               >
                 Value
               </label>
               <NumberBox
                 className={styles.sliderNumberBox}
-                name={`${variable.id}-value`}
+                name={`${variable.name}-value`}
                 value={sliderState.value}
                 onChange={handleChangeFor("value")}
                 disabled={disabled}
@@ -97,13 +100,13 @@ const VariableSlider = memo(
 
               <label
                 className={styles.sliderTitleLabel}
-                htmlFor={`${variable.id}-min`}
+                htmlFor={`${variable.name}-min`}
               >
                 Min
               </label>
               <NumberBox
                 className={styles.sliderNumberBox}
-                name={`${variable.id}-min`}
+                name={`${variable.name}-min`}
                 value={sliderState.min}
                 onChange={handleChangeFor("min")}
                 validator={(value) => value < sliderState.max}
@@ -112,13 +115,13 @@ const VariableSlider = memo(
 
               <label
                 className={styles.sliderTitleLabel}
-                htmlFor={`${variable.id}-max`}
+                htmlFor={`${variable.name}-max`}
               >
                 Max
               </label>
               <NumberBox
                 className={styles.sliderNumberBox}
-                name={`${variable.id}-max`}
+                name={`${variable.name}-max`}
                 value={sliderState.max}
                 onChange={handleChangeFor("max")}
                 validator={(value) => value > sliderState.min}

@@ -38,6 +38,8 @@ export const generatePlotParameters = (
   timeCourseIndependentVariable: string | null,
   scanIndependentVariable: string,
   palette: Palette,
+  xAxisTitle: string,
+  yAxisTitle: string,
 ): {
   plotData: Data[];
   layout: Partial<Layout>;
@@ -82,11 +84,6 @@ export const generatePlotParameters = (
     result.type === "parameterScan"
       ? variableSettingss[result.parameter]
       : null;
-
-  const xAxisTitle = xAxis.useDefaultTitle
-    ? variableSettingss[independentVariableName].displayName
-    : xAxis.title;
-  const yAxisTitle = yAxis.useDefaultTitle ? "Concentrations" : yAxis.title;
 
   if (independentVariableColumn) {
     for (const {

@@ -11,7 +11,7 @@ const makeGenericVariable = (name: string): Variable => {
   return {
     type: "normal",
     defaultDisplayName: name,
-    id: name,
+    name: name,
     category: "Test",
   };
 };
