@@ -1,10 +1,14 @@
+/**
+ * Atoms for running simulations and current simulation
+ * status.
+ */
+
 import { atom, type Getter } from "jotai";
 
 import type {
   ParameterScanResult,
   SettableVariable,
   SimulationResult,
-  Simulator,
   TimeCourseParameters,
   Variable,
 } from "@/features/simulation/Simulator";
@@ -14,6 +18,7 @@ import {
 } from "@/features/distribution";
 
 import type { Setter } from "jotai";
+import { simulatorAtom } from "./simulator";
 import {
   editorContentAtom,
   modelStatusAtom,
@@ -43,22 +48,11 @@ type SimulationInternalState = {
   abortController: AbortController;
 };
 
-// pretend there is a Simulator since it will always be instantiated
-// when the App is created (inside ./WorkspaceProvider)
-const _simulatorAtom = atom<Simulator>({} as Simulator);
-
 const _simulationInternalStateAtom = atom<SimulationInternalState | null>(null);
 
 // exported atoms
 
 export const simulationResultAtom = atom<SimulationResult | null>(null);
-export const simulatorAtom = atom((get) => get(_simulatorAtom));
-export const updateSimulatorAtom = atom(
-  null,
-  (_, set, simulator: Simulator) => {
-    set(_simulatorAtom, simulator);
-  },
-);
 export const isSimulatingAtom = atom((get) =>
   Boolean(get(_simulationInternalStateAtom)),
 );
@@ -346,11 +340,9 @@ export const cancelSimulationAtom = atom(null, (get) => {
 });
 
 export const simulationAtoms = [
-  _simulatorAtom,
   _simulationInternalStateAtom,
 
   simulationResultAtom,
-  simulatorAtom,
 
   simulateTimeCourseAtom,
   computeSteadyStateAtom,

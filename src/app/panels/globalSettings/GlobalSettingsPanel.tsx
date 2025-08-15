@@ -1,4 +1,12 @@
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+
+import { editorFontSizeAtom, themeOptionAtom } from "@/globals/appearance";
+import {
+  getSimulatorName,
+  SIMULATOR_LIST,
+  simulatorAtom,
+  updateSimulatorAtom,
+} from "@/globals/workspace/simulator";
 
 import styles from "./globalSettings.module.css";
 import PropertyList from "@/components/property-list/PropertyList";
@@ -6,7 +14,6 @@ import SelectProperty from "@/components/property-list/SelectProperty";
 
 import { THEMES } from "@/features/theme";
 
-import { editorFontSizeAtom, themeOptionAtom } from "@/globals/appearance";
 import PropertyHeading from "@/components/property-list/PropertyHeading";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
 
@@ -17,9 +24,16 @@ for (const theme of THEMES) {
   themeOptions[theme] = theme;
 }
 
+const simulatorOptions: Record<string, string> = {};
+for (const simulator of SIMULATOR_LIST) {
+  simulatorOptions[simulator] = simulator;
+}
+
 const GlobalSettingsPanel = () => {
   const [themeOption, setThemeOption] = useAtom(themeOptionAtom);
   const [editorFontSize, setEditorFontSize] = useAtom(editorFontSizeAtom);
+  const simulator = useAtomValue(simulatorAtom);
+  const updateSimulator = useSetAtom(updateSimulatorAtom);
 
   return (
     <div className={styles.panel}>
@@ -43,9 +57,9 @@ const GlobalSettingsPanel = () => {
           <PropertyHeading>Simulation</PropertyHeading>
           <SelectProperty
             name="Simulator"
-            options={{ COPASI: "COPASI" }}
-            value={"COPASI"}
-            onChange={() => undefined}
+            options={simulatorOptions}
+            value={getSimulatorName(simulator)}
+            onChange={(name) => updateSimulator(name)}
           />
           <NumericSliderProperty
             name="Max Threads"

@@ -82,7 +82,10 @@ const handleMessage = async (e) => {
         simulator.SetVariable(name, value);
       }
       if (parameterScanOptions) {
-        simulator.SetVariable(parameterScanOptions.varyingParameter, parameterScanOptions.varyingParameterValue);
+        simulator.SetVariable(
+          parameterScanOptions.varyingParameter,
+          parameterScanOptions.varyingParameterValue,
+        );
       }
 
       // TODO: make work with the start time

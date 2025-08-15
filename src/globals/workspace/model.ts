@@ -9,7 +9,7 @@ import { WorkerTermination } from "@/features/workerPool";
 import { getDefaultColorForIndex } from "@/features/colors";
 
 import { type VariableSettings } from "./settings";
-import { simulatorAtom } from "./simulation";
+import { simulatorAtom } from "./simulator";
 import {
   independentVariableAtom,
   parameterScanOptionsAtom,

@@ -2,7 +2,7 @@
 import "allotment/dist/style.css";
 
 import { useEffect, useRef } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useSetAtom, Provider as JotaiProvider } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
@@ -45,11 +45,13 @@ const getDefaultResultsPanelWidth = () => {
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const didIntialLoadRef = useRef(false);
   return (
-    <ToastProvider>
-      <WorkspaceProvider didInitialLoadRef={didIntialLoadRef}>
-        {children}
-      </WorkspaceProvider>
-    </ToastProvider>
+    <JotaiProvider>
+      <ToastProvider>
+        <WorkspaceProvider didInitialLoadRef={didIntialLoadRef}>
+          {children}
+        </WorkspaceProvider>
+      </ToastProvider>
+    </JotaiProvider>
   );
 };
 

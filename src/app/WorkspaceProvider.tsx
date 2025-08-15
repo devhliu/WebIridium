@@ -16,13 +16,12 @@ import {
   computeSteadyStateAtom,
   simulateTimeCourseAtom,
   simulationAtoms,
-  updateSimulatorAtom,
 } from "@/globals/workspace/simulation";
-import { LibSbmlSimSimulator } from "@/features/simulation/LibSbmlSimSimulator";
 import { readShareUrlFragment } from "@/features/share";
 import { historyAtoms } from "@/globals/workspace/history";
 import { editorActionsAtoms } from "@/globals/workspace/editorActions";
 import { plotAtoms } from "@/globals/workspace/plot";
+import { simulatorAtoms } from "@/globals/workspace/simulator";
 
 const allWorkspaceAtoms = [
   ...modelAtoms,
@@ -33,6 +32,7 @@ const allWorkspaceAtoms = [
   ...historyAtoms,
   ...editorActionsAtoms,
   ...plotAtoms,
+  ...simulatorAtoms,
 ];
 
 // simulation from share link will not be run if they use more number of points
@@ -45,7 +45,6 @@ const Initialize = ({
   didInitialLoadRef: React.RefObject<boolean>;
 }) => {
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
-  const updateSimulator = useSetAtom(updateSimulatorAtom);
   const setWorkspaceName = useSetAtom(nameAtom);
   const setTimeCourseParameters = useSetAtom(timeCourseParametersAtom);
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
@@ -53,7 +52,6 @@ const Initialize = ({
 
   useEffect(() => {
     const load = async (model: string): Promise<boolean> => {
-      updateSimulator(new LibSbmlSimSimulator());
       return await updateEditorContent({ content: model, skipDebounce: true });
     };
 
@@ -92,7 +90,6 @@ const Initialize = ({
   }, [
     didInitialLoadRef,
     updateEditorContent,
-    updateSimulator,
     computeSteadyState,
     setTimeCourseParameters,
     setWorkspaceName,
