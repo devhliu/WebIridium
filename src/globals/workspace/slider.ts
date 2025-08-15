@@ -81,14 +81,14 @@ const _setSlidersAndSimulateAtom = atom(
 
       switch (get(simulationResultAtom)?.type) {
         case "steadyState":
-          await set(computeSteadyStateAtom);
+          await set(computeSteadyStateAtom, { delayEnd: true });
           break;
         case "parameterScan":
-          await set(runParameterScanAtom);
+          await set(runParameterScanAtom, { delayEnd: true });
           break;
         case "timeCourse":
         default:
-          await set(simulateTimeCourseAtom);
+          await set(simulateTimeCourseAtom, { delayEnd: true });
           break;
       }
     };

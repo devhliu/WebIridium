@@ -75,8 +75,20 @@ const getVariableValues = (
   return values;
 };
 
+export interface RunSimulationOptions {
+  /**
+   * default: false
+   * Whether or not to delay the simulations end.
+   * This is used by slider so it doesn't flash as you drag.
+   */
+  delayEnd?: boolean; // TODO: add test for this feature (test by moving sliders and making sure the simulation buttons stay disabled for some time)
+}
+
+const SIMULATION_DELAY_END_DURATION = 500;
+
 const runSimulation = async (
   simulationType: string,
+  options: RunSimulationOptions,
   get: Getter,
   set: Setter,
   run: (abortSignal: AbortSignal) => Promise<SimulationResult>,
@@ -97,6 +109,7 @@ const runSimulation = async (
       abortController,
     });
 
+    let canceled = false;
     try {
       const code = get(editorContentAtom);
 
@@ -108,6 +121,7 @@ const runSimulation = async (
       return { type: "success" };
     } catch (err) {
       if (err instanceof WorkerTermination) {
+        canceled = true;
         return { type: "cancel" };
       } else {
         if (err instanceof Error && err.message !== "mock fail") {
@@ -120,10 +134,20 @@ const runSimulation = async (
         };
       }
     } finally {
-      if (
-        get(_simulationInternalStateAtom)?.abortController === abortController
-      ) {
-        set(_simulationInternalStateAtom, null);
+      const reset = () => {
+        if (
+          get(_simulationInternalStateAtom)?.abortController === abortController
+        ) {
+          set(_simulationInternalStateAtom, null);
+        }
+      };
+
+      // even if delayEnd is true, when the user presses
+      // cancel we want it to be instantaneous
+      if (!options.delayEnd && !canceled) {
+        reset();
+      } else {
+        setTimeout(reset, SIMULATION_DELAY_END_DURATION);
       }
     }
   }
@@ -139,10 +163,14 @@ export const simulateTimeCourseAtom = atom(
   async (
     get,
     set,
-    { resetInitialConditions = true }: SimulateTimeCourseOptions = {},
+    {
+      resetInitialConditions = true,
+      ...rest
+    }: SimulateTimeCourseOptions & RunSimulationOptions = {},
   ) => {
     return await runSimulation(
       "timeCourse",
+      rest,
       get,
       set,
       async (abortSignal: AbortSignal) => {
@@ -173,164 +201,174 @@ export const simulateTimeCourseAtom = atom(
   },
 );
 
-export const computeSteadyStateAtom = atom(null, async (get, set) => {
-  return await runSimulation(
-    "steadyState",
-    get,
-    set,
-    async (abortSignal: AbortSignal) => {
-      return await get(simulatorAtom).computeSteadyState(
-        get(editorContentAtom),
-        {
-          parameters: null,
-          variableValues: getVariableValues(
-            get(variableSliderStatesAtom),
-            get(variablesMapAtom),
-          ),
-        },
-        abortSignal,
-      );
-    },
-  );
-});
-
-export const runParameterScanAtom = atom(null, async (get, set) => {
-  const simulator = get(simulatorAtom);
-  const parameterScanOptions = get(parameterScanOptionsAtom);
-  const variables = get(variablesAtom);
-  const variableSettingss = get(variableSettingssAtom);
-  const editorContent = get(editorContentAtom);
-  const variablesMap = get(variablesMapAtom);
-
-  return await runSimulation(
-    "parameterScan",
-    get,
-    set,
-    async (abortSignal: AbortSignal) => {
-      const parameter = parameterScanOptions.varyingParameter;
-      if (!parameter) {
-        throw new Error("select parameter to scan with");
-      }
-
-      let scanValues: number[];
-      const resultPromises = [];
-
-      if (parameterScanOptions.useNumberList) {
-        // TODO: unit test this path
-        const numbers = parameterScanOptions.numberList
-          .split(" ")
-          .filter((n) => n.trim().length > 0)
-          .map((n) => +n.trim());
-        if (numbers.length === 0 || numbers.some((n) => isNaN(n))) {
-          throw new Error(
-            "Number list should be a list of numbers separate by spaces.",
-          );
-        }
-
-        scanValues = numbers;
-      } else {
-        const getDistribution = parameterScanOptions.useLogarithmicDistribution
-          ? getLogarithmicDistribution
-          : getLinearDistribution;
-        scanValues = getDistribution(
-          parameterScanOptions.min,
-          parameterScanOptions.max,
-          parameterScanOptions.numberOfValues,
+export const computeSteadyStateAtom = atom(
+  null,
+  async (get, set, options: RunSimulationOptions = {}) => {
+    return await runSimulation(
+      "steadyState",
+      options,
+      get,
+      set,
+      async (abortSignal: AbortSignal) => {
+        return await get(simulatorAtom).computeSteadyState(
+          get(editorContentAtom),
+          {
+            parameters: null,
+            variableValues: getVariableValues(
+              get(variableSliderStatesAtom),
+              get(variablesMapAtom),
+            ),
+          },
+          abortSignal,
         );
-      }
+      },
+    );
+  },
+);
 
-      const parameterSetName = (variablesMap.get(parameter) as SettableVariable)
-        .setName;
-      const variableValues = getVariableValues(
-        get(variableSliderStatesAtom),
-        get(variablesMapAtom),
-      );
+export const runParameterScanAtom = atom(
+  null,
+  async (get, set, options: RunSimulationOptions = {}) => {
+    const simulator = get(simulatorAtom);
+    const parameterScanOptions = get(parameterScanOptionsAtom);
+    const variables = get(variablesAtom);
+    const variableSettingss = get(variableSettingssAtom);
+    const editorContent = get(editorContentAtom);
+    const variablesMap = get(variablesMapAtom);
 
-      if (parameterScanOptions.mode === "timeCourse") {
-        const scanTimeCourseParameters: TimeCourseParameters = {
-          ...parameterScanOptions.timeCourseParameters,
-          resetInitialConditions: true,
-          includedVariables: variables.filter(
-            (v) =>
-              v.name === simulator.scanIndependentVariableId ||
-              variableSettingss[v.name].visible,
-          ),
-        };
-
-        for (const value of scanValues) {
-          resultPromises.push(
-            simulator.simulateTimeCourse(
-              editorContent,
-              {
-                parameters: scanTimeCourseParameters,
-                variableValues,
-                parameterScanOptions: {
-                  varyingParameter: parameterSetName,
-                  varyingParameterValue: value,
-                },
-              },
-              abortSignal,
-            ),
-          );
+    return await runSimulation(
+      "parameterScan",
+      options,
+      get,
+      set,
+      async (abortSignal: AbortSignal) => {
+        const parameter = parameterScanOptions.varyingParameter;
+        if (!parameter) {
+          throw new Error("select parameter to scan with");
         }
 
-        const results = await Promise.all(resultPromises);
-        const scans = [];
-        for (const [i, result] of results.entries()) {
-          scans.push({
-            parameterValue: scanValues[i],
-            // special case if there is only one value, have scan percent be 0% instead of 100% since it looks better for Custom palette
-            scanPercent:
-              scanValues.length === 1 ? 0 : i / (scanValues.length - 1),
-            ...result,
-          });
-        }
-
-        return {
-          type: "parameterScan",
-          mode: "timeCourse",
-          parameter,
-          scans,
-        } satisfies ParameterScanResult;
-      } else {
+        let scanValues: number[];
         const resultPromises = [];
-        for (const value of scanValues) {
-          resultPromises.push(
-            simulator.computeSteadyState(
-              editorContent,
-              {
-                parameters: null,
-                variableValues,
-                parameterScanOptions: {
-                  varyingParameter: parameterSetName,
-                  varyingParameterValue: value,
-                },
-              },
-              abortSignal,
-            ),
+
+        if (parameterScanOptions.useNumberList) {
+          // TODO: unit test this path
+          const numbers = parameterScanOptions.numberList
+            .split(" ")
+            .filter((n) => n.trim().length > 0)
+            .map((n) => +n.trim());
+          if (numbers.length === 0 || numbers.some((n) => isNaN(n))) {
+            throw new Error(
+              "Number list should be a list of numbers separate by spaces.",
+            );
+          }
+
+          scanValues = numbers;
+        } else {
+          const getDistribution =
+            parameterScanOptions.useLogarithmicDistribution
+              ? getLogarithmicDistribution
+              : getLinearDistribution;
+          scanValues = getDistribution(
+            parameterScanOptions.min,
+            parameterScanOptions.max,
+            parameterScanOptions.numberOfValues,
           );
         }
 
-        const results = await Promise.all(resultPromises);
-        const scans = [];
-        for (const [i, result] of results.entries()) {
-          scans.push({
-            parameterValue: scanValues[i],
-            scanPercent: i / (scanValues.length - 1),
-            concentrations: result.concentrations,
-          });
-        }
+        const parameterSetName = (
+          variablesMap.get(parameter) as SettableVariable
+        ).setName;
+        const variableValues = getVariableValues(
+          get(variableSliderStatesAtom),
+          get(variablesMapAtom),
+        );
 
-        return {
-          type: "parameterScan",
-          mode: "steadyState",
-          parameter,
-          scans,
-        } satisfies ParameterScanResult;
-      }
-    },
-  );
-});
+        if (parameterScanOptions.mode === "timeCourse") {
+          const scanTimeCourseParameters: TimeCourseParameters = {
+            ...parameterScanOptions.timeCourseParameters,
+            resetInitialConditions: true,
+            includedVariables: variables.filter(
+              (v) =>
+                v.name === simulator.scanIndependentVariableId ||
+                variableSettingss[v.name].visible,
+            ),
+          };
+
+          for (const value of scanValues) {
+            resultPromises.push(
+              simulator.simulateTimeCourse(
+                editorContent,
+                {
+                  parameters: scanTimeCourseParameters,
+                  variableValues,
+                  parameterScanOptions: {
+                    varyingParameter: parameterSetName,
+                    varyingParameterValue: value,
+                  },
+                },
+                abortSignal,
+              ),
+            );
+          }
+
+          const results = await Promise.all(resultPromises);
+          const scans = [];
+          for (const [i, result] of results.entries()) {
+            scans.push({
+              parameterValue: scanValues[i],
+              // special case if there is only one value, have scan percent be 0% instead of 100% since it looks better for Custom palette
+              scanPercent:
+                scanValues.length === 1 ? 0 : i / (scanValues.length - 1),
+              ...result,
+            });
+          }
+
+          return {
+            type: "parameterScan",
+            mode: "timeCourse",
+            parameter,
+            scans,
+          } satisfies ParameterScanResult;
+        } else {
+          const resultPromises = [];
+          for (const value of scanValues) {
+            resultPromises.push(
+              simulator.computeSteadyState(
+                editorContent,
+                {
+                  parameters: null,
+                  variableValues,
+                  parameterScanOptions: {
+                    varyingParameter: parameterSetName,
+                    varyingParameterValue: value,
+                  },
+                },
+                abortSignal,
+              ),
+            );
+          }
+
+          const results = await Promise.all(resultPromises);
+          const scans = [];
+          for (const [i, result] of results.entries()) {
+            scans.push({
+              parameterValue: scanValues[i],
+              scanPercent: i / (scanValues.length - 1),
+              concentrations: result.concentrations,
+            });
+          }
+
+          return {
+            type: "parameterScan",
+            mode: "steadyState",
+            parameter,
+            scans,
+          } satisfies ParameterScanResult;
+        }
+      },
+    );
+  },
+);
 
 export const cancelSimulationAtom = atom(null, (get) => {
   const internalState = get(_simulationInternalStateAtom);
