@@ -22,6 +22,9 @@ export const getTheme = () => {
 };
 
 export const setTheme = (theme: Theme) => {
+  // for tests
+  if (typeof document === "undefined") return;
+
   document.documentElement.classList.add(TRANSITION_CLASS);
 
   document.documentElement.dataset.theme = theme;

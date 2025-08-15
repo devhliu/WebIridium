@@ -7,7 +7,7 @@
  */
 
 import { it, afterEach, expect } from "vitest";
-import { screen } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import {
   resetWorkerResponseDelay,
@@ -45,6 +45,9 @@ export const itShouldDisableWhenStartingSimulation = ({
     setWorkerResponseDelay(100);
 
     const button = screen.getByText(buttonText);
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
     await userEvent.click(button);
     expect(button).toBeDisabled();
   });
@@ -58,6 +61,9 @@ export const itShouldDisplayPlot = ({
     await render();
 
     const button = screen.getByText(buttonText);
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
     await userEvent.click(button);
     expect(screen.getByTestId("results-plot")).toBeInTheDocument();
   });
@@ -73,6 +79,9 @@ export const itShouldBeCancellable = ({
     setWorkerResponseDelay(100);
 
     const button = screen.getByText(buttonText);
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
     await userEvent.click(button);
 
     const cancel = screen.getByLabelText("Cancel");

@@ -56,7 +56,9 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
   const handleSimulateClick = async () => {
+    console.log("STARTING!");
     const result = await runParameterScan();
+    console.log("HEY??!?!", result);
     if (result.type === "failure") {
       toast({
         type: "error",
