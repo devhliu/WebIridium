@@ -144,7 +144,7 @@ const runSimulation = async (
 
       // even if delayEnd is true, when the user presses
       // cancel we want it to be instantaneous
-      if (!options.delayEnd && !canceled) {
+      if (!options.delayEnd || canceled) {
         reset();
       } else {
         setTimeout(reset, SIMULATION_DELAY_END_DURATION);
