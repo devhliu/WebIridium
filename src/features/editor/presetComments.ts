@@ -1,15 +1,15 @@
 import * as monaco from "monaco-editor";
 
-export const LENS_ID = "togglePreset";
+export const LENS_ID = "loadPreset";
 
-const PRESET_PREFIX = "// Preset: ";
+const PRESET_PREFIX = "// Parameter Set: ";
 // TODO: handle scientific notation for the second capture group
 const PRESET_COMMENT_START_REGEX = /\s*\/\*\s*/;
 const PRESET_COMMENT_END_REGEX = /\s*\*\/\s*/;
 const PRESET_VALUE_REGEX =
   /^\s*([A-Za-z_'][A-Za-z0-9_']*)+\s*=\s*(\d\d*\.?\d*)$/;
 // this is a string so it can be used in the findMatches monaco API
-const PRESET_START_REGEX = "^\\s*// Preset:.+$";
+const PRESET_START_REGEX = "^\\s*// Parameter Set:(.+)$";
 
 const ANTIMONY_GENERATED_REGEX = /^\/\/ Created by libAntimony v[0-9.]+$/;
 // after this part, there are no more initializations, so we want to insert here
@@ -109,139 +109,47 @@ export const addVariablePresetToModel = (
 
 // TODO: unit test this
 /**
- * This only handles the text portion of toggle preset.
- * You must also provide a callback to handle updating the sliders
- * or whatever else.
- *
  * @param model - model for the editor
- * @param updateCallback - will be called when a preset is toggled on to handle
- *                         any extra effects such as updating the sliders
+ * @param loadCallback - will be called when a preset is loaded
  *
  * @returns a command handler to toggle a preset
  */
-export const createTogglePresetCommandHandler = (
+export const createLoadPresetCommandHandler = (
   model: monaco.editor.IModel,
-  updateCallback: (preset: Record<string, number>) => void,
+  updateCallback: (name: string, preset: Record<string, number>) => void,
 ): monaco.editor.ICommandHandler => {
   return (_, range: monaco.Range) => {
     const totalLines = model.getLineCount();
+    const startLine = range.startLineNumber;
+    const preset: Record<string, number> = {};
+    const name = model.getLineContent(startLine).match(PRESET_START_REGEX)![1];
 
-    const matches = model.findMatches(
-      PRESET_START_REGEX,
-      true,
-      true,
-      true,
-      null,
-      false,
-    );
-
-    const editOperations: monaco.editor.IIdentifiedSingleEditOperation[] = [];
-
-    for (const match of matches) {
-      const matchLineNumber = match.range.startLineNumber;
-      const isTogglingOn = matchLineNumber === range.startLineNumber;
-      const isOpen =
-        matchLineNumber < totalLines &&
-        !PRESET_COMMENT_START_REGEX.test(
-          model.getLineContent(matchLineNumber + 1),
-        );
-      const preset: Record<string, number> = {};
-
-      if (isOpen) {
-        // look for where the values end to add a closing comment
-        for (let i = matchLineNumber + 1; i <= totalLines + 1; i++) {
-          if (
-            i === totalLines + 1 ||
-            !PRESET_VALUE_REGEX.test(model.getLineContent(i))
-          ) {
-            editOperations.push({
-              range: {
-                startLineNumber: i - 1,
-                endLineNumber: i,
-                startColumn: model.getLineMaxColumn(i - 1),
-                endColumn: 1,
-              },
-              text: "\n*/\n",
-            });
-            editOperations.push({
-              range: {
-                startLineNumber: matchLineNumber,
-                endLineNumber: matchLineNumber + 1,
-                startColumn: model.getLineMaxColumn(matchLineNumber),
-                endColumn: 1,
-              },
-              text: "\n/*\n",
-            });
-            break;
-          }
-        }
-      } else if (isTogglingOn) {
-        // open it
-        for (let i = matchLineNumber + 2; i <= totalLines; i++) {
-          const lineContent = model.getLineContent(i);
-          if (PRESET_COMMENT_END_REGEX.test(lineContent)) {
-            // delete the comment start and ends
-            editOperations.push({
-              range: {
-                startLineNumber: matchLineNumber + 1,
-                endLineNumber: matchLineNumber + 2,
-                startColumn: 1,
-                endColumn: 1,
-              },
-              text: "",
-            });
-            editOperations.push({
-              range: {
-                startLineNumber: i,
-                endLineNumber: i + 1,
-                startColumn: 1,
-                endColumn: 1,
-              },
-              text: "",
-            });
-            updateCallback(preset);
-            break;
-          } else {
-            // collect the preset values
-            const match = lineContent.match(PRESET_VALUE_REGEX);
-            if (!match) break;
-            const name = match[1].trim();
-            const value = Number(match[2]);
-            if (isNaN(value)) break;
-            preset[name] = value;
-          }
-        }
+    for (let i = startLine + 1; i <= totalLines; i++) {
+      const lineContent = model.getLineContent(i);
+      const valueMatch = lineContent.match(PRESET_VALUE_REGEX);
+      if (valueMatch) {
+        const name = valueMatch[1].trim();
+        const value = Number(valueMatch[2]);
+        if (isNaN(value)) break;
+        preset[name] = value;
+      } else if (
+        !(
+          lineContent.match(PRESET_COMMENT_START_REGEX) ||
+          lineContent.match(PRESET_COMMENT_END_REGEX)
+        )
+      ) {
+        break;
       }
     }
 
-    if (editOperations.length > 0) {
-      model.pushEditOperations(
-        [
-          new monaco.Selection(
-            range.startLineNumber,
-            range.startColumn,
-            range.endLineNumber,
-            range.endColumn,
-          ),
-        ],
-        editOperations,
-        () => [
-          new monaco.Selection(
-            range.startLineNumber,
-            range.startColumn,
-            range.endLineNumber,
-            range.endColumn,
-          ),
-        ],
-      );
-    }
+    updateCallback(name, preset);
   };
 };
 
 /**
  * @param commandId - the id of the command to toggle a preset
  */
-export const createTogglePresetProvider = (
+export const createLoadPresetProvider = (
   commandId: string,
 ): monaco.languages.CodeLensProvider => {
   return {
@@ -263,7 +171,7 @@ export const createTogglePresetProvider = (
           range: match.range,
           command: {
             id: commandId,
-            title: "Toggle Preset",
+            title: "Load Parameter Set",
             arguments: [match.range],
           },
         });

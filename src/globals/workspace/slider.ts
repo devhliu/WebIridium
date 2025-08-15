@@ -123,7 +123,7 @@ export const updateSliderAndSimulateAtom = atom(
   },
 );
 
-export const usePresetAndSimulateAtom = atom(
+export const loadPresetAndSimulateAtom = atom(
   null,
   (get, set, preset: Record<string, number>) => {
     const variablesMap = get(variablesMapAtom);
@@ -154,5 +154,5 @@ export const sliderAtoms = [
   variableSliderStatesAtom,
 
   updateSliderAndSimulateAtom,
-  usePresetAndSimulateAtom,
+  loadPresetAndSimulateAtom,
 ];

@@ -55,7 +55,7 @@ model *BIOMD0000000010()
   J9_V10 = 0.5;
   J9_KK10 = 15;
 
-  // Preset: test
+  // Parameter Set: test
   /*
   A = 20
   B = 30

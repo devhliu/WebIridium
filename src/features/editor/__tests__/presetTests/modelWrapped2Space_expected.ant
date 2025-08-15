@@ -6,7 +6,7 @@ model Test
   B = 0; C = 0
   A = 10
 
-  // Preset: test
+  // Parameter Set: test
   /*
   A = 20
   B = 30

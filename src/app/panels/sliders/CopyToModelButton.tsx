@@ -14,7 +14,7 @@ import { editorActionsDispatcherAtom } from "@/globals/workspace/editorActions";
 const DEFAULT_PRESET_NAME = "Unnamed";
 
 // TODO: add unit tests for this
-const AddAsCommentButton = () => {
+const CopyToModelButton = () => {
   const { toast } = useToast();
 
   const variablesMap = useAtomValue(variablesMapAtom);
@@ -57,9 +57,9 @@ const AddAsCommentButton = () => {
   return (
     <Button onClick={handleAddAsComment}>
       <PlusIcon width="1em" height="1em" />
-      Add as Comment
+      Copy to Model
     </Button>
   );
 };
 
-export default AddAsCommentButton;
+export default CopyToModelButton;

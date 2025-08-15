@@ -19,7 +19,7 @@ import { groupVariables } from "@/features/category";
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 import VariableSlider from "./VariableSlider";
-import AddAsCommentButton from "./AddAsCommentButton";
+import CopyToModelButton from "./CopyToModelButton";
 import SearchBox from "@/components/input/SearchBox";
 import Button from "@/components/Button";
 
@@ -111,7 +111,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           onChange={setSearchTerm}
         />
 
-        <AddAsCommentButton />
+        <CopyToModelButton />
 
         <Button onClick={() => setShowingInactive(!showingInactive)}>
           {showingInactive ? (

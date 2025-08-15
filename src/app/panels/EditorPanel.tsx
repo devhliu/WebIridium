@@ -2,6 +2,8 @@ import { useEffect, useRef } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import * as monaco from "monaco-editor";
 
+import { useToast } from "@/components/Toast";
+
 import styles from "./EditorPanel.module.css";
 import {
   editorContentAtom,
@@ -14,11 +16,11 @@ import {
 } from "@/globals/workspace/editorActions";
 import {
   addVariablePresetToModel,
-  createTogglePresetCommandHandler,
-  createTogglePresetProvider,
-} from "@/features/editor/togglePreset";
+  createLoadPresetCommandHandler,
+  createLoadPresetProvider,
+} from "@/features/editor/presetComments";
 import ModelSemanticsChecker from "@/features/editor/language-handler/ModelSemanticChecker";
-import { usePresetAndSimulateAtom } from "@/globals/workspace/slider";
+import { loadPresetAndSimulateAtom } from "@/globals/workspace/slider";
 
 const SEMANTIC_CHECKER_DEBOUNCE = 100; // in ms
 const ANNOTATION_COLOR = "Red";
@@ -27,11 +29,13 @@ const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
   const fontSize = useAtomValue(editorFontSizeAtom);
 
-  const updateAndSimulateVariableSliders = useSetAtom(usePresetAndSimulateAtom);
+  const loadPresetAndSimulate = useSetAtom(loadPresetAndSimulateAtom);
   const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
 
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
+
+  const { toast } = useToast();
 
   const containerRef = useRef<HTMLDivElement | null>(null);
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -71,21 +75,28 @@ const EditorPanel = () => {
         monaco.editor.setTheme("iridiumDark");
       }
 
-      const handlePresetToggle = (preset: Record<string, number>) => {
-        updateAndSimulateVariableSliders(preset);
+      const handlePresetLoad = (
+        name: string,
+        preset: Record<string, number>,
+      ) => {
+        loadPresetAndSimulate(preset);
+        toast({
+          type: "success",
+          title: `Loaded ${name}`,
+          description: Object.entries(preset)
+            .map(([k, v]) => `${k}=${v}`)
+            .join(", "),
+        });
       };
 
-      const togglePresetId = editor.addCommand(
+      const loadPresetCommandId = editor.addCommand(
         0,
-        createTogglePresetCommandHandler(
-          editor.getModel()!,
-          handlePresetToggle,
-        ),
+        createLoadPresetCommandHandler(editor.getModel()!, handlePresetLoad),
       );
 
-      const togglePreset = monaco.languages.registerCodeLensProvider(
+      const loadPresetProvider = monaco.languages.registerCodeLensProvider(
         "antimony",
-        createTogglePresetProvider(togglePresetId!),
+        createLoadPresetProvider(loadPresetCommandId!),
       );
 
       editorRef.current = editor;
@@ -120,7 +131,7 @@ const EditorPanel = () => {
       return () => {
         editorChangeEvent.dispose();
         editor.dispose();
-        togglePreset.dispose();
+        loadPresetProvider.dispose();
         editorRef.current = null;
 
         setEditorActionsDispatcher((prev) =>
@@ -133,7 +144,7 @@ const EditorPanel = () => {
     containerRef,
     updateEditorContent,
     setEditorActionsDispatcher,
-    updateAndSimulateVariableSliders,
+    loadPresetAndSimulate,
     theme,
     fontSize,
   ]);

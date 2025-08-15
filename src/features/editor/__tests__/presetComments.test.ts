@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { addVariablePresetToModel } from "../togglePreset";
+import { addVariablePresetToModel } from "../presetComments";
 
 const testFiles: Record<string, string> = import.meta.glob(
   "./presetTests/*.ant",
@@ -19,7 +19,7 @@ describe("addVariablePresetsToModel", () => {
     C: 40,
   };
 
-  const COMMENT_REGEX = /\s*\/\/ Preset:/;
+  const COMMENT_REGEX = /\s*\/\/ Parameter Set:/;
 
   for (const [name, content] of Object.entries(testFiles)) {
     if (name.endsWith("_expected.ant")) continue;
