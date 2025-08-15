@@ -194,6 +194,17 @@ export const createWorker = (type: WorkerType) => {
       break;
     }
 
+    case "libsbmlsim": {
+      worker.port.addEventListener(
+        "message",
+        createMockWorkerMessageHandler(worker, (_) => {
+          // TODO: mock this? or maybe not
+          return {};
+        }),
+      );
+      break;
+    }
+
     case "antimony": {
       worker.port.addEventListener(
         "message",
