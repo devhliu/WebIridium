@@ -5,12 +5,18 @@ import styles from "./SlidersPanel.module.css";
 
 import type { SettableVariable } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
-import type { VariableSliderState } from "@/globals/workspace/slider";
+import {
+  type VariableSliderState,
+  getInitialSliderState,
+} from "@/globals/workspace/slider";
+
+import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 
 import Slider from "@/components/input/Slider";
 import Checkbox from "@/components/input/Checkbox";
 import NumberBox from "@/components/input/NumberBox";
 import { getVariableSetDisplayName } from "@/features/simulation/getVariableSetDisplayName";
+import IconButton from "@/components/IconButton";
 
 export interface VariableSliderProps {
   variable: SettableVariable;
@@ -84,6 +90,14 @@ const VariableSlider = memo(
 
           {sliderState && (
             <>
+              <IconButton
+                label="Reset"
+                onClick={() =>
+                  onStateChange(variable, getInitialSliderState(variable))
+                }
+              >
+                <ResetIcon width="1em" height="1em" />
+              </IconButton>
               <label
                 className={styles.sliderTitleLabel}
                 htmlFor={`${variable.name}-value`}
