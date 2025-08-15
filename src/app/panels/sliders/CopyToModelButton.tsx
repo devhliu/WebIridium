@@ -1,7 +1,5 @@
 import { useAtomValue } from "jotai";
 
-import { type SettableVariable } from "@/features/simulation/Simulator";
-
 import { useToast } from "@/components/Toast";
 import Button from "@/components/Button";
 
