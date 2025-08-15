@@ -112,20 +112,21 @@ export class LibSbmlSimSimulator extends Simulator {
       antimonyCode,
       abortSignal,
     )) as {
-      species: string[];
-      parameters: string[];
+      floatingSpecies: Record<string, number>;
+      boundarySpecies: Record<string, number>;
+      parameters: Record<string, number>;
     };
 
     const variables: Variable[] = [];
 
     variables.push({
       type: "normal",
-      defaultDisplayName: "time",
+      defaultDisplayName: "Time",
       name: "time",
       category: "Time",
     });
 
-    for (const specie of result.species) {
+    for (const [specie, value] of Object.entries(result.floatingSpecies)) {
       variables.push({
         type: "settable",
         defaultDisplayName: specie,
@@ -133,11 +134,23 @@ export class LibSbmlSimSimulator extends Simulator {
         category: "Floating Species",
 
         setName: specie,
-        defaultValue: 5,
+        defaultValue: value,
       });
     }
 
-    for (const parameter of result.parameters) {
+    for (const [specie, value] of Object.entries(result.boundarySpecies)) {
+      variables.push({
+        type: "settable",
+        defaultDisplayName: specie,
+        name: specie,
+        category: "Boundary Species",
+
+        setName: specie,
+        defaultValue: value,
+      });
+    }
+
+    for (const [parameter, value] of Object.entries(result.parameters)) {
       variables.push({
         type: "settable",
         defaultDisplayName: parameter,
@@ -145,7 +158,7 @@ export class LibSbmlSimSimulator extends Simulator {
         category: "Parameters",
 
         setName: parameter,
-        defaultValue: 5,
+        defaultValue: value,
       });
     }
 

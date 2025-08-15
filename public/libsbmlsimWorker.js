@@ -4,6 +4,19 @@ let simulator = null;
 let antimony = null;
 
 /**
+ * Converts a emscripten map to a record.
+ */
+const mapToRecord = (map) => {
+  let record = {};
+  const keys = map.keys();
+  for (let i = 0; i < keys.size(); i++) {
+    const key = keys.get(i);
+    record[key] = map.get(key);
+  }
+  return record;
+};
+
+/**
  * Converts a emscripten vector to an array.
  */
 const vectorToArray = (vector) => {
@@ -29,7 +42,8 @@ const loadLibraries = () => {
   return loadedPromise;
 };
 
-let cachedSpecies = null;
+let cachedFloatingSpecies = null;
+let cachedBoundarySpecies = null;
 let cachedParameters = null;
 const handleMessage = async (e) => {
   await loadLibraries();
@@ -53,14 +67,23 @@ const handleMessage = async (e) => {
       throw new Error(simulator.GetLastError());
     }
 
-    cachedSpecies = vectorToArray(simulator.GetSpecies());
-    cachedParameters = vectorToArray(simulator.GetParameters());
+    cachedFloatingSpecies = mapToRecord(simulator.GetFloatingSpecies());
+    cachedBoundarySpecies = mapToRecord(simulator.GetBoundarySpecies());
+    cachedParameters = mapToRecord(simulator.GetParameters());
   }
 
   switch (action.type) {
     case "timeCourse": {
       const { parameters, variableValues, parameterScanOptions } =
         action.payload;
+
+      simulator.ResetVariables();
+      for (const [name, value] of Object.entries(variableValues)) {
+        simulator.SetVariable(name, value);
+      }
+      if (parameterScanOptions) {
+        simulator.SetVariable(parameterScanOptions.varyingParameter, parameterScanOptions.varyingParameterValue);
+      }
 
       // TODO: make work with the start time
       const simulationResult = simulator.SimulateTimeCourse(
@@ -100,7 +123,8 @@ const handleMessage = async (e) => {
       self.postMessage({
         id: action.id,
         data: {
-          species: cachedSpecies,
+          floatingSpecies: cachedFloatingSpecies,
+          boundarySpecies: cachedBoundarySpecies,
           parameters: cachedParameters,
         },
       });
