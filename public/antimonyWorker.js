@@ -41,6 +41,25 @@ const handleMessage = async (e) => {
       break;
     }
 
+    case "convertAntimonyToSbml": {
+      const { antimony: code } = action.payload;
+
+      const sbmlConversion = antimony.convertAntimonyToSBML(code);
+      // TODO: notify user about these warnings
+      if (sbmlConversion.getWarnings()) {
+        console.warn(antimonyConversion.getWarnings());
+      }
+      if (!sbmlConversion.isSuccess()) {
+        throw new Error(sbmlConversion.getResult());
+      }
+
+      self.postMessage({
+        id: action.id,
+        data: sbmlConversion.getResult(),
+      });
+      break;
+    }
+
     default:
       throw new Error(`invalid action type: ${action.type}`);
   }

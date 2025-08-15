@@ -23,6 +23,10 @@ import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
 import ShareButton from "./ShareButton";
 
+import {
+  convertAntimonyToSbml,
+  convertSbmlToAntimony,
+} from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/workspace/settings";
 import {
@@ -50,8 +54,23 @@ const AppMenubar = () => {
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleDownload = () => {
+  const handleDownloadAntimony = () => {
     promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
+  };
+
+  const handleDownloadSbml = async () => {
+    try {
+      const sbml = await convertAntimonyToSbml(editorContent);
+      promptDownloadString(`${workspaceName}.xml`, sbml, "xml");
+    } catch (e) {
+      if (e instanceof Error) {
+        toast({
+          type: "error",
+          title: "Error converting Antimony to SBML",
+          description: e.message,
+        });
+      }
+    }
   };
 
   const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,10 +85,22 @@ const AppMenubar = () => {
     }
 
     const file = files[0];
+    const isSbml =
+      file.name.toLowerCase().endsWith(".sbml") ||
+      file.name.toLowerCase().endsWith(".xml");
     const reader = new FileReader();
     reader.readAsText(file);
-    reader.onload = () => {
-      void updateEditorContent({ content: reader.result as string });
+    reader.onload = async () => {
+      let content = reader.result as string;
+      if (isSbml) {
+        try {
+          content = await convertSbmlToAntimony(content);
+        } catch (e) {
+          // silently fail and use the content directly
+          console.error(e);
+        }
+      }
+      void updateEditorContent({ content });
     };
   };
 
@@ -80,7 +111,7 @@ const AppMenubar = () => {
         ref={fileInputRef}
         type="file"
         onChange={handleFileOpen}
-        accept=".ant,.txt"
+        accept=".ant,.txt,.xml,.sbml"
       />
 
       {isSettingsOpen && (
@@ -96,7 +127,11 @@ const AppMenubar = () => {
               fileInputRef.current?.click();
             }}
           />
-          <MenubarItem name="Download" onSelect={handleDownload} />
+          <MenubarItem
+            name="Download as Antimony"
+            onSelect={handleDownloadAntimony}
+          />
+          <MenubarItem name="Download as SBML" onSelect={handleDownloadSbml} />
         </MenubarMenu>
 
         <MenubarMenu name="View">

@@ -15,3 +15,16 @@ export const convertSbmlToAntimony = async (sbml: string): Promise<string> => {
   )) as string;
   return result;
 };
+
+export const convertAntimonyToSbml = async (
+  antimony: string,
+): Promise<string> => {
+  const result = (await antimonyWorkerPool.queueTask(
+    "convertAntimonyToSbml",
+    {
+      antimony,
+    },
+    null,
+  )) as string;
+  return result;
+};
