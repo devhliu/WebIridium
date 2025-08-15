@@ -1,6 +1,4 @@
-const { cache } = require("react");
-
-importScripts("libsbmlsim.js", "antimony_wrap.js");
+importScripts("libsbmlsim.js", "libantimony.js", "antimony_wrap.js");
 
 let simulator = null;
 let antimony = null;
@@ -23,7 +21,7 @@ const loadLibraries = () => {
   }
 
   loadedPromise = Promise.all([
-    libsbmlsim().then(() => (simulator = new libsbmlsim.Simulator())),
+    libsbmlsim().then((module) => (simulator = new module.Simulator())),
     libantimony().then((module) => (antimony = new AntimonyWrapper(module))),
     // if the load fails, reset the promise and try again next time
   ]).catch(() => (loadedPromise = null));
@@ -77,10 +75,12 @@ const handleMessage = async (e) => {
       const columns = [];
       for (let i = 0; i < simulationResult.columns.size(); i++) {
         const column = simulationResult.columns.get(i);
-        columns.push({
-          title: column.name,
-          values: vectorToArray(column.values),
-        });
+        if (parameters.includedVariables.includes(column.name)) {
+          columns.push({
+            title: column.name,
+            values: vectorToArray(column.values),
+          });
+        }
       }
 
       simulationResult.delete();

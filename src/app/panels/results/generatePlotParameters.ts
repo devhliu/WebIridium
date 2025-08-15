@@ -95,6 +95,7 @@ export const generatePlotParameters = (
       if (variableName === independentVariableName) continue;
 
       const settings = variableSettingss[variableName];
+      console.log(variableSettingss, variableName);
       if (!settings.visible) continue;
       let finalColor: string = "red";
       if (palette === "Custom") {

@@ -19,8 +19,8 @@ interface LibSbmlSimTimeCourseResult {
 }
 
 export class LibSbmlSimSimulator extends Simulator {
-  defaultIndependentVariableId = "Time";
-  scanIndependentVariableId = "Time";
+  defaultIndependentVariableId = "time";
+  scanIndependentVariableId = "time";
 
   #workerPool: WorkerPool;
 
@@ -47,7 +47,10 @@ export class LibSbmlSimSimulator extends Simulator {
     const result = (await this.#workerPool.queueTask(
       "timeCourse",
       {
-        parameters,
+        parameters: {
+          ...parameters,
+          includedVariables: parameters.includedVariables.map((v) => v.name),
+        },
         variableValues,
         parameterScanOptions,
       },
@@ -105,6 +108,7 @@ export class LibSbmlSimSimulator extends Simulator {
   ): Promise<Variable[]> {
     const result = (await this.#workerPool.queueTask(
       "loadModel",
+      null,
       antimonyCode,
       abortSignal,
     )) as {
@@ -116,8 +120,8 @@ export class LibSbmlSimSimulator extends Simulator {
 
     variables.push({
       type: "normal",
-      defaultDisplayName: "Time",
-      name: "Time",
+      defaultDisplayName: "time",
+      name: "time",
       category: "Time",
     });
 
@@ -126,7 +130,7 @@ export class LibSbmlSimSimulator extends Simulator {
         type: "settable",
         defaultDisplayName: specie,
         name: specie,
-        category: "Species",
+        category: "Floating Species",
 
         setName: specie,
         defaultValue: 5,

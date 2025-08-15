@@ -18,7 +18,7 @@ import {
   simulationAtoms,
   updateSimulatorAtom,
 } from "@/globals/workspace/simulation";
-import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
+import { LibSbmlSimSimulator } from "@/features/simulation/LibSbmlSimSimulator";
 import { readShareUrlFragment } from "@/features/share";
 import { historyAtoms } from "@/globals/workspace/history";
 import { editorActionsAtoms } from "@/globals/workspace/editorActions";
@@ -53,7 +53,7 @@ const Initialize = ({
 
   useEffect(() => {
     const load = async (model: string): Promise<boolean> => {
-      updateSimulator(new CopasiSimulator());
+      updateSimulator(new LibSbmlSimSimulator());
       return await updateEditorContent({ content: model, skipDebounce: true });
     };
 
