@@ -28,12 +28,7 @@ const CopyToModelButton = () => {
 
     for (const [name, state] of Object.entries(variableSliderStates)) {
       const variable = variablesMap.get(name);
-      if (
-        !variable ||
-        (variable as SettableVariable).defaultValue === state.value
-      ) {
-        continue;
-      }
+      if (!variable) continue;
 
       preset[variable.name] = state.value;
       didAdd = true;
@@ -43,8 +38,7 @@ const CopyToModelButton = () => {
       toast({
         type: "warning",
         title: "Sliders unchanged",
-        description:
-          "There is nothing to add. Your sliders are their default values. Move your sliders around then try again.",
+        description: "No sliders are activate. Activate one and try again.",
       });
     } else {
       void editorActionsDispatcher?.addPresetAsComment(
