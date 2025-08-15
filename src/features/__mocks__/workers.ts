@@ -17,7 +17,6 @@ export const createWorker = (type: WorkerType) => {
             case "timeCourse":
               return {
                 num_variables: 2,
-                recorded_steps: 10,
                 titles: ["Time", "A"],
                 columns: [
                   [1, 2, 3, 4, 5],

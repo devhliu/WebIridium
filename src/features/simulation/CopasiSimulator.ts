@@ -54,7 +54,6 @@ export class CopasiSimulator extends Simulator {
 
     return {
       type: "timeCourse",
-      recordedSteps: result.recorded_steps,
       columns: result.titles.map((title, index) => ({
         title,
         values: result.columns[index],

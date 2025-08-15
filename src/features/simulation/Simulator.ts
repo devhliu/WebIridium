@@ -47,7 +47,6 @@ export type VariableValues = { [variableName: string]: number };
 
 export type TimeCourseResult = {
   type: "timeCourse";
-  recordedSteps: number;
   // title -> values
   columns: {
     title: string;
