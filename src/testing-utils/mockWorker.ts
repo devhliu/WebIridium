@@ -1,4 +1,4 @@
-import type { Action, ErrorResult, Result } from "@/features/workerPool";
+import type { Action, ErrorResult, Result } from "@/features/taskPool";
 
 export type WorkerFailMode = "normal" | "always";
 

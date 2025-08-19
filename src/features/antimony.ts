@@ -1,4 +1,4 @@
-import { WorkerPool } from "./workerPool";
+import { WorkerPool } from "./taskPool";
 import { createWorker } from "./workers";
 
 const antimonyWorkerPool = new WorkerPool(() => createWorker("antimony"), {
@@ -6,7 +6,7 @@ const antimonyWorkerPool = new WorkerPool(() => createWorker("antimony"), {
 });
 
 export const convertSbmlToAntimony = async (sbml: string): Promise<string> => {
-  const result = (await antimonyWorkerPool.queueTask(
+  const result = (await antimonyWorkerPool.runTask(
     "convertSbmlToAntimony",
     {
       sbml,
@@ -19,7 +19,7 @@ export const convertSbmlToAntimony = async (sbml: string): Promise<string> => {
 export const convertAntimonyToSbml = async (
   antimony: string,
 ): Promise<string> => {
-  const result = (await antimonyWorkerPool.queueTask(
+  const result = (await antimonyWorkerPool.runTask(
     "convertAntimonyToSbml",
     {
       antimony,

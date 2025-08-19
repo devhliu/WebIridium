@@ -8,7 +8,7 @@ import {
   type VariableValues,
   type Variable,
 } from "./Simulator";
-import { WorkerPool } from "@/features/workerPool";
+import { WorkerPool } from "@/features/taskPool";
 import { createWorker } from "@/features/workers";
 
 interface LibSbmlSimTimeCourseResult {
@@ -44,7 +44,7 @@ export class LibSbmlSimSimulator extends Simulator {
     },
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
-    const result = (await this.#workerPool.queueTask(
+    const result = (await this.#workerPool.runTask(
       "timeCourse",
       {
         parameters: {
@@ -106,7 +106,7 @@ export class LibSbmlSimSimulator extends Simulator {
     antimonyCode: string,
     abortSignal?: AbortSignal,
   ): Promise<Variable[]> {
-    const result = (await this.#workerPool.queueTask(
+    const result = (await this.#workerPool.runTask(
       "loadModel",
       null,
       antimonyCode,

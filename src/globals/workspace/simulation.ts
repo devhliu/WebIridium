@@ -33,7 +33,7 @@ import {
 } from "./settings";
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
 import { currentRightPanelAtom } from "./layout";
-import { WorkerTermination } from "@/features/workerPool";
+import { TaskTermination } from "@/features/taskPool";
 import { tryAddToHistoryAtom } from "./history";
 
 export type SimulationOperationResult =
@@ -120,7 +120,7 @@ const runSimulation = async (
 
       return { type: "success" };
     } catch (err) {
-      if (err instanceof WorkerTermination) {
+      if (err instanceof TaskTermination) {
         canceled = true;
         return { type: "cancel" };
       } else {

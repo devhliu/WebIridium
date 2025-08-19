@@ -1,6 +1,6 @@
 import { describe, it, expect, afterEach } from "vitest";
 import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
-import { WorkerTermination } from "../workerPool";
+import { TaskTermination } from "../taskPool";
 import {
   resetWorkerResponseDelay,
   setWorkerResponseDelay,
@@ -52,7 +52,7 @@ describe("TimeCourse", () => {
     const abortController = new AbortController();
     const expectPromise = expect(
       simulateTimeCourseGeneric(abortController.signal),
-    ).rejects.toThrowError(new WorkerTermination());
+    ).rejects.toThrowError(new TaskTermination());
     abortController.abort();
     await expectPromise;
   });

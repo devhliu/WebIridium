@@ -5,7 +5,7 @@ import type {
   Variable,
   SettableVariable,
 } from "@/features/simulation/Simulator";
-import { WorkerTermination } from "@/features/workerPool";
+import { TaskTermination } from "@/features/taskPool";
 import { getDefaultColorForIndex } from "@/features/colors";
 
 import { type VariableSettings } from "./settings";
@@ -128,7 +128,7 @@ export const updateEditorContentAtom = atom(
           setTimeout(resolve, MODEL_LOAD_DEBOUNCE),
         );
         if (currentAbortController.signal.aborted) {
-          throw new WorkerTermination();
+          throw new TaskTermination();
         }
       }
 
@@ -137,7 +137,7 @@ export const updateEditorContentAtom = atom(
         currentAbortController.signal,
       );
     } catch (err) {
-      if (err instanceof WorkerTermination) {
+      if (err instanceof TaskTermination) {
         return false;
       } else if (err instanceof Error) {
         set(_modelStatusAtom, {

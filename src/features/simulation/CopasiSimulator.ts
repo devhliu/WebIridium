@@ -9,7 +9,7 @@ import {
   type SteadyStateParameters,
   type VariableValues,
 } from "./Simulator";
-import { WorkerPool } from "@/features/workerPool.ts";
+import { WorkerPool } from "@/features/taskPool";
 import { createWorker } from "@/features/workers.ts";
 
 export class CopasiSimulator extends Simulator {
@@ -38,7 +38,7 @@ export class CopasiSimulator extends Simulator {
     },
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
-    const result = (await this.#workerPool.queueTask(
+    const result = (await this.#workerPool.runTask(
       "timeCourse",
       {
         parameters: {
@@ -75,7 +75,7 @@ export class CopasiSimulator extends Simulator {
     },
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
-    const result = (await this.#workerPool.queueTask(
+    const result = (await this.#workerPool.runTask(
       "steadyState",
       {
         parameters,
@@ -94,7 +94,7 @@ export class CopasiSimulator extends Simulator {
     abortSignal?: AbortSignal,
   ): Promise<Variable[]> {
     const { modelInfo, boundarySpeciesNames, reactionIds } =
-      (await this.#workerPool.queueTask(
+      (await this.#workerPool.runTask(
         "loadModel",
         null,
         antimonyCode,
