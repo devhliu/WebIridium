@@ -1,3 +1,4 @@
+import { SocketTaskPool } from "../taskPool";
 import {
   Simulator,
   type TimeCourseParameters,
@@ -9,16 +10,7 @@ import {
   type Variable,
 } from "./Simulator";
 
-type ActionBase = {
-  id: string;
-  code: string;
-};
-
-type LoadModelAction = ActionBase & {
-  type: "loadModel";
-};
-type TimeCourseAction = ActionBase & {
-  type: "timeCourse";
+type TimeCourseAction = {
   startTime: number;
   endTime: number;
   numberOfPoints: number;
@@ -27,35 +19,26 @@ type TimeCourseAction = ActionBase & {
   variableValues: Record<string, number>;
   parameterScanOptions?: ParameterScanOptions;
 };
-type SteadyStateAction = ActionBase & {
-  type: "steadyState";
-  variableValues: Record<string, number>;
-  parameterScanOptions?: ParameterScanOptions;
-};
 
-type Action = LoadModelAction | TimeCourseAction | SteadyStateAction;
+// type SteadyStateAction = {
+//   variableValues: Record<string, number>;
+//   parameterScanOptions?: ParameterScanOptions;
+// };
 
-type ResponseBase = {
-  id: string;
-};
-
-type LoadModelResponse = ResponseBase & {
-  type: "loadModel";
+type LoadModelResponse = {
   floatingSpecies: Record<string, number>;
   boundarySpecies: Record<string, number>;
   reactions: string[];
   parameters: Record<string, number>;
 };
 
-type TimeCourseResponse = ResponseBase & {
+type TimeCourseResponse = {
   type: "timeCourse";
   columnNames: string[];
   rows: number[][];
 };
 
-type SteadyStateResponse = ResponseBase & {
-  type: "steadyState";
-};
+// type SteadyStateResponse = {};
 
 /**
  * Simulator that uses external RoadRunner WebSocket server.
@@ -64,60 +47,12 @@ export class RoadrunnerServerSimulator extends Simulator {
   defaultIndependentVariableId = "time";
   scanIndependentVariableId = "time";
 
-  #socket: WebSocket;
-  #pendingActions: Map<
-    string,
-    {
-      action: Action;
-      resolve: (value: unknown) => void;
-      reject: (error: unknown) => void;
-    }
-  >;
-
-  #actionIdCounter: number;
+  #socketTaskPool: SocketTaskPool;
 
   constructor() {
     super();
-    this.#pendingActions = new Map();
-    this.#actionIdCounter = 0;
-
-    // TODO: make these configurable
-    this.#socket = new WebSocket("ws://localhost:47137");
-
-    this.#socket.addEventListener("on", () => {
-      console.log("Socket connected");
-    });
-
-    this.#socket.addEventListener("close", () => {
-      console.log("Socket closing");
-    });
-
-    this.#socket.addEventListener("error", (err) => {
-      console.error(err);
-    });
-
-    this.#socket.addEventListener("message", (event) => {
-      // TODO!IMPORTANT: validate
-      const data = JSON.parse(event.data);
-      if (data.id) {
-        const action = this.#pendingActions.get(data.id);
-        if (action) {
-          this.#pendingActions.delete(data.id);
-          action.resolve(data);
-        }
-      }
-    });
-  }
-
-  #delegateAction(action: Action): Promise<unknown> {
-    if (this.#socket.readyState !== WebSocket.OPEN) {
-      throw new Error("WebSocket not open.");
-    }
-
-    return new Promise((resolve, reject) => {
-      this.#pendingActions.set(action.id, { action, resolve, reject });
-      this.#socket.send(JSON.stringify(action));
-    });
+    this.#socketTaskPool = new SocketTaskPool();
+    this.#socketTaskPool.connect("ws://localhost:47137");
   }
 
   async simulateTimeCourse(
@@ -133,20 +68,22 @@ export class RoadrunnerServerSimulator extends Simulator {
     },
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
-    const result = (await this.#delegateAction({
-      type: "timeCourse",
-      id: (this.#actionIdCounter++).toString(),
-      code: antimonyCode,
-      startTime: parameters.startTime,
-      endTime: parameters.endTime,
-      numberOfPoints: parameters.numberOfPoints,
-      resetInitialConditions: parameters.resetInitialConditions,
-      selectionList: parameters.includedVariables.map((v) => v.name),
-      variableValues: variableValues,
-      parameterScanOptions: parameterScanOptions,
-    } satisfies TimeCourseAction)) as TimeCourseResponse;
+    const result = (await this.#socketTaskPool.runTask(
+      "timeCourse",
+      {
+        startTime: parameters.startTime,
+        endTime: parameters.endTime,
+        numberOfPoints: parameters.numberOfPoints,
+        resetInitialConditions: parameters.resetInitialConditions,
+        selectionList: parameters.includedVariables.map((v) => v.name),
+        variableValues: variableValues,
+        parameterScanOptions: parameterScanOptions,
+      } satisfies TimeCourseAction,
+      antimonyCode,
+      abortSignal,
+    )) as TimeCourseResponse;
 
-    const r = {
+    return {
       type: "timeCourse",
       columns: result.columnNames.map((name, i) => ({
         title: name,
@@ -154,9 +91,6 @@ export class RoadrunnerServerSimulator extends Simulator {
       })),
       columnSet: new Set(result.columnNames),
     };
-
-    console.log(r);
-    return r;
   }
 
   computeSteadyState(
@@ -197,13 +131,12 @@ export class RoadrunnerServerSimulator extends Simulator {
   }
 
   async loadModel(antimonyCode: string, abortSignal?: AbortSignal) {
-    const result = (await this.#delegateAction({
-      type: "loadModel",
-      id: this.#getNextActionId(),
-      code: antimonyCode,
-    } satisfies LoadModelAction)) as LoadModelResponse;
-
-    console.log(result);
+    const result = (await this.#socketTaskPool.runTask(
+      "loadModel",
+      null,
+      antimonyCode,
+      abortSignal,
+    )) as LoadModelResponse;
 
     const variables: Variable[] = [];
 
@@ -299,9 +232,5 @@ export class RoadrunnerServerSimulator extends Simulator {
     }
 
     return variables;
-  }
-
-  #getNextActionId(): string {
-    return (this.#actionIdCounter++).toString();
   }
 }

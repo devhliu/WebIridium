@@ -1,12 +1,13 @@
 // TODO: Add automatically killing unused workers.
 
 /**
- * TaskPool is an abstract class for that manages tasks asynchronously.
+ * TaskPool is an abstract class for that receives tasks to complete,
+ * and dispatches them to "task runners" to run asychronously.
  * Run tasks using the `runTask` method.
  *
  * There are two implementations:
  *  - WorkerPool, which runs tasks inside WebWorkers.
- *  - SocketPool, which runs tasks from a server (via WebSocket).
+ *  - SocketTaskPool, which runs tasks from a server (via WebSocket).
  *
  * When comments refer "task runner" it is either a web worker or web socket.
  */
@@ -38,10 +39,6 @@ export type ErrorResult = {
   errorMessage: string;
 };
 
-export type WorkerPoolOptions = {
-  maxWorkers?: number;
-};
-
 type Task<RunnerInfo> = {
   id: number;
   state: "waiting" | "working" | "done" | "terminated" | "failed";
@@ -64,15 +61,21 @@ type WorkerInfo = {
   internalState: unknown;
 };
 
+export type WorkerPoolOptions = {
+  maxWorkers?: number;
+};
+
 /**
  * Manages tasks asychronously, dispatching them to a "task runner" (either WebSocket or WebWorker) to run.
+ *
+ * Implementors are expected to call `_getAvailableTask` and run the task whenever a runner is available to run a task.
  */
 export abstract class TaskPool<RunnerInfo> {
-  _tasks: Task<RunnerInfo>[];
+  #tasks: Task<RunnerInfo>[];
   #idCounter: number = 0;
 
   constructor() {
-    this._tasks = [];
+    this.#tasks = [];
   }
 
   /**
@@ -101,7 +104,7 @@ export abstract class TaskPool<RunnerInfo> {
         state: "waiting" as const,
       };
 
-      this._tasks.push(task);
+      this.#tasks.push(task);
 
       if (abortSignal) {
         abortSignal.addEventListener("abort", () => {
@@ -122,7 +125,7 @@ export abstract class TaskPool<RunnerInfo> {
   }
 
   _getAvailableTask(): Task<RunnerInfo> | undefined {
-    return this._tasks.find((t) => t.state === "waiting");
+    return this.#tasks.find((t) => t.state === "waiting");
   }
 
   abstract _getAvailableRunner(): RunnerInfo | null;
@@ -145,20 +148,43 @@ export abstract class TaskPool<RunnerInfo> {
   }
 
   /**
-   * Delegates a task to a runner.
+   * Delegates a task to a runner to be ran.
    */
   abstract _delegateTask(task: Task<RunnerInfo>, runnerInfo: RunnerInfo): void;
 
-  _terminateTask(task: Task<RunnerInfo>): void {
+  _resolveResult(result: Result | ErrorResult): void {
+    const taskIndex = this.#tasks.findIndex((t) => t.id === result.id);
+    if (taskIndex >= 0) {
+      const task = this.#tasks[taskIndex];
+      this.#tasks.splice(taskIndex, 1);
+      if ("errorMessage" in result) {
+        task.state = "failed";
+        task.runnerInfo = undefined;
+        task.reject(new Error(result.errorMessage));
+      } else {
+        task.state = "done";
+        task.runnerInfo = undefined;
+        task.resolve(result.data);
+      }
+    }
+  }
+
+  _terminateTask(task: Task<RunnerInfo>, error?: Error): void {
     if (task.state === "waiting" || task.state === "working") {
-      const index = this._tasks.indexOf(task);
-      this._tasks.splice(index, 1);
+      const index = this.#tasks.indexOf(task);
+      this.#tasks.splice(index, 1);
 
       task.state = "terminated";
-      task.reject(new TaskTermination());
+      task.reject(error ?? new TaskTermination());
       if (task.runnerInfo) {
         this._stopTask(task, task.runnerInfo);
       }
+    }
+  }
+
+  _terminateAllTasks(error?: Error): void {
+    while (this.#tasks.length > 0) {
+      this._terminateTask(this.#tasks[0], error);
     }
   }
 
@@ -169,15 +195,7 @@ export abstract class TaskPool<RunnerInfo> {
 }
 
 /**
- * give this worker pool tasks, it will find a worker to do the task
- * and return the result. Pass a `createWorker` function so the worker
- * can create workers to do its tasks.
- *
- * THIS DOES NOT ACCEPT ANY OLD WORKER. When you post a message to a worker created by
- * this worker pool, it must accept Action as the message's data. It must pass Result with the same id
- * back to the main thread.
- *
- * See `/public/simulationWorker.js` for an example of what a worker
+ * See `/public/antimonyWorker.js` for an example of what a worker
  * used by this worker pool should look like.
  */
 export class WorkerPool extends TaskPool<WorkerInfo> {
@@ -237,20 +255,7 @@ export class WorkerPool extends TaskPool<WorkerInfo> {
     workerInfo.worker.addEventListener(
       "message",
       (e: MessageEvent<Result | ErrorResult>) => {
-        const taskIndex = this._tasks.findIndex((t) => t.id === e.data.id);
-        if (taskIndex >= 0) {
-          const task = this._tasks[taskIndex];
-          this._tasks.splice(taskIndex, 1);
-          if ("errorMessage" in e.data) {
-            task.state = "failed";
-            task.runnerInfo = undefined;
-            task.reject(new Error(e.data.errorMessage));
-          } else {
-            task.state = "done";
-            task.runnerInfo = undefined;
-            task.resolve(e.data.data);
-          }
-        }
+        this._resolveResult(e.data);
 
         const availableTask = this._getAvailableTask();
         if (availableTask) {
@@ -268,6 +273,111 @@ export class WorkerPool extends TaskPool<WorkerInfo> {
 
     const index = this.#workers.indexOf(workerInfo);
     this.#workers.splice(index, 1);
+  }
+}
+
+type SocketInfo = {
+  socket: WebSocket;
+  internalState?: unknown;
+};
+
+export class SocketTaskPool extends TaskPool<SocketInfo> {
+  #socketInfo: SocketInfo | null;
+
+  constructor() {
+    super();
+    this.#socketInfo = null;
+  }
+
+  connect(url: string) {
+    if (this.#socketInfo) {
+      this.#socketInfo.socket.close();
+      this._terminateAllTasks(new Error("Connection closed."));
+    }
+
+    const socket = new WebSocket(url);
+    const socketInfo: SocketInfo = {
+      socket: socket,
+      internalState: undefined,
+    };
+
+    this.#socketInfo = socketInfo;
+
+    socket.addEventListener("message", (event) => {
+      if (typeof event.data !== "string") return;
+
+      const json: unknown = JSON.parse(event.data);
+      if (
+        typeof json === "object" &&
+        json !== null &&
+        "id" in json &&
+        typeof json.id === "number"
+      ) {
+        if ("errorMessage" in json && typeof json.errorMessage === "string") {
+          this._resolveResult({
+            id: json.id,
+            errorMessage: json.errorMessage,
+          });
+        } else if ("data" in json) {
+          this._resolveResult({
+            id: json.id,
+            data: json.data,
+          });
+        }
+      }
+    });
+
+    socket.addEventListener("open", () => {
+      if (this.#socketInfo !== socketInfo) return;
+
+      let task: Task<SocketInfo> | undefined;
+      while ((task = this._getAvailableTask())) {
+        this._startTask(socketInfo, task);
+      }
+    });
+
+    socket.addEventListener("close", () => {
+      if (this.#socketInfo !== socketInfo) return;
+      this._terminateAllTasks(new Error("Connection closed."));
+    });
+
+    socket.addEventListener("error", () => {
+      if (this.#socketInfo !== socketInfo) return;
+      this._terminateAllTasks(new Error("WebSocket errored."));
+    });
+  }
+
+  _getAvailableRunner(): SocketInfo | null {
+    if (this.#socketInfo?.socket?.readyState !== WebSocket.CONNECTING) {
+      return this.#socketInfo;
+    }
+    return null;
+  }
+
+  _delegateTask(task: Task<SocketInfo>, socketInfo: SocketInfo): void {
+    if (socketInfo.socket.readyState === WebSocket.CLOSED) {
+      this._terminateTask(task, new Error("WebSocket connecting..."));
+      return;
+    } else if (socketInfo.socket.readyState !== WebSocket.OPEN) {
+      this._terminateTask(task, new Error("WebSocket closed."));
+    }
+
+    socketInfo.socket.send(
+      JSON.stringify({
+        type: task.actionType,
+        id: task.id,
+        internalState:
+          socketInfo.internalState !== task.internalState
+            ? task.internalState
+            : undefined,
+        payload: task.payload,
+      } as Action),
+    );
+  }
+
+  _stopTask(_task: Task<SocketInfo>, _runnerInfo: SocketInfo): void {
+    // for now, canceling a task just means ignoring it when
+    // the result is sent back
   }
 }
 
