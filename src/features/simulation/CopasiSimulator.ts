@@ -1,13 +1,11 @@
 import type { ModelInfo, SimResult } from "@/third-party/copasi";
 import {
   Simulator,
-  type TimeCourseParameters,
-  type ParameterScanOptions,
   type SteadyStateResult,
   type TimeCourseResult,
   type Variable,
-  type SteadyStateParameters,
-  type VariableValues,
+  type SimulateTimeCourseOptions,
+  type ComputeSteadyStateOptions,
 } from "./Simulator";
 import { WorkerPool } from "@/features/taskPool";
 import { createWorker } from "@/features/workers.ts";
@@ -31,11 +29,7 @@ export class CopasiSimulator extends Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: TimeCourseParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: SimulateTimeCourseOptions,
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
     const result = (await this.#workerPool.runTask(
@@ -68,11 +62,7 @@ export class CopasiSimulator extends Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: SteadyStateParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: ComputeSteadyStateOptions,
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
     const result = (await this.#workerPool.runTask(

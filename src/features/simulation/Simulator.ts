@@ -117,6 +117,18 @@ export type SimulationResult =
   | SteadyStateResult
   | ParameterScanResult;
 
+export type SimulateTimeCourseOptions = {
+  parameters: TimeCourseParameters;
+  variableValues: VariableValues;
+  parameterScanOptions?: ParameterScanOptions;
+};
+
+export type ComputeSteadyStateOptions = {
+  parameters: SteadyStateParameters;
+  variableValues: VariableValues;
+  parameterScanOptions?: ParameterScanOptions;
+};
+
 export abstract class Simulator {
   abstract defaultIndependentVariableId: string;
   abstract scanIndependentVariableId: string;
@@ -127,11 +139,7 @@ export abstract class Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: TimeCourseParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: SimulateTimeCourseOptions,
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult>;
 
@@ -141,11 +149,7 @@ export abstract class Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: SteadyStateParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: ComputeSteadyStateOptions,
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult>;
 

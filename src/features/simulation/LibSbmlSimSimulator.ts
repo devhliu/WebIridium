@@ -1,12 +1,10 @@
 import {
   Simulator,
-  type TimeCourseParameters,
-  type SteadyStateParameters,
   type TimeCourseResult,
   type SteadyStateResult,
-  type ParameterScanOptions,
-  type VariableValues,
   type Variable,
+  type ComputeSteadyStateOptions,
+  type SimulateTimeCourseOptions,
 } from "./Simulator";
 import { WorkerPool } from "@/features/taskPool";
 import { createWorker } from "@/features/workers";
@@ -37,11 +35,7 @@ export class LibSbmlSimSimulator extends Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: TimeCourseParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: SimulateTimeCourseOptions,
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
     const result = (await this.#workerPool.runTask(
@@ -67,11 +61,7 @@ export class LibSbmlSimSimulator extends Simulator {
 
   computeSteadyState(
     _antimonyCode: string,
-    _params: {
-      parameters: SteadyStateParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    _params: ComputeSteadyStateOptions,
     _abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
     return Promise.resolve({

@@ -1,13 +1,12 @@
 import { SocketTaskPool } from "../taskPool";
 import {
   Simulator,
-  type TimeCourseParameters,
-  type SteadyStateParameters,
   type TimeCourseResult,
   type SteadyStateResult,
   type ParameterScanOptions,
-  type VariableValues,
   type Variable,
+  type ComputeSteadyStateOptions,
+  type SimulateTimeCourseOptions,
 } from "./Simulator";
 
 type TimeCourseAction = {
@@ -83,11 +82,7 @@ export class RoadrunnerServerSimulator extends Simulator {
       parameters,
       variableValues,
       parameterScanOptions,
-    }: {
-      parameters: TimeCourseParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    }: SimulateTimeCourseOptions,
     abortSignal?: AbortSignal,
   ): Promise<TimeCourseResult> {
     const result = (await this.#socketTaskPool.runTask(
@@ -117,15 +112,7 @@ export class RoadrunnerServerSimulator extends Simulator {
 
   async computeSteadyState(
     antimonyCode: string,
-    {
-      parameters: _,
-      variableValues,
-      parameterScanOptions,
-    }: {
-      parameters: SteadyStateParameters;
-      variableValues: VariableValues;
-      parameterScanOptions?: ParameterScanOptions;
-    },
+    { variableValues, parameterScanOptions }: ComputeSteadyStateOptions,
     abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
     const result = (await this.#socketTaskPool.runTask(
