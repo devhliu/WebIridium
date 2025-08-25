@@ -20,6 +20,11 @@ type TimeCourseAction = {
   parameterScanOptions?: ParameterScanOptions;
 };
 
+type SteadyStateAction = {
+  variableValues: Record<string, number>;
+  parameterScanOptions?: ParameterScanOptions;
+};
+
 // type SteadyStateAction = {
 //   variableValues: Record<string, number>;
 //   parameterScanOptions?: ParameterScanOptions;
@@ -38,7 +43,24 @@ type TimeCourseResponse = {
   rows: number[][];
 };
 
-// type SteadyStateResponse = {};
+type SteadyStateResponseItem = {
+  columns: string[];
+  rows: string[];
+  values: number[][];
+};
+
+type SteadyStateResponse = {
+  value: number;
+  concentrations: {
+    name: string;
+    value: number;
+  }[];
+  eigenValues: number[][];
+  jacobian: SteadyStateResponseItem;
+  concentrationControl: SteadyStateResponseItem;
+  fluxControl: SteadyStateResponseItem;
+  elasticities: SteadyStateResponseItem;
+};
 
 /**
  * Simulator that uses external RoadRunner WebSocket server.
@@ -93,41 +115,39 @@ export class RoadrunnerServerSimulator extends Simulator {
     };
   }
 
-  computeSteadyState(
-    _antimonyCode: string,
-    _params: {
+  async computeSteadyState(
+    antimonyCode: string,
+    {
+      parameters: _,
+      variableValues,
+      parameterScanOptions,
+    }: {
       parameters: SteadyStateParameters;
       variableValues: VariableValues;
       parameterScanOptions?: ParameterScanOptions;
     },
-    _abortSignal?: AbortSignal,
+    abortSignal?: AbortSignal,
   ): Promise<SteadyStateResult> {
-    return Promise.resolve({
+    const result = (await this.#socketTaskPool.runTask(
+      "steadyState",
+      {
+        variableValues: variableValues,
+        parameterScanOptions: parameterScanOptions,
+      } satisfies SteadyStateAction,
+      antimonyCode,
+      abortSignal,
+    )) as SteadyStateResponse;
+
+    return {
       type: "steadyState",
-      value: 0,
-      concentrations: [],
-      eigenValues: [],
-      jacobian: {
-        columns: [],
-        rows: [],
-        values: [],
-      },
-      concentrationControl: {
-        columns: [],
-        rows: [],
-        values: [],
-      },
-      fluxControl: {
-        columns: [],
-        rows: [],
-        values: [],
-      },
-      elasticities: {
-        columns: [],
-        rows: [],
-        values: [],
-      },
-    });
+      value: result.value,
+      concentrations: result.concentrations,
+      eigenValues: result.eigenValues,
+      jacobian: result.jacobian,
+      concentrationControl: result.concentrationControl,
+      fluxControl: result.fluxControl,
+      elasticities: result.elasticities,
+    };
   }
 
   async loadModel(antimonyCode: string, abortSignal?: AbortSignal) {
