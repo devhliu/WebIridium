@@ -87,9 +87,11 @@ export const itShouldBeCancellable = ({
     const cancel = screen.getByLabelText("Cancel");
     await userEvent.click(cancel);
 
-    expect(button).toBeEnabled();
-    expect(cancel).not.toBeInTheDocument();
-    expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+      expect(cancel).not.toBeInTheDocument();
+      expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
+    });
   });
 };
 
