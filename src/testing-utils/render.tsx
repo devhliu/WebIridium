@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import { render } from "@testing-library/react";
 import { ToastProvider } from "@/components/Toast";
+import { TooltipProvider } from "@/components/Tooltip";
 import WorkspaceProvider from "@/app/WorkspaceProvider";
 
 /**
@@ -18,11 +19,13 @@ export const renderFlush = async (node: React.ReactNode) => {
 const TestApp = ({ children }: { children: React.ReactNode }) => {
   const didInitialLoadRef = useRef(false);
   return (
-    <ToastProvider>
-      <WorkspaceProvider didInitialLoadRef={didInitialLoadRef}>
-        {children}
-      </WorkspaceProvider>
-    </ToastProvider>
+    <TooltipProvider>
+      <ToastProvider>
+        <WorkspaceProvider didInitialLoadRef={didInitialLoadRef}>
+          {children}
+        </WorkspaceProvider>
+      </ToastProvider>
+    </TooltipProvider>
   );
 };
 

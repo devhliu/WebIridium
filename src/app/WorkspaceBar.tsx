@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { useAtom } from "jotai";
 
 import styles from "./WorkspaceBar.module.css";
+import buttonStyles from "@/components/Button.module.css";
 
 import { convertSbmlToAntimony } from "@/features/antimony";
 
@@ -14,7 +15,6 @@ import {
 
 import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 
-import Button from "@/components/Button";
 import PulseLoader from "@/components/PulseLoader";
 import { useToast } from "@/components/Toast";
 
@@ -351,16 +351,15 @@ const AutocompleteSimpleItem = ({
 
   return (
     <li>
-      <Button
+      <button
         ref={buttonRef}
-        className={styles.autocompleteItem}
-        style="ghost"
-        active={selected}
+        className={clsx(buttonStyles.ghost, styles.autocompleteItem)}
+        data-active={selected}
         onClick={() => onClick(item)}
       >
         <b className={styles.autocompleteSimpleItemName}>{item.name}:</b>
         {item.value}
-      </Button>
+      </button>
     </li>
   );
 };
@@ -379,10 +378,10 @@ const AutocompleteBiomodelItem = ({
 
   return (
     <li>
-      <Button
+      <button
         ref={buttonRef}
-        style="ghost"
-        active={selected}
+        className={buttonStyles.ghost}
+        data-active={selected}
         onClick={() => onClick(item)}
       >
         <div
@@ -400,7 +399,7 @@ const AutocompleteBiomodelItem = ({
             {item.info.date} | Journal: {item.info.journal}
           </span>
         </div>
-      </Button>
+      </button>
     </li>
   );
 };

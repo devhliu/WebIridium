@@ -1,6 +1,7 @@
 import { useCallback, useState } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styles from "./SlidersPanel.module.css";
+import buttonStyles from "@/components/Button.module.css";
 
 import { type SettableVariable } from "@/features/simulation/Simulator";
 
@@ -21,7 +22,6 @@ import { simulationResultAtom } from "@/globals/workspace/simulation";
 import VariableSlider from "./VariableSlider";
 import CopyToModelButton from "./CopyToModelButton";
 import SearchBox from "@/components/input/SearchBox";
-import Button from "@/components/Button";
 
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
@@ -113,14 +113,17 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
 
         <CopyToModelButton />
 
-        <Button onClick={() => setShowingInactive(!showingInactive)}>
+        <button
+          className={buttonStyles.default}
+          onClick={() => setShowingInactive(!showingInactive)}
+        >
           {showingInactive ? (
             <ClosedEyeIcon width="1em" height="1em" />
           ) : (
             <EyeIcon width="1em" height="1em" />
           )}
           {showingInactive ? "Hide Inactive" : "Show Inactive"}
-        </Button>
+        </button>
 
         <IconButton label="Close" onClick={onClose}>
           <CrossIcon width="1em" height="1em" aria-hidden />
@@ -147,9 +150,12 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
                 <h3 className={styles.groupTitle}>
                   {group}
                   {searchTerm.length === 0 && (
-                    <Button onClick={() => handleGroupToggle(!allActive)}>
+                    <button
+                      className={buttonStyles.default}
+                      onClick={() => handleGroupToggle(!allActive)}
+                    >
                       {allActive ? <>Deactivate All</> : <>Activate All</>}
-                    </Button>
+                    </button>
                   )}
                 </h3>
                 {vars.map((v) => (

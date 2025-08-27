@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 import styles from "./ShareDialog.module.css";
+import buttonStyles from "@/components/Button.module.css";
 import { Dialog as RadixDialog } from "radix-ui";
 
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
-import Button from "@/components/Button";
 import clsx from "clsx";
 
 export interface ShareDialogProps {
@@ -55,13 +55,17 @@ const ShareDialog = ({ url, onClose }: ShareDialogProps) => {
               autoFocus
               onFocus={(e) => e.target.select()}
             />
-            <Button
-              className={clsx(copied && styles.copied, styles.copy)}
+            <button
+              className={clsx(
+                buttonStyles.default,
+                copied && styles.copied,
+                styles.copy,
+              )}
               onClick={handleCopy}
               disabled={copied}
             >
               {copied ? "Copied!" : "Copy"}
-            </Button>
+            </button>
           </div>
         </RadixDialog.Content>
       </RadixDialog.Portal>

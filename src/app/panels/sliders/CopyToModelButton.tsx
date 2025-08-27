@@ -1,7 +1,8 @@
 import { useAtomValue } from "jotai";
 
+import buttonStyles from "@/components/Button.module.css";
+
 import { useToast } from "@/components/Toast";
-import Button from "@/components/Button";
 
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
@@ -47,10 +48,10 @@ const CopyToModelButton = () => {
   };
 
   return (
-    <Button onClick={handleAddAsComment}>
+    <button className={buttonStyles.default} onClick={handleAddAsComment}>
       <PlusIcon width="1em" height="1em" />
       Copy to Model
-    </Button>
+    </button>
   );
 };
 

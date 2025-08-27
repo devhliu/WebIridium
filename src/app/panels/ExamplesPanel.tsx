@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useSetAtom } from "jotai";
 
 import styles from "./ExamplesPanel.module.css";
+import buttonStyles from "@/components/Button.module.css";
 
 import {
   exampleFormattedNames,
@@ -15,7 +16,6 @@ import {
 import PlayIcon from "@/assets/icons/PlayIcon.svg?react";
 
 import PanelTitle from "./PanelTitle";
-import Button from "@/components/Button";
 import PulseLoader from "@/components/PulseLoader";
 
 import { updateEditorContentAtom } from "@/globals/workspace/model";
@@ -37,8 +37,12 @@ const ExampleButton = ({
   onRun: () => void;
 }) => {
   return (
-    <Button
-      className={clsx(styles.item, running && styles.running)}
+    <button
+      className={clsx(
+        buttonStyles.default,
+        styles.item,
+        running && styles.running,
+      )}
       disabled={running}
       onClick={onRun}
     >
@@ -50,7 +54,7 @@ const ExampleButton = ({
           <PlayIcon width="1em" height="1em" />
         )}
       </div>
-    </Button>
+    </button>
   );
 };
 

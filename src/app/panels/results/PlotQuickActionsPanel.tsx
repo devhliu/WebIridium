@@ -1,12 +1,13 @@
 import { useAtom } from "jotai";
+import clsx from "clsx";
 
 import styles from "./results.module.css";
+import buttonStyles from "@/components/Button.module.css";
 
 import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 
-import Button from "@/components/Button";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 
@@ -35,21 +36,21 @@ const PlotQuickActionsPanel = () => {
     <div className={styles.quickActionsContainer}>
       <div className={styles.quickActionsButtons}>
         {currentVeryRightPanel === "Plot Settings" ? (
-          <Button
-            className={styles.quickActionsButton}
+          <button
+            className={clsx(buttonStyles.default, styles.quickActionsButton)}
             onClick={() => setCurrentVeryRightPanel(null)}
           >
             <CrossIcon width="1em" height="1em" />
             Close Settings
-          </Button>
+          </button>
         ) : (
-          <Button
-            className={styles.quickActionsButton}
+          <button
+            className={clsx(buttonStyles.default, styles.quickActionsButton)}
             onClick={() => setCurrentVeryRightPanel("Plot Settings")}
           >
             <PencilIcon width="1em" height="1em" />
             Edit Graph
-          </Button>
+          </button>
         )}
       </div>
 
