@@ -1,5 +1,5 @@
 import { test, expect, afterEach } from "vitest";
-import { screen, within } from "@testing-library/react";
+import { waitFor, screen, within } from "@testing-library/react";
 import { renderFlush, renderWithinWorkspace } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
 
@@ -40,7 +40,9 @@ test("panels should all be cancellable when a simulation is running", async () =
 
   await userEvent.click(simulateTimeCourseButton);
 
-  expect(simulateTimeCourseButton).toBeDisabled();
+  await waitFor(() => {
+    expect(simulateTimeCourseButton).toBeDisabled();
+  });
   expect(computeSteadyStateButton).toBeDisabled();
   expect(runParameterScanButton).toBeDisabled();
 
@@ -53,7 +55,9 @@ test("panels should all be cancellable when a simulation is running", async () =
 
   await userEvent.click(cancelButton);
 
-  expect(simulateTimeCourseButton).toBeEnabled();
+  await waitFor(() => {
+    expect(simulateTimeCourseButton).toBeEnabled();
+  });
   expect(computeSteadyStateButton).toBeEnabled();
   expect(runParameterScanButton).toBeEnabled();
 });
