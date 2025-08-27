@@ -51,9 +51,7 @@ test("panels should all be cancellable when a simulation is running", async () =
   expect(runParameterScanButton).toBeDisabled();
 
   const cancelButton = await within(timeCoursePanel).findByLabelText("Cancel");
-  await waitFor(() => {
-    expect(cancelButton).toBeInTheDocument();
-  });
+  expect(cancelButton).toBeInTheDocument();
   expect(within(steadyStatePanel).getByLabelText("Cancel")).toBeInTheDocument();
   expect(
     within(parameterScanPanel).getByLabelText("Cancel"),
@@ -61,9 +59,7 @@ test("panels should all be cancellable when a simulation is running", async () =
 
   await userEvent.click(cancelButton);
 
-  await waitFor(() => {
-    expect(simulateTimeCourseButton).toBeEnabled();
-  });
+  expect(simulateTimeCourseButton).toBeEnabled();
   expect(computeSteadyStateButton).toBeEnabled();
   expect(runParameterScanButton).toBeEnabled();
 });
