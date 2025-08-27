@@ -58,6 +58,9 @@ const EditorPanel = () => {
         minimap: {
           enabled: false,
         },
+        padding: {
+          top: 4
+        },
         codeLens: true,
         fontSize,
       });
