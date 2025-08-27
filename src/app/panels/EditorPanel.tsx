@@ -59,7 +59,7 @@ const EditorPanel = () => {
           enabled: false,
         },
         padding: {
-          top: 4
+          top: 4,
         },
         codeLens: true,
         fontSize,

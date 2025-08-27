@@ -13,23 +13,27 @@
 .sliders-button {
   color: var(--color-ghost-text-button);
   line-height: 0;
-  background-color: transparent;
+  background-color: var(--color-ghost-button-bg);
   border: none;
+  border-radius: var(--border-radius);
   font-size: calc(1.5 * var(--font-size-big));
   aspect-ratio: 1 / 1;
-  padding: 0;
+  padding: var(--spacing-1);
   cursor: pointer;
 
   &:hover {
     color: var(--color-ghost-text-button-hover);
+    background-color: var(--color-ghost-button-hover-bg);
   }
 
   &:active {
     color: var(--color-ghost-text-button-active);
+    background-color: var(--color-ghost-button-active-bg);
   }
 
   &[aria-pressed="true"] {
-    color: var(--color-accent);
+    color: var(--color-accent-fg);
+    background-color: var(--color-accent);
   }
 }
 
