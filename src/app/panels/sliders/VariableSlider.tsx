@@ -28,6 +28,7 @@ export interface VariableSliderProps {
     variable: SettableVariable,
     newState: VariableSliderState,
   ) => void;
+  /** Specifically for `value` changes. Should also trigger a resimulation. */
   onValueChange: (variable: SettableVariable, newValue: number) => void;
 }
 
@@ -92,9 +93,11 @@ const VariableSlider = memo(
             <>
               <IconButton
                 label="Reset"
-                onClick={() =>
-                  onStateChange(variable, getInitialSliderState(variable))
-                }
+                onClick={() => {
+                  const newState = getInitialSliderState(variable);
+                  onStateChange(variable, newState);
+                  onValueChange(variable, newState.value);
+                }}
               >
                 <ResetIcon width="1em" height="1em" />
               </IconButton>
