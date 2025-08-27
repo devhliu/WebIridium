@@ -8,7 +8,9 @@ import WorkspaceProvider from "@/app/WorkspaceProvider";
 
 /**
  * Renders then waits for microtask queue to clear.
- * Many of the tests do not work without this :( (weird timing issues with different machines)
+ * Many of the tests do not work without this :(
+ * (the CI runners are so slow, they don't work if we don't
+ *  add this to make sure everything loads correctly)
  */
 export const renderFlush = async (node: React.ReactNode) => {
   render(node);

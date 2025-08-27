@@ -38,6 +38,10 @@ test("panels should all be cancellable when a simulation is running", async () =
     within(steadyStatePanel).getByText("Compute");
   const runParameterScanButton = within(parameterScanPanel).getByText("Run");
 
+  await waitFor(() => {
+    expect(simulateTimeCourseButton).toBeEnabled();
+  });
+
   await userEvent.click(simulateTimeCourseButton);
 
   await waitFor(() => {
