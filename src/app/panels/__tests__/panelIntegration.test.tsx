@@ -44,7 +44,9 @@ test("panels should all be cancellable when a simulation is running", async () =
 
   await userEvent.click(simulateTimeCourseButton);
 
-  expect(simulateTimeCourseButton).toBeDisabled();
+  await waitFor(() => {
+    expect(simulateTimeCourseButton).toBeDisabled();
+  });
   expect(computeSteadyStateButton).toBeDisabled();
   expect(runParameterScanButton).toBeDisabled();
 

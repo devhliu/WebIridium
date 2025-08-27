@@ -10,6 +10,8 @@ export const CATEGORY_ORDER = [
   "Rate of Changes",
   "Parameters",
   "Reaction Rates",
+  "Elasticities",
+  "Eigenvalues",
 ];
 
 /**
