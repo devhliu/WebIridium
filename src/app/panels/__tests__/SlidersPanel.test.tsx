@@ -10,7 +10,7 @@ import SlidersPanel from "../sliders/SlidersPanel";
 it("should run close on click", async () => {
   const onClose = vi.fn();
 
-  renderWithinWorkspace(<SlidersPanel onClose={onClose} />);
+  await renderWithinWorkspace(<SlidersPanel onClose={onClose} />);
 
   await userEvent.click(screen.getByLabelText("Close"));
 

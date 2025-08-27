@@ -14,8 +14,8 @@ import {
 describe("simulation button", () => {
   const testButtonOptions = {
     buttonText: "Simulate",
-    render: () => {
-      renderWithinWorkspace(
+    render: async () => {
+      await renderWithinWorkspace(
         <div>
           <TimeCoursePanel visible />
           <PlotPanel />
@@ -30,8 +30,8 @@ describe("simulation button", () => {
   itShouldDisplayToasts(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
     ...testButtonOptions,
-    render: () => {
-      renderWithinWorkspace(
+    render: async () => {
+      await renderWithinWorkspace(
         <div>
           <TimeCoursePanel visible />
           <ForceModelUpdateButton />

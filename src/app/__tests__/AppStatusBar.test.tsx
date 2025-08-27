@@ -1,5 +1,5 @@
 import { it, expect, afterEach } from "vitest";
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 
 import { renderWithinWorkspace } from "@/testing-utils/render";
@@ -16,7 +16,7 @@ afterEach(() => {
 });
 
 it("should say Simulating when a simulation is being ran", async () => {
-  renderWithinWorkspace(
+  await renderWithinWorkspace(
     <>
       <AppStatusBar />
       <TimeCoursePanel visible />
@@ -25,14 +25,9 @@ it("should say Simulating when a simulation is being ran", async () => {
 
   expect(screen.queryByText("Simulating")).not.toBeInTheDocument();
 
-  const simulateButton = screen.getByText("Simulate");
-  await waitFor(() => {
-    expect(simulateButton).toBeEnabled();
-  });
-
   setWorkerResponseDelay(1000);
 
-  await userEvent.click(simulateButton);
+  await userEvent.click(screen.getByText("Simulate"));
 
   expect(screen.getByText("Simulating")).toBeInTheDocument();
 });

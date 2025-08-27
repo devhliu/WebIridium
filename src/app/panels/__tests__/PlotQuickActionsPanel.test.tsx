@@ -19,7 +19,7 @@ it("should let you toggle plot settings", async () => {
     );
   };
 
-  renderWithinWorkspace(
+  await renderWithinWorkspace(
     <>
       <PlotSettingsTestComponent />
       <PlotQuickActionsPanel />

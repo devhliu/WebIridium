@@ -1,5 +1,6 @@
 import { test, expect, afterEach, describe, it } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import { renderFlush } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
 
 import App from "@/app/App";
@@ -7,7 +8,7 @@ import App from "@/app/App";
 const RESULTS_PANEL_TEST_ID = "results-panel";
 
 test("results panel should only be visible after simulating", async () => {
-  render(<App />);
+  await renderFlush(<App />);
 
   expect(screen.queryByTestId(RESULTS_PANEL_TEST_ID)).not.toBeInTheDocument();
 
@@ -30,7 +31,7 @@ describe("sharing", () => {
 
   it("should start a simulation when using a share link", async () => {
     location.hash = SAMPLE_SHARE_FRAGMENT;
-    render(<App />);
+    await renderFlush(<App />);
 
     await waitFor(() => {
       expect(screen.getByTestId(RESULTS_PANEL_TEST_ID)).toBeInTheDocument();
@@ -39,7 +40,7 @@ describe("sharing", () => {
 
   it("should not start a simulation when using a share link with unreasonable parameters", async () => {
     location.hash = UNREASONABLE_SAMPLE_SHARE_FRAGMENT;
-    render(<App />);
+    await renderFlush(<App />);
 
     await expect(
       waitFor(
@@ -57,7 +58,7 @@ describe("sharing", () => {
   });
 
   it("should not start a simulation when not using a share link", async () => {
-    render(<App />);
+    await renderFlush(<App />);
 
     await expect(
       waitFor(

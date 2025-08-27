@@ -16,8 +16,8 @@ const WorkspaceNameLabel = () => {
   return <p>{getWorkspaceNameLabelText(workspaceName)}</p>;
 };
 
-const renderWorkspaceBar = () => {
-  renderWithinWorkspace(
+const renderWorkspaceBar = async () => {
+  await renderWithinWorkspace(
     <div>
       <WorkspaceNameLabel />
       <WorkspaceBar />
@@ -30,7 +30,7 @@ const clickRename = async () => {
 };
 
 it("should rename the workspace", async () => {
-  renderWorkspaceBar();
+  await renderWorkspaceBar();
 
   await clickRename();
 
@@ -44,7 +44,7 @@ it("should rename the workspace", async () => {
 });
 
 it("should cancel rename on escape", async () => {
-  renderWorkspaceBar();
+  await renderWorkspaceBar();
 
   await clickRename();
 
@@ -58,7 +58,7 @@ it("should cancel rename on escape", async () => {
 });
 
 it("should cancel rename when clicking somewhere else", async () => {
-  renderWorkspaceBar();
+  await renderWorkspaceBar();
 
   await clickRename();
 
@@ -74,7 +74,7 @@ it("should cancel rename when clicking somewhere else", async () => {
 });
 
 it("should not rename when name is invalid", async () => {
-  renderWorkspaceBar();
+  await renderWorkspaceBar();
 
   await clickRename();
 

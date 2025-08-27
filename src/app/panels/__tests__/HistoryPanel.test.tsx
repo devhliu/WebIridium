@@ -31,7 +31,7 @@ afterEach(() => {
 
 describe("the panel", () => {
   it("should show history records", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <HistoryPanel visible />
@@ -56,7 +56,7 @@ describe("the panel", () => {
   it("should show time since the record was made", async () => {
     vi.useFakeTimers({ toFake: ["Date", "setInterval"] });
 
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <HistoryPanel visible />
@@ -78,7 +78,7 @@ describe("the panel", () => {
   });
 
   it("should update result when clicking a record", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <SteadyStatePanel visible />
@@ -117,7 +117,7 @@ describe("the panel", () => {
 
 describe("history", () => {
   it("should not add records when they are in quick succession and of the same type", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <HistoryPanel visible />
@@ -144,7 +144,7 @@ describe("history", () => {
   });
 
   it("should add records when they are not in quick succession (1 minute)", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <HistoryPanel visible />
@@ -176,7 +176,7 @@ describe("history", () => {
   });
 
   it("should add records when they are in quick succession and not of the same type", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <TimeCoursePanel visible />
         <SteadyStatePanel visible />
@@ -206,7 +206,7 @@ describe("history", () => {
   });
 
   it("should not add records when they are in quick succession and of the same mode (parameter scan)", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <ParameterScanPanel visible />
         <HistoryPanel visible />
@@ -233,7 +233,7 @@ describe("history", () => {
   });
 
   it("should add records when they are in quick succession and of the different mode (parameter scan)", async () => {
-    renderWithinWorkspace(
+    await renderWithinWorkspace(
       <div>
         <ParameterScanPanel visible />
         <HistoryPanel visible />
