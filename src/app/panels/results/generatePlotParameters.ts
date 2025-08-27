@@ -139,6 +139,10 @@ export const generatePlotParameters = (
     for (const [i, data] of plotData.entries()) {
       data.marker.color = getPaletteColor(palette, i / (plotData.length - 1));
     }
+
+    for (const [i, data] of legendData.entries()) {
+      data.color = getPaletteColor(palette, i / (plotData.length - 1));
+    }
   }
 
   // Other settings
