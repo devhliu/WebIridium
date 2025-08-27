@@ -1,14 +1,15 @@
 import { useState } from "react";
+import clsx from "clsx";
 import styles from "./VariableList.module.css";
 
 import { type Variable } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
 import VariableItem from "./VariableItem";
-import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
+import { Tooltip } from "@/components/Tooltip";
 
+import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
-import clsx from "clsx";
 
 const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
 
@@ -68,16 +69,18 @@ const VariableGroup = ({
         </button>
 
         <div className={styles.actionList}>
-          <button
-            className={clsx(styles.action, !areAllVisible && styles.dim)}
-            onClick={handleToggleAll}
-          >
-            {areAllVisible || areSomeVisible ? (
-              <EyeIcon height="1em" width="1em" />
-            ) : (
-              <ClosedEyeIcon height="1em" width="1em" />
-            )}
-          </button>
+          <Tooltip text="Group Visibility" side="right">
+            <button
+              className={clsx(styles.action, !areAllVisible && styles.dim)}
+              onClick={handleToggleAll}
+            >
+              {areAllVisible || areSomeVisible ? (
+                <EyeIcon height="1em" width="1em" />
+              ) : (
+                <ClosedEyeIcon height="1em" width="1em" />
+              )}
+            </button>
+          </Tooltip>
         </div>
       </div>
 

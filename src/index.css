@@ -42,6 +42,7 @@
   --timing-very-fast: 0.05s;
   --timing-fast: 0.1s;
 
+  --shadow-small: 0px 3px 5px 0px rgba(0, 0, 0, 0.3);
   --shadow-medium: 0px 15px 25px -15px rgba(0, 0, 0, 0.75);
 
   /* Base Colors (more defined in individual theme files */

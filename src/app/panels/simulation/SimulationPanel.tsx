@@ -6,6 +6,7 @@ import PanelTitle from "../PanelTitle";
 import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
 
 import { currentBottomPanelAtom } from "@/globals/workspace/layout";
+import { Tooltip } from "@/components/Tooltip";
 
 export interface SimulationPanelProps {
   title: string;
@@ -46,7 +47,9 @@ const SimulationPanel = ({
             aria-pressed={currentBottomPanel === "Sliders"}
             onClick={toggleSliders}
           >
-            <SlidersIcon aria-hidden width="1em" height="1em" />
+            <Tooltip text="Sliders">
+              <SlidersIcon aria-hidden width="1em" height="1em" />
+            </Tooltip>
           </button>
         </PanelTitle>
 

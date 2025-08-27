@@ -8,7 +8,7 @@ export interface DownloadButtonBaseProps {
 
 const DownloadButtonBase = ({ onClick }: DownloadButtonBaseProps) => {
   return (
-    <IconButton label="export" onClick={onClick}>
+    <IconButton label="Export" onClick={onClick}>
       <DownloadIcon width="1em" height="1em" />
     </IconButton>
   );

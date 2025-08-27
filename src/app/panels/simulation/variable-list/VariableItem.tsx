@@ -2,12 +2,15 @@ import { memo, useState } from "react";
 import { clsx } from "clsx";
 
 import styles from "./VariableList.module.css";
+
 import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
+
 import { type Variable } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
 import VariableSettingsPropertyList from "./VariableSettingsPropertyList";
+import { Tooltip } from "@/components/Tooltip";
 
 export interface VariableItemProps {
   variable: Variable;
@@ -40,28 +43,32 @@ const VariableItem = memo(
       >
         <div className={styles.itemStrip}>
           <div className={styles.actionList}>
-            <button
-              className={clsx(styles.action, !settings.visible && styles.dim)}
-              onClick={handleVisiblityToggle}
-            >
-              {/* TODO: add aria stuff to this */}
-              {settings.visible ? (
-                <EyeIcon height="1em" width="1em" />
-              ) : (
-                <ClosedEyeIcon height="1em" width="1em" />
-              )}
-            </button>
+            <Tooltip text="Visibility" side="right">
+              <button
+                className={clsx(styles.action, !settings.visible && styles.dim)}
+                onClick={handleVisiblityToggle}
+              >
+                {/* TODO: add aria stuff to this */}
+                {settings.visible ? (
+                  <EyeIcon height="1em" width="1em" />
+                ) : (
+                  <ClosedEyeIcon height="1em" width="1em" />
+                )}
+              </button>
+            </Tooltip>
           </div>
 
           <span className={styles.itemName}>{settings.displayName}</span>
 
           <div className={styles.actionList}>
-            <button
-              className={clsx(styles.action, !settingsActive && styles.dim)}
-              onClick={handleSettingsToggle}
-            >
-              <SettingsIcon height={ICON_DIMS} width={ICON_DIMS} />
-            </button>
+            <Tooltip text="Settings" side="right">
+              <button
+                className={clsx(styles.action, !settingsActive && styles.dim)}
+                onClick={handleSettingsToggle}
+              >
+                <SettingsIcon height={ICON_DIMS} width={ICON_DIMS} />
+              </button>
+            </Tooltip>
           </div>
         </div>
 

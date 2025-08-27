@@ -20,6 +20,7 @@ import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
 import { ToastProvider } from "@/components/Toast";
+import { TooltipProvider } from "@/components/Tooltip";
 
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
 import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
@@ -46,9 +47,11 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const didIntialLoadRef = useRef(false);
   return (
     <ToastProvider>
-      <WorkspaceProvider didInitialLoadRef={didIntialLoadRef}>
-        {children}
-      </WorkspaceProvider>
+      <TooltipProvider>
+        <WorkspaceProvider didInitialLoadRef={didIntialLoadRef}>
+          {children}
+        </WorkspaceProvider>
+      </TooltipProvider>
     </ToastProvider>
   );
 };

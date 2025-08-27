@@ -1,8 +1,9 @@
 import clsx from "clsx";
 
+import buttonStyles from "./Button.module.css";
 import styles from "./IconButton.module.css";
 
-import Button from "./Button";
+import { Tooltip } from "./Tooltip";
 
 export interface IconButtonProps {
   label: string;
@@ -21,15 +22,20 @@ const IconButton = ({
   children,
 }: IconButtonProps) => {
   return (
-    <Button
-      className={clsx(styles.iconButton, styles[size])}
-      style="ghostText"
-      onClick={onClick}
-      disabled={disabled}
-      aria-label={label}
-    >
-      {children}
-    </Button>
+    <Tooltip text={label}>
+      <button
+        className={clsx(
+          buttonStyles.ghostText,
+          styles.iconButton,
+          styles[size],
+        )}
+        onClick={onClick}
+        disabled={disabled}
+        aria-label={label}
+      >
+        {children}
+      </button>
+    </Tooltip>
   );
 };
 

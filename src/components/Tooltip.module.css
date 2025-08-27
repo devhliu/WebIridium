@@ -1,0 +1,14 @@
+.content {
+  color: var(--color-layer3-fg);
+  font-size: var(--font-size-small);
+  background-color: var(--color-layer3-bg);
+  border: var(--border-layer3);
+  padding: var(--spacing-2) var(--spacing-3);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-small);
+  pointer-events: none;
+}
+
+.arrow {
+  fill: var(--color-layer3-border);
+}
