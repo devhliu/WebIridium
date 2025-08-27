@@ -10,7 +10,7 @@ import PlotSettingsPanel from "../PlotSettingsPanel";
 it("should run close on click", async () => {
   const onClose = vi.fn();
 
-  await renderWithinWorkspace(<PlotSettingsPanel onClose={onClose} />);
+  renderWithinWorkspace(<PlotSettingsPanel onClose={onClose} />);
 
   await userEvent.click(screen.getByLabelText("Close"));
 

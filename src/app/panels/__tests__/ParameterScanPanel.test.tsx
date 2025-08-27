@@ -13,8 +13,8 @@ import ParameterScanPanel from "../simulation/ParameterScanPanel.tsx";
 describe("run button", () => {
   const testButtonOptions = {
     buttonText: "Run",
-    render: async () => {
-      await renderWithinWorkspace(
+    render: () => {
+      renderWithinWorkspace(
         <div>
           <ParameterScanPanel visible />
           <PlotPanel />
@@ -28,8 +28,8 @@ describe("run button", () => {
   itShouldDisplayPlot(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
     ...testButtonOptions,
-    render: async () => {
-      await renderWithinWorkspace(
+    render: () => {
+      renderWithinWorkspace(
         <div>
           <ParameterScanPanel visible />
           <ForceModelUpdateButton />

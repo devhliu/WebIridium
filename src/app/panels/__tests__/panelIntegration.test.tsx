@@ -1,6 +1,6 @@
 import { test, expect, afterEach } from "vitest";
-import { screen, within } from "@testing-library/react";
-import { renderFlush, renderWithinWorkspace } from "@/testing-utils/render";
+import { render, screen, within, waitFor } from "@testing-library/react";
+import { renderWithinWorkspace } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
 
 import {
@@ -18,7 +18,7 @@ afterEach(() => {
 });
 
 test("panels should all be cancellable when a simulation is running", async () => {
-  await renderWithinWorkspace(
+  renderWithinWorkspace(
     <div>
       <TimeCoursePanel visible />
       <SteadyStatePanel visible />
@@ -38,13 +38,17 @@ test("panels should all be cancellable when a simulation is running", async () =
     within(steadyStatePanel).getByText("Compute");
   const runParameterScanButton = within(parameterScanPanel).getByText("Run");
 
+  await waitFor(() => {
+    expect(simulateTimeCourseButton).toBeEnabled();
+  });
+
   await userEvent.click(simulateTimeCourseButton);
 
   expect(simulateTimeCourseButton).toBeDisabled();
   expect(computeSteadyStateButton).toBeDisabled();
   expect(runParameterScanButton).toBeDisabled();
 
-  const cancelButton = within(timeCoursePanel).getByLabelText("Cancel");
+  const cancelButton = await within(timeCoursePanel).findByLabelText("Cancel");
   expect(cancelButton).toBeInTheDocument();
   expect(within(steadyStatePanel).getByLabelText("Cancel")).toBeInTheDocument();
   expect(
@@ -59,7 +63,7 @@ test("panels should all be cancellable when a simulation is running", async () =
 });
 
 test("clicking sliders button should toggle sliders panel", async () => {
-  await renderFlush(<App />);
+  render(<App />);
 
   expect(screen.queryByTestId("sliders-panel")).not.toBeInTheDocument();
 

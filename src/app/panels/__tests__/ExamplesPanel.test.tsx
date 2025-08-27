@@ -23,8 +23,8 @@ afterEach(() => {
   resetWorkerResponseDelay();
 });
 
-const renderExamples = async () => {
-  await renderWithinWorkspace(
+const renderExamples = () => {
+  renderWithinWorkspace(
     <div>
       <TimeCoursePanel visible />
       <ExamplesPanel visible />
@@ -33,7 +33,7 @@ const renderExamples = async () => {
 };
 
 it("should update simulation parameters with presets", async () => {
-  await renderExamples();
+  renderExamples();
 
   setWorkerResponseDelay(50);
 
@@ -63,7 +63,7 @@ it("should update simulation parameters with presets", async () => {
 
 // keeps failing :(
 it.skip("should make run the latest clicked example when multiple are clicked", async () => {
-  await renderExamples();
+  renderExamples();
 
   const janaWolfButton = screen.getByRole("button", {
     name: exampleFormattedNames[JANA_WOLF_MODEL_NAME],
@@ -91,7 +91,7 @@ it.skip("should make run the latest clicked example when multiple are clicked", 
 });
 
 it("should update independent variable if preset says so", async () => {
-  await renderExamples();
+  renderExamples();
 
   const lorenzButton = screen.getByRole("button", {
     name: exampleFormattedNames[LORENZ_NAME],

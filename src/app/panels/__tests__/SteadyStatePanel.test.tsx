@@ -13,8 +13,8 @@ import {
 describe("compute button", () => {
   const testButtonOptions = {
     buttonText: "Compute",
-    render: async () => {
-      await renderWithinWorkspace(
+    render: () => {
+      renderWithinWorkspace(
         <div>
           <SteadyStatePanel visible />
           <PlotPanel />
@@ -28,8 +28,8 @@ describe("compute button", () => {
   itShouldDisplayToasts(testButtonOptions);
   itShouldBeLoadingWhenModelIsLoading({
     ...testButtonOptions,
-    render: async () => {
-      await renderWithinWorkspace(
+    render: () => {
+      renderWithinWorkspace(
         <div>
           <SteadyStatePanel visible />
           <ForceModelUpdateButton />
