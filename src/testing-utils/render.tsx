@@ -8,8 +8,7 @@ import WorkspaceProvider from "@/app/WorkspaceProvider";
 
 /**
  * Renders then waits for microtask queue to clear.
- * This is useful for making sure all the promises for things like model info
- * get ran.
+ * Many of the tests do not work without this :( (weird timing issues with different machines)
  */
 export const renderFlush = async (node: React.ReactNode) => {
   render(node);
