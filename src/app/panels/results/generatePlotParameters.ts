@@ -40,7 +40,7 @@ const calculateBounds = (values: number[]): [number, number] => {
  * Same as (0...n).map(callback)
  */
 const mapCount = <T>(count: number, callback: (n: number) => T): T[] => {
-  const arr: T[] = Array(count);
+  const arr = Array<T>(count);
   for (let i = 0; i < count; i++) {
     arr[i] = callback(i);
   }

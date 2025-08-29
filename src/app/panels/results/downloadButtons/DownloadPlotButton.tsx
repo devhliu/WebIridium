@@ -1,4 +1,5 @@
 import { useAtomValue } from "jotai";
+import * as echarts from "echarts/core";
 
 import DownloadButtonBase from "./DownloadButtonBase";
 
@@ -29,12 +30,14 @@ const DownloadPlotButton = () => {
   const xAxisTitle = useAtomValue(xAxisTitleAtom);
   const yAxisTitle = useAtomValue(yAxisTitleAtom);
 
-  const handleClick = async () => {
+  const handleClick = () => {
     if (!result) return;
 
-    const { plotData, layout } = generatePlotParameters(
-      WIDTH,
-      HEIGHT,
+    const canvas = document.createElement("canvas");
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+
+    const { plotOptions } = generatePlotParameters(
       result,
       {
         ...graphSettings,
@@ -51,14 +54,16 @@ const DownloadPlotButton = () => {
       yAxisTitle,
     );
 
-    const fakeContainer = document.createElement("div");
-    const plot = await plotly.newPlot(fakeContainer, plotData, layout);
-    const imageUrl = await plotly.toImage(plot, {
-      format: "png",
-      width: WIDTH,
-      height: HEIGHT,
+    const chart = echarts.init(canvas as unknown as HTMLCanvasElement);
+    chart.setOption(plotOptions);
+
+    canvas.toBlob((blob) => {
+      if (!blob) return;
+
+      const url = URL.createObjectURL(blob);
+      promptDownloadUrl(`Plot of ${workspaceName}`, url);
+      URL.revokeObjectURL(url);
     });
-    promptDownloadUrl(`Plot of ${workspaceName}`, imageUrl);
   };
 
   return <DownloadButtonBase onClick={handleClick} />;

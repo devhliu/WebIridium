@@ -50,7 +50,7 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
             <IconButton label="Close" onClick={onClose}>
               <CrossIcon width="1em" height="1em" />
             </IconButton>
-            {/*<DownloadPlotButton />*/}
+            <DownloadPlotButton />
           </>
         ),
       },
