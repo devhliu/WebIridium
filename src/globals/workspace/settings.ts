@@ -37,7 +37,6 @@ export interface ParameterScanOptions {
 export interface AxisSettings {
   includeTitle: boolean;
   title: string;
-  showMajorTicks: boolean;
   color: string;
 }
 
@@ -166,14 +165,12 @@ export const graphSettingsAtom = atom<GraphSettings>({
   xAxis: {
     includeTitle: true,
     title: "", // empty means use placeholder
-    showMajorTicks: true,
     color: "#000",
   },
 
   yAxis: {
     includeTitle: true,
     title: "", // empty means use placeholder
-    showMajorTicks: true,
     color: "#000",
   },
 

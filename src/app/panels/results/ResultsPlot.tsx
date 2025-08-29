@@ -1,5 +1,7 @@
+import { useMemo, useRef, useEffect } from "react";
 import { useAtomValue } from "jotai";
-import Plot from "react-plotly.js";
+import * as echarts from "echarts/core";
+import { type ECharts } from "echarts/core";
 
 import FloatingLegend from "./FloatingLegend";
 
@@ -30,18 +32,50 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
   const xAxisTitle = useAtomValue(xAxisTitleAtom);
   const yAxisTitle = useAtomValue(yAxisTitleAtom);
 
-  const { plotData, layout, legendData } = generatePlotParameters(
-    width,
-    height,
-    result,
-    graphSettings,
-    variableSettingss,
-    timeCourseIndependentVariable,
-    scanIndependentVariable,
-    palette,
-    xAxisTitle,
-    yAxisTitle,
+  const plotContainerRef = useRef<HTMLDivElement>(null);
+  const plotRef = useRef<ECharts | null>(null);
+
+  const { plotOptions, legendData } = useMemo(
+    () =>
+      generatePlotParameters(
+        result,
+        graphSettings,
+        variableSettingss,
+        timeCourseIndependentVariable,
+        scanIndependentVariable,
+        palette,
+        xAxisTitle,
+        yAxisTitle,
+      ),
+    [
+      result,
+      graphSettings,
+      variableSettingss,
+      timeCourseIndependentVariable,
+      scanIndependentVariable,
+      palette,
+      xAxisTitle,
+      yAxisTitle,
+    ],
   );
+
+  useEffect(() => {
+    if (!plotRef.current) {
+      plotRef.current = echarts.init(plotContainerRef.current);
+    }
+
+    // might be null in a test
+    plotRef.current?.resize();
+  }, [width, height]);
+
+  useEffect(() => {
+    if (!plotRef.current) {
+      plotRef.current = echarts.init(plotContainerRef.current);
+    }
+
+    // might be null in a test
+    plotRef.current?.setOption(plotOptions, true);
+  }, [plotOptions]);
 
   return (
     <>
@@ -50,11 +84,13 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         legendData.length > 0 && (
           <FloatingLegend settings={legendSettings} data={legendData} />
         )}
-      <Plot
+      <div
+        ref={plotContainerRef}
         data-testid="results-plot"
-        data={plotData}
-        layout={layout}
-        config={{ responsive: true, displayModeBar: false }}
+        style={{
+          width: Number.isNaN(width) ? 0 : width,
+          height: Number.isNaN(height) ? 0 : height,
+        }}
       />
     </>
   );

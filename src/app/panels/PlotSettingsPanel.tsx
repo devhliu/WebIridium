@@ -273,12 +273,6 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
               value={axisSettings["color"]}
               onChange={handleAxisChangeFor("color")}
             />
-
-            <BooleanProperty
-              name="Show Major Ticks"
-              value={axisSettings["showMajorTicks"]}
-              onChange={handleAxisChangeFor("showMajorTicks")}
-            />
           </PropertyList>
         </PropertyAccordionItem>
 

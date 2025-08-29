@@ -1,16 +1,7 @@
 import { useRef, useState, type CSSProperties } from "react";
 import styles from "./FloatingLegend.module.css";
 import type { LegendSettings } from "@/globals/workspace/settings";
-import type { LineStyle } from "@/features/lineStyle";
-
-const dashArrays: Record<LineStyle, string> = {
-  solid: "",
-  dash: "5,5",
-  dot: "2,2",
-  dashdot: "5,5,2,5",
-  longdash: "10,5",
-  longdashdot: "10,5,2,5",
-};
+import { type LineStyle, DASH_ARRAYS } from "@/features/lineStyle";
 
 export interface LegendDataItem {
   title: string;
@@ -40,7 +31,7 @@ const LegendItem = ({
           y2="5"
           stroke={data.color}
           strokeWidth="2"
-          strokeDasharray={dashArrays[data.dash]}
+          strokeDasharray={DASH_ARRAYS[data.dash].join(",")}
         />
       </svg>
       <span style={{ color: settings.textColor }}>{data.title}</span>

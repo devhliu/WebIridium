@@ -1,7 +1,5 @@
 import { useAtomValue } from "jotai";
 
-import plotly from "plotly.js-dist-min";
-
 import DownloadButtonBase from "./DownloadButtonBase";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";

@@ -1,4 +1,5 @@
-import type { Data, Layout } from "plotly.js";
+import type { ECBasicOption } from "echarts/types/dist/shared";
+import type { LineSeriesOption } from "echarts/types/src/chart/line/LineSeries.js";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import type {
@@ -14,8 +15,14 @@ import {
   getPaletteColor,
   type Palette,
 } from "@/features/colors";
+import { DASH_ARRAYS } from "@/features/lineStyle";
 
-const RANGE_ROUND_PERCENT = 0.05;
+const AXIS_LABEL_MAX_DECIMALS = 2;
+
+// how many items you need before rotating x-axis labels by 45 degrees
+const X_AXIS_LABEL_ROTATE45_MIN = 12;
+
+const X_AXIS_LABEL_ROTATE90_MIN = 20;
 
 /**
  * Calculates min and max for a list of values.
@@ -29,9 +36,28 @@ const calculateBounds = (values: number[]): [number, number] => {
   return [min, max];
 };
 
+/**
+ * Same as (0...n).map(callback)
+ */
+const mapCount = <T>(count: number, callback: (n: number) => T): T[] => {
+  const arr: T[] = Array(count);
+  for (let i = 0; i < count; i++) {
+    arr[i] = callback(i);
+  }
+  return arr;
+};
+
+const axisLabelFormatter = (value: number): string => {
+  const asString = value.toString();
+  const asFixed = value.toFixed(AXIS_LABEL_MAX_DECIMALS);
+  if (asFixed.length > asString.length) {
+    return asString;
+  } else {
+    return asFixed;
+  }
+};
+
 export const generatePlotParameters = (
-  width: number,
-  height: number,
   result: SimulationResult,
   graphSettings: GraphSettings,
   variableSettingss: Record<string, VariableSettings>,
@@ -41,8 +67,7 @@ export const generatePlotParameters = (
   xAxisTitle: string,
   yAxisTitle: string,
 ): {
-  plotData: Data[];
-  layout: Partial<Layout>;
+  plotOptions: ECBasicOption;
   legendData: LegendDataItem[];
 } => {
   const {
@@ -60,7 +85,6 @@ export const generatePlotParameters = (
     isAutoscaledY,
     minY,
     maxY,
-    margin,
     xAxis,
     yAxis,
     majorGrid,
@@ -74,7 +98,7 @@ export const generatePlotParameters = (
     scanIndependentVariable,
   );
 
-  const plotData = [];
+  const series: LineSeriesOption[] = [];
   const legendData: LegendDataItem[] = [];
   // note that independent variable column might be null for time course if data was not collected for it
   const independentVariableColumn = columns.find(
@@ -117,14 +141,19 @@ export const generatePlotParameters = (
             )
           : settings.displayName;
 
-      plotData.push({
-        x: independentVariableColumn?.values,
-        y: values,
-        type: "scatter",
-        mode: "lines",
-        marker: { color: finalColor },
-        line: { width: settings.width, dash: settings.lineStyle },
+      series.push({
         name: title,
+        data: values.map((v, i) => [independentVariableColumn.values[i], v]),
+        type: "line",
+        lineStyle: {
+          width: settings.width,
+          color: finalColor,
+          type: DASH_ARRAYS[settings.lineStyle],
+        },
+        itemStyle: {
+          color: finalColor,
+          opacity: 0,
+        },
       });
 
       legendData.push({
@@ -136,12 +165,14 @@ export const generatePlotParameters = (
   }
 
   if (palette !== "Custom") {
-    for (const [i, data] of plotData.entries()) {
-      data.marker.color = getPaletteColor(palette, i / (plotData.length - 1));
+    for (const [i, data] of series.entries()) {
+      const color = getPaletteColor(palette, i / (series.length - 1));
+      data.lineStyle!.color = color;
+      data.itemStyle!.color = color;
     }
 
     for (const [i, data] of legendData.entries()) {
-      data.color = getPaletteColor(palette, i / (plotData.length - 1));
+      data.color = getPaletteColor(palette, i / (series.length - 1));
     }
   }
 
@@ -152,98 +183,169 @@ export const generatePlotParameters = (
       ? calculateBounds(independentVariableColumn.values)
       : [minX, maxX];
   const [rangeMinY, rangeMaxY] = isAutoscaledY
-    ? calculateBounds(plotData.map((data) => data.y).flat())
+    ? calculateBounds(
+        columns
+          .filter((c) => c.variableName !== independentVariableName)
+          .map((c) => c.values)
+          .flat(),
+      )
     : [minY, maxY];
-  const yPadding = (rangeMaxY - rangeMinY) * RANGE_ROUND_PERCENT;
 
-  const xMajorGridSettings = {
-    gridcolor: majorGrid.xColor,
-    gridwidth: majorGrid.xWidth,
-    dtick: (rangeMaxX - rangeMinX) / (majorGrid.numXGrids + 1),
-    showgrid: majorGrid.enabled.x,
-    showticklabels: xAxis.showMajorTicks,
+  const xMajorTickInterval = (rangeMaxX - rangeMinX) / majorGrid.numXGrids;
+  const xMajorTicks = mapCount(
+    majorGrid.numXGrids,
+    (n) => rangeMinX + xMajorTickInterval * n,
+  );
+
+  const yMajorTickInterval = (rangeMaxY - rangeMinY) / majorGrid.numYGrids;
+  const yMajorTicks = mapCount(
+    majorGrid.numYGrids,
+    (n) => rangeMinY + yMajorTickInterval * n,
+  );
+
+  const grid: Record<string, unknown> = {
+    show: true,
+    color: drawingAreaColor,
+    backgroundColor: drawingAreaColor,
+    borderColor: borderColor,
+    borderWidth: includeBorder ? borderThickness : 0,
   };
-  const yMajorGridSettings = {
-    gridcolor: majorGrid.yColor,
-    gridwidth: majorGrid.yWidth,
-    dtick: (rangeMaxY - rangeMinY) / (majorGrid.numYGrids + 1),
-    showgrid: majorGrid.enabled.y,
-    showticklabels: yAxis.showMajorTicks,
-  };
-  const xMinorGridSettings = {
-    gridcolor: minorGrid.xColor,
-    gridwidth: minorGrid.xWidth,
-    dtick: xMajorGridSettings.dtick / (minorGrid.numXGrids + 1),
-    showgrid: minorGrid.enabled.x,
-  };
-  const yMinorGridSettings = {
-    gridcolor: minorGrid.yColor,
-    gridwidth: minorGrid.yWidth,
-    dtick: yMajorGridSettings.dtick / (minorGrid.numYGrids + 1),
-    showgrid: minorGrid.enabled.y,
-  };
+
+  if (!legendSettings.isFloating) {
+    const approximateLegendWidth = legendSettings.isFloating
+      ? 0
+      : Math.min(
+          200,
+          Math.max(...series.map((s) => (s.name as string).length * 5.5)) + 66,
+        );
+    grid.right = approximateLegendWidth;
+  }
 
   return {
     legendData,
-    plotData: plotData as unknown as Data[],
-    layout: {
-      width,
-      height,
-      title: !includeTitle
-        ? undefined
-        : {
-            text: title,
-            font: {
-              color: titleColor,
-            },
-          },
-      paper_bgcolor: backgroundColor,
-      plot_bgcolor: drawingAreaColor,
-      xaxis: {
-        title: !xAxis.includeTitle ? undefined : { text: xAxisTitle },
-        range: [rangeMinX, rangeMaxX],
-        color: xAxis.color,
-        minor: xMinorGridSettings,
-        ...xMajorGridSettings,
+    plotOptions: {
+      grid: grid,
+      title: {
+        show: includeTitle,
+        text: title,
+        textStyle: {
+          color: titleColor,
+        },
       },
-      yaxis: {
-        title: !yAxis.includeTitle ? undefined : { text: yAxisTitle },
-        range: [rangeMinY - yPadding, rangeMaxY + yPadding],
-        color: yAxis.color,
-        minor: yMinorGridSettings,
-        ...yMajorGridSettings,
-      },
-      margin: {
-        l: margin,
-        r: margin,
-        b: margin,
-        t: margin,
-      },
-      shapes: !includeBorder
-        ? undefined
-        : [
-            {
-              type: "rect",
-              xref: "paper",
-              yref: "paper",
-              x0: 0,
-              y0: 0,
-              x1: 1,
-              y1: 1,
-              line: {
-                color: borderColor,
-                width: borderThickness,
-              },
-            },
-          ],
-      showlegend:
-        legendSettings.visible &&
-        !legendSettings.isFloating &&
-        legendData.length > 0,
       legend: {
-        // disable click toggling the item in the view since we want to control variable visibility manually
-        itemclick: false,
+        show: !legendSettings.isFloating,
+        type: "scroll",
+        orient: "vertical",
+        top: "center",
+        right: 0,
+        selectedMode: false,
       },
+      tooltip: {
+        trigger: "item",
+        formatter: (params: { seriesName: string; value: [number, number] }) =>
+          `${params.seriesName} (${params.value[0].toFixed(6)}, ${params.value[1].toFixed(6)})`,
+        padding: 4,
+        textStyle: {
+          fontSize: 12,
+        },
+      },
+      xAxis: {
+        type: "value",
+        name: xAxisTitle,
+        nameLocation: "center",
+        nameGap: 40,
+        nameTextStyle: {
+          fontSize: 16,
+          color: xAxis.color,
+        },
+        min: rangeMinX,
+        max: rangeMaxX,
+        splitLine: {
+          show: majorGrid.enabled.x,
+          lineStyle: {
+            width: majorGrid.xWidth,
+            color: majorGrid.xColor,
+          },
+        },
+        axisTick: {
+          show: majorGrid.enabled.x,
+          customValues: xMajorTicks,
+        },
+        axisLabel: {
+          customValues: xMajorTicks,
+          formatter: axisLabelFormatter,
+          rotate:
+            majorGrid.numXGrids >= X_AXIS_LABEL_ROTATE90_MIN
+              ? 90
+              : majorGrid.numXGrids >= X_AXIS_LABEL_ROTATE45_MIN
+                ? 45
+                : 0,
+          color: xAxis.color,
+        },
+        axisLine: {
+          lineStyle: {
+            color: xAxis.color,
+          },
+        },
+        minorTick: {
+          show: minorGrid.enabled.x,
+          splitNumber: minorGrid.numXGrids,
+        },
+        minorSplitLine: {
+          show: minorGrid.enabled.x,
+          lineStyle: {
+            width: minorGrid.xWidth,
+            color: minorGrid.xColor,
+          },
+        },
+      },
+      yAxis: {
+        type: "value",
+        name: yAxisTitle,
+        nameLocation: "center",
+        nameGap: 40,
+        nameTextStyle: {
+          fontSize: 16,
+          color: yAxis.color,
+        },
+        min: rangeMinY,
+        max: rangeMaxY,
+        splitLine: {
+          show: majorGrid.enabled.y,
+          lineStyle: {
+            width: majorGrid.yWidth,
+            color: majorGrid.yColor,
+          },
+        },
+        axisTick: {
+          show: majorGrid.enabled.y,
+          customValues: yMajorTicks,
+        },
+        axisLabel: {
+          customValues: yMajorTicks,
+          formatter: axisLabelFormatter,
+          color: yAxis.color,
+        },
+        axisLine: {
+          lineStyle: {
+            color: yAxis.color,
+          },
+        },
+        minorTick: {
+          show: minorGrid.enabled.y,
+          splitNumber: minorGrid.numYGrids,
+        },
+        minorSplitLine: {
+          show: minorGrid.enabled.y,
+          lineStyle: {
+            width: minorGrid.yWidth,
+            color: minorGrid.yColor,
+          },
+        },
+      },
+      series: series,
+      animation: false,
+      backgroundColor: backgroundColor,
     },
   };
 };

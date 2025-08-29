@@ -8,8 +8,8 @@ import { vi, afterEach, beforeAll } from "vitest";
 vi.mock("@/app/panels/EditorPanel.tsx");
 vi.mock("@/components/Toast.tsx");
 vi.mock("@/features/workers");
-vi.mock("react-plotly.js");
-vi.mock("plotly.js-dist-min");
+vi.mock("echarts");
+vi.mock("echarts/core");
 vi.mock("monaco-editor");
 
 afterEach(cleanup);
