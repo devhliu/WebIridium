@@ -47,14 +47,12 @@ const mapCount = <T>(count: number, callback: (n: number) => T): T[] => {
   return arr;
 };
 
+const formatWithMaxDecimals = (n: number, maxDecimals: number): string => {
+  return (Math.floor(n * 10 ** maxDecimals) / 10 ** maxDecimals).toString();
+};
+
 const axisLabelFormatter = (value: number): string => {
-  const asString = value.toString();
-  const asFixed = value.toFixed(AXIS_LABEL_MAX_DECIMALS);
-  if (asFixed.length > asString.length) {
-    return asString;
-  } else {
-    return asFixed;
-  }
+  return formatWithMaxDecimals(value, AXIS_LABEL_MAX_DECIMALS);
 };
 
 export const generatePlotParameters = (
@@ -244,8 +242,9 @@ export const generatePlotParameters = (
       tooltip: {
         trigger: "item",
         formatter: (params: { seriesName: string; value: [number, number] }) =>
-          `${params.seriesName} (${params.value[0].toFixed(6)}, ${params.value[1].toFixed(6)})`,
+          `${params.seriesName} (${formatWithMaxDecimals(params.value[0], 6)}, ${formatWithMaxDecimals(params.value[1], 6)})`,
         padding: 4,
+        borderWidth: 2,
         textStyle: {
           fontSize: 12,
         },

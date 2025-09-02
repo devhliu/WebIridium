@@ -1,9 +1,13 @@
 import { atom, useAtom, useAtomValue } from "jotai";
+
 import { simulationResultAtom } from "@/globals/workspace/simulation";
+
 import styles from "./results.module.css";
+
 import DataTable from "@/components/DataTable";
-import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
+
+import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
 
 const decimalPlacesAtom = atom(2);
 
@@ -79,7 +83,7 @@ const SteadyStateResultPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <div className={styles.steadyStateContainer}>
+      <div className={styles.steadyStateTables}>
         <NumericSliderProperty
           name="Decimal Places"
           value={decimalPlaces}

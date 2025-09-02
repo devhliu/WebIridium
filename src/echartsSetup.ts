@@ -3,11 +3,15 @@ import { LineChart } from "echarts/charts";
 import { LabelLayout } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
 
+import { Bar3DChart } from "echarts-gl/charts";
+import { Grid3DComponent } from "echarts-gl/components";
+
 import {
   TitleComponent,
   TooltipComponent,
   GridComponent,
   LegendComponent,
+  VisualMapComponent,
 } from "echarts/components";
 
 echarts.use([
@@ -15,7 +19,10 @@ echarts.use([
   TooltipComponent,
   GridComponent,
   LegendComponent,
+  VisualMapComponent,
   LineChart,
   LabelLayout,
   CanvasRenderer,
+  Bar3DChart,
+  Grid3DComponent,
 ]);

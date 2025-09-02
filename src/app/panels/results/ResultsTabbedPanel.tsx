@@ -4,13 +4,14 @@ import styles from "./results.module.css";
 
 import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
-import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
+import ThreeDIcon from "@/assets/icons/ThreeDIcon.svg?react";
 
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
 import TablePanel from "./TablePanel";
-import SteadyStateResultPanel from "./SteadyStateResultPanel";
+import SteadyStateTablePanel from "./SteadyStateTablePanel";
+import SteadyState3DPanel from "./SteadyState3DPanel";
 import DownloadPlotButton from "./downloadButtons/DownloadPlotButton";
 import DownloadTableButton from "./downloadButtons/DownloadTableButton";
 
@@ -27,9 +28,21 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
   if (simulationResult?.type === "steadyState") {
     tabs = [
       {
-        name: "Steady State",
-        icon: <SteadyStateIcon width="20" height="20" />,
-        render: () => <SteadyStateResultPanel />,
+        name: "Tables",
+        icon: <TableIcon width="20" height="20" />,
+        render: () => <SteadyStateTablePanel />,
+        renderActions: () => (
+          <>
+            <IconButton label="Close" onClick={onClose}>
+              <CrossIcon width="1em" height="1em" />
+            </IconButton>
+          </>
+        ),
+      },
+      {
+        name: "3D",
+        icon: <ThreeDIcon width="20" height="20" />,
+        render: () => <SteadyState3DPanel />,
         renderActions: () => (
           <>
             <IconButton label="Close" onClick={onClose}>
