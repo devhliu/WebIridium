@@ -20,7 +20,7 @@
     "antlr4ts": "^0.5.0-alpha.4",
     "chroma-js": "3.1.2",
     "clsx": "^2.1.1",
-    "echarts": "^6.0.0",
+    "echarts": "^5.6.0",
     "echarts-gl": "^2.0.9",
     "jotai": "^2.12.4",
     "jotai-scope": "^0.7.3",
