@@ -20,7 +20,7 @@ import { useToast } from "@/components/Toast";
 
 import { nameAtom } from "@/globals/workspace/settings";
 import { useSetAtom } from "jotai";
-import { updateEditorContentAtom } from "@/globals/workspace/model";
+import { setModelAtom } from "@/globals/workspace/model";
 
 type AutocompleteItems = { [group: string]: AutocompleteItem[] };
 
@@ -72,7 +72,7 @@ const incrementIndexFromItems = (
 export const WorkspaceBar = () => {
   const { toast } = useToast();
   const [workspaceName, setWorkspaceName] = useAtom(nameAtom);
-  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  const setModel = useSetAtom(setModelAtom);
 
   const popupRef = useRef<HTMLElement | null>(null);
 
@@ -133,9 +133,8 @@ export const WorkspaceBar = () => {
     try {
       const sbml = await loadBiomodelSbml(modelInfo);
       const antimony = await convertSbmlToAntimony(sbml);
-      setWorkspaceName(modelInfo.name);
 
-      void updateEditorContent({ content: antimony, skipDebounce: true });
+      void setModel({ name: modelInfo.name, content: antimony });
     } catch (e) {
       console.error(e);
       toast({

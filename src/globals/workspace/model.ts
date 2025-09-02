@@ -8,7 +8,7 @@ import type {
 import { TaskTermination } from "@/features/taskPool";
 import { getDefaultColorForIndex } from "@/features/colors";
 
-import { type VariableSettings } from "./settings";
+import { nameAtom, type VariableSettings } from "./settings";
 import { simulatorAtom } from "./simulator";
 import {
   independentVariableAtom,
@@ -17,6 +17,7 @@ import {
 } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
 import type { Atom } from "jotai";
+import { simulationResultAtom } from "./simulation";
 
 export type ModelStatus =
   | { type: "loading" }
@@ -215,6 +216,23 @@ export const updateEditorContentAtom = atom(
     }
 
     return true;
+  },
+);
+
+export interface SetModelOptions {
+  name: string;
+  content: string;
+}
+
+/**
+ * Set the model which updates the editor content, model name, and resets other relevant state.
+ */
+export const setModelAtom = atom(
+  null,
+  async (_get, set, { name, content }: SetModelOptions) => {
+    set(nameAtom, name);
+    set(simulationResultAtom, null);
+    await set(updateEditorContentAtom, { content, skipDebounce: true });
   },
 );
 

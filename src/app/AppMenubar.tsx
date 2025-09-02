@@ -29,17 +29,14 @@ import {
 } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/workspace/settings";
-import {
-  editorContentAtom,
-  updateEditorContentAtom,
-} from "@/globals/workspace/model";
+import { editorContentAtom, setModelAtom } from "@/globals/workspace/model";
 import GlobalSettingsDialog from "./panels/globalSettings/GlobalSettingsDialog";
 
 const AppMenubar = () => {
   const { toast } = useToast();
 
   const editorContent = useAtomValue(editorContentAtom);
-  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  const setModel = useSetAtom(setModelAtom);
   const workspaceName = useAtomValue(nameAtom);
 
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
@@ -85,6 +82,7 @@ const AppMenubar = () => {
     }
 
     const file = files[0];
+    const nameWithoutExtension = file.name.split(".")[0];
     const isSbml =
       file.name.toLowerCase().endsWith(".sbml") ||
       file.name.toLowerCase().endsWith(".xml");
@@ -100,7 +98,7 @@ const AppMenubar = () => {
           console.error(e);
         }
       }
-      void updateEditorContent({ content });
+      void setModel({ name: nameWithoutExtension, content });
     };
   };
 
