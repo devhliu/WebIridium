@@ -191,13 +191,13 @@ export const generatePlotParameters = (
 
   const xMajorTickInterval = (rangeMaxX - rangeMinX) / majorGrid.numXGrids;
   const xMajorTicks = mapCount(
-    majorGrid.numXGrids,
+    majorGrid.numXGrids + 1,
     (n) => rangeMinX + xMajorTickInterval * n,
   );
 
   const yMajorTickInterval = (rangeMaxY - rangeMinY) / majorGrid.numYGrids;
   const yMajorTicks = mapCount(
-    majorGrid.numYGrids,
+    majorGrid.numYGrids + 1,
     (n) => rangeMinY + yMajorTickInterval * n,
   );
 
@@ -289,7 +289,7 @@ export const generatePlotParameters = (
         },
         minorTick: {
           show: minorGrid.enabled.x,
-          splitNumber: minorGrid.numXGrids,
+          splitNumber: minorGrid.numXGrids + 1,
         },
         minorSplitLine: {
           show: minorGrid.enabled.x,
@@ -333,7 +333,7 @@ export const generatePlotParameters = (
         },
         minorTick: {
           show: minorGrid.enabled.y,
-          splitNumber: minorGrid.numYGrids,
+          splitNumber: minorGrid.numYGrids + 1,
         },
         minorSplitLine: {
           show: minorGrid.enabled.y,
