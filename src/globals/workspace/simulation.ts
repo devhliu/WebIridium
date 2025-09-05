@@ -32,7 +32,7 @@ import {
   variableSettingssAtom,
 } from "./settings";
 import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
-import { currentRightPanelAtom } from "./layout";
+import { currentBottomPanelAtom, currentRightPanelAtom } from "./layout";
 import { TaskTermination } from "@/features/taskPool";
 import { tryAddToHistoryAtom } from "./history";
 
@@ -59,10 +59,15 @@ export const isSimulatingAtom = atom((get) =>
 
 // exported simulation action atoms
 
-const getVariableValues = (
-  sliderStates: Record<string, VariableSliderState>,
-  variableMap: Map<string, Variable>,
-): Record<string, number> => {
+const getVariableValues = (get: Getter): Record<string, number> => {
+  // if sliders panel is not open, do not use them
+  if (get(currentBottomPanelAtom) !== "Sliders") {
+    return {};
+  }
+
+  const sliderStates = get(variableSliderStatesAtom);
+  const variableMap = get(variablesMapAtom);
+
   const values: Record<string, number> = {};
   for (const [name, state] of Object.entries(sliderStates)) {
     const variable = variableMap.get(name) as SettableVariable;
@@ -189,10 +194,7 @@ export const simulateTimeCourseAtom = atom(
                   variableSettings[v.name].visible,
               ),
             },
-            variableValues: getVariableValues(
-              get(variableSliderStatesAtom),
-              get(variablesMapAtom),
-            ),
+            variableValues: getVariableValues(get),
           },
           abortSignal,
         );
@@ -214,10 +216,7 @@ export const computeSteadyStateAtom = atom(
           get(editorContentAtom),
           {
             parameters: null,
-            variableValues: getVariableValues(
-              get(variableSliderStatesAtom),
-              get(variablesMapAtom),
-            ),
+            variableValues: getVariableValues(get),
           },
           abortSignal,
         );
@@ -278,10 +277,7 @@ export const runParameterScanAtom = atom(
         const parameterSetName = (
           variablesMap.get(parameter) as SettableVariable
         ).setName;
-        const variableValues = getVariableValues(
-          get(variableSliderStatesAtom),
-          get(variablesMapAtom),
-        );
+        const variableValues = getVariableValues(get);
 
         if (parameterScanOptions.mode === "timeCourse") {
           const scanTimeCourseParameters: TimeCourseParameters = {
