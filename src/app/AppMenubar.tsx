@@ -6,6 +6,7 @@ import {
   MenubarRoot,
   MenubarMenu,
   MenubarItem,
+  MenubarLinkItem,
   MenubarRadioItem,
   MenubarCheckboxItem,
   MenubarRadioGroup,
@@ -183,6 +184,10 @@ const AppMenubar = () => {
 
         <MenubarMenu name="Help">
           <MenubarItem name="Help" onSelect={() => setHelpOpen(true)} />
+          <MenubarLinkItem
+            name="Antimony Reference"
+            href="https://tellurium.readthedocs.io/en/latest/antimony.html"
+          />
           <MenubarItem
             name="About Web Iridium"
             onSelect={() => setAboutOpen(true)}

@@ -51,6 +51,10 @@
   }
 }
 
+a.item {
+  text-decoration: none;
+}
+
 .item-indicator {
   position: absolute;
   left: var(--spacing-4);

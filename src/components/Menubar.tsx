@@ -59,6 +59,22 @@ export const MenubarItem = ({
   );
 };
 
+export const MenubarLinkItem = ({
+  name,
+  href,
+}: {
+  name: string;
+  href: string;
+}) => {
+  return (
+    <RadixMenubar.Item asChild>
+      <a className={styles.item} href={href} target="_blank">
+        {name}
+      </a>
+    </RadixMenubar.Item>
+  );
+};
+
 export const MenubarRadioGroup = ({
   value,
   onValueChange,
