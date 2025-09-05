@@ -1,10 +1,7 @@
-import { Dialog as RadixDialog, VisuallyHidden } from "radix-ui";
-
 import styles from "./globalSettings.module.css";
 
-import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
-
 import GlobalSettingsPanel from "./GlobalSettingsPanel";
+import Dialog from "@/components/Dialog";
 
 export interface GlobalSettingsDialog {
   onClose: () => void;
@@ -12,33 +9,17 @@ export interface GlobalSettingsDialog {
 
 const GlobalSettingsDialog = ({ onClose }: GlobalSettingsDialog) => {
   return (
-    <RadixDialog.Root
-      defaultOpen={true}
-      onOpenChange={(open) => {
-        if (!open) onClose();
-      }}
+    <Dialog
+      title="Settings"
+      description="Edit settings"
+      showDescription={false}
+      onClose={onClose}
+      className={styles.dialog}
     >
-      <RadixDialog.Portal>
-        <RadixDialog.Overlay className="overlay" />
-        <RadixDialog.Content className={styles.dialog}>
-          <RadixDialog.Title className={styles.title}>
-            Settings
-          </RadixDialog.Title>
-          <RadixDialog.Close className={styles.close}>
-            <CrossIcon />
-          </RadixDialog.Close>
-          <VisuallyHidden.Root asChild>
-            <RadixDialog.Description className={styles.description}>
-              Edit settings
-            </RadixDialog.Description>
-          </VisuallyHidden.Root>
-
-          <div className={styles.panelContainer}>
-            <GlobalSettingsPanel />
-          </div>
-        </RadixDialog.Content>
-      </RadixDialog.Portal>
-    </RadixDialog.Root>
+      <div className={styles.panelContainer}>
+        <GlobalSettingsPanel />
+      </div>
+    </Dialog>
   );
 };
 

@@ -1,11 +1,10 @@
 import { useState } from "react";
+import clsx from "clsx";
 
 import styles from "./ShareDialog.module.css";
 import buttonStyles from "@/components/Button.module.css";
-import { Dialog as RadixDialog } from "radix-ui";
 
-import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
-import clsx from "clsx";
+import Dialog from "@/components/Dialog";
 
 export interface ShareDialogProps {
   url: string;
@@ -27,49 +26,34 @@ const ShareDialog = ({ url, onClose }: ShareDialogProps) => {
   };
 
   return (
-    <RadixDialog.Root
-      defaultOpen={true}
-      onOpenChange={(open) => {
-        if (!open) onClose();
-      }}
+    <Dialog
+      title="Share"
+      description="Copy the link to share your model with others."
+      onClose={onClose}
     >
-      <RadixDialog.Portal>
-        <RadixDialog.Overlay className="overlay" />
-        <RadixDialog.Content className={styles.content}>
-          <RadixDialog.Title className={styles.title}>Share</RadixDialog.Title>
-          <RadixDialog.Description className={styles.description}>
-            Copy the link to share your model with others.
-          </RadixDialog.Description>
-
-          <RadixDialog.Close className={styles.close}>
-            <CrossIcon />
-          </RadixDialog.Close>
-
-          <div className={styles.urlContainer}>
-            <input
-              className={styles.url}
-              id="url-share-link"
-              type="url"
-              value={url}
-              readOnly
-              autoFocus
-              onFocus={(e) => e.target.select()}
-            />
-            <button
-              className={clsx(
-                buttonStyles.default,
-                copied && styles.copied,
-                styles.copy,
-              )}
-              onClick={handleCopy}
-              disabled={copied}
-            >
-              {copied ? "Copied!" : "Copy"}
-            </button>
-          </div>
-        </RadixDialog.Content>
-      </RadixDialog.Portal>
-    </RadixDialog.Root>
+      <div className={styles.urlContainer}>
+        <input
+          className={styles.url}
+          id="url-share-link"
+          type="url"
+          value={url}
+          readOnly
+          autoFocus
+          onFocus={(e) => e.target.select()}
+        />
+        <button
+          className={clsx(
+            buttonStyles.default,
+            copied && styles.copied,
+            styles.copy,
+          )}
+          onClick={handleCopy}
+          disabled={copied}
+        >
+          {copied ? "Copied!" : "Copy"}
+        </button>
+      </div>
+    </Dialog>
   );
 };
 

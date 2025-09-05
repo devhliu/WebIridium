@@ -205,21 +205,3 @@ body {
   transition-duration: 0ms !important;
   transition-delay: 0 !important;
 }
-
-/* Useful global classes */
-
-.overlay {
-  background-color: rgba(0, 0, 0, 0.6);
-  position: fixed;
-  inset: 0;
-  animation: overlayShow var(--timing-fast) ease-in;
-}
-
-@keyframes overlayShow {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}

@@ -1,33 +1,6 @@
 .dialog {
-  position: fixed;
-  top: 50%;
-  left: 50%;
   height: 60%;
   aspect-ratio: 1 / 0.85;
-  transform: translate(-50%, -50%);
-  color: var(--color-layer1-fg);
-  background-color: var(--color-layer1-bg);
-  border: var(--border-layer1);
-  border-radius: var(--border-radius-large);
-  padding: var(--spacing-dialog);
-  box-shadow: var(--shadow-medium);
-}
-
-.title {
-  margin: 0;
-  color: var(--color-layer1-fg-dim);
-  font-size: var(--font-size-big);
-}
-
-.close {
-  position: absolute;
-  background-color: transparent;
-  border: none;
-  color: var(--color-layer1-fg-dim);
-  top: var(--spacing-dialog);
-  right: var(--spacing-dialog);
-  padding: 0;
-  cursor: pointer;
 }
 
 .panel-container {
