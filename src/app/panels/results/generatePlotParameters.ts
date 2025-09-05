@@ -217,6 +217,8 @@ export const generatePlotParameters = (
           Math.max(...series.map((s) => (s.name as string).length * 5.5)) + 66,
         );
     grid.right = approximateLegendWidth;
+  } else {
+    grid.left = "center";
   }
 
   return {
