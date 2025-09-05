@@ -21,8 +21,9 @@ const AXIS_LABEL_MAX_DECIMALS = 2;
 
 // how many items you need before rotating x-axis labels by 45 degrees
 const X_AXIS_LABEL_ROTATE45_MIN = 12;
-
 const X_AXIS_LABEL_ROTATE90_MIN = 20;
+
+const PADDING = 50; // hard-coded but whatever
 
 /**
  * Calculates min and max for a list of values.
@@ -207,9 +208,14 @@ export const generatePlotParameters = (
     backgroundColor: drawingAreaColor,
     borderColor: borderColor,
     borderWidth: includeBorder ? borderThickness : 0,
+    containLabel: true,
+    top: PADDING,
+    left: PADDING,
+    right: PADDING,
+    bottom: PADDING,
   };
 
-  if (!legendSettings.isFloating) {
+  if (!legendSettings.isFloating && legendSettings.visible) {
     const approximateLegendWidth = legendSettings.isFloating
       ? 0
       : Math.min(
@@ -233,7 +239,7 @@ export const generatePlotParameters = (
         },
       },
       legend: {
-        show: !legendSettings.isFloating,
+        show: !legendSettings.isFloating && legendSettings.visible,
         type: "scroll",
         orient: "vertical",
         top: "center",
