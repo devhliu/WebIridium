@@ -226,6 +226,7 @@ export const generatePlotParameters = (
       title: {
         show: includeTitle,
         text: title,
+        left: "center",
         textStyle: {
           fontWeight: "normal",
           color: titleColor,
