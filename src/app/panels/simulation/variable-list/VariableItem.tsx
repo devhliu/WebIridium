@@ -2,9 +2,9 @@ import { memo, useState } from "react";
 import { clsx } from "clsx";
 
 import styles from "./VariableList.module.css";
+import checkboxStyles from "@/components/input/Checkbox.module.css";
 
-import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
-import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
 
 import { type Variable } from "@/features/simulation/Simulator";
@@ -43,19 +43,25 @@ const VariableItem = memo(
       >
         <div className={styles.itemStrip}>
           <div className={styles.actionList}>
-            <Tooltip text="Visibility" side="right">
-              <button
-                className={clsx(styles.action, !settings.visible && styles.dim)}
-                onClick={handleVisiblityToggle}
-              >
-                {/* TODO: add aria stuff to this */}
-                {settings.visible ? (
-                  <EyeIcon height="1em" width="1em" />
-                ) : (
-                  <ClosedEyeIcon height="1em" width="1em" />
-                )}
-              </button>
-            </Tooltip>
+            <button
+              className={clsx(
+                styles.action,
+                checkboxStyles.root,
+                styles.visibleAction,
+                !settings.visible && styles.dim,
+              )}
+              onClick={handleVisiblityToggle}
+              data-state={settings.visible ? "checked" : null}
+            >
+              {/* TODO: add aria stuff to this */}
+              {settings.visible && (
+                <CheckIcon
+                  className={styles.indicator}
+                  height="1em"
+                  width="1em"
+                />
+              )}
+            </button>
           </div>
 
           <span className={styles.itemName}>{settings.displayName}</span>

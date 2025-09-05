@@ -1,6 +1,8 @@
 import { useState } from "react";
 import clsx from "clsx";
+
 import styles from "./VariableList.module.css";
+import checkboxStyles from "@/components/input/Checkbox.module.css";
 
 import { type Variable } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
@@ -8,8 +10,8 @@ import VariableItem from "./VariableItem";
 import { Tooltip } from "@/components/Tooltip";
 
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
-import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
-import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
+import DashIcon from "@/assets/icons/DashIcon.svg?react";
 
 const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
 
@@ -71,14 +73,34 @@ const VariableGroup = ({
         <div className={styles.actionList}>
           <Tooltip text="Group Visibility" side="right">
             <button
-              className={clsx(styles.action, !areAllVisible && styles.dim)}
+              className={clsx(
+                styles.action,
+                styles.visibleAction,
+                checkboxStyles.root,
+                !areAllVisible && styles.dim,
+              )}
+              data-state={
+                areAllVisible
+                  ? "checked"
+                  : areSomeVisible
+                    ? "indeterminate"
+                    : null
+              }
               onClick={handleToggleAll}
             >
-              {areAllVisible || areSomeVisible ? (
-                <EyeIcon height="1em" width="1em" />
-              ) : (
-                <ClosedEyeIcon height="1em" width="1em" />
-              )}
+              {areAllVisible ? (
+                <CheckIcon
+                  className={checkboxStyles.indiactor}
+                  height="1em"
+                  width="1em"
+                />
+              ) : areSomeVisible ? (
+                <DashIcon
+                  className={checkboxStyles.indiactor}
+                  height="1em"
+                  width="1em"
+                />
+              ) : null}
             </button>
           </Tooltip>
         </div>
