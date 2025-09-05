@@ -18,7 +18,7 @@ import PlayIcon from "@/assets/icons/PlayIcon.svg?react";
 import PanelTitle from "./PanelTitle";
 import PulseLoader from "@/components/PulseLoader";
 
-import { updateEditorContentAtom } from "@/globals/workspace/model";
+import { setModelAtom } from "@/globals/workspace/model";
 import { useToast } from "@/components/Toast";
 import { simulateTimeCourseAtom } from "@/globals/workspace/simulation";
 import {
@@ -63,7 +63,7 @@ export interface ExamplesPanelProps {
 }
 
 const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
-  const updateEditorContent = useSetAtom(updateEditorContentAtom);
+  const setModel = useSetAtom(setModelAtom);
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const setTimeCourseParameters = useSetAtom(timeCourseParametersAtom);
   const setWorkspaceName = useSetAtom(nameAtom);
@@ -75,9 +75,10 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
   const handleRun = async (example: string) => {
     setRunningExample(example);
     if (
-      !(await updateEditorContent({
+      !(await setModel({
+        name: exampleFormattedNames[example],
         content: examples[example],
-        skipDebounce: true,
+        resetCurrentResult: false,
       }))
     ) {
       toast({

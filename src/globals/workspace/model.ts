@@ -222,6 +222,12 @@ export const updateEditorContentAtom = atom(
 export interface SetModelOptions {
   name: string;
   content: string;
+
+  /**
+   * Whether or not to set the current simulation result to null.
+   * default: true
+   */
+  resetCurrentResult?: boolean;
 }
 
 /**
@@ -229,10 +235,18 @@ export interface SetModelOptions {
  */
 export const setModelAtom = atom(
   null,
-  async (_get, set, { name, content }: SetModelOptions) => {
+  async (
+    _get,
+    set,
+    { name, content, resetCurrentResult = true }: SetModelOptions,
+  ): Promise<boolean> => {
     set(nameAtom, name);
-    set(simulationResultAtom, null);
-    await set(updateEditorContentAtom, { content, skipDebounce: true });
+
+    if (resetCurrentResult) {
+      set(simulationResultAtom, null);
+    }
+
+    return await set(updateEditorContentAtom, { content, skipDebounce: true });
   },
 );
 

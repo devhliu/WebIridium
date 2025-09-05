@@ -1,11 +1,29 @@
 /* nothing */
 
 .nothing-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
   padding: var(--spacing-panel);
+}
+
+.nothing-topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+.nothing-body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-grow: 1;
 }
 
 .nothing-label {
   color: var(--color-layer1-fg);
+  font-size: var(--font-size-big);
 }
 
 /* plot */

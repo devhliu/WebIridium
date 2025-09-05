@@ -88,7 +88,15 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
   } else {
     return (
       <div className={styles.nothingContainer}>
-        <p className={styles.nothingLabel}>Nothing yet...</p>
+        <div className={styles.nothingTopbar}>
+          <IconButton label="Close" onClick={onClose}>
+            <CrossIcon width="1em" height="1em" />
+          </IconButton>
+        </div>
+
+        <div className={styles.nothingBody}>
+          <p className={styles.nothingLabel}>No results.</p>
+        </div>
       </div>
     );
   }

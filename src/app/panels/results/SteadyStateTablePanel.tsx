@@ -43,7 +43,7 @@ const SteadyStateResultPanel = () => {
   const [decimalPlaces, setDecimalPlaces] = useAtom(decimalPlacesAtom);
 
   if (simulationResults?.type !== "steadyState") {
-    return <div>nothing yet...</div>;
+    return;
   }
 
   const concentrationColumns = [

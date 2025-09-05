@@ -9,11 +9,7 @@ export const TablePanel = () => {
   return (
     <div className={styles.panel}>
       <div className={styles.tableContainer}>
-        {!simulationResults ? (
-          "nothing yet..."
-        ) : (
-          <ResultsTable result={simulationResults} />
-        )}
+        {simulationResults && <ResultsTable result={simulationResults} />}
       </div>
     </div>
   );
