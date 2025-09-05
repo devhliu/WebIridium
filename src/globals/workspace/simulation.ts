@@ -10,7 +10,6 @@ import type {
   SettableVariable,
   SimulationResult,
   TimeCourseParameters,
-  Variable,
 } from "@/features/simulation/Simulator";
 import {
   getLinearDistribution,
@@ -31,7 +30,7 @@ import {
   timeCourseParametersAtom,
   variableSettingssAtom,
 } from "./settings";
-import { variableSliderStatesAtom, type VariableSliderState } from "./slider";
+import { variableSliderStatesAtom } from "./slider";
 import { currentBottomPanelAtom, currentRightPanelAtom } from "./layout";
 import { TaskTermination } from "@/features/taskPool";
 import { tryAddToHistoryAtom } from "./history";
