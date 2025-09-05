@@ -7,6 +7,7 @@ import styles from "./results.module.css";
 import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
 
 const MAX_DECIMALS = 6;
+const HOVER_COLOR = "#080";
 
 const formatWithMaxDecimals = (n: number, maxDecimals: number): string => {
   return (Math.floor(n * 10 ** maxDecimals) / 10 ** maxDecimals).toString();
@@ -123,6 +124,14 @@ const Results3DBarChart = ({ name, data }: ResultsThreeDBarChartProps) => {
             data: data.values.flatMap((row, y) =>
               row.map((value, x) => [x, y, value]),
             ),
+            emphasis: {
+              label: {
+                show: false,
+              },
+              itemStyle: {
+                color: HOVER_COLOR,
+              },
+            },
           },
         ],
       },
