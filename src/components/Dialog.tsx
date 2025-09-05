@@ -13,7 +13,7 @@ export interface DialogProps {
   showDescription?: boolean;
   onClose: () => void;
 
-  children: React.ReactNode;
+  children?: React.ReactNode;
   className?: string;
 }
 
@@ -41,18 +41,21 @@ const Dialog = ({
       <RadixDialog.Portal>
         <RadixDialog.Overlay className={styles.overlay} />
         <RadixDialog.Content className={clsx(styles.dialog, className)}>
-          <RadixDialog.Title className={styles.title}>
-            {title}
-          </RadixDialog.Title>
+          <div className={styles.top}>
+            <RadixDialog.Title className={styles.title}>
+              {title}
+            </RadixDialog.Title>
+
+            <RadixDialog.Close className={styles.close}>
+              <CrossIcon />
+            </RadixDialog.Close>
+          </div>
+
           {showDescription ? (
             descriptionElement
           ) : (
             <VisuallyHidden.Root>{descriptionElement}</VisuallyHidden.Root>
           )}
-
-          <RadixDialog.Close className={styles.close}>
-            <CrossIcon />
-          </RadixDialog.Close>
 
           {children}
         </RadixDialog.Content>

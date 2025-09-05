@@ -22,6 +22,9 @@ import {
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
 import ShareButton from "./ShareButton";
+import GlobalSettingsDialog from "./panels/globalSettings/GlobalSettingsDialog";
+import HelpDialog from "./panels/HelpDialog";
+import AboutDialog from "./panels/AboutDialog";
 
 import {
   convertAntimonyToSbml,
@@ -30,7 +33,6 @@ import {
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/workspace/settings";
 import { editorContentAtom, setModelAtom } from "@/globals/workspace/model";
-import GlobalSettingsDialog from "./panels/globalSettings/GlobalSettingsDialog";
 
 const AppMenubar = () => {
   const { toast } = useToast();
@@ -48,6 +50,8 @@ const AppMenubar = () => {
   );
 
   const [isSettingsOpen, setSettingsOpen] = useState(false);
+  const [isHelpOpen, setHelpOpen] = useState(false);
+  const [isAboutOpen, setAboutOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -116,6 +120,10 @@ const AppMenubar = () => {
         <GlobalSettingsDialog onClose={() => setSettingsOpen(false)} />
       )}
 
+      {isHelpOpen && <HelpDialog onClose={() => setHelpOpen(false)} />}
+
+      {isAboutOpen && <AboutDialog onClose={() => setAboutOpen(false)} />}
+
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
           <MenubarItem name="New" onSelect={() => null} />
@@ -171,6 +179,14 @@ const AppMenubar = () => {
           <MenubarSeparator />
 
           <MenubarItem name="Settings" onSelect={() => setSettingsOpen(true)} />
+        </MenubarMenu>
+
+        <MenubarMenu name="Help">
+          <MenubarItem name="Help" onSelect={() => setHelpOpen(true)} />
+          <MenubarItem
+            name="About Web Iridium"
+            onSelect={() => setAboutOpen(true)}
+          />
         </MenubarMenu>
       </MenubarRoot>
 

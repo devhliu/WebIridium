@@ -12,19 +12,29 @@
   animation: contentShow var(--timing-fast) ease-in-out;
 }
 
+.top {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-5);
+  justify-content: space-between;
+  align-items: center;
+}
+
 .title {
   margin: 0;
   color: var(--color-layer1-fg-dim);
   font-size: var(--font-size-big);
 }
 
+.description {
+  margin-block: var(--spacing-5);
+}
+
 .close {
-  position: absolute;
+  line-height: 0;
   background-color: transparent;
   border: none;
   color: var(--color-layer1-fg-dim);
-  top: var(--spacing-dialog);
-  right: var(--spacing-dialog);
   padding: 0;
   cursor: pointer;
 }

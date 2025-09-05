@@ -205,3 +205,16 @@ body {
   transition-duration: 0ms !important;
   transition-delay: 0 !important;
 }
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-block: var(--spacing-5);
+}
+
+p {
+  margin-block: var(--spacing-4);
+}
