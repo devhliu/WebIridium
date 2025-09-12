@@ -16,9 +16,18 @@ const formatWithMaxDecimals = (n: number, maxDecimals: number): string => {
 export interface ResultsThreeDBarChartProps {
   name: string;
   data: SteadyStateResultItem;
+  x: string;
+  y: string;
+  z: string;
 }
 
-const Results3DBarChart = ({ name, data }: ResultsThreeDBarChartProps) => {
+const Results3DBarChart = ({
+  name,
+  data,
+  x,
+  y,
+  z,
+}: ResultsThreeDBarChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts | null>(null);
 
@@ -67,14 +76,17 @@ const Results3DBarChart = ({ name, data }: ResultsThreeDBarChartProps) => {
         },
         animation: false,
         xAxis3D: {
+          name: x,
           type: "category",
           data: data.columns,
         },
         yAxis3D: {
+          name: y,
           type: "category",
           data: data.rows,
         },
         zAxis3D: {
+          name: z,
           type: "value",
         },
         tooltip: {

@@ -15,6 +15,13 @@ const ITEMS = [
   "Elasticities",
 ];
 
+const AXES: { [name: string]: { x: string; y: string; z: string } } = {
+  Jacobian: { x: "X", y: "Y", z: "Z" },
+  "Flux Control": { x: "Reaction", y: "Flux", z: "Coefficient" },
+  "Concentration Control": { x: "Reaction", y: "Species", z: "Coefficient" },
+  Elasticities: { x: "Species", y: "Reaction", z: "Elasticity" },
+};
+
 const ITEM_OPTIONS = Object.fromEntries(ITEMS.map((i) => [i, i]));
 
 type Item = (typeof ITEMS)[number];
@@ -45,7 +52,13 @@ const SteadyState3DPanel = () => {
           onChange={setItem}
         />
 
-        <Results3DBarChart name={item} data={resultItem} />
+        <Results3DBarChart
+          name={item}
+          data={resultItem}
+          x={AXES[item].x}
+          y={AXES[item].y}
+          z={AXES[item].z}
+        />
       </div>
     </div>
   );
