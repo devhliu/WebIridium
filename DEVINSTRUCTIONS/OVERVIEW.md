@@ -27,9 +27,9 @@ Please write tests for any changes you make, as much as is reasonable.
 
 ### React Layer
 
-- `src/app`: Specific UI components
+- `src/app`: UI components that depend on app state
 - `src/components`: Generic UI components
-- `src/assets`: Non-code assets (usually interacts with `src/globals`)
+- `src/assets`: Non-code assets
 
 ###
 
