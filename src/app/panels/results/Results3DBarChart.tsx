@@ -79,15 +79,24 @@ const Results3DBarChart = ({
           name: x,
           type: "category",
           data: data.columns,
+          axisPointer: {
+            show: false,
+          },
         },
         yAxis3D: {
           name: y,
           type: "category",
           data: data.rows,
+          axisPointer: {
+            show: false,
+          },
         },
         zAxis3D: {
           name: z,
           type: "value",
+          axisPointer: {
+            show: false,
+          },
         },
         tooltip: {
           formatter: (params: {
