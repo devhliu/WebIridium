@@ -2,10 +2,12 @@
 import "allotment/dist/style.css";
 
 import { useEffect, useRef } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { Allotment, LayoutPriority } from "allotment";
 
 import styles from "./App.module.css";
+
+import { setTheme, themeMediaQuery } from "@/features/theme";
 
 import {
   currentLeftPanelAtom,
@@ -14,6 +16,8 @@ import {
   LEFT_PANELS,
   currentRightPanelAtom,
 } from "@/globals/workspace/layout";
+import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
+import { saveAtom } from "@/globals/workspace/saving";
 
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
@@ -31,9 +35,8 @@ import HistoryPanel from "./panels/HistoryPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
 import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./panels/PlotSettingsPanel";
-import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
-import { setTheme, themeMediaQuery } from "@/features/theme";
-import { useAtomValue } from "jotai";
+
+const SAVE_INTERVAL = 60_000; // in ms
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -161,10 +164,35 @@ const ThemeUpdater = () => {
   return null;
 };
 
+const DataSaver = () => {
+  const save = useSetAtom(saveAtom);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      void save();
+    }, SAVE_INTERVAL);
+
+    return () => clearInterval(id);
+  }, [save]);
+
+  useEffect(() => {
+    const handleUnload = () => {
+      void save();
+    };
+
+    window.addEventListener("beforeunload", handleUnload);
+
+    return () => window.removeEventListener("beforeunload", handleUnload);
+  }, [save]);
+
+  return null;
+};
+
 const App = () => {
   return (
     <AppProvider>
       <ThemeUpdater />
+      <DataSaver />
       <AppContent />
     </AppProvider>
   );

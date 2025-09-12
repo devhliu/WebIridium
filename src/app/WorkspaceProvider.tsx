@@ -3,16 +3,21 @@ import { Provider, useSetAtom } from "jotai";
 
 import defaultModel from "@/assets/default.ant?raw";
 
-import { updateEditorContentAtom } from "@/globals/workspace/model";
+import { requestSavedData, type SavedDataV1 } from "@/features/saving";
+
+import { setModelAtom } from "@/globals/workspace/model";
+import { themeOptionAtom } from "@/globals/appearance";
 import {
-  nameAtom,
+  graphSettingsAtom,
   timeCourseParametersAtom,
+  variableSettingssAtom,
 } from "@/globals/workspace/settings";
 import {
   computeSteadyStateAtom,
   simulateTimeCourseAtom,
 } from "@/globals/workspace/simulation";
 import { readShareUrlFragment } from "@/features/share";
+import { updateAllHistoryAtom } from "@/globals/workspace/history";
 
 // simulation from share link will not be run if they use more number of points
 // than this.
@@ -23,28 +28,47 @@ const Initialize = ({
 }: {
   didInitialLoadRef: React.RefObject<boolean>;
 }) => {
-  const updateEditorContent = useSetAtom(updateEditorContentAtom);
-  const setWorkspaceName = useSetAtom(nameAtom);
+  const setModel = useSetAtom(setModelAtom);
   const setTimeCourseParameters = useSetAtom(timeCourseParametersAtom);
+
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const computeSteadyState = useSetAtom(computeSteadyStateAtom);
 
-  useEffect(() => {
-    const load = async (model: string): Promise<boolean> => {
-      return await updateEditorContent({ content: model, skipDebounce: true });
-    };
+  const setThemeOption = useSetAtom(themeOptionAtom);
+  const updateAllHistory = useSetAtom(updateAllHistoryAtom);
+  const setGraphSettings = useSetAtom(graphSettingsAtom);
+  const setVariableSettingss = useSetAtom(variableSettingssAtom);
 
+  useEffect(() => {
     if (!didInitialLoadRef.current) {
       didInitialLoadRef.current = true;
 
       const loadWithInitial = async () => {
+        let savedData: SavedDataV1 | null = null;
+        try {
+          savedData = await requestSavedData();
+        } catch (err) {
+          console.error(err);
+        }
+
+        if (savedData) {
+          setThemeOption(savedData.theme);
+          updateAllHistory(savedData.workspace.history);
+          setVariableSettingss(savedData.workspace.variableSettingss);
+          setGraphSettings(savedData.workspace.graphSettings);
+        }
+
         const result = await readShareUrlFragment(
           decodeURIComponent(location.hash.slice(1)),
         );
 
         if (result.type === "success") {
-          setWorkspaceName(result.data.name);
-          if (await load(result.data.code)) {
+          if (
+            await setModel({
+              name: result.data.name,
+              content: result.data.code,
+            })
+          ) {
             if (result.data.simulation.type === "timeCourse") {
               setTimeCourseParameters(result.data.simulation.parameters);
               if (
@@ -57,22 +81,36 @@ const Initialize = ({
               await computeSteadyState();
             }
           }
+        } else if (savedData) {
+          await setModel({
+            name: savedData.workspace.name,
+            content: savedData.workspace.content,
+          });
         } else {
-          await load(defaultModel);
+          await setModel({
+            name: "Starter Model",
+            content: defaultModel,
+          });
         }
       };
 
       void loadWithInitial();
     } else {
-      void load(defaultModel);
+      void setModel({
+        name: "Starter Model",
+        content: defaultModel,
+      });
     }
   }, [
     didInitialLoadRef,
-    updateEditorContent,
+    setModel,
     computeSteadyState,
     setTimeCourseParameters,
-    setWorkspaceName,
     simulateTimeCourse,
+    setGraphSettings,
+    setThemeOption,
+    setVariableSettingss,
+    updateAllHistory,
   ]);
 
   return null;

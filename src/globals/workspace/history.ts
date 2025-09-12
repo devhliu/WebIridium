@@ -1,6 +1,8 @@
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import { atom } from "jotai";
 
+import { saveAtom } from "./saving";
+
 export interface HistoryRecord {
   code: string;
   simulationResult: SimulationResult;
@@ -44,6 +46,7 @@ export const tryAddToHistoryAtom = atom(
         history.length > MAX_HISTORY_LENGTH ? history.slice(1) : history;
       set(_historyAtom, [...remainingHistory, record]);
 
+      void set(saveAtom);
       return true;
     } else if (
       record.unixTimestampMs - lastRecord.unixTimestampMs <
@@ -56,6 +59,13 @@ export const tryAddToHistoryAtom = atom(
     }
 
     return false;
+  },
+);
+
+export const updateAllHistoryAtom = atom(
+  null,
+  (_get, set, history: HistoryRecord[]) => {
+    set(_historyAtom, history);
   },
 );
 
