@@ -9,7 +9,7 @@ import type {
 
 import type { LegendDataItem } from "./FloatingLegend";
 import { getColumnsFromResult } from "./getColumnsFromResult";
-import { getParameterScanTitle } from "./shared";
+import { getParameterScanTitle } from "./getParameterScanTitle";
 import {
   getDefaultParameterScanColor,
   getPaletteColor,

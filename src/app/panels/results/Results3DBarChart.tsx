@@ -1,3 +1,7 @@
+/**
+ * This is used for steady state.
+ */
+
 import { useRef, useLayoutEffect, useEffect } from "react";
 import * as echarts from "echarts/core";
 import { type ECharts } from "echarts/core";
@@ -13,7 +17,7 @@ const formatWithMaxDecimals = (n: number, maxDecimals: number): string => {
   return (Math.floor(n * 10 ** maxDecimals) / 10 ** maxDecimals).toString();
 };
 
-export interface ResultsThreeDBarChartProps {
+export interface Results3DBarChartProps {
   name: string;
   data: SteadyStateResultItem;
   x: string;
@@ -21,13 +25,7 @@ export interface ResultsThreeDBarChartProps {
   z: string;
 }
 
-const Results3DBarChart = ({
-  name,
-  data,
-  x,
-  y,
-  z,
-}: ResultsThreeDBarChartProps) => {
+const Results3DBarChart = ({ name, data, x, y, z }: Results3DBarChartProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts | null>(null);
 

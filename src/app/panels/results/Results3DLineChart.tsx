@@ -1,0 +1,178 @@
+/**
+ * This is used for time series and parameter scan
+ */
+
+import { useRef, useLayoutEffect, useEffect } from "react";
+import { useAtomValue } from "jotai";
+import * as echarts from "echarts/core";
+import { type ECharts } from "echarts/core";
+
+import styles from "./results.module.css";
+
+import { getColumnsFromResult } from "./getColumnsFromResult";
+import { getDefaultParameterScanColor } from "@/features/colors";
+import { getParameterScanTitle } from "./getParameterScanTitle";
+import { DASH_ARRAYS } from "@/features/lineStyle";
+
+import type { SimulationResult } from "@/features/simulation/Simulator";
+import {
+  independentVariableAtom,
+  variableSettingssAtom,
+} from "@/globals/workspace/settings";
+import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
+
+export interface Results3DLineChartProps {
+  result: SimulationResult;
+}
+
+const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
+  const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
+  const scanIndependentVariable = useScanIndependentVariable();
+
+  const variableSettingss = useAtomValue(variableSettingssAtom);
+
+  const containerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<ECharts | null>(null);
+
+  // sychronize size
+  useLayoutEffect(() => {
+    if (!containerRef.current) return;
+
+    const updateSize = () => {
+      if (containerRef.current && chartRef.current) {
+        chartRef.current.resize();
+      }
+    };
+
+    updateSize();
+
+    const observer = new ResizeObserver((entries) => {
+      if (entries.length > 0) {
+        updateSize();
+      }
+    });
+
+    observer.observe(containerRef.current);
+
+    return () => observer.disconnect();
+  }, [containerRef]);
+
+  // sychronize data
+  useEffect(() => {
+    if (containerRef.current && !chartRef.current) {
+      chartRef.current = echarts.init(containerRef.current);
+    }
+
+    const [columns, independentVariableName] = getColumnsFromResult(
+      result,
+      timeCourseIndependentVariable,
+      scanIndependentVariable,
+    );
+    const independentVariableColumn = columns.find(
+      (c) => c.variableName === independentVariableName,
+    );
+    const parameterSettings =
+      result.type === "parameterScan"
+        ? variableSettingss[result.parameter]
+        : null;
+    if (!independentVariableColumn) return;
+
+    const series = [];
+    const titles = [];
+
+    for (const {
+      variableName,
+      values,
+      parameterValue,
+      scanPercent,
+    } of columns) {
+      if (variableName === independentVariableName) continue;
+
+      const settings = variableSettingss[variableName];
+      if (!settings.visible) continue;
+      let finalColor: string = settings.color;
+      if (result.type === "parameterScan" && result.mode === "timeCourse") {
+        finalColor = getDefaultParameterScanColor(settings.color, scanPercent!);
+      }
+
+      const title =
+        parameterValue !== undefined
+          ? getParameterScanTitle(
+              settings.displayName,
+              parameterSettings!.displayName,
+              parameterValue,
+            )
+          : settings.displayName;
+
+      series.push({
+        name: title,
+        data: values.map((v, i) => [
+          independentVariableColumn.values[i],
+          title,
+          v,
+        ]),
+        type: "line3D",
+        lineStyle: {
+          width: 4 * settings.width,
+          color: finalColor,
+          type: DASH_ARRAYS[settings.lineStyle],
+        },
+        itemStyle: {
+          color: finalColor,
+          opacity: 0,
+        },
+      });
+
+      titles.push(title);
+    }
+
+    chartRef.current?.setOption(
+      {
+        title: {
+          text: "Transition of substances in chemical reaction",
+          left: "center",
+          textStyle: {
+            fontSize: 20,
+            fontWeight: "normal",
+          },
+        },
+        tooltip: {},
+        animation: false,
+        xAxis3D: {
+          name: independentVariableName,
+          type: "value",
+          axisPointer: {
+            show: false,
+          },
+        },
+        yAxis3D: {
+          name: "Variable",
+          type: "category",
+          data: titles,
+          axisPointer: {
+            show: false,
+          },
+        },
+        zAxis3D: {
+          name: "Concentrations",
+          type: "value",
+          axisPointer: {
+            show: false,
+          },
+        },
+        grid3D: {},
+        series: series,
+      },
+      false,
+    );
+  }, [
+    result,
+    variableSettingss,
+    scanIndependentVariable,
+    timeCourseIndependentVariable,
+  ]);
+
+  return <div className={styles.threeDLineChart} ref={containerRef} />;
+};
+
+export default Results3DLineChart;

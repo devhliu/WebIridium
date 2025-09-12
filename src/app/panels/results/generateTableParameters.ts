@@ -4,7 +4,7 @@ import type { SimulationResult } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
 
 import { getColumnsFromResult } from "./getColumnsFromResult";
-import { getParameterScanTitle } from "./shared";
+import { getParameterScanTitle } from "./getParameterScanTitle";
 
 export const generateTableParameters = (
   result: SimulationResult,

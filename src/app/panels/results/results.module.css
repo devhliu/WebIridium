@@ -65,6 +65,14 @@
   --button-spacing: var(--spacing-4);
 }
 
+/* 3d line chart */
+
+.three-d-line-chart {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
 /* table */
 
 .table-container {

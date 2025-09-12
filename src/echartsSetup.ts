@@ -3,7 +3,7 @@ import { LineChart } from "echarts/charts";
 import { LabelLayout } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
 
-import { Bar3DChart } from "echarts-gl/charts";
+import { Line3DChart, Bar3DChart } from "echarts-gl/charts";
 import { Grid3DComponent } from "echarts-gl/components";
 
 import {
@@ -23,6 +23,7 @@ echarts.use([
   LineChart,
   LabelLayout,
   CanvasRenderer,
+  Line3DChart,
   Bar3DChart,
   Grid3DComponent,
 ]);
