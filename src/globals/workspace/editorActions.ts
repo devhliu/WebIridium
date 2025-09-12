@@ -15,5 +15,3 @@ export interface EditorActionsDispatcher {
 export const editorActionsDispatcherAtom = atom<EditorActionsDispatcher | null>(
   null,
 );
-
-export const editorActionsAtoms = [editorActionsDispatcherAtom];

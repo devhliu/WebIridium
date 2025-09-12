@@ -33,10 +33,3 @@ export const yAxisTitleAtom = atom((get) => {
     return graphSettings.yAxis.title;
   }
 });
-
-export const plotAtoms = [
-  defaultXAxisTitleAtom,
-  defaultYAxisTitleAtom,
-  xAxisTitleAtom,
-  yAxisTitleAtom,
-];

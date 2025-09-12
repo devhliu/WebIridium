@@ -279,16 +279,3 @@ export const setModelAtom = atom(
     });
   },
 );
-
-export const modelAtoms = [
-  _updateAbortControllerAtom,
-  _editorContentAtom,
-  _modelStatusAtom,
-  updateEditorContentAtom,
-
-  editorContentAtom,
-  modelStatusAtom,
-  variablesAtom,
-  variablesMapAtom,
-  updateEditorContentAtom,
-];

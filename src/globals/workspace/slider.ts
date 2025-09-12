@@ -145,14 +145,3 @@ export const loadPresetAndSimulateAtom = atom(
     });
   },
 );
-
-export const sliderAtoms = [
-  _queuedSliderSimulationIdAtom,
-  _setSlidersAndSimulateAtom,
-
-  isSliderSimulationQueuedAtom,
-  variableSliderStatesAtom,
-
-  updateSliderAndSimulateAtom,
-  loadPresetAndSimulateAtom,
-];

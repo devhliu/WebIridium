@@ -60,5 +60,3 @@ export const tryAddToHistoryAtom = atom(
 );
 
 export const historyAtom = atom((get) => get(_historyAtom));
-
-export const historyAtoms = [_historyAtom, tryAddToHistoryAtom, historyAtom];

@@ -1,39 +1,18 @@
 import { useEffect } from "react";
-import { useSetAtom } from "jotai";
-import { ScopeProvider } from "jotai-scope";
+import { Provider, useSetAtom } from "jotai";
 
 import defaultModel from "@/assets/default.ant?raw";
 
-import { modelAtoms, updateEditorContentAtom } from "@/globals/workspace/model";
-import { sliderAtoms } from "@/globals/workspace/slider";
-import { layoutAtoms } from "@/globals/workspace/layout";
+import { updateEditorContentAtom } from "@/globals/workspace/model";
 import {
   nameAtom,
-  settingsAtoms,
   timeCourseParametersAtom,
 } from "@/globals/workspace/settings";
 import {
   computeSteadyStateAtom,
   simulateTimeCourseAtom,
-  simulationAtoms,
 } from "@/globals/workspace/simulation";
 import { readShareUrlFragment } from "@/features/share";
-import { historyAtoms } from "@/globals/workspace/history";
-import { editorActionsAtoms } from "@/globals/workspace/editorActions";
-import { plotAtoms } from "@/globals/workspace/plot";
-import { simulatorAtoms } from "@/globals/workspace/simulator";
-
-const allWorkspaceAtoms = [
-  ...modelAtoms,
-  ...sliderAtoms,
-  ...settingsAtoms,
-  ...simulationAtoms,
-  ...layoutAtoms,
-  ...historyAtoms,
-  ...editorActionsAtoms,
-  ...plotAtoms,
-  ...simulatorAtoms,
-];
 
 // simulation from share link will not be run if they use more number of points
 // than this.
@@ -107,10 +86,10 @@ const WorkspaceProvider = ({
   children: React.ReactNode;
 }) => {
   return (
-    <ScopeProvider atoms={allWorkspaceAtoms}>
+    <Provider>
       <Initialize didInitialLoadRef={didInitialLoadRef} />
       {children}
-    </ScopeProvider>
+    </Provider>
   );
 };
 

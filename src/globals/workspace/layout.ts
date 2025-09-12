@@ -59,14 +59,3 @@ export const currentVeryRightPanelAtom = atom(
     set(_currentVeryRightPanelAtom, panel);
   },
 );
-
-export const layoutAtoms = [
-  _currentVeryRightPanelAtom,
-  _lastLeftPanelAtom,
-  _currentLeftPanelAtom,
-
-  currentLeftPanelAtom,
-  currentRightPanelAtom,
-  currentBottomPanelAtom,
-  currentVeryRightPanelAtom,
-];

@@ -43,9 +43,3 @@ export const updateSimulatorAtom = atom(null, (get, set, name: string) => {
     });
   }
 });
-
-export const simulatorAtoms = [
-  _simulatorAtom,
-  simulatorAtom,
-  updateSimulatorAtom,
-];

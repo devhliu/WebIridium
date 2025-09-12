@@ -206,16 +206,3 @@ export const graphSettingsAtom = atom<GraphSettings>({
     lineLength: 50,
   },
 });
-
-export const settingsAtoms = [
-  nameAtom,
-  paletteAtom,
-
-  variableSettingssAtom,
-  independentVariableAtom,
-
-  timeCourseParametersAtom,
-  parameterScanOptionsAtom,
-
-  graphSettingsAtom,
-];

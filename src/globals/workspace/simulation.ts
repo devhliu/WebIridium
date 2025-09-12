@@ -371,14 +371,3 @@ export const cancelSimulationAtom = atom(null, (get) => {
     internalState.abortController.abort();
   }
 });
-
-export const simulationAtoms = [
-  _simulationInternalStateAtom,
-
-  simulationResultAtom,
-
-  simulateTimeCourseAtom,
-  computeSteadyStateAtom,
-  runParameterScanAtom,
-  cancelSimulationAtom,
-];

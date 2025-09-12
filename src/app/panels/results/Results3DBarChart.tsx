@@ -158,7 +158,7 @@ const Results3DBarChart = ({
       },
       false,
     );
-  }, [name, data]);
+  }, [name, data, x, y, z]);
 
   return <div className={styles.steadyStateThreeDChart} ref={containerRef} />;
 };
