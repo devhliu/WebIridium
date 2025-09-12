@@ -38,14 +38,17 @@ export const variablesMapAtom: Atom<Map<string, Variable>> = atom(
   (get) => new Map(get(variablesAtom).map((v) => [v.name, v])),
 );
 
-// TODO: unit test this?
-const patchVariablesSettings = (
+/**
+ * Only exported so it can be unit tested.
+ * Should not be used elsewhere.
+ */
+export const patchVariablesSettings = (
   currentVariables: Variable[],
-  currentVariablesSettings: Record<string, VariableSettings>,
+  currentVariableSettingss: Record<string, VariableSettings>,
   newVariables: Variable[],
   overwriteCurrentVariables: boolean,
 ): Record<string, VariableSettings> => {
-  let count = Object.keys(currentVariablesSettings).length;
+  let count = Object.keys(currentVariableSettingss).length;
   const adding: Record<string, VariableSettings> = {};
 
   const hasVariableAlready = (variable: Variable): boolean =>
@@ -91,9 +94,9 @@ const patchVariablesSettings = (
   }
 
   if (Object.keys(adding).length === 0) {
-    return currentVariablesSettings;
+    return currentVariableSettingss;
   } else {
-    return { ...currentVariablesSettings, ...adding };
+    return { ...currentVariableSettingss, ...adding };
   }
 };
 
@@ -209,7 +212,6 @@ export const updateEditorContentAtom = atom(
       });
     }
 
-    set(_variablesAtom, newVariables);
     set(
       variableSettingssAtom,
       patchVariablesSettings(
@@ -219,6 +221,7 @@ export const updateEditorContentAtom = atom(
         overwriteCurrentVariables,
       ),
     );
+    set(_variablesAtom, newVariables);
     set(_modelStatusAtom, { type: "success" });
 
     // TODO: unit test this

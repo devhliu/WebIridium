@@ -24,6 +24,7 @@ const VariableList = ({
   onVariableSettingsChange,
 }: VariableListProps) => {
   const [searchTerm, setSearchTerm] = useState("");
+
   const filteredVariables = variables.filter(
     (variable) =>
       variableSettingss[variable.name].displayName
