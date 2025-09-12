@@ -40,21 +40,26 @@ export const variablesMapAtom: Atom<Map<string, Variable>> = atom(
 
 // TODO: unit test this?
 const patchVariablesSettings = (
+  currentVariables: Variable[],
   currentVariablesSettings: Record<string, VariableSettings>,
   newVariables: Variable[],
 ): Record<string, VariableSettings> => {
   let count = Object.keys(currentVariablesSettings).length;
   const adding: Record<string, VariableSettings> = {};
 
-  const isPriorityVariable = (variable: Variable) =>
+  const hasVariableAlready = (variable: Variable): boolean =>
+    Boolean(
+      currentVariables.find(
+        (v) => v.name === variable.name && v.type === variable.type,
+      ),
+    );
+
+  const isPriorityVariable = (variable: Variable): boolean =>
     variable.category === "Floating Species" || variable.category === "Time";
 
   // first pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
-    if (
-      !currentVariablesSettings[variable.name] &&
-      isPriorityVariable(variable)
-    ) {
+    if (isPriorityVariable(variable) && hasVariableAlready(variable)) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
@@ -68,10 +73,7 @@ const patchVariablesSettings = (
 
   // second pass for everything else
   for (const variable of newVariables) {
-    if (
-      !currentVariablesSettings[variable.name] &&
-      !isPriorityVariable(variable)
-    ) {
+    if (!isPriorityVariable(variable) && hasVariableAlready(variable)) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: false,
@@ -193,7 +195,11 @@ export const updateEditorContentAtom = atom(
     set(_variablesAtom, newVariables);
     set(
       variableSettingssAtom,
-      patchVariablesSettings(get(variableSettingssAtom), newVariables),
+      patchVariablesSettings(
+        get(variablesAtom),
+        get(variableSettingssAtom),
+        newVariables,
+      ),
     );
     set(_modelStatusAtom, { type: "success" });
 
