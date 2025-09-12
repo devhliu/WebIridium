@@ -57,9 +57,27 @@ export const patchVariablesSettings = (
     );
 
   const isPriorityVariable = (variable: Variable): boolean =>
-    variable.category === "Floating Species" || variable.category === "Time";
+    variable.category === "Floating Species";
 
-  // first pass for prioritized variables (this is so they get the good default colors)
+  // first pass for time so it always gets the same color
+  for (const variable of newVariables) {
+    if (
+      variable.category === "Time" &&
+      (overwriteCurrentVariables || !hasVariableAlready(variable))
+    ) {
+      adding[variable.name] = {
+        displayName: variable.defaultDisplayName,
+        visible: false,
+        color: getDefaultColorForIndex(count),
+        lineStyle: "solid",
+        width: 2,
+      };
+      count += 1;
+      break;
+    }
+  }
+
+  // second pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
     if (
       isPriorityVariable(variable) &&
@@ -67,7 +85,7 @@ export const patchVariablesSettings = (
     ) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
-        visible: variable.category !== "Time",
+        visible: true,
         color: getDefaultColorForIndex(count),
         lineStyle: "solid",
         width: 2,
@@ -76,9 +94,10 @@ export const patchVariablesSettings = (
     }
   }
 
-  // second pass for everything else
+  // third pass for everything else
   for (const variable of newVariables) {
     if (
+      variable.category !== "Time" &&
       !isPriorityVariable(variable) &&
       (overwriteCurrentVariables || !hasVariableAlready(variable))
     ) {
@@ -172,6 +191,11 @@ export const updateEditorContentAtom = atom(
         throw err;
       }
     }
+
+    // Sort new variables in alphabetical order. Time always comes first.
+    newVariables = newVariables.sort((a, b) =>
+      a.defaultDisplayName.localeCompare(b.defaultDisplayName),
+    );
 
     const independentVariable = get(independentVariableAtom);
     const parameterScanOptions = get(parameterScanOptionsAtom);
