@@ -43,6 +43,7 @@ const patchVariablesSettings = (
   currentVariables: Variable[],
   currentVariablesSettings: Record<string, VariableSettings>,
   newVariables: Variable[],
+  overwriteCurrentVariables: boolean,
 ): Record<string, VariableSettings> => {
   let count = Object.keys(currentVariablesSettings).length;
   const adding: Record<string, VariableSettings> = {};
@@ -59,7 +60,10 @@ const patchVariablesSettings = (
 
   // first pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
-    if (isPriorityVariable(variable) && hasVariableAlready(variable)) {
+    if (
+      isPriorityVariable(variable) &&
+      (overwriteCurrentVariables || hasVariableAlready(variable))
+    ) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: variable.category !== "Time",
@@ -73,7 +77,10 @@ const patchVariablesSettings = (
 
   // second pass for everything else
   for (const variable of newVariables) {
-    if (!isPriorityVariable(variable) && hasVariableAlready(variable)) {
+    if (
+      !isPriorityVariable(variable) &&
+      (overwriteCurrentVariables || hasVariableAlready(variable))
+    ) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: false,
@@ -92,6 +99,17 @@ const patchVariablesSettings = (
   }
 };
 
+export interface UpdateEditorContentOptions {
+  content: string;
+  /** default: false */
+  skipDebounce?: boolean;
+  /**
+   * default: false. Whether or not to overwrite any variables found in the model
+   * so they are fresh/unedited.
+   */
+  overwriteCurrentVariables?: boolean;
+}
+
 /**
  * Update editor content and associated things like model info, variables, etc.
  * @returns `true` on successful model update, `false` on failed model update
@@ -104,7 +122,8 @@ export const updateEditorContentAtom = atom(
     {
       content,
       skipDebounce = false,
-    }: { content: string; skipDebounce?: boolean },
+      overwriteCurrentVariables = false,
+    }: UpdateEditorContentOptions,
   ): Promise<boolean> => {
     // the !skipDebounce is for initial loads
     // if infinite loading errors on app initialization are experienced, check here
@@ -199,6 +218,7 @@ export const updateEditorContentAtom = atom(
         get(variablesAtom),
         get(variableSettingssAtom),
         newVariables,
+        overwriteCurrentVariables,
       ),
     );
     set(_modelStatusAtom, { type: "success" });
@@ -252,7 +272,11 @@ export const setModelAtom = atom(
       set(simulationResultAtom, null);
     }
 
-    return await set(updateEditorContentAtom, { content, skipDebounce: true });
+    return await set(updateEditorContentAtom, {
+      content,
+      skipDebounce: true,
+      overwriteCurrentVariables: true,
+    });
   },
 );
 
