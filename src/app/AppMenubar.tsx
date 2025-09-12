@@ -2,6 +2,8 @@ import { useState, useRef } from "react";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styles from "./AppMenubar.module.css";
 
+import defaultModel from "@/assets/default.ant?raw";
+
 import {
   MenubarRoot,
   MenubarMenu,
@@ -55,6 +57,13 @@ const AppMenubar = () => {
   const [isAboutOpen, setAboutOpen] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleNew = () => {
+    void setModel({
+      name: "Starter Model",
+      content: defaultModel,
+    });
+  };
 
   const handleDownloadAntimony = () => {
     promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
@@ -127,7 +136,7 @@ const AppMenubar = () => {
 
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
-          <MenubarItem name="New" onSelect={() => null} />
+          <MenubarItem name="New" onSelect={handleNew} />
           <MenubarItem
             name="Open..."
             onSelect={() => {
