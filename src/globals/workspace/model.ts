@@ -49,10 +49,8 @@ const patchVariablesSettings = (
   const adding: Record<string, VariableSettings> = {};
 
   const hasVariableAlready = (variable: Variable): boolean =>
-    Boolean(
-      currentVariables.find(
-        (v) => v.name === variable.name && v.type === variable.type,
-      ),
+    currentVariables.some(
+      (v) => v.name === variable.name && v.category === variable.category,
     );
 
   const isPriorityVariable = (variable: Variable): boolean =>
@@ -62,7 +60,7 @@ const patchVariablesSettings = (
   for (const variable of newVariables) {
     if (
       isPriorityVariable(variable) &&
-      (overwriteCurrentVariables || hasVariableAlready(variable))
+      (overwriteCurrentVariables || !hasVariableAlready(variable))
     ) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
@@ -79,7 +77,7 @@ const patchVariablesSettings = (
   for (const variable of newVariables) {
     if (
       !isPriorityVariable(variable) &&
-      (overwriteCurrentVariables || hasVariableAlready(variable))
+      (overwriteCurrentVariables || !hasVariableAlready(variable))
     ) {
       adding[variable.name] = {
         displayName: variable.defaultDisplayName,
