@@ -23,7 +23,6 @@
     "echarts": "^5.6.0",
     "echarts-gl": "^2.0.9",
     "jotai": "^2.12.4",
-    "jotai-scope": "^0.7.3",
     "monaco-editor": "^0.52.2",
     "radix-ui": "^1.4.2",
     "react": "^19.1.0",
