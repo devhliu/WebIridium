@@ -152,6 +152,9 @@ const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
           axisPointer: {
             show: false,
           },
+          axisLabel: {
+            interval: 0,
+          },
         },
         zAxis3D: {
           name: "Concentrations",
