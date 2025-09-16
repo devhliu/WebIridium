@@ -140,7 +140,7 @@ export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
   numberList: "1 2 3 4 5",
 });
 
-export const graphSettingsAtom = atom<GraphSettings>({
+export const defaultGraphSettings: GraphSettings = {
   backgroundColor: "#ffffff",
   drawingAreaColor: "#f1e7f4",
 
@@ -205,4 +205,6 @@ export const graphSettingsAtom = atom<GraphSettings>({
     padding: 15,
     lineLength: 50,
   },
-});
+};
+
+export const graphSettingsAtom = atom(defaultGraphSettings);

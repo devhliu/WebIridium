@@ -2,6 +2,7 @@ import { useAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 
 import {
+  defaultGraphSettings,
   graphSettingsAtom,
   paletteAtom,
   type AxisSettings,
@@ -15,8 +16,10 @@ import {
 } from "@/globals/workspace/plot";
 
 import styles from "./PlotSettingsPanel.module.css";
+import buttonStyles from "@/components/Button.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
 
+import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 
 import BooleanProperty from "@/components/property-list/BooleanProperty";
@@ -110,6 +113,14 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
           <CrossIcon width="1em" height="1em" aria-hidden />
         </IconButton>
       </PanelTitle>
+
+      <button
+        className={buttonStyles.default}
+        onClick={() => setGraphSettings(defaultGraphSettings)}
+      >
+        <ResetIcon width="1em" height="1em" />
+        Reset to Default
+      </button>
 
       <PropertyAccordion
         defaultOpen={["Bounds", "Graph", "Series", "Axes", "Grids", "Legend"]}
