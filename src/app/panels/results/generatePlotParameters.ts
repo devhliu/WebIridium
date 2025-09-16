@@ -184,7 +184,11 @@ export const generatePlotParameters = (
   const [rangeMinY, rangeMaxY] = isAutoscaledY
     ? calculateBounds(
         columns
-          .filter((c) => c.variableName !== independentVariableName)
+          .filter(
+            (c) =>
+              c.variableName !== independentVariableName &&
+              variableSettingss[c.variableName].visible,
+          )
           .map((c) => c.values)
           .flat(),
       )

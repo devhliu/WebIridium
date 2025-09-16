@@ -187,11 +187,7 @@ export const simulateTimeCourseAtom = atom(
             parameters: {
               ...get(timeCourseParametersAtom),
               resetInitialConditions,
-              includedVariables: variables.filter(
-                (v) =>
-                  v.name === independentVariable ||
-                  variableSettings[v.name].visible,
-              ),
+              includedVariables: variables,
             },
             variableValues: getVariableValues(get),
           },
@@ -282,11 +278,7 @@ export const runParameterScanAtom = atom(
           const scanTimeCourseParameters: TimeCourseParameters = {
             ...parameterScanOptions.timeCourseParameters,
             resetInitialConditions: true,
-            includedVariables: variables.filter(
-              (v) =>
-                v.name === simulator.scanIndependentVariableId ||
-                variableSettingss[v.name].visible,
-            ),
+            includedVariables: variables,
           };
 
           for (const value of scanValues) {
