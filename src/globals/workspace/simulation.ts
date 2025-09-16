@@ -25,10 +25,8 @@ import {
   variablesMapAtom,
 } from "./model";
 import {
-  independentVariableAtom,
   parameterScanOptionsAtom,
   timeCourseParametersAtom,
-  variableSettingssAtom,
 } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
 import { currentBottomPanelAtom, currentRightPanelAtom } from "./layout";
@@ -179,8 +177,6 @@ export const simulateTimeCourseAtom = atom(
       set,
       async (abortSignal: AbortSignal) => {
         const variables = get(variablesAtom);
-        const variableSettings = get(variableSettingssAtom);
-        const independentVariable = get(independentVariableAtom);
         return await get(simulatorAtom).simulateTimeCourse(
           get(editorContentAtom),
           {
@@ -226,7 +222,6 @@ export const runParameterScanAtom = atom(
     const simulator = get(simulatorAtom);
     const parameterScanOptions = get(parameterScanOptionsAtom);
     const variables = get(variablesAtom);
-    const variableSettingss = get(variableSettingssAtom);
     const editorContent = get(editorContentAtom);
     const variablesMap = get(variablesMapAtom);
 

@@ -75,7 +75,7 @@ export const patchVariablesSettings = (
       // it's a new variable, add it
       patches[variable.name] = {
         displayName: variable.defaultDisplayName,
-        visible: false,
+        visible: variable.category === "Floating Species",
         color: getDefaultColorForIndex(added),
         lineStyle: "solid",
         width: 2,

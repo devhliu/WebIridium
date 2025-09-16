@@ -25,7 +25,7 @@ describe("patchVariableSettings", () => {
     color: "green",
     visible: false,
     lineStyle: "solid",
-    width: 5,
+    width: 2,
   };
 
   const variableSettingss = {
@@ -61,7 +61,20 @@ describe("patchVariableSettings", () => {
     },
   ];
 
-  it("should not overwrite the variable when it is the same", () => {
+  it("should add new variables", () => {
+    const result = patchVariablesSettings([], {}, variables, false);
+
+    expect(result).toMatchObject(
+      Object.fromEntries(
+        Object.entries(variableSettingss).map(([name, settings]) => {
+          const { color, lineStyle, width, ...rest } = settings;
+          return [name, rest];
+        }),
+      ),
+    );
+  });
+
+  it("should not overwrite the variables when they are the same", () => {
     const result = patchVariablesSettings(
       variables,
       variableSettingss,
