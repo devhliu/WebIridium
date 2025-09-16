@@ -56,7 +56,7 @@ const VariableItem = memo(
               {/* TODO: add aria stuff to this */}
               {settings.visible && (
                 <CheckIcon
-                  className={styles.indicator}
+                  className={checkboxStyles.indicator}
                   height="1em"
                   width="1em"
                 />
@@ -64,7 +64,10 @@ const VariableItem = memo(
             </button>
           </div>
 
-          <span className={styles.itemName}>{settings.displayName}</span>
+          {/* TODO: this should probably be a label and the visibility toggle a checkbox? */}
+          <button className={styles.itemName} onClick={handleVisiblityToggle}>
+            {settings.displayName}
+          </button>
 
           <div className={styles.actionList}>
             <Tooltip text="Settings" side="right">

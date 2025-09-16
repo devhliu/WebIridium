@@ -100,7 +100,12 @@
 
 .item-name {
   flex-grow: 1;
+  background: none;
+  border: none;
+  color: inherit;
+  text-align: left;
   font-size: var(--font-size-small);
+  padding: 0;
 }
 
 .action-list {
