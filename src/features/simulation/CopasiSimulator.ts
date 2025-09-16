@@ -120,7 +120,8 @@ export class CopasiSimulator extends Simulator {
         variables.push({
           type: "normal",
           defaultDisplayName: `${specie.name}'`,
-          name: `${specie.id}.Rate`,
+          // COPASI wants name, not id for this. Not sure why.
+          name: `${specie.name}.Rate`,
           category: "Rate of Changes",
         });
 

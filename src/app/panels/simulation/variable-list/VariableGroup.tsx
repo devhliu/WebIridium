@@ -90,13 +90,13 @@ const VariableGroup = ({
             >
               {areAllVisible ? (
                 <CheckIcon
-                  className={checkboxStyles.indiactor}
+                  className={checkboxStyles.indicator}
                   height="1em"
                   width="1em"
                 />
               ) : areSomeVisible ? (
                 <DashIcon
-                  className={checkboxStyles.indiactor}
+                  className={checkboxStyles.indicator}
                   height="1em"
                   width="1em"
                 />
