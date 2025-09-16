@@ -24,10 +24,7 @@ import {
   variablesAtom,
   variablesMapAtom,
 } from "./model";
-import {
-  parameterScanOptionsAtom,
-  timeCourseParametersAtom,
-} from "./settings";
+import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
 import { currentBottomPanelAtom, currentRightPanelAtom } from "./layout";
 import { TaskTermination } from "@/features/taskPool";

@@ -180,18 +180,6 @@ export const WorkspaceBar = () => {
     await searchBiomodels(newTyping, BIOMODELS_SEARCH_LIMIT);
   };
 
-  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    // don't cancel if the user clicked on the popup
-    // (note: the blur still goes through since this gets called again with
-    // relatedTarget as null, but its OK because we only need to make sure
-    // there's enough time for the autocomplete item clicks to go through)
-    if (popupRef.current && popupRef.current.contains(e.relatedTarget)) {
-      return;
-    }
-
-    cancelInput();
-  };
-
   if (!open) {
     return (
       <button
@@ -226,7 +214,7 @@ export const WorkspaceBar = () => {
           autoFocus
           value={typing}
           placeholder="Rename your model or search for one"
-          onBlur={handleBlur}
+          onBlur={cancelInput}
           onKeyDown={handleKeyDown}
           onChange={handleChange}
           autoComplete="off"
@@ -381,7 +369,7 @@ const AutocompleteBiomodelItem = ({
         ref={buttonRef}
         className={buttonStyles.ghost}
         data-active={selected}
-        onClick={() => onClick(item)}
+        onPointerDown={() => onClick(item)}
       >
         <div
           className={clsx(
