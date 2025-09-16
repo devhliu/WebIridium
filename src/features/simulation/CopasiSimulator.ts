@@ -130,7 +130,7 @@ export class CopasiSimulator extends Simulator {
           name: specie.id,
           category: "Floating Species",
 
-          setName: `[${specie.name}]_0`,
+          setName: `[${specie.id}]_0`,
           defaultValue: specie.initial_concentration,
         });
       }
@@ -143,7 +143,7 @@ export class CopasiSimulator extends Simulator {
         name: param.id,
         category: "Parameters",
 
-        setName: param.name,
+        setName: param.id,
         defaultValue: param.initial_value,
       });
     }

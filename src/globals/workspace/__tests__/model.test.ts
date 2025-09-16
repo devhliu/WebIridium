@@ -118,6 +118,23 @@ describe("patchVariableSettings", () => {
           ? {
               ...v,
               category: "Boundary Species",
+            }
+          : v,
+      ),
+      false,
+    );
+
+    expect(result["test3"]).not.toStrictEqual(v3);
+  });
+
+  it("should overwrite the variable when the display name is different", () => {
+    const result = patchVariablesSettings(
+      variables,
+      variableSettingss,
+      variables.map((v) =>
+        v.name === "test3"
+          ? {
+              ...v,
               defaultDisplayName: "different",
             }
           : v,

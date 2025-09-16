@@ -48,8 +48,8 @@ export const patchVariablesSettings = (
   newVariables: Variable[],
   overwriteCurrentVariables: boolean,
 ): Record<string, VariableSettings> => {
-  let count = Object.keys(currentVariableSettingss).length;
-  const adding: Record<string, VariableSettings> = {};
+  let added = Object.keys(currentVariableSettingss).length;
+  const patches: Record<string, VariableSettings> = {};
 
   const hasVariableAlready = (variable: Variable): boolean =>
     currentVariables.some(
@@ -59,63 +59,56 @@ export const patchVariablesSettings = (
   const isPriorityVariable = (variable: Variable): boolean =>
     variable.category === "Floating Species";
 
-  // first pass for time so it always gets the same color
-  for (const variable of newVariables) {
-    if (
-      variable.category === "Time" &&
-      (overwriteCurrentVariables || !hasVariableAlready(variable))
-    ) {
-      adding[variable.name] = {
+  const patchVariable = (variable: Variable) => {
+    if (hasVariableAlready(variable) && !overwriteCurrentVariables) {
+      // it's an old variable, only overwrite the display name if necessary
+      if (
+        currentVariableSettingss[variable.name].displayName !==
+        variable.defaultDisplayName
+      ) {
+        patches[variable.name] = {
+          ...currentVariableSettingss[variable.name],
+          displayName: variable.defaultDisplayName,
+        };
+      }
+    } else {
+      // it's a new variable, add it
+      patches[variable.name] = {
         displayName: variable.defaultDisplayName,
         visible: false,
-        color: getDefaultColorForIndex(count),
+        color: getDefaultColorForIndex(added),
         lineStyle: "solid",
         width: 2,
       };
-      count += 1;
-      break;
+      added += 1;
+    }
+  };
+
+  // first pass for time so it always gets the same color
+  for (const variable of newVariables) {
+    if (variable.category === "Time") {
+      patchVariable(variable);
     }
   }
 
   // second pass for prioritized variables (this is so they get the good default colors)
   for (const variable of newVariables) {
-    if (
-      isPriorityVariable(variable) &&
-      (overwriteCurrentVariables || !hasVariableAlready(variable))
-    ) {
-      adding[variable.name] = {
-        displayName: variable.defaultDisplayName,
-        visible: true,
-        color: getDefaultColorForIndex(count),
-        lineStyle: "solid",
-        width: 2,
-      };
-      count += 1;
+    if (isPriorityVariable(variable)) {
+      patchVariable(variable);
     }
   }
 
   // third pass for everything else
   for (const variable of newVariables) {
-    if (
-      variable.category !== "Time" &&
-      !isPriorityVariable(variable) &&
-      (overwriteCurrentVariables || !hasVariableAlready(variable))
-    ) {
-      adding[variable.name] = {
-        displayName: variable.defaultDisplayName,
-        visible: false,
-        color: getDefaultColorForIndex(count),
-        width: 2,
-        lineStyle: "solid",
-      };
-      count += 1;
+    if (variable.category !== "Time" && !isPriorityVariable(variable)) {
+      patchVariable(variable);
     }
   }
 
-  if (Object.keys(adding).length === 0) {
+  if (Object.keys(patches).length === 0) {
     return currentVariableSettingss;
   } else {
-    return { ...currentVariableSettingss, ...adding };
+    return { ...currentVariableSettingss, ...patches };
   }
 };
 
