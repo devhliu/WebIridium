@@ -4,6 +4,7 @@ import * as echarts from "echarts/core";
 import DownloadButtonBase from "./DownloadButtonBase";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { datasetsAtom } from "@/globals/workspace/datasets";
 import {
   graphSettingsAtom,
   variableSettingssAtom,
@@ -29,6 +30,7 @@ const DownloadPlotButton = () => {
   const workspaceName = useAtomValue(nameAtom);
   const xAxisTitle = useAtomValue(xAxisTitleAtom);
   const yAxisTitle = useAtomValue(yAxisTitleAtom);
+  const datasets = useAtomValue(datasetsAtom);
 
   const handleClick = () => {
     if (!result) return;
@@ -52,6 +54,7 @@ const DownloadPlotButton = () => {
       palette,
       xAxisTitle,
       yAxisTitle,
+      datasets,
     );
 
     const chart = echarts.init(canvas as unknown as HTMLCanvasElement);

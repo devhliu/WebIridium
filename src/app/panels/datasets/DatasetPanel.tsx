@@ -17,7 +17,11 @@ import DatasetItem from "./DatasetItem.tsx";
 
 import DownloadIcon from "@/assets/icons/DownloadIcon.svg?react";
 
-const DatasetsPanel = () => {
+export interface DatasetsPanelProps {
+  visible: boolean;
+}
+
+const DatasetsPanel = ({ visible }: DatasetsPanelProps) => {
   const [datasets, setDatasets] = useAtom(datasetsAtom);
   const importCsvDataset = useSetAtom(importCsvDatasetAtom);
 
@@ -73,38 +77,42 @@ const DatasetsPanel = () => {
     );
   };
 
-  return (
-    <div className={styles.panel}>
-      <input
-        style={{ display: "none" }}
-        ref={fileInputRef}
-        type="file"
-        onChange={handleFileOpen}
-        accept=".csv"
-      />
+  if (visible) {
+    return (
+      <div className={styles.panel}>
+        <input
+          style={{ display: "none" }}
+          ref={fileInputRef}
+          type="file"
+          onChange={handleFileOpen}
+          accept=".csv"
+        />
 
-      <PanelTitle title="Datasets" />
+        <PanelTitle title="Datasets" />
 
-      <CancellableButton onClick={handleImport}>
-        <DownloadIcon width="1em" height="1em" />
-        Import Series
-      </CancellableButton>
+        <CancellableButton onClick={handleImport}>
+          <DownloadIcon width="1em" height="1em" />
+          Import Series
+        </CancellableButton>
 
-      <PropertyAccordion open={openDatasets} onOpenChange={setOpenDatasets}>
-        {datasets.length === 0 ? (
-          <p className={styles.noDatasets}>No datasets</p>
-        ) : (
-          datasets.map((d) => (
-            <DatasetItem
-              key={d.name}
-              dataset={d}
-              onDatasetChange={handleDatasetChange}
-            />
-          ))
-        )}
-      </PropertyAccordion>
-    </div>
-  );
+        <PropertyAccordion open={openDatasets} onOpenChange={setOpenDatasets}>
+          {datasets.length === 0 ? (
+            <p className={styles.noDatasets}>No datasets</p>
+          ) : (
+            datasets.map((d) => (
+              <DatasetItem
+                key={d.name}
+                dataset={d}
+                onDatasetChange={handleDatasetChange}
+              />
+            ))
+          )}
+        </PropertyAccordion>
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default DatasetsPanel;
