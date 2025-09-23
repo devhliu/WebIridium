@@ -1,6 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react";
 import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
+import { datasetsAtom } from "@/globals/workspace/datasets.ts";
 import styles from "./results.module.css";
 import ResultsPlot from "./ResultsPlot";
 import { Allotment } from "allotment";
@@ -9,6 +10,7 @@ import PlotQuickActionsPanel from "./PlotQuickActionsPanel.tsx";
 export const PlotPanel = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const simulationResults = useAtomValue(simulationResultAtom);
+  const datasets = useAtomValue(datasetsAtom);
   const [[width, height], setDimensions] = useState([0, 0]);
 
   useLayoutEffect(() => {
@@ -50,6 +52,7 @@ export const PlotPanel = () => {
           {simulationResults && (
             <ResultsPlot
               result={simulationResults}
+              datasets={datasets}
               height={height}
               width={width}
             />

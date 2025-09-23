@@ -1,5 +1,5 @@
 import * as echarts from "echarts/core";
-import { LineChart } from "echarts/charts";
+import { LineChart, ScatterChart } from "echarts/charts";
 import { LabelLayout } from "echarts/features";
 import { CanvasRenderer } from "echarts/renderers";
 
@@ -21,6 +21,7 @@ echarts.use([
   LegendComponent,
   VisualMapComponent,
   LineChart,
+  ScatterChart,
   LabelLayout,
   CanvasRenderer,
   Line3DChart,

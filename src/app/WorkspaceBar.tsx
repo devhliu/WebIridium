@@ -369,6 +369,7 @@ const AutocompleteBiomodelItem = ({
         ref={buttonRef}
         className={buttonStyles.ghost}
         data-active={selected}
+        // have to use pointer down because on safari, onClick triggers after the blur event which is too late
         onPointerDown={() => onClick(item)}
       >
         <div

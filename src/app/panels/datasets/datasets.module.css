@@ -1,0 +1,50 @@
+/** styles for stuff in the datasets panel */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--spacing-panel);
+  gap: var(--spacing-5);
+  height: 100%;
+  width: 100%;
+  overflow-y: auto;
+}
+
+.no-datasets {
+  text-align: center;
+  color: var(--color-layer1-fg);
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.variable-list {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-input-bg);
+  border-radius: var(--border-radius);
+  border: var(--border-layer2);
+  padding: var(--spacing-2);
+  gap: var(--spacing-2);
+}
+
+.item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+  background-color: var(--color-layer2-bg);
+  border: var(--border-layer2);
+  border-radius: var(--border-radius);
+  padding: var(--spacing-2);
+  box-shadow: var(--shadow-medium);
+}
+
+.item-title {
+  font-size: var(--font-size-medium);
+  color: var(--color-layer3-fg);
+  font-weight: normal;
+  margin: 0;
+}

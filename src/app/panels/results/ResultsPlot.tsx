@@ -14,15 +14,18 @@ import {
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "./generatePlotParameters";
+
 import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
+import type { Dataset } from "@/globals/workspace/datasets";
 
 export interface ResultsPlotProps {
   result: SimulationResult;
+  datasets: Dataset[];
   width: number;
   height: number;
 }
 
-const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
+const ResultsPlot = ({ result, datasets, width, height }: ResultsPlotProps) => {
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const palette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
@@ -46,6 +49,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
         palette,
         xAxisTitle,
         yAxisTitle,
+        datasets,
       ),
     [
       result,
@@ -56,6 +60,7 @@ const ResultsPlot = ({ result, width, height }: ResultsPlotProps) => {
       palette,
       xAxisTitle,
       yAxisTitle,
+      datasets,
     ],
   );
 

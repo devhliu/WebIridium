@@ -1,4 +1,5 @@
 import type { ECBasicOption } from "echarts/types/dist/shared";
+import type { ScatterSeriesOption } from "echarts/types/src/chart/scatter/ScatterSeries.js";
 import type { LineSeriesOption } from "echarts/types/src/chart/line/LineSeries.js";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
@@ -6,6 +7,7 @@ import type {
   GraphSettings,
   VariableSettings,
 } from "@/globals/workspace/settings";
+import type { Dataset } from "@/globals/workspace/datasets";
 
 import type { LegendDataItem } from "./FloatingLegend";
 import { getColumnsFromResult } from "./getColumnsFromResult";
@@ -65,6 +67,7 @@ export const generatePlotParameters = (
   palette: Palette,
   xAxisTitle: string,
   yAxisTitle: string,
+  datasets: Dataset[],
 ): {
   plotOptions: ECBasicOption;
   legendData: LegendDataItem[];
@@ -97,7 +100,7 @@ export const generatePlotParameters = (
     scanIndependentVariable,
   );
 
-  const series: LineSeriesOption[] = [];
+  const series: (LineSeriesOption | ScatterSeriesOption)[] = [];
   const legendData: LegendDataItem[] = [];
   // note that independent variable column might be null for time course if data was not collected for it
   const independentVariableColumn = columns.find(
@@ -153,7 +156,7 @@ export const generatePlotParameters = (
           color: finalColor,
           opacity: 0,
         },
-      });
+      } satisfies LineSeriesOption);
 
       legendData.push({
         title,
@@ -166,12 +169,41 @@ export const generatePlotParameters = (
   if (palette !== "Custom") {
     for (const [i, data] of series.entries()) {
       const color = getPaletteColor(palette, i / (series.length - 1));
-      data.lineStyle!.color = color;
-      data.itemStyle!.color = color;
+      (data as LineSeriesOption).lineStyle!.color = color;
+      (data as LineSeriesOption).itemStyle!.color = color;
     }
 
     for (const [i, data] of legendData.entries()) {
       data.color = getPaletteColor(palette, i / (series.length - 1));
+    }
+  }
+
+  // Dataset
+
+  for (const dataset of datasets) {
+    if (!dataset.enabled) continue;
+
+    const datasetIndependentVariableColumn = dataset.columns.find(
+      (c) => c.title === dataset.independentVariableName,
+    );
+    if (!datasetIndependentVariableColumn) continue;
+
+    for (const column of dataset.columns) {
+      if (column.title === datasetIndependentVariableColumn.title) continue;
+
+      const datasetVariable = dataset.variables[column.title];
+      if (!datasetVariable.visible) continue;
+
+      series.push({
+        type: "scatter",
+        name: datasetVariable.displayName,
+        symbolSize: datasetVariable.size,
+        color: datasetVariable.color,
+        data: column.values.map((v, i) => [
+          datasetIndependentVariableColumn.values[i],
+          v,
+        ]),
+      });
     }
   }
 
