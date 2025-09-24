@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { clsx } from "clsx";
 
 import styles from "./VariableList.module.css";
-import checkboxStyles from "@/components/input/Checkbox.module.css";
 
-import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
 
+import Checkbox from "@/components/input/Checkbox";
 import { Tooltip } from "@/components/Tooltip";
 
 export interface GenericVariableItemProps {
@@ -26,6 +25,7 @@ const GenericVariableItem = ({
   name,
   children,
 }: GenericVariableItemProps) => {
+  const visibilityCheckboxId = useId();
   const [settingsActive, setSettingsActive] = useState(false);
 
   const handleSettingsToggle = () => {
@@ -39,34 +39,17 @@ const GenericVariableItem = ({
     >
       <div className={styles.itemStrip}>
         <div className={styles.actionList}>
-          <button
-            className={clsx(
-              styles.action,
-              checkboxStyles.root,
-              styles.visibleAction,
-              !visible && styles.dim,
-            )}
-            onClick={() => onVisibleChange(!visible)}
-            data-state={visible ? "checked" : null}
-          >
-            {/* TODO: add aria stuff to this */}
-            {visible && (
-              <CheckIcon
-                className={checkboxStyles.indicator}
-                height="1em"
-                width="1em"
-              />
-            )}
-          </button>
+          <Checkbox
+            className={styles.checkbox}
+            name={visibilityCheckboxId}
+            value={visible}
+            onChange={(newValue) => onVisibleChange(newValue)}
+          />
         </div>
 
-        {/* TODO: this should probably be a label and the visibility toggle a checkbox? */}
-        <button
-          className={styles.itemName}
-          onClick={() => onVisibleChange(!visible)}
-        >
+        <label className={styles.itemName} htmlFor={visibilityCheckboxId}>
           {name}
-        </button>
+        </label>
 
         <div className={styles.actionList}>
           <Tooltip text="Settings" side="right">

@@ -1,17 +1,14 @@
-import { useState } from "react";
-import clsx from "clsx";
+import { useId, useState } from "react";
 
 import styles from "./VariableList.module.css";
-import checkboxStyles from "@/components/input/Checkbox.module.css";
 
 import { type Variable } from "@/features/simulation/Simulator";
 import type { VariableSettings } from "@/globals/workspace/settings";
 import VariableItem from "./VariableItem";
 import { Tooltip } from "@/components/Tooltip";
+import Checkbox from "@/components/input/Checkbox";
 
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
-import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
-import DashIcon from "@/assets/icons/DashIcon.svg?react";
 
 const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
 
@@ -49,12 +46,12 @@ const VariableGroup = ({
     }
   };
 
-  const handleToggleAll = () => {
+  const handleToggleAll = (on: boolean) => {
     setOpen(true);
     for (const v of variables) {
       onVariableSettingsChange(v.name, {
         ...variableSettingss[v.name],
-        visible: !areAllVisible,
+        visible: on,
       });
     }
   };
@@ -72,36 +69,14 @@ const VariableGroup = ({
 
         <div className={styles.actionList}>
           <Tooltip text="Group Visibility" side="right">
-            <button
-              className={clsx(
-                styles.action,
-                styles.visibleAction,
-                checkboxStyles.root,
-                !areAllVisible && styles.dim,
-              )}
-              data-state={
-                areAllVisible
-                  ? "checked"
-                  : areSomeVisible
-                    ? "indeterminate"
-                    : null
+            <Checkbox
+              name={useId()}
+              className={styles.checkbox}
+              value={
+                areAllVisible ? true : areSomeVisible ? "indeterminate" : false
               }
-              onClick={handleToggleAll}
-            >
-              {areAllVisible ? (
-                <CheckIcon
-                  className={checkboxStyles.indicator}
-                  height="1em"
-                  width="1em"
-                />
-              ) : areSomeVisible ? (
-                <DashIcon
-                  className={checkboxStyles.indicator}
-                  height="1em"
-                  width="1em"
-                />
-              ) : null}
-            </button>
+              onChange={handleToggleAll}
+            />
           </Tooltip>
         </div>
       </div>

@@ -139,12 +139,6 @@
   }
 }
 
-.visible-action {
-  /* need the important to override the deafult checkbox height and width */
-  height: var(--font-size-medium) !important;
-  width: var(--font-size-medium) !important;
-}
-
 .item-settings {
   display: flex;
   flex-direction: column;
@@ -155,4 +149,9 @@
   font-size: var(--font-size-small);
   padding: var(--spacing-2);
   text-align: center;
+}
+
+.checkbox {
+  width: var(--font-size-medium) !important;
+  height: var(--font-size-medium) !important;
 }
