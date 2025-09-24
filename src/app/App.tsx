@@ -29,7 +29,7 @@ import { TooltipProvider } from "@/components/Tooltip";
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
 import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
-import DatasetsPanel from "./panels/datasets/DatasetPanel";
+import OverlaysPanel from "./panels/overlays/OverlaysPanel";
 
 import HistoryPanel from "./panels/HistoryPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
@@ -100,7 +100,6 @@ const AppContent = () => {
               <SteadyStatePanel visible={currentLeftPanel === "Steady State"} />
               <HistoryPanel visible={currentLeftPanel === "History"} />
               <ExamplesPanel visible={currentLeftPanel === "Examples"} />
-              <DatasetsPanel visible={currentLeftPanel === "Datasets"} />
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>
@@ -137,6 +136,9 @@ const AppContent = () => {
                 <PlotSettingsPanel
                   onClose={() => setCurrentVeryRightPanel(null)}
                 />
+              )}
+              {currentVeryRightPanel === "Overlays" && (
+                <OverlaysPanel onClose={() => setCurrentVeryRightPanel(null)} />
               )}
             </Allotment.Pane>
           </Allotment>

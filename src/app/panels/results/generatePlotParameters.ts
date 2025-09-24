@@ -7,7 +7,7 @@ import type {
   GraphSettings,
   VariableSettings,
 } from "@/globals/workspace/settings";
-import type { Dataset } from "@/globals/workspace/datasets";
+import type { Dataset } from "@/globals/workspace/overlays";
 
 import type { LegendDataItem } from "./FloatingLegend";
 import { getColumnsFromResult } from "./getColumnsFromResult";

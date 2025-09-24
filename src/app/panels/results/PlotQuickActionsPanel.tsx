@@ -10,6 +10,7 @@ import NumericProperty from "@/components/property-list/NumericProperty";
 
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
+import LayersIcon from "@/assets/icons/LayersIcon.svg?react";
 
 import {
   graphSettingsAtom,
@@ -24,6 +25,9 @@ const PlotQuickActionsPanel = () => {
     currentVeryRightPanelAtom,
   );
 
+  const isPlotSettingsOpen = currentVeryRightPanel === "Plot Settings";
+  const isOverlaysOpen = currentVeryRightPanel === "Overlays";
+
   const handleChangeFor = (
     setting: keyof GraphSettings,
   ): ((newValue: unknown) => void) => {
@@ -35,23 +39,35 @@ const PlotQuickActionsPanel = () => {
   return (
     <div className={styles.quickActionsContainer}>
       <div className={styles.quickActionsButtons}>
-        {currentVeryRightPanel === "Plot Settings" ? (
-          <button
-            className={clsx(buttonStyles.default, styles.quickActionsButton)}
-            onClick={() => setCurrentVeryRightPanel(null)}
-          >
+        <button
+          className={clsx(buttonStyles.default, styles.quickActionsButton)}
+          onClick={() =>
+            setCurrentVeryRightPanel(
+              isPlotSettingsOpen ? null : "Plot Settings",
+            )
+          }
+        >
+          {isPlotSettingsOpen ? (
             <CrossIcon width="1em" height="1em" />
-            Close Settings
-          </button>
-        ) : (
-          <button
-            className={clsx(buttonStyles.default, styles.quickActionsButton)}
-            onClick={() => setCurrentVeryRightPanel("Plot Settings")}
-          >
+          ) : (
             <PencilIcon width="1em" height="1em" />
-            Edit Graph
-          </button>
-        )}
+          )}
+          {isPlotSettingsOpen ? "Close Settings" : "Edit Graph"}
+        </button>
+
+        <button
+          className={clsx(buttonStyles.default, styles.quickActionsButton)}
+          onClick={() =>
+            setCurrentVeryRightPanel(isOverlaysOpen ? null : "Overlays")
+          }
+        >
+          {isOverlaysOpen ? (
+            <CrossIcon width="1em" height="1em" />
+          ) : (
+            <LayersIcon width="1em" height="1em" />
+          )}
+          {isOverlaysOpen ? "Close Overlays" : "Add Overlays"}
+        </button>
       </div>
 
       <div className={styles.quickActionsSettings}>

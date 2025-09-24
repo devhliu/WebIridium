@@ -90,13 +90,14 @@ export const importCsvDatasetAtom = atom(
       const columns = getColumnsFromCsv(csv);
       const variables: Record<string, DatasetVariable> = {};
 
+      const colorIndexOffset = Math.floor(10 * Math.random());
       for (let i = 0; i < columns.length; i++) {
         const column = columns[i];
         variables[column.title] = {
           name: column.title,
           displayName: column.title,
           visible: true,
-          color: getDefaultColorForIndex(i),
+          color: getDefaultColorForIndex(colorIndexOffset + i),
           size: 5,
         };
       }

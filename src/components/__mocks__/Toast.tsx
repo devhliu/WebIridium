@@ -13,7 +13,9 @@ export const ToastProvider = ({ children }: { children: React.ReactNode }) => {
 export const useToast = () => {
   const isInContext = useContext(ToastContext);
   if (!isInContext) {
-    throw new Error("can't use toast outside a toast context");
+    throw new Error(
+      "can't use toast outside a toast context (note: this is the mock module not the real one",
+    );
   }
 
   return {

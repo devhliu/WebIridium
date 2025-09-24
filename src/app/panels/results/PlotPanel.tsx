@@ -1,7 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react";
 import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
-import { datasetsAtom } from "@/globals/workspace/datasets.ts";
+import { datasetsAtom } from "@/globals/workspace/overlays.ts";
 import styles from "./results.module.css";
 import ResultsPlot from "./ResultsPlot";
 import { Allotment } from "allotment";

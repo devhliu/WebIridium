@@ -7,7 +7,6 @@ import { type LeftPanel } from "@/globals/workspace/layout";
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";
 import SteadyStateIcon from "@/assets/icons/SteadyStateIcon.svg?react";
-import DatasetIcon from "@/assets/icons/DatasetIcon.svg?react";
 import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
 import NotebookIcon from "@/assets/icons/NotebookIcon.svg?react";
 import { Tooltip } from "@/components/Tooltip";
@@ -19,7 +18,6 @@ const PANEL_ICONS: Record<
   "Time Course": TimeCourseIcon,
   "Parameter Scan": ParameterScanIcon,
   "Steady State": SteadyStateIcon,
-  Datasets: DatasetIcon,
   History: HistoryIcon,
   Examples: NotebookIcon,
 } as const;
@@ -29,7 +27,6 @@ const TOP_PANELS = new Set<LeftPanel>([
   "Time Course",
   "Parameter Scan",
   "Steady State",
-  "Datasets",
 ]);
 
 interface SidebarItemProps {

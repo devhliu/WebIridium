@@ -4,12 +4,11 @@ export const LEFT_PANELS = [
   "Time Course",
   "Steady State",
   "Parameter Scan",
-  "Datasets",
   "History",
   "Examples",
 ] as const;
 export const RIGHT_PANELS = ["Results"] as const;
-export const VERY_RIGHT_PANELS = ["Plot Settings"] as const;
+export const VERY_RIGHT_PANELS = ["Plot Settings", "Overlays"] as const;
 export const BOTTOM_PANELS = ["Sliders"] as const;
 
 const STARTING_LEFT_PANEL: LeftPanel = "Time Course";
@@ -37,7 +36,7 @@ export const currentLeftPanelAtom = atom(
 export const currentRightPanelAtom = atom(
   (get) => get(_currentRightPanelAtom),
   (get, set, panel: RightPanel | null) => {
-    if (get(currentVeryRightPanelAtom) === "Plot Settings") {
+    if (get(currentVeryRightPanelAtom) !== null) {
       set(currentVeryRightPanelAtom, null);
     }
     set(_currentRightPanelAtom, panel);

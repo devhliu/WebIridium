@@ -140,7 +140,11 @@ const AppMenubar = () => {
           <MenubarItem
             name="Open..."
             onSelect={() => {
-              fileInputRef.current?.click();
+              const fileInput = fileInputRef.current;
+              if (fileInput) {
+                fileInput.value = "";
+                fileInput.click();
+              }
             }}
           />
           <MenubarItem

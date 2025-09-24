@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { type Dataset, getAvailableName, getColumnsFromCsv } from "../datasets";
+import { type Dataset, getAvailableName, getColumnsFromCsv } from "../overlays";
 
 describe("getAvailableName", () => {
   it("should return available name", () => {

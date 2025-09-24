@@ -16,7 +16,7 @@ import { useScanIndependentVariable } from "@/features/simulation/useScanIndepen
 import { generatePlotParameters } from "./generatePlotParameters";
 
 import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
-import type { Dataset } from "@/globals/workspace/datasets";
+import type { Dataset } from "@/globals/workspace/overlays";
 
 export interface ResultsPlotProps {
   result: SimulationResult;
