@@ -104,7 +104,7 @@ const OverlaysPanel = ({ onClose }: OverlaysPanelProps) => {
         }}
       >
         <DownloadIcon width="1em" height="1em" />
-        Import Series
+        Import CSV
       </CancellableButton>
 
       <PropertyAccordion open={openDatasets} onOpenChange={handleOpenChange}>
