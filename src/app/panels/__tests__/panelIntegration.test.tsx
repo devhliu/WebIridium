@@ -26,8 +26,6 @@ test("panels should all be cancellable when a simulation is running", async () =
     </div>,
   );
 
-  setWorkerResponseDelay(100);
-
   const timeCoursePanel = screen.getByTestId("timeCoursePanel");
   const steadyStatePanel = screen.getByTestId("steadyStatePanel");
   const parameterScanPanel = screen.getByTestId("parameterScanPanel");
@@ -41,6 +39,8 @@ test("panels should all be cancellable when a simulation is running", async () =
   await waitFor(() => {
     expect(simulateTimeCourseButton).toBeEnabled();
   });
+
+  setWorkerResponseDelay(100);
 
   await userEvent.click(simulateTimeCourseButton);
 
