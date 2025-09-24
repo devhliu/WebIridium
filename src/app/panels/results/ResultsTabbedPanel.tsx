@@ -6,6 +6,7 @@ import GraphIcon from "@/assets/icons/GraphIcon.svg?react";
 import TableIcon from "@/assets/icons/TableIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import ThreeDIcon from "@/assets/icons/ThreeDIcon.svg?react";
+import DatasetIcon from "@/assets/icons/DatasetIcon.svg?react";
 
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
@@ -22,9 +23,13 @@ import IconButton from "@/components/IconButton";
 
 export interface ResultTabbedPanelProps {
   onClose: () => void;
+  onStartDatasetImport: () => void;
 }
 
-const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
+const ResultTabbedPanel = ({
+  onClose,
+  onStartDatasetImport,
+}: ResultTabbedPanelProps) => {
   const simulationResult = useAtomValue(simulationResultAtom);
   let tabs: TabInfo[];
   if (simulationResult?.type === "steadyState") {
@@ -66,6 +71,9 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
               <CrossIcon width="1em" height="1em" />
             </IconButton>
             <DownloadPlotButton />
+            <IconButton label="Datasets" onClick={onStartDatasetImport}>
+              <DatasetIcon width="1em" height="1em" />
+            </IconButton>
           </>
         ),
       },
