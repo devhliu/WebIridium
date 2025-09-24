@@ -87,9 +87,16 @@ export const itShouldBeCancellable = ({
     const cancel = screen.getByLabelText("Cancel");
     await userEvent.click(cancel);
 
-    expect(button).toBeEnabled();
-    expect(cancel).not.toBeInTheDocument();
-    expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
+    // add a bunch of wait for, this test is very flaky :(
+    await waitFor(() => {
+      expect(button).toBeEnabled();
+    });
+    await waitFor(() => {
+      expect(cancel).not.toBeInTheDocument();
+    });
+    await waitFor(() => {
+      expect(screen.queryByTestId("results-plot")).not.toBeInTheDocument();
+    });
   });
 };
 
