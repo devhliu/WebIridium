@@ -171,20 +171,6 @@ export class RoadrunnerServerSimulator extends Simulator {
         name: `${name}'`,
         category: "Rate of Changes",
       });
-
-      variables.push({
-        type: "normal",
-        defaultDisplayName: `eigenReal(${name})`,
-        name: `eigenReal(${name})`,
-        category: "Eigenvalues",
-      });
-
-      variables.push({
-        type: "normal",
-        defaultDisplayName: `eigenImag(${name})`,
-        name: `eigenImag(${name})`,
-        category: "Eigenvalues",
-      });
     }
 
     for (const [name, value] of Object.entries(result.boundarySpecies)) {
