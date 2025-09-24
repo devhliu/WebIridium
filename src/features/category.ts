@@ -3,6 +3,7 @@
 import type { VariableSettings } from "@/globals/workspace/settings";
 import type { Variable } from "./simulation/Simulator";
 import type { SelectGroupedProps } from "@/components/input/Select";
+import { getVariableFullName } from "./simulation/variableNames";
 
 export const CATEGORY_ORDER = [
   "Floating Species",
@@ -33,11 +34,6 @@ export const groupVariables = <TVar extends Variable>(
   return sortedGroupedVariables;
 };
 
-const defaultDisplayNameSelector = (
-  _: Variable,
-  settings: VariableSettings,
-): string => settings.displayName;
-
 /**
  * Convenience function that groups variables into a format usable by the Select
  * component.
@@ -55,7 +51,7 @@ export const groupVariablesForSelectComponent = <TVar extends Variable>(
   displayNameSelector: (
     variable: Variable,
     settings: VariableSettings,
-  ) => string = defaultDisplayNameSelector,
+  ) => string = getVariableFullName,
 ): SelectGroupedProps["groups"] => {
   return groupVariables(variables).reduce((acc, [category, variables]) => {
     return {

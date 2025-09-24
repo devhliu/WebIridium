@@ -21,7 +21,7 @@ import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import SimulationPanel from "./SimulationPanel";
 
 import { groupVariablesForSelectComponent } from "@/features/category";
-import { getVariableSetDisplayName } from "@/features/simulation/getVariableSetDisplayName";
+import { getVariableSetDisplayName } from "@/features/simulation/variableNames";
 
 import {
   cancelSimulationAtom,

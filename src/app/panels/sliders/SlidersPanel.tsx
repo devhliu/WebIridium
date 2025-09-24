@@ -4,6 +4,8 @@ import styles from "./SlidersPanel.module.css";
 import buttonStyles from "@/components/Button.module.css";
 
 import { type SettableVariable } from "@/features/simulation/Simulator";
+import { groupVariables } from "@/features/category";
+import { hasDisplayName } from "@/features/simulation/variableNames";
 
 import { variablesAtom } from "@/globals/workspace/model";
 import {
@@ -16,7 +18,6 @@ import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
-import { groupVariables } from "@/features/category";
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
 import VariableSlider from "./VariableSlider";
@@ -27,12 +28,14 @@ import EyeIcon from "@/assets/icons/EyeIcon.svg?react";
 import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import IconButton from "@/components/IconButton";
+import Select from "@/components/input/Select";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
   "Floating Species",
   "Boundary Species",
 ];
+
 export interface SlidersPanelProps {
   onClose: () => void;
 }
@@ -50,6 +53,10 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [showingInactive, setShowingInactive] = useState(true);
 
+  // 'all' means show all variables
+  // 'displayNamed' means only show those with a display name
+  const [filterType, setFilterType] = useState<"all" | "displayNamed">("all");
+
   const filteredVariables = variables
     .filter((v) => showingInactive || variableSliderStates[v.name])
     .filter((v) => v.type === "settable")
@@ -59,6 +66,11 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
           .toLowerCase()
           .includes(searchTerm.toLowerCase()) ||
         v.category.toLowerCase().includes(searchTerm.toLowerCase()),
+    )
+    .filter(
+      (v) =>
+        filterType !== "displayNamed" ||
+        hasDisplayName(v, variableSettingss[v.name]),
     );
 
   const filteredGroups = groupVariables(
@@ -103,6 +115,13 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   return (
     <div className={styles.panel} data-testid="sliders-panel">
       <div className={styles.topbar}>
+        <Select
+          name="variableFilter"
+          value={filterType}
+          options={{ All: "all", "Has Display Name": "displayNamed" }}
+          onChange={setFilterType as (newValue: string) => void}
+        />
+
         <SearchBox
           className={styles.searchBox}
           name="slider-variable-search"

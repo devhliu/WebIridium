@@ -1,7 +1,10 @@
 import { memo } from "react";
 
 import { type Variable } from "@/features/simulation/Simulator";
+import { getVariableFullName } from "@/features/simulation/variableNames";
+
 import type { VariableSettings } from "@/globals/workspace/settings";
+
 import GenericVariableItem from "./GenericVariableItem";
 import VariableSettingsPropertyList from "./VariableSettingsPropertyList";
 
@@ -12,7 +15,7 @@ export interface VariableItemProps {
 }
 
 const VariableItem = memo(
-  ({ settings, onVariableSettingsChange }: VariableItemProps) => {
+  ({ variable, settings, onVariableSettingsChange }: VariableItemProps) => {
     const handleVisibleChange = (visible: boolean) => {
       onVariableSettingsChange({
         ...settings,
@@ -24,7 +27,7 @@ const VariableItem = memo(
       <GenericVariableItem
         visible={settings.visible}
         onVisibleChange={handleVisibleChange}
-        name={settings.displayName}
+        name={getVariableFullName(variable, settings)}
       >
         <VariableSettingsPropertyList
           settings={settings}

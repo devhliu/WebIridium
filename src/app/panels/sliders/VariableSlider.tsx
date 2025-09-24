@@ -15,7 +15,7 @@ import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import Slider from "@/components/input/Slider";
 import Checkbox from "@/components/input/Checkbox";
 import NumberBox from "@/components/input/NumberBox";
-import { getVariableSetDisplayName } from "@/features/simulation/getVariableSetDisplayName";
+import { getVariableSetDisplayName } from "@/features/simulation/variableNames";
 import IconButton from "@/components/IconButton";
 
 export interface VariableSliderProps {
