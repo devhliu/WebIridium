@@ -21,6 +21,7 @@ import {
 } from "@/features/editor/presetComments";
 import ModelSemanticsChecker from "@/features/editor/language-handler/ModelSemanticChecker";
 import { loadPresetAndSimulateAtom } from "@/globals/workspace/slider";
+import { monacoThemes } from "@/features/editor/theme";
 
 const SEMANTIC_CHECKER_DEBOUNCE = 100; // in ms
 const ANNOTATION_COLOR = "Red";
@@ -70,13 +71,7 @@ const EditorPanel = () => {
         queueSemanticCheck();
       });
 
-      if (theme === "Light") {
-        monaco.editor.setTheme("iridiumLight");
-      } else if (theme === "Monokai") {
-        monaco.editor.setTheme("monokai");
-      } else {
-        monaco.editor.setTheme("iridiumDark");
-      }
+      monaco.editor.setTheme(monacoThemes[theme].name);
 
       const handlePresetLoad = (
         name: string,

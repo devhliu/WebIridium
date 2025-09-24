@@ -1,10 +1,11 @@
 import * as monaco from "monaco-editor";
+import type { Theme } from "../theme";
 
 const DARK_KEYWORD_COLOR = "#77dce0";
 const DARK_KEYWORD2_COLOR = "#5adb8e";
 const DARK_SPECIAL_COLOR = "#7cebe7";
 
-export const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
+const iridiumDarkTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs-dark",
   inherit: false,
   colors: {
@@ -55,7 +56,7 @@ const LIGHT_KEYWORD_COLOR = "#038286";
 const LIGHT_KEYWORD2_COLOR = "#248457";
 const LIGHT_SPECIAL_COLOR = "#13817d";
 
-export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
+const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs",
   inherit: false,
   colors: {
@@ -102,7 +103,7 @@ export const iridiumLightTheme: monaco.editor.IStandaloneThemeData = {
   ],
 };
 
-export const monokaiTheme: monaco.editor.IStandaloneThemeData = {
+const monokaiTheme: monaco.editor.IStandaloneThemeData = {
   base: "vs-dark",
   inherit: false,
   colors: {
@@ -149,4 +150,13 @@ export const monokaiTheme: monaco.editor.IStandaloneThemeData = {
     { token: "string", foreground: "#e6db74" },
     { token: "number", foreground: "#ae81ff" },
   ],
+};
+
+export const monacoThemes: Record<
+  Theme,
+  { name: string; data: monaco.editor.IStandaloneThemeData }
+> = {
+  Dark: { name: "iridiumDark", data: iridiumDarkTheme },
+  Light: { name: "iridiumLight", data: iridiumLightTheme },
+  Monokai: { name: "monokai", data: monokaiTheme },
 };

@@ -1,11 +1,7 @@
 import * as monaco from "monaco-editor";
 import EditorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
 
-import {
-  iridiumDarkTheme,
-  iridiumLightTheme,
-  monokaiTheme,
-} from "@/features/editor/theme";
+import { monacoThemes } from "@/features/editor/theme";
 import { antimonyMonarchDefinition } from "@/features/editor/monarchDefinition";
 
 self.MonacoEnvironment = {
@@ -14,9 +10,9 @@ self.MonacoEnvironment = {
   },
 };
 
-monaco.editor.defineTheme("iridiumDark", iridiumDarkTheme);
-monaco.editor.defineTheme("iridiumLight", iridiumLightTheme);
-monaco.editor.defineTheme("monokai", monokaiTheme);
+for (const theme of Object.values(monacoThemes)) {
+  monaco.editor.defineTheme(theme.name, theme.data);
+}
 
 monaco.languages.register({ id: "antimony" });
 monaco.languages.setMonarchTokensProvider(
