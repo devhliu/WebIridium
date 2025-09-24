@@ -4,7 +4,7 @@ import * as echarts from "echarts/core";
 import DownloadButtonBase from "./DownloadButtonBase";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
-import { datasetsAtom } from "@/globals/workspace/datasets";
+import { datasetsAtom } from "@/globals/workspace/overlays";
 import {
   graphSettingsAtom,
   variableSettingssAtom,

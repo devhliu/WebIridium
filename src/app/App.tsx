@@ -18,19 +18,18 @@ import {
 } from "@/globals/workspace/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/workspace/saving";
-import { importCsvDatasetAtom } from "@/globals/workspace/datasets";
 
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
-import { ToastProvider, useToast } from "@/components/Toast";
+import { ToastProvider } from "@/components/Toast";
 import { TooltipProvider } from "@/components/Tooltip";
 
 import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
 import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
 import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
-import DatasetsPanel from "./panels/datasets/DatasetPanel";
+import OverlaysPanel from "./panels/overlays/OverlaysPanel";
 
 import HistoryPanel from "./panels/HistoryPanel";
 import ExamplesPanel from "./panels/ExamplesPanel";
@@ -75,56 +74,9 @@ const AppContent = () => {
   const [currentVeryRightPanel, setCurrentVeryRightPanel] = useAtom(
     currentVeryRightPanelAtom,
   );
-  const importCsvDataset = useSetAtom(importCsvDatasetAtom);
-
-  const { toast } = useToast();
-
-  const datasetInputRef = useRef<HTMLInputElement>(null);
-
-  const handleDatasetFileOpen = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const files = event.target.files;
-    if (!files || files.length < 0) {
-      toast({
-        type: "error",
-        title: "No files imported",
-        description: "None were selected.",
-      });
-      return;
-    }
-
-    for (const file of files) {
-      const nameWithoutExtension = file.name.split(".")[0];
-      const reader = new FileReader();
-      reader.readAsText(file);
-      reader.onload = () => {
-        const result = importCsvDataset({
-          name: nameWithoutExtension,
-          csv: reader.result as string,
-        });
-
-        if (result.type === "error") {
-          toast({
-            type: "error",
-            title: "Failed to import series",
-            description: result.message,
-          });
-        }
-      };
-    }
-  };
 
   return (
     <div className={styles.app}>
-      <input
-        style={{ display: "none" }}
-        ref={datasetInputRef}
-        type="file"
-        onChange={handleDatasetFileOpen}
-        accept=".csv"
-      />
-
       <AppMenubar />
 
       <div className={styles.appMain}>
@@ -148,16 +100,6 @@ const AppContent = () => {
               <SteadyStatePanel visible={currentLeftPanel === "Steady State"} />
               <HistoryPanel visible={currentLeftPanel === "History"} />
               <ExamplesPanel visible={currentLeftPanel === "Examples"} />
-              <DatasetsPanel
-                visible={currentLeftPanel === "Datasets"}
-                onStartImport={() => {
-                  const datasetInput = datasetInputRef.current;
-                  if (datasetInput) {
-                    datasetInput.value = "";
-                    datasetInput.click();
-                  }
-                }}
-              />
             </Allotment.Pane>
 
             <Allotment.Pane priority={LayoutPriority.High}>
@@ -182,17 +124,7 @@ const AppContent = () => {
               preferredSize={getDefaultResultsPanelWidth()}
             >
               {currentRightPanel === "Results" && (
-                <ResultTabbedPanel
-                  onClose={() => setCurrentRightPanel(null)}
-                  onStartDatasetImport={() => {
-                    const datasetInput = datasetInputRef.current;
-                    if (datasetInput) {
-                      datasetInput.value = "";
-                      datasetInput.click();
-                      setCurrentLeftPanel("Datasets");
-                    }
-                  }}
-                />
+                <ResultTabbedPanel onClose={() => setCurrentRightPanel(null)} />
               )}
             </Allotment.Pane>
 
@@ -204,6 +136,9 @@ const AppContent = () => {
                 <PlotSettingsPanel
                   onClose={() => setCurrentVeryRightPanel(null)}
                 />
+              )}
+              {currentVeryRightPanel === "Overlays" && (
+                <OverlaysPanel onClose={() => setCurrentRightPanel(null)} />
               )}
             </Allotment.Pane>
           </Allotment>

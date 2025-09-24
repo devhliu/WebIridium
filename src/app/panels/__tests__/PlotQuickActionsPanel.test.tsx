@@ -36,3 +36,33 @@ it("should let you toggle plot settings", async () => {
 
   expect(screen.getByText(ITS_CLOSE_TEXT)).toBeInTheDocument();
 });
+
+it("should let you toggle overlays", async () => {
+  const ITS_OPEN_TEXT = "ITS OPEN!";
+  const ITS_CLOSE_TEXT = "ITS CLOSED!";
+  const PlotSettingsTestComponent = () => {
+    const currentVeryRightPanel = useAtomValue(currentVeryRightPanelAtom);
+    return currentVeryRightPanel === "Overlays" ? (
+      <p>{ITS_OPEN_TEXT}</p>
+    ) : (
+      <p>{ITS_CLOSE_TEXT}</p>
+    );
+  };
+
+  await renderWithinWorkspace(
+    <>
+      <PlotSettingsTestComponent />
+      <PlotQuickActionsPanel />
+    </>,
+  );
+
+  expect(screen.getByText(ITS_CLOSE_TEXT)).toBeInTheDocument();
+
+  await userEvent.click(screen.getByText("Add Overlays"));
+
+  expect(screen.getByText(ITS_OPEN_TEXT)).toBeInTheDocument();
+
+  await userEvent.click(screen.getByText("Close Overlays"));
+
+  expect(screen.getByText(ITS_CLOSE_TEXT)).toBeInTheDocument();
+});

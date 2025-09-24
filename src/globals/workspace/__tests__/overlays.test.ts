@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { type Dataset, getAvailableName, getColumnsFromCsv } from "../datasets";
+import { type Dataset, getAvailableName, getColumnsFromCsv } from "../overlays";
 
 describe("getAvailableName", () => {
   it("should return available name", () => {
@@ -82,7 +82,7 @@ describe("getColumnsFromCsv", () => {
        1,2
        3,4
        5,6`,
-      `Time,
+      `Time
        1,2
        3,4
        5,6`,

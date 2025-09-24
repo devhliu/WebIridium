@@ -10,7 +10,7 @@
   overflow-y: auto;
 }
 
-.no-datasets {
+.no-overlays {
   text-align: center;
   color: var(--color-layer1-fg);
 }
