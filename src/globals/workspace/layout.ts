@@ -36,7 +36,7 @@ export const currentLeftPanelAtom = atom(
 export const currentRightPanelAtom = atom(
   (get) => get(_currentRightPanelAtom),
   (get, set, panel: RightPanel | null) => {
-    if (get(currentVeryRightPanelAtom) === "Plot Settings") {
+    if (get(currentVeryRightPanelAtom) !== null) {
       set(currentVeryRightPanelAtom, null);
     }
     set(_currentRightPanelAtom, panel);
