@@ -8,7 +8,13 @@ import type {
 import { TaskTermination } from "@/features/taskPool";
 import { getDefaultColorForIndex } from "@/features/colors";
 
-import { nameAtom, type VariableSettings } from "./settings";
+import {
+  defaultParameterScanOptions,
+  defaultTimeCourseParameters,
+  nameAtom,
+  timeCourseParametersAtom,
+  type VariableSettings,
+} from "./settings";
 import { simulatorAtom } from "./simulator";
 import {
   independentVariableAtom,
@@ -280,6 +286,9 @@ export const setModelAtom = atom(
     { name, content, resetCurrentResult = true }: SetModelOptions,
   ): Promise<boolean> => {
     set(nameAtom, name);
+
+    set(timeCourseParametersAtom, defaultTimeCourseParameters);
+    set(parameterScanOptionsAtom, defaultParameterScanOptions);
 
     if (resetCurrentResult) {
       set(simulationResultAtom, null);

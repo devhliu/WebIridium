@@ -116,13 +116,14 @@ export const variableSettingssAtom = atom<{ [id: string]: VariableSettings }>(
   {},
 );
 
-export const timeCourseParametersAtom = atom<EditableTimeCourseParameters>({
+export const defaultTimeCourseParameters: EditableTimeCourseParameters = {
   startTime: 0,
   endTime: 20,
   numberOfPoints: 200,
-});
+};
+export const timeCourseParametersAtom = atom(defaultTimeCourseParameters);
 
-export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
+export const defaultParameterScanOptions: ParameterScanOptions = {
   mode: "timeCourse",
   varyingParameter: null,
   timeCourseParameters: {
@@ -138,7 +139,8 @@ export const parameterScanOptionsAtom = atom<ParameterScanOptions>({
 
   useNumberList: false,
   numberList: "1 2 3 4 5",
-});
+};
+export const parameterScanOptionsAtom = atom(defaultParameterScanOptions);
 
 export const defaultGraphSettings: GraphSettings = {
   backgroundColor: "#ffffff",

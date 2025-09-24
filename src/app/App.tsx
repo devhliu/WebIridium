@@ -19,6 +19,7 @@ import {
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/workspace/saving";
 
+import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
@@ -197,11 +198,13 @@ const DataSaver = () => {
 
 const App = () => {
   return (
-    <AppProvider>
-      <ThemeUpdater />
-      <DataSaver />
-      <AppContent />
-    </AppProvider>
+    <AppErrorWrapperPage>
+      <AppProvider>
+        <ThemeUpdater />
+        <DataSaver />
+        <AppContent />
+      </AppProvider>
+    </AppErrorWrapperPage>
   );
 };
 
