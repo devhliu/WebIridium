@@ -142,7 +142,7 @@ export class CopasiSimulator extends Simulator {
         type: "settable",
         defaultDisplayName: param.name,
         name: param.id,
-        category: "Parameters",
+        category: param.type === "ode" ? "ODEs" : "Parameters",
 
         setName: param.id,
         defaultValue: param.initial_value,

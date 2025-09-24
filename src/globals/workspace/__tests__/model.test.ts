@@ -45,7 +45,7 @@ describe("patchVariableSettings", () => {
     },
     {
       type: "settable",
-      category: "Floating Species",
+      category: "ODEs",
       defaultDisplayName: "test2",
       defaultValue: 3,
       name: "test2",

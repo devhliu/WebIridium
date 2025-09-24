@@ -10,6 +10,7 @@ export const CATEGORY_ORDER = [
   "Boundary Species",
   "Rate of Changes",
   "Parameters",
+  "ODEs",
   "Reaction Rates",
 ];
 

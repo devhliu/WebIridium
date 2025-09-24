@@ -32,6 +32,7 @@ import Select from "@/components/input/Select";
 
 const SLIDER_CATEGORY_ORDER = [
   "Parameters",
+  "ODEs",
   "Floating Species",
   "Boundary Species",
 ];
