@@ -138,7 +138,7 @@ const AppContent = () => {
                 />
               )}
               {currentVeryRightPanel === "Overlays" && (
-                <OverlaysPanel onClose={() => setCurrentRightPanel(null)} />
+                <OverlaysPanel onClose={() => setCurrentVeryRightPanel(null)} />
               )}
             </Allotment.Pane>
           </Allotment>
