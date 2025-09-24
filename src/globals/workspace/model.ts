@@ -46,7 +46,6 @@ export const patchVariablesSettings = (
   currentVariables: Variable[],
   currentVariableSettingss: Record<string, VariableSettings>,
   newVariables: Variable[],
-  overwriteCurrentVariables: boolean,
 ): Record<string, VariableSettings> => {
   let added = Object.keys(currentVariableSettingss).length;
   const patches: Record<string, VariableSettings> = {};
@@ -60,7 +59,7 @@ export const patchVariablesSettings = (
     variable.category === "Floating Species";
 
   const patchVariable = (variable: Variable) => {
-    if (hasVariableAlready(variable) && !overwriteCurrentVariables) {
+    if (hasVariableAlready(variable)) {
       // it's an old variable, only overwrite the display name if necessary
       if (
         currentVariableSettingss[variable.name].displayName !==
@@ -116,11 +115,8 @@ export interface UpdateEditorContentOptions {
   content: string;
   /** default: false */
   skipDebounce?: boolean;
-  /**
-   * default: false. Whether or not to overwrite any variables found in the model
-   * so they are fresh/unedited.
-   */
-  overwriteCurrentVariables?: boolean;
+  /** default: false */
+  resetAllVariables?: boolean;
 }
 
 /**
@@ -135,7 +131,7 @@ export const updateEditorContentAtom = atom(
     {
       content,
       skipDebounce = false,
-      overwriteCurrentVariables = false,
+      resetAllVariables = false,
     }: UpdateEditorContentOptions,
   ): Promise<boolean> => {
     // the !skipDebounce is for initial loads
@@ -232,10 +228,9 @@ export const updateEditorContentAtom = atom(
     set(
       variableSettingssAtom,
       patchVariablesSettings(
-        get(variablesAtom),
-        get(variableSettingssAtom),
+        resetAllVariables ? [] : get(variablesAtom),
+        resetAllVariables ? {} : get(variableSettingssAtom),
         newVariables,
-        overwriteCurrentVariables,
       ),
     );
     set(_variablesAtom, newVariables);
@@ -293,7 +288,9 @@ export const setModelAtom = atom(
     return await set(updateEditorContentAtom, {
       content,
       skipDebounce: true,
-      overwriteCurrentVariables: true,
+      // reseting all the variables will delete some of the variable settings which will cause the current result to be unable to display
+      // so don't reset all variables if not resetting the result as well.
+      resetAllVariables: resetCurrentResult,
     });
   },
 );
