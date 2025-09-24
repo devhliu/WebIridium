@@ -43,6 +43,10 @@
     background-color: var(--color-layer1-bg-translucent);
   }
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-state="active"]::after {
     content: "";
     position: absolute;

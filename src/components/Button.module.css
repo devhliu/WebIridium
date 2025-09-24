@@ -3,6 +3,10 @@
 .ghost-text {
   --button-spacing: var(--spacing-2);
   font-size: var(--font-size-small);
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 }
 
 .default {

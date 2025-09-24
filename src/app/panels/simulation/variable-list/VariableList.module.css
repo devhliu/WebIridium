@@ -55,6 +55,10 @@
   flex-grow: 1;
   cursor: pointer;
   user-select: none;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 }
 
 .group-container:not([data-open]) .group-trigger-icon {
@@ -106,6 +110,10 @@
   text-align: left;
   font-size: var(--font-size-small);
   padding: 0;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 }
 
 .action-list {
@@ -121,6 +129,10 @@
   background: transparent;
   border: none;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 
   &.dim {
     color: var(--color-input-fg-dim);

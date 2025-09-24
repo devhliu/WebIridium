@@ -107,6 +107,10 @@
   align-self: stretch;
   border-radius: var(--border-radius);
   width: 0;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 }
 
 .color-popup {

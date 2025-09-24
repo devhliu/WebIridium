@@ -37,6 +37,10 @@
   color: var(--color-layer1-fg-dim);
   padding: 0;
   cursor: pointer;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 }
 
 .overlay {

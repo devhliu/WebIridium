@@ -15,6 +15,10 @@
   border-radius: var(--border-radius);
   cursor: pointer;
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-highlighted],
   &[data-state="open"] {
     background-color: var(--color-layer1-bg-translucent);
@@ -44,6 +48,10 @@
   padding: var(--spacing-2) var(--spacing-4);
   margin: var(--spacing-1);
   padding-left: 20px;
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
 
   &[data-highlighted] {
     background-color: var(--color-accent);

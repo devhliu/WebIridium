@@ -82,6 +82,10 @@
   --button-background: color-mix(in hsl, var(--color-accent) 92%, transparent);
 }
 
+.primary:focus-visible {
+  outline: var(--outline-focused);
+}
+
 .disabled > .primary {
   --button-foreground: color-mix(
     in hsl,

@@ -27,6 +27,10 @@
     transition-duration: var(--timing-fast);
   }
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-state="open"] {
     border-bottom-right-radius: 0;
     border-bottom-left-radius: 0;

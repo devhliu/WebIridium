@@ -40,6 +40,10 @@
   border-radius: 10px;
   cursor: pointer;
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-disabled] {
     background-color: var(--color-disabled-fg);
   }

@@ -52,9 +52,14 @@
   border-radius: var(--border-radius);
   cursor: pointer;
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-highlighted] {
     color: var(--color-accent-fg);
     background-color: var(--color-accent);
+    outline: none;
   }
 }
 

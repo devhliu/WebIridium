@@ -105,6 +105,9 @@
     from var(--color-layer3-fg) l c h / var(--opacity-very-dim)
   );
 
+  --outline-focused: 2px solid
+    color-mix(in hsl, 40% var(--color-accent-fg), var(--color-accent));
+
   --border-button: 1px solid var(--color-button-border);
   --border-layer1: 1px solid var(--color-layer1-border);
   --border-layer2: 1px solid var(--color-layer2-border);

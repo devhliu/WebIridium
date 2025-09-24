@@ -11,6 +11,10 @@
   transition-duration: var(--timing-fast);
   cursor: pointer;
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[data-state="checked"],
   &[data-state="indeterminate"] {
     color: var(--color-layer1-fg);
@@ -30,6 +34,7 @@
   display: flex;
   padding: 0;
   margin: 0;
+
   &[data-disabled] {
     background-color: var(--color-disabled);
   }

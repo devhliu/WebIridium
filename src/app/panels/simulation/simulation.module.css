@@ -31,6 +31,10 @@
     background-color: var(--color-ghost-button-active-bg);
   }
 
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+
   &[aria-pressed="true"] {
     color: var(--color-accent-fg);
     background-color: var(--color-accent);
