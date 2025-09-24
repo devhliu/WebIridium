@@ -185,15 +185,6 @@ export class RoadrunnerServerSimulator extends Simulator {
         name: `eigenImag(${name})`,
         category: "Eigenvalues",
       });
-
-      for (const reactionName of result.reactions) {
-        variables.push({
-          type: "normal",
-          defaultDisplayName: `ec(${reactionName}, ${name})`,
-          name: `ec(${reactionName}, ${name})`,
-          category: "Elasticities",
-        });
-      }
     }
 
     for (const [name, value] of Object.entries(result.boundarySpecies)) {
@@ -218,15 +209,6 @@ export class RoadrunnerServerSimulator extends Simulator {
         setName: name,
         defaultValue: value,
       });
-
-      for (const reactionName of result.reactions) {
-        variables.push({
-          type: "normal",
-          defaultDisplayName: `ec(${reactionName}, ${name})`,
-          name: `ec(${reactionName}, ${name})`,
-          category: "Elasticities",
-        });
-      }
     }
 
     for (const name of result.reactions) {
