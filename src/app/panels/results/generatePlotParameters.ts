@@ -314,7 +314,7 @@ export const generatePlotParameters = (
       },
       xAxis: {
         type: "value",
-        name: xAxisTitle,
+        name: xAxis.includeTitle ? xAxisTitle : "",
         nameLocation: "center",
         nameGap: 40,
         nameTextStyle: {
@@ -364,7 +364,7 @@ export const generatePlotParameters = (
       },
       yAxis: {
         type: "value",
-        name: yAxisTitle,
+        name: yAxis.includeTitle ? yAxisTitle : "",
         nameLocation: "center",
         nameGap: 40,
         nameTextStyle: {
