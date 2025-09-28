@@ -1,3 +1,5 @@
+import type { Category } from "../category";
+
 export type TimeCourseParameters = {
   startTime: number;
   endTime: number;
@@ -20,7 +22,7 @@ type VariableBase = {
   defaultDisplayName: string;
   /** General name used internally by the simulator */
   name: string;
-  category: string;
+  category: Category;
 };
 
 export type NormalVariable = VariableBase & {

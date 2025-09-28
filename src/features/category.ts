@@ -14,6 +14,8 @@ export const CATEGORY_ORDER = [
   "Reaction Rates",
 ];
 
+export type Category = (typeof CATEGORY_ORDER)[number];
+
 /**
  * Groups variables into categories, following the pre-defined category order.
  *

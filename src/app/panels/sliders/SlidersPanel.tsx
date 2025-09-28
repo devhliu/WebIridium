@@ -4,7 +4,7 @@ import styles from "./SlidersPanel.module.css";
 import buttonStyles from "@/components/Button.module.css";
 
 import { type SettableVariable } from "@/features/simulation/Simulator";
-import { groupVariables } from "@/features/category";
+import { groupVariables, type Category } from "@/features/category";
 import { hasDisplayName } from "@/features/simulation/variableNames";
 
 import { variablesAtom } from "@/globals/workspace/model";
@@ -30,7 +30,7 @@ import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import IconButton from "@/components/IconButton";
 import Select from "@/components/input/Select";
 
-const SLIDER_CATEGORY_ORDER = [
+const SLIDER_CATEGORY_ORDER: Category[] = [
   "Parameters",
   "ODEs",
   "Floating Species",
