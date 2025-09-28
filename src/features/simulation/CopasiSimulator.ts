@@ -1,4 +1,4 @@
-import type { ModelInfo, SimResult } from "@/third-party/copasi";
+import type { ModelInfo, SimResult } from "@/types/copasi";
 import {
   Simulator,
   type SteadyStateResult,

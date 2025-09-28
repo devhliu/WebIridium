@@ -1,4 +1,4 @@
-import type { SimResult } from "@/third-party/copasi.js";
+import type { SimResult } from "@/types/copasi.js";
 import type { WorkerType } from "../workers.ts";
 import {
   createMockWorkerMessageHandler,
