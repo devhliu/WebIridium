@@ -17,8 +17,8 @@ interface LibSbmlSimTimeCourseResult {
 }
 
 export class LibSbmlSimSimulator extends Simulator {
-  defaultIndependentVariableId = "time";
-  scanIndependentVariableId = "time";
+  defaultIndependentVariableName = "time";
+  scanIndependentVariableName = "time";
 
   #workerPool: WorkerPool;
 

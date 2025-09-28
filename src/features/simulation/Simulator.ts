@@ -130,8 +130,8 @@ export type ComputeSteadyStateOptions = {
 };
 
 export abstract class Simulator {
-  abstract defaultIndependentVariableId: string;
-  abstract scanIndependentVariableId: string;
+  abstract defaultIndependentVariableName: string;
+  abstract scanIndependentVariableName: string;
 
   abstract simulateTimeCourse(
     antimonyCode: string,

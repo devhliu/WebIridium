@@ -11,8 +11,8 @@ import { WorkerPool } from "@/features/taskPool";
 import { createWorker } from "@/features/workers.ts";
 
 export class CopasiSimulator extends Simulator {
-  defaultIndependentVariableId = "Time";
-  scanIndependentVariableId = "Time";
+  defaultIndependentVariableName = "Time";
+  scanIndependentVariableName = "Time";
 
   #workerPool: WorkerPool;
 

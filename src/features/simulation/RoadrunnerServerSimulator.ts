@@ -65,8 +65,8 @@ type SteadyStateResponse = {
  * Simulator that uses external RoadRunner WebSocket server.
  */
 export class RoadrunnerServerSimulator extends Simulator {
-  defaultIndependentVariableId = "time";
-  scanIndependentVariableId = "time";
+  defaultIndependentVariableName = "time";
+  scanIndependentVariableName = "time";
 
   #socketTaskPool: SocketTaskPool;
 

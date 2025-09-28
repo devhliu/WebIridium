@@ -205,7 +205,7 @@ export const updateEditorContentAtom = atom(
       set(
         independentVariableAtom,
         newVariables.find(
-          (v) => v.name === simulator.defaultIndependentVariableId,
+          (v) => v.name === simulator.defaultIndependentVariableName,
         )?.name ?? null,
       );
     }
