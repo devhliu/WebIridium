@@ -130,6 +130,7 @@ const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
       titles.push(title);
     }
 
+    chartRef.current?.clear();
     chartRef.current?.setOption(
       {
         title: {

@@ -79,6 +79,7 @@ const ResultsPlot = ({ result, datasets, width, height }: ResultsPlotProps) => {
     }
 
     // might be null in a test
+    plotRef.current?.clear();
     plotRef.current?.setOption(plotOptions, true);
   }, [plotOptions]);
 
