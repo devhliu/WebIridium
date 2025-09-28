@@ -40,7 +40,7 @@ test("panels should all be cancellable when a simulation is running", async () =
     expect(simulateTimeCourseButton).toBeEnabled();
   });
 
-  setWorkerResponseDelay(100);
+  setWorkerResponseDelay(1000);
 
   await userEvent.click(simulateTimeCourseButton);
 
