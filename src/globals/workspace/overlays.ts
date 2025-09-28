@@ -8,6 +8,7 @@ export interface Dataset {
   enabled: boolean;
   independentVariableName: string;
   variables: Record<string, DatasetVariable>;
+  size: number;
   columns: {
     title: string;
     values: number[];
@@ -19,7 +20,6 @@ export interface DatasetVariable {
   displayName: string;
   visible: boolean;
   color: string;
-  size: number;
 }
 
 export const datasetsAtom = atom<Dataset[]>([]);
@@ -98,7 +98,6 @@ export const importCsvDatasetAtom = atom(
           displayName: column.title,
           visible: true,
           color: getDefaultColorForIndex(colorIndexOffset + i),
-          size: 5,
         };
       }
 
@@ -108,6 +107,7 @@ export const importCsvDatasetAtom = atom(
         independentVariableName: columns[0].title,
         columns: columns,
         variables: variables,
+        size: 5,
       };
 
       set(datasetsAtom, [...datasets, dataset]);

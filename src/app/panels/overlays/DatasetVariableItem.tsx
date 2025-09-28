@@ -3,7 +3,6 @@ import GenericVariableItem from "../simulation/variable-list/GenericVariableItem
 import PropertyList from "@/components/property-list/PropertyList";
 import PropertyHeading from "@/components/property-list/PropertyHeading";
 import ColorProperty from "@/components/property-list/ColorProperty";
-import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
 
 export interface DatasetVariableItemProps {
   variable: DatasetVariable;
@@ -35,14 +34,6 @@ const DatasetVariableItem = ({
           name="Color"
           value={variable.color}
           onChange={handleChangeFor("color")}
-        />
-        <NumericSliderProperty
-          name="Size"
-          value={variable.size}
-          onChange={handleChangeFor("size")}
-          min={1}
-          max={100}
-          step={1}
         />
       </PropertyList>
     </GenericVariableItem>

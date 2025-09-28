@@ -30,12 +30,13 @@ const PADDING = 50; // hard-coded but whatever
 /**
  * Calculates min and max for a list of values.
  */
-const calculateBounds = (values: number[]): [number, number] => {
-  const min = values.reduce((acc, current) => Math.min(acc, current), Infinity);
-  const max = values.reduce(
-    (acc, current) => Math.max(acc, current),
-    -Infinity,
-  );
+const calculateBounds = (...values: number[][]): [number, number] => {
+  const min = values
+    .flat()
+    .reduce((acc, current) => Math.min(acc, current), Infinity);
+  const max = values
+    .flat()
+    .reduce((acc, current) => Math.max(acc, current), -Infinity);
   return [min, max];
 };
 
@@ -178,7 +179,7 @@ export const generatePlotParameters = (
     }
   }
 
-  // Dataset
+  // Dataset overlays
 
   for (const dataset of datasets) {
     if (!dataset.enabled) continue;
@@ -197,7 +198,7 @@ export const generatePlotParameters = (
       series.push({
         type: "scatter",
         name: datasetVariable.displayName,
-        symbolSize: datasetVariable.size,
+        symbolSize: dataset.size,
         color: datasetVariable.color,
         data: column.values.map((v, i) => [
           datasetIndependentVariableColumn.values[i],
@@ -211,7 +212,16 @@ export const generatePlotParameters = (
 
   const [rangeMinX, rangeMaxX] =
     isAutoscaledX && independentVariableColumn
-      ? calculateBounds(independentVariableColumn.values)
+      ? calculateBounds(
+          independentVariableColumn.values,
+          ...datasets
+            .filter((d) => d.enabled)
+            .map(
+              (d) =>
+                d.columns.find((c) => c.title === d.independentVariableName)!
+                  .values,
+            ),
+        )
       : [minX, maxX];
   const [rangeMinY, rangeMaxY] = isAutoscaledY
     ? calculateBounds(
@@ -223,6 +233,13 @@ export const generatePlotParameters = (
           )
           .map((c) => c.values)
           .flat(),
+        ...datasets
+          .filter((d) => d.enabled)
+          .map((d) =>
+            d.columns
+              .filter((c) => c.title !== d.independentVariableName)
+              .flatMap((d) => d.values),
+          ),
       )
     : [minY, maxY];
 

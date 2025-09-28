@@ -8,6 +8,7 @@ import PropertyAccordionItem from "@/components/property-accordion/PropertyAccor
 import PropertyList from "@/components/property-list/PropertyList";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
+import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
 
 export interface DatasetItemProps {
   dataset: Dataset;
@@ -54,6 +55,19 @@ const DatasetItem = ({ dataset, onDatasetChange }: DatasetItemProps) => {
                 v.name,
               ]),
             )}
+          />
+          <NumericSliderProperty
+            name="Size"
+            value={dataset.size}
+            onChange={(newSize: number) =>
+              onDatasetChange({
+                ...dataset,
+                size: newSize,
+              })
+            }
+            min={1}
+            max={100}
+            step={1}
           />
         </PropertyList>
 
