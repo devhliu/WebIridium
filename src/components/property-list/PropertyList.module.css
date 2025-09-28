@@ -37,6 +37,10 @@
   font-size: 1em;
   font-weight: bold;
   margin: 0;
+
+  &:not(:first-child) {
+    padding-top: var(--spacing-5);
+  }
 }
 
 /* See the comment in BooleanProperty.tsx for more about this. */
