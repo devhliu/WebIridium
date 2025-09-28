@@ -20,6 +20,10 @@ export class LibSbmlSimSimulator extends Simulator {
   defaultIndependentVariableName = "time";
   scanIndependentVariableName = "time";
 
+  capabilities = {
+    canRunSteadyState: false,
+  };
+
   #workerPool: WorkerPool;
 
   constructor() {

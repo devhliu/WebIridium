@@ -1,5 +1,12 @@
 import type { Category } from "../category";
 
+/**
+ * Information about what the simulator can do.
+ */
+export type SimulatorCapabilities = {
+  readonly canRunSteadyState: boolean;
+};
+
 export type TimeCourseParameters = {
   startTime: number;
   endTime: number;
@@ -132,8 +139,10 @@ export type ComputeSteadyStateOptions = {
 };
 
 export abstract class Simulator {
-  abstract defaultIndependentVariableName: string;
-  abstract scanIndependentVariableName: string;
+  abstract readonly defaultIndependentVariableName: string;
+  abstract readonly scanIndependentVariableName: string;
+
+  abstract readonly capabilities: SimulatorCapabilities;
 
   abstract simulateTimeCourse(
     antimonyCode: string,

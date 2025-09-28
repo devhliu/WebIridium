@@ -13,8 +13,8 @@ import {
   currentLeftPanelAtom,
   currentBottomPanelAtom,
   currentVeryRightPanelAtom,
-  LEFT_PANELS,
   currentRightPanelAtom,
+  availableLeftPanelsAtom,
 } from "@/globals/workspace/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/workspace/saving";
@@ -76,13 +76,15 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
+  const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
+
   return (
     <div className={styles.app}>
       <AppMenubar />
 
       <div className={styles.appMain}>
         <Sidebar
-          panels={LEFT_PANELS}
+          panels={availableLeftPanels}
           currentPanel={currentLeftPanel}
           onPanelChange={setCurrentLeftPanel}
         />
@@ -208,4 +210,6 @@ const App = () => {
   );
 };
 
+// this is exported for testing
+export { AppContent };
 export default App;

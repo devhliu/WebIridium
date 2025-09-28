@@ -16,10 +16,10 @@ import {
 } from "@/components/Menubar";
 
 import {
-  LEFT_PANELS,
   currentLeftPanelAtom,
   currentRightPanelAtom,
   currentBottomPanelAtom,
+  availableLeftPanelsAtom,
 } from "@/globals/workspace/layout";
 
 import { useToast } from "@/components/Toast";
@@ -44,6 +44,7 @@ const AppMenubar = () => {
   const setModel = useSetAtom(setModelAtom);
   const workspaceName = useAtomValue(nameAtom);
 
+  const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
   const [currentRightPanel, setCurrentRightPanel] = useAtom(
     currentRightPanelAtom,
@@ -159,7 +160,7 @@ const AppMenubar = () => {
             value={currentLeftPanel}
             onValueChange={setCurrentLeftPanel as (newValue: string) => void}
           >
-            {LEFT_PANELS.map((panel) => (
+            {availableLeftPanels.map((panel) => (
               <MenubarRadioItem key={panel} value={panel}>
                 {panel}
               </MenubarRadioItem>

@@ -19,6 +19,7 @@ import UncontrolledVariableList from "@/app/panels/simulation/variable-list/Unco
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import SimulationPanel from "./SimulationPanel";
+import StringProperty from "@/components/property-list/StringProperty";
 
 import { groupVariablesForSelectComponent } from "@/features/category";
 import { getVariableSetDisplayName } from "@/features/simulation/variableNames";
@@ -35,7 +36,7 @@ import {
   type ParameterScanOptions,
 } from "@/globals/workspace/settings";
 import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
-import StringProperty from "@/components/property-list/StringProperty";
+import { simulatorAtom } from "@/globals/workspace/simulator";
 
 export interface ParameterScanPanelProps {
   visible: boolean;
@@ -52,6 +53,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
   const isSimulating = useAtomValue(isSimulatingAtom);
   const isSliderSimulationQueued = useAtomValue(isSliderSimulationQueuedAtom);
   const modelStatus = useAtomValue(modelStatusAtom);
+  const simulator = useAtomValue(simulatorAtom);
   const runParameterScan = useSetAtom(runParameterScanAtom);
   const cancelSimulation = useSetAtom(cancelSimulationAtom);
 
@@ -108,9 +110,11 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
             <ToggleGroupButton value="timeCourse">
               Time Course
             </ToggleGroupButton>
-            <ToggleGroupButton value="steadyState">
-              Steady State
-            </ToggleGroupButton>
+            {simulator.capabilities.canRunSteadyState && (
+              <ToggleGroupButton value="steadyState">
+                Steady State
+              </ToggleGroupButton>
+            )}
           </ToggleGroup>
 
           {parameterScanOptions.mode === "timeCourse" && (

@@ -14,6 +14,10 @@ export class CopasiSimulator extends Simulator {
   defaultIndependentVariableName = "Time";
   scanIndependentVariableName = "Time";
 
+  capabilities = {
+    canRunSteadyState: true,
+  };
+
   #workerPool: WorkerPool;
 
   constructor() {

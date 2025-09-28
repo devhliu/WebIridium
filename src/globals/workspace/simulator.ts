@@ -10,6 +10,7 @@ import { LibSbmlSimSimulator } from "@/features/simulation/LibSbmlSimSimulator";
 import { RoadrunnerServerSimulator } from "@/features/simulation/RoadrunnerServerSimulator";
 
 import { editorContentAtom, updateEditorContentAtom } from "./model";
+import { parameterScanOptionsAtom } from "./settings";
 
 export const SIMULATOR_PRODUCERS: Record<string, () => Simulator> = {
   COPASI: () => new CopasiSimulator(),
@@ -35,6 +36,12 @@ export const updateSimulatorAtom = atom(null, (get, set, name: string) => {
   const currentSimulator = get(_simulatorAtom);
   if (getSimulatorName(currentSimulator) !== name) {
     set(_simulatorAtom, SIMULATOR_PRODUCERS[name]());
+
+    // reset mode to time course, since some simulators don't support steady state
+    set(parameterScanOptionsAtom, {
+      ...get(parameterScanOptionsAtom),
+      mode: "timeCourse",
+    });
 
     // force model reload
     void set(updateEditorContentAtom, {

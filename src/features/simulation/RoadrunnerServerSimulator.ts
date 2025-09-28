@@ -68,6 +68,10 @@ export class RoadrunnerServerSimulator extends Simulator {
   defaultIndependentVariableName = "time";
   scanIndependentVariableName = "time";
 
+  capabilities = {
+    canRunSteadyState: true,
+  };
+
   #socketTaskPool: SocketTaskPool;
 
   constructor() {

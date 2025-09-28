@@ -1,9 +1,12 @@
 import { test, expect, afterEach, describe, it } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
-import { renderFlush } from "@/testing-utils/render";
+import { renderFlush, renderWithinWorkspace } from "@/testing-utils/render";
 import userEvent from "@testing-library/user-event";
 
-import App from "@/app/App";
+import { useSetAtom } from "jotai";
+
+import App, { AppContent } from "@/app/App";
+import { updateSimulatorAtom } from "@/globals/workspace/simulator";
 
 const RESULTS_PANEL_TEST_ID = "results-panel";
 
@@ -23,6 +26,45 @@ const SAMPLE_SHARE_FRAGMENT =
 
 const UNREASONABLE_SAMPLE_SHARE_FRAGMENT =
   "#s%3DNZHLTsMwEEV%2F5cobpCo0aRGbVkVqKxZIvCRYZuMmE2oSeyp7DFSo%2F44mLSuP7z0zmsev%2BaKYHAezqAoTrCezMG9io1DEE7c0mMI03Kpclnhk28LCq4EuskfrUl9AjgeCC%2F9WUYeyBEccXNODA4E7yJ5AP9YfBjpTaawwourdn70ETyHXYdSfWWiBsoRLyIlaCMOF1jVWCBYNe09BLjBNP6YarnF9h80S%2FWyyrsNGf9sl%2BvlkU4d%2BhhWq6c2tCmM4V2SFaomtPpq%2Bwqy61HzocOR8FQmBBSlHwvfeivbRcoHPnGTkmkEn1TGS83nQ9nZZhIOSKg%2FUSR1MYS7%2BuPJfo4szCyPO05ZzTGQKc7DRehKKSYmkx3h3epiqMBTaczzXc2W%2Fo%2FjSvbILklSrqup0Ov0B";
+
+describe("sidebar", () => {
+  it("should show steady state if it is available", async () => {
+    await renderWithinWorkspace(<AppContent />);
+
+    const steadyStateButton = screen.getByLabelText("Steady State");
+    expect(steadyStateButton).toBeInTheDocument();
+    expect(steadyStateButton).toHaveRole("button");
+  });
+
+  it("should not show steady state if it is not available", async () => {
+    const SWITCH_TEXT = "SWITCH TO LIBSBMLSIM";
+    const SwitchToLibSbmlSimButton = () => {
+      const updateSimulator = useSetAtom(updateSimulatorAtom);
+      return (
+        <button onClick={() => updateSimulator("libsbmlsim")}>
+          {SWITCH_TEXT}
+        </button>
+      );
+    };
+
+    await renderWithinWorkspace(
+      <>
+        <AppContent />
+        <SwitchToLibSbmlSimButton />
+      </>,
+    );
+
+    const steadyStateButton = screen.getByLabelText("Steady State");
+    expect(steadyStateButton).toBeInTheDocument();
+    expect(steadyStateButton).toHaveRole("button");
+
+    const switchButton = screen.getByText(SWITCH_TEXT);
+    expect(switchButton).toBeInTheDocument();
+    await userEvent.click(switchButton);
+
+    expect(screen.queryByLabelText("Steady State")).not.toBeInTheDocument();
+  });
+});
 
 describe("sharing", () => {
   afterEach(() => {
