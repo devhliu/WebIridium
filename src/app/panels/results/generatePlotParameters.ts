@@ -27,17 +27,19 @@ const X_AXIS_LABEL_ROTATE90_MIN = 20;
 
 const PADDING = 50; // hard-coded but whatever
 
-/**
- * Calculates min and max for a list of values.
- */
-const calculateBounds = (...values: number[][]): [number, number] => {
+const calculatePlotBounds = (...values: number[][]): [number, number] => {
   const min = values
     .flat()
     .reduce((acc, current) => Math.min(acc, current), Infinity);
   const max = values
     .flat()
     .reduce((acc, current) => Math.max(acc, current), -Infinity);
-  return [min, max];
+
+  if (min === Infinity || max === Infinity || min === max) {
+    return [0, 10];
+  } else {
+    return [min, max];
+  }
 };
 
 /**
@@ -212,7 +214,7 @@ export const generatePlotParameters = (
 
   const [rangeMinX, rangeMaxX] =
     isAutoscaledX && independentVariableColumn
-      ? calculateBounds(
+      ? calculatePlotBounds(
           independentVariableColumn.values,
           ...datasets
             .filter((d) => d.enabled)
@@ -224,7 +226,7 @@ export const generatePlotParameters = (
         )
       : [minX, maxX];
   const [rangeMinY, rangeMaxY] = isAutoscaledY
-    ? calculateBounds(
+    ? calculatePlotBounds(
         columns
           .filter(
             (c) =>
