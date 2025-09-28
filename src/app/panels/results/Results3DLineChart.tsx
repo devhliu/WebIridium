@@ -21,6 +21,10 @@ import {
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 
+// if it's too much, the labels get crowded
+// just make them hover to see what the value is
+const MAX_TITLES_TO_SHOW = 12;
+
 export interface Results3DLineChartProps {
   result: SimulationResult;
 }
@@ -153,6 +157,7 @@ const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
             show: false,
           },
           axisLabel: {
+            show: titles.length <= MAX_TITLES_TO_SHOW,
             interval: 0,
           },
         },
@@ -163,7 +168,11 @@ const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
             show: false,
           },
         },
-        grid3D: {},
+        grid3D: {
+          viewControl: {
+            projection: "orthogonal",
+          },
+        },
         series: series,
       },
       false,
