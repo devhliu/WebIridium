@@ -1,5 +1,5 @@
 /// <reference types="vitest" />
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import svgr from "vite-plugin-svgr";
 import { nodePolyfills } from "vite-plugin-node-polyfills";
@@ -7,10 +7,34 @@ import { nodePolyfills } from "vite-plugin-node-polyfills";
 // https://medium.com/@vitor.vicen.te/setting-up-path-aliases-in-a-vite-typescript-react-project-the-ultimate-way-d2a9a8ff7c63
 import path from "path";
 
+/**
+ * This plugin includes goat counter only when its production build.
+ */
+const includeGoatCounterPlugin: Plugin = {
+  name: "include-goat-counter",
+  apply: "build",
+  transformIndexHtml: {
+    order: "post",
+    handler() {
+      return [
+        {
+          tag: "script",
+          attrs: {
+            async: true,
+            src: "//gc.zgo.at/count.js",
+            "data-goatcounter": "https://hsauro.goatcounter.com/count",
+          },
+          injectTo: "head",
+        },
+      ];
+    },
+  },
+};
+
 // https://vite.dev/config/
 export default defineConfig({
   base: "/WebIridium",
-  plugins: [react(), svgr(), nodePolyfills()],
+  plugins: [react(), svgr(), nodePolyfills(), includeGoatCounterPlugin],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
