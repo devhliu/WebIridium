@@ -21,20 +21,17 @@ export interface TooltipProps {
 
 export const Tooltip = ({ text, side = "bottom", children }: TooltipProps) => {
   return (
-    <>
-      <RadixTooltip.Root>
-        <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
-
-        <RadixTooltip.Portal>
-          <RadixTooltip.Content
-            className={styles.content}
-            side={side}
-            sideOffset={4}
-          >
-            {text}
-          </RadixTooltip.Content>
-        </RadixTooltip.Portal>
-      </RadixTooltip.Root>
-    </>
+    <RadixTooltip.Root>
+      <RadixTooltip.Trigger asChild>{children}</RadixTooltip.Trigger>
+      <RadixTooltip.Portal>
+        <RadixTooltip.Content
+          className={styles.content}
+          side={side}
+          sideOffset={4}
+        >
+          {text}
+        </RadixTooltip.Content>
+      </RadixTooltip.Portal>
+    </RadixTooltip.Root>
   );
 };
