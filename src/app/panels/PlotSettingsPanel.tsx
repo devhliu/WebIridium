@@ -40,6 +40,7 @@ import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import PanelTitle from "./PanelTitle";
 import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
 import IconButton from "@/components/IconButton";
+import { Tooltip } from "@/components/Tooltip";
 
 export interface PlotSettingsPanelProps {
   onClose: () => void;
@@ -323,16 +324,24 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
               }}
             >
               <ToggleGroupButton value="none">
-                <GridNoneIcon width="1em" height="1em" />
+                <Tooltip text="Empty Grid">
+                  <GridNoneIcon width="1.6em" height="1.6em" />
+                </Tooltip>
               </ToggleGroupButton>
               <ToggleGroupButton value="x">
-                <GridXIcon width="1em" height="1em" />
+                <Tooltip text="X Grid">
+                  <GridXIcon width="1.6em" height="1.6em" />
+                </Tooltip>
               </ToggleGroupButton>
               <ToggleGroupButton value="y">
-                <GridYIcon width="1em" height="1em" />
+                <Tooltip text="Y Grid">
+                  <GridYIcon width="1.6em" height="1.6em" />
+                </Tooltip>
               </ToggleGroupButton>
               <ToggleGroupButton value="xy">
-                <GridXYIcon width="1em" height="1em" />
+                <Tooltip text="XY Grid">
+                  <GridXYIcon width="1.6em" height="1.6em" />
+                </Tooltip>
               </ToggleGroupButton>
             </ToggleGroup>
 
