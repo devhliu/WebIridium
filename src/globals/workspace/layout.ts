@@ -56,7 +56,7 @@ export const availableLeftPanelsAtom: Atom<LeftPanel[]> = atom((get) => {
 export const currentRightPanelAtom = atom(
   (get) => get(_currentRightPanelAtom),
   (get, set, panel: RightPanel | null) => {
-    if (get(currentVeryRightPanelAtom) !== null) {
+    if (panel === null && get(currentVeryRightPanelAtom) !== null) {
       set(currentVeryRightPanelAtom, null);
     }
     set(_currentRightPanelAtom, panel);
