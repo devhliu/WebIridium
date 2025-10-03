@@ -58,11 +58,11 @@ it("should let you toggle overlays", async () => {
 
   expect(screen.getByText(ITS_CLOSE_TEXT)).toBeInTheDocument();
 
-  await userEvent.click(screen.getByText("Add Overlays"));
+  await userEvent.click(screen.getByText("Add Overlay Data"));
 
   expect(screen.getByText(ITS_OPEN_TEXT)).toBeInTheDocument();
 
-  await userEvent.click(screen.getByText("Close Overlays"));
+  await userEvent.click(screen.getByText("Close Overlay Data"));
 
   expect(screen.getByText(ITS_CLOSE_TEXT)).toBeInTheDocument();
 });

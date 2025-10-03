@@ -3,6 +3,18 @@
 import { getDefaultColorForIndex } from "@/features/colors";
 import { atom } from "jotai";
 
+export const markerSymbols = [
+  "circle",
+  "rect",
+  "roundRect",
+  "triangle",
+  "diamond",
+  "pin",
+  "arrow",
+] as const;
+
+export type MarkerSymbol = (typeof markerSymbols)[number];
+
 export interface Dataset {
   name: string;
   enabled: boolean;
@@ -20,6 +32,7 @@ export interface DatasetVariable {
   displayName: string;
   visible: boolean;
   color: string;
+  marker: MarkerSymbol;
 }
 
 export const datasetsAtom = atom<Dataset[]>([]);
@@ -98,6 +111,7 @@ export const importCsvDatasetAtom = atom(
           displayName: column.title,
           visible: true,
           color: getDefaultColorForIndex(colorIndexOffset + i),
+          marker: "circle" as const,
         };
       }
 

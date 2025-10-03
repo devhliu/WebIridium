@@ -37,7 +37,7 @@
 .quick-actions-container {
   display: grid;
   gap: calc(2 * var(--spacing-panel));
-  grid-template-columns: 150px 2fr;
+  grid-template-columns: 170px 2fr;
   padding: var(--spacing-panel);
   overflow-y: auto;
   display: grid;

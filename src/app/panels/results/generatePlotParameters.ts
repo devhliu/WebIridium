@@ -202,6 +202,7 @@ export const generatePlotParameters = (
         name: datasetVariable.displayName,
         symbolSize: dataset.size,
         color: datasetVariable.color,
+        symbol: datasetVariable.marker,
         data: column.values.map((v, i) => [
           datasetIndependentVariableColumn.values[i],
           v,

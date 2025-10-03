@@ -66,7 +66,7 @@ const PlotQuickActionsPanel = () => {
           ) : (
             <LayersIcon width="1em" height="1em" />
           )}
-          {isOverlaysOpen ? "Close Overlays" : "Add Overlays"}
+          {isOverlaysOpen ? "Close Overlay Data" : "Add Overlay Data"}
         </button>
       </div>
 
