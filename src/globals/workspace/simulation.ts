@@ -25,8 +25,8 @@ import {
   variablesMapAtom,
 } from "./model";
 import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
-import { variableSliderStatesAtom } from "./slider";
-import { currentBottomPanelAtom, currentRightPanelAtom } from "./layout";
+import { variableSliderStatesAtom, areSlidersActiveAtom } from "./slider";
+import { currentRightPanelAtom } from "./layout";
 import { TaskTermination } from "@/features/taskPool";
 import { tryAddToHistoryAtom } from "./history";
 
@@ -55,9 +55,7 @@ export const isSimulatingAtom = atom((get) =>
 
 const getVariableValues = (get: Getter): Record<string, number> => {
   // if sliders panel is not open, do not use them
-  if (get(currentBottomPanelAtom) !== "Sliders") {
-    return {};
-  }
+  if (!get(areSlidersActiveAtom)) return {};
 
   const sliderStates = get(variableSliderStatesAtom);
   const variableMap = get(variablesMapAtom);

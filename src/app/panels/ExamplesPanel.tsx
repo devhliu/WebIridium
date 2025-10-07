@@ -74,13 +74,14 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
 
   const handleRun = async (example: string) => {
     setRunningExample(example);
-    if (
-      !(await setModel({
-        name: exampleFormattedNames[example],
-        content: examples[example],
-        resetCurrentResult: false,
-      }))
-    ) {
+
+    const wasModelSetSuccessful = await setModel({
+      name: exampleFormattedNames[example],
+      content: examples[example],
+      resetCurrentResult: false,
+    });
+
+    if (!wasModelSetSuccessful) {
       toast({
         type: "error",
         title: "Example Failed to Load",

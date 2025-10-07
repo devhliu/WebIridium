@@ -7,6 +7,7 @@ import {
 } from "./simulation";
 import { type SettableVariable } from "@/features/simulation/Simulator";
 import { variablesMapAtom } from "./model";
+import { currentBottomPanelAtom } from "./layout";
 
 export interface VariableSliderState {
   value: number;
@@ -145,3 +146,7 @@ export const loadPresetAndSimulateAtom = atom(
     });
   },
 );
+
+export const areSlidersActiveAtom = atom((get) => {
+  return get(currentBottomPanelAtom) === "Sliders";
+});

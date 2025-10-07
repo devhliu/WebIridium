@@ -19,12 +19,19 @@ import {
   createLoadPresetCommandHandler,
   createLoadPresetProvider,
 } from "@/features/editor/presetComments";
+import { type SettableVariable } from "@/features/simulation/Simulator";
 import ModelSemanticsChecker from "@/features/editor/language-handler/ModelSemanticChecker";
-import { loadPresetAndSimulateAtom } from "@/globals/workspace/slider";
+import {
+  areSlidersActiveAtom,
+  loadPresetAndSimulateAtom,
+  variableSliderStatesAtom,
+} from "@/globals/workspace/slider";
 import { monacoThemes } from "@/features/editor/theme";
 
 const SEMANTIC_CHECKER_DEBOUNCE = 100; // in ms
 const ANNOTATION_COLOR = "Red";
+
+const VARIABLE_CHANGED_WARNING_DEBOUNCE = 10_000; // in ms
 
 const EditorPanel = () => {
   const theme = useAtomValue(themeAtom);
@@ -32,6 +39,9 @@ const EditorPanel = () => {
 
   const loadPresetAndSimulate = useSetAtom(loadPresetAndSimulateAtom);
   const setEditorActionsDispatcher = useSetAtom(editorActionsDispatcherAtom);
+
+  const variableSliderStates = useAtomValue(variableSliderStatesAtom);
+  const areSlidersActive = useAtomValue(areSlidersActiveAtom);
 
   const editorContent = useAtomValue(editorContentAtom);
   const updateEditorContent = useSetAtom(updateEditorContentAtom);
@@ -43,6 +53,54 @@ const EditorPanel = () => {
   const decorationsRef = useRef<string[]>([]);
   const semanticCheckerTimerIdRef = useRef<number | null>(null);
   const areAnnotationsEnabledRef = useRef(false);
+
+  const canWarnChangedRef = useRef(true); // used for debouncing the warning when a variable with a slider on changes
+  const onEditorChangeRef = useRef<() => Promise<void>>(async () => {});
+  onEditorChangeRef.current = async () => {
+    if (!editorRef.current) return;
+
+    queueSemanticCheck();
+
+    const result = await updateEditorContent({
+      content: editorRef.current.getValue(),
+    });
+
+    if (
+      canWarnChangedRef.current &&
+      areSlidersActive &&
+      result.type === "success"
+    ) {
+      const oldValues = new Map(
+        result.oldVariables
+          .filter((v) => v.type === "settable")
+          .map((v) => [v.name, v.defaultValue]),
+      );
+
+      for (const v of result.newVariables) {
+        const oldValue = oldValues.get(v.name);
+        if (oldValue === undefined) continue;
+
+        if (oldValue !== (v as SettableVariable).defaultValue) {
+          if (Object.hasOwn(variableSliderStates, v.name)) {
+            canWarnChangedRef.current = false;
+
+            setTimeout(() => {
+              canWarnChangedRef.current = true;
+            }, VARIABLE_CHANGED_WARNING_DEBOUNCE);
+
+            toast({
+              type: "warning",
+              title: "Variable changed while slider active",
+              description:
+                "The slider value will take precedence over the updated model value.",
+            });
+
+            break;
+          }
+        }
+      }
+    }
+  };
 
   useEffect(() => {
     const container = containerRef.current;
@@ -67,8 +125,7 @@ const EditorPanel = () => {
       });
 
       const editorChangeEvent = editor.onDidChangeModelContent(() => {
-        void updateEditorContent({ content: editor.getValue() });
-        queueSemanticCheck();
+        void onEditorChangeRef.current();
       });
 
       monaco.editor.setTheme(monacoThemes[theme].name);
@@ -140,6 +197,7 @@ const EditorPanel = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     containerRef,
+    onEditorChangeRef,
     updateEditorContent,
     setEditorActionsDispatcher,
     loadPresetAndSimulate,

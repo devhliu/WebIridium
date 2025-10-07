@@ -127,6 +127,10 @@ export interface UpdateEditorContentOptions {
   resetAllVariables?: boolean;
 }
 
+export type UpdateEditorContentResult =
+  | { type: "failure"; message: string }
+  | { type: "canceled" }
+  | { type: "success"; oldVariables: Variable[]; newVariables: Variable[] };
 /**
  * Update editor content and associated things like model info, variables, etc.
  * @returns `true` on successful model update, `false` on failed model update
@@ -141,10 +145,16 @@ export const updateEditorContentAtom = atom(
       skipDebounce = false,
       resetAllVariables = false,
     }: UpdateEditorContentOptions,
-  ): Promise<boolean> => {
+  ): Promise<UpdateEditorContentResult> => {
     // the !skipDebounce is for initial loads
     // if infinite loading errors on app initialization are experienced, check here
-    if (get(editorContentAtom) === content && !skipDebounce) return true;
+    if (get(editorContentAtom) === content && !skipDebounce) {
+      return {
+        type: "success",
+        oldVariables: get(variablesAtom),
+        newVariables: get(variablesAtom),
+      };
+    }
 
     const simulator = get(simulatorAtom);
     const variableSliderStates = get(variableSliderStatesAtom);
@@ -159,6 +169,7 @@ export const updateEditorContentAtom = atom(
     set(_editorContentAtom, content);
     set(_modelStatusAtom, { type: "loading" });
 
+    const oldVariables = get(variablesAtom);
     let newVariables: Variable[];
     try {
       // wait a bit in case the user is still typing
@@ -177,13 +188,18 @@ export const updateEditorContentAtom = atom(
       );
     } catch (err) {
       if (err instanceof TaskTermination) {
-        return false;
+        return {
+          type: "canceled",
+        };
       } else if (err instanceof Error) {
         set(_modelStatusAtom, {
           type: "error",
           message: err.message,
         });
-        return false;
+        return {
+          type: "failure",
+          message: err.message,
+        };
       } else {
         throw err;
       }
@@ -226,9 +242,9 @@ export const updateEditorContentAtom = atom(
       set(parameterScanOptionsAtom, {
         ...parameterScanOptions,
         varyingParameter:
-          // first try to use the first parameter
+          // first try to use the first parameter that is settable
           firstAvailableParameter?.setName ??
-          // if no parameteres found, use the first available
+          // if no parameters found, use the first available settable non-parameter
           newVariables.find((v) => v.type === "settable")?.setName,
       });
     }
@@ -262,7 +278,11 @@ export const updateEditorContentAtom = atom(
       );
     }
 
-    return true;
+    return {
+      type: "success",
+      oldVariables,
+      newVariables,
+    };
   },
 );
 
@@ -279,6 +299,7 @@ export interface SetModelOptions {
 
 /**
  * Set the model which updates the editor content, model name, and resets other relevant state.
+ * @returns if the model failed to load
  */
 export const setModelAtom = atom(
   null,
@@ -296,12 +317,14 @@ export const setModelAtom = atom(
       set(simulationResultAtom, null);
     }
 
-    return await set(updateEditorContentAtom, {
+    const updateResult = await set(updateEditorContentAtom, {
       content,
       skipDebounce: true,
       // reseting all the variables will delete some of the variable settings which will cause the current result to be unable to display
       // so don't reset all variables if not resetting the result as well.
       resetAllVariables: resetCurrentResult,
     });
+
+    return updateResult.type !== "failure";
   },
 );
