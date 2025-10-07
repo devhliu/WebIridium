@@ -1,6 +1,6 @@
 import { atom } from "jotai";
 import { commitSavedData } from "@/features/saving";
-import { themeOptionAtom } from "../appearance";
+import { editorFontSizeAtom, themeOptionAtom } from "../appearance";
 import { graphSettingsAtom, nameAtom, variableSettingssAtom } from "./settings";
 import { editorContentAtom } from "./model";
 import { historyAtom } from "./history";
@@ -8,6 +8,7 @@ import { historyAtom } from "./history";
 export const saveAtom = atom(null, async (get, _set): Promise<void> => {
   await commitSavedData({
     theme: get(themeOptionAtom),
+    editorFontSize: get(editorFontSizeAtom),
     workspace: {
       name: get(nameAtom),
       graphSettings: get(graphSettingsAtom),

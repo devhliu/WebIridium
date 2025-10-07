@@ -6,7 +6,7 @@ import defaultModel from "@/assets/default.ant?raw";
 import { requestSavedData, type SavedDataV1 } from "@/features/saving";
 
 import { setModelAtom } from "@/globals/workspace/model";
-import { themeOptionAtom } from "@/globals/appearance";
+import { editorFontSizeAtom, themeOptionAtom } from "@/globals/appearance";
 import {
   graphSettingsAtom,
   timeCourseParametersAtom,
@@ -35,6 +35,7 @@ const Initialize = ({
   const computeSteadyState = useSetAtom(computeSteadyStateAtom);
 
   const setThemeOption = useSetAtom(themeOptionAtom);
+  const setEditorFontSize = useSetAtom(editorFontSizeAtom);
   const updateAllHistory = useSetAtom(updateAllHistoryAtom);
   const setGraphSettings = useSetAtom(graphSettingsAtom);
   const setVariableSettingss = useSetAtom(variableSettingssAtom);
@@ -53,6 +54,7 @@ const Initialize = ({
 
         if (savedData) {
           setThemeOption(savedData.theme);
+          setEditorFontSize(savedData.editorFontSize);
           updateAllHistory(savedData.workspace.history);
           setVariableSettingss(savedData.workspace.variableSettingss);
           setGraphSettings(savedData.workspace.graphSettings);
@@ -109,6 +111,7 @@ const Initialize = ({
     simulateTimeCourse,
     setGraphSettings,
     setThemeOption,
+    setEditorFontSize,
     setVariableSettingss,
     updateAllHistory,
   ]);
