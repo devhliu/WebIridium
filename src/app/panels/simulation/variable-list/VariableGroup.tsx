@@ -10,7 +10,12 @@ import Checkbox from "@/components/input/Checkbox";
 
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
 
-const DEFAULT_OPEN_GROUPS = new Set(["Floating Species"]);
+import { type Category } from "@/features/category";
+
+const DEFAULT_OPEN_GROUPS: Set<Category> = new Set([
+  "Floating Species",
+  "ODEs",
+]);
 
 export interface VariableGroupProps {
   group: string;
