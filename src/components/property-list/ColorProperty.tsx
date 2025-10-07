@@ -14,8 +14,8 @@ const isValidColor = (color: string): boolean => {
   if (!color || color.trim() === "") return false;
   const style = new Option().style;
   style.color = color;
-  return style.color !== '';
-}
+  return style.color !== "";
+};
 
 // TODO: fix the color box being slightly larger than the input box for numeric slider
 const ColorProperty = ({ name, value, onChange }: ColorPropertyProps) => {
@@ -24,7 +24,7 @@ const ColorProperty = ({ name, value, onChange }: ColorPropertyProps) => {
 
   const handleInputChange = (inputValue: string) => {
     setWorkingValue(inputValue);
-    
+
     if (isValidColor(inputValue)) {
       lastValidValueRef.current = inputValue;
       onChange(inputValue);
@@ -37,7 +37,8 @@ const ColorProperty = ({ name, value, onChange }: ColorPropertyProps) => {
     }
   };
 
-  const isInvalid = !isValidColor(workingValue) && workingValue !== lastValidValueRef.current;
+  const isInvalid =
+    !isValidColor(workingValue) && workingValue !== lastValidValueRef.current;
 
   return (
     <div className={styles.property}>
@@ -63,7 +64,7 @@ const ColorProperty = ({ name, value, onChange }: ColorPropertyProps) => {
       <input
         id={name}
         className={clsx(styles.propertyInput, {
-          [styles.invalid]: isInvalid
+          [styles.invalid]: isInvalid,
         })}
         value={workingValue}
         onChange={(e) => handleInputChange(e.target.value)}
