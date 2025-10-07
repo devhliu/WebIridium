@@ -15,12 +15,12 @@ const Section = ({
   title,
   children,
 }: {
-  title: string;
+  title?: string;
   children: React.ReactNode;
 }) => {
   return (
     <div className={styles.steadyStateSection}>
-      <h2>{title}</h2>
+      {title && <h2>{title}</h2>}
       {children}
     </div>
   );
@@ -93,7 +93,7 @@ const SteadyStateResultPanel = () => {
           step={1}
         />
         <p>Value: {simulationResults.value}</p>
-        <Section title="Concentrations">
+        <Section>
           <DataTable
             columns={concentrationColumns}
             decimalPlaces={decimalPlaces}
