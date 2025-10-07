@@ -46,7 +46,7 @@
   border-top-right-radius: 0;
   border-top-left-radius: 0;
   padding: var(--spacing-3);
-  overflow: visible;
+  overflow: hidden;
   height: auto;
 
   &[data-state="open"] {

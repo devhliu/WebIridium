@@ -40,7 +40,6 @@ import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import PanelTitle from "./PanelTitle";
 import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
 import IconButton from "@/components/IconButton";
-import { Tooltip } from "@/components/Tooltip";
 
 export interface PlotSettingsPanelProps {
   onClose: () => void;
@@ -324,24 +323,52 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
               }}
             >
               <ToggleGroupButton value="none">
-                <Tooltip text="Empty Grid">
-                  <GridNoneIcon width="1.6em" height="1.6em" />
-                </Tooltip>
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <GridNoneIcon width="1.6em" height="1.6em" /> None
+                </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="x">
-                <Tooltip text="X Grid">
-                  <GridXIcon width="1.6em" height="1.6em" />
-                </Tooltip>
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <GridXIcon width="1.6em" height="1.6em" /> X
+                </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="y">
-                <Tooltip text="Y Grid">
-                  <GridYIcon width="1.6em" height="1.6em" />
-                </Tooltip>
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <GridYIcon width="1.6em" height="1.6em" /> Y
+                </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="xy">
-                <Tooltip text="XY Grid">
-                  <GridXYIcon width="1.6em" height="1.6em" />
-                </Tooltip>
+                <span
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  <GridXYIcon width="1.6em" height="1.6em" /> XY
+                </span>
               </ToggleGroupButton>
             </ToggleGroup>
 
