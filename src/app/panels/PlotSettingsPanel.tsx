@@ -323,50 +323,22 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
               }}
             >
               <ToggleGroupButton value="none">
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <span className={styles.gridButtonText}>
                   <GridNoneIcon width="1.6em" height="1.6em" /> None
                 </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="x">
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <span className={styles.gridButtonText}>
                   <GridXIcon width="1.6em" height="1.6em" /> X
                 </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="y">
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <span className={styles.gridButtonText}>
                   <GridYIcon width="1.6em" height="1.6em" /> Y
                 </span>
               </ToggleGroupButton>
               <ToggleGroupButton value="xy">
-                <span
-                  style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    gap: "0.5rem",
-                  }}
-                >
+                <span className={styles.gridButtonText}>
                   <GridXYIcon width="1.6em" height="1.6em" /> XY
                 </span>
               </ToggleGroupButton>
