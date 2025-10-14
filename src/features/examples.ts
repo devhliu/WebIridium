@@ -75,7 +75,7 @@ export const examplePresets: Record<string, ExamplePreset> = {
     },
     independentVariable: "u",
   },
-  "relaxation-oscillator:-from-heinrich-1997-review": {
+  "relaxation-oscillator-from-heinrich-1997-review": {
     parameters: {
       startTime: 0,
       endTime: 10,
@@ -89,14 +89,14 @@ export const examplePresets: Record<string, ExamplePreset> = {
       numberOfPoints: 200,
     },
   },
-  "smallest-bistable-model:-thomas-wilhelm": {
+  "smallest-bistable-model-by-thomas-wilhelm": {
     parameters: {
       startTime: 0,
       endTime: 15,
       numberOfPoints: 100,
     },
   },
-  "smallest-hopf-model:-wilhelm-and-heinrich": {
+  "smallest-hopf-model-by-wilhelm-and-heinrich": {
     parameters: {
       startTime: 0,
       endTime: 50,
