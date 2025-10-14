@@ -80,6 +80,9 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
   if (!visible) {
     return null;
   } else {
+    const reversedHistory = [...history];
+    reversedHistory.reverse();
+
     return (
       <div className={styles.panel} data-testid="history-panel">
         <PanelTitle title="History" />
@@ -87,7 +90,7 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
           <p className={styles.noHistory}>No history</p>
         ) : (
           <ul className={styles.list}>
-            {history.toReversed().map((record) => (
+            {reversedHistory.map((record) => (
               <HistoryItem
                 key={record.unixTimestampMs}
                 record={record}

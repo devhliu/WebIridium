@@ -27,11 +27,17 @@ export const groupVariables = <TVar extends Variable>(
   variables: TVar[],
   categoryOrder: string[] = CATEGORY_ORDER,
 ): [categoryName: string, variables: TVar[]][] => {
-  const groupedVariables = Object.groupBy(
-    variables,
-    (v) => v.category,
-  ) as Record<string, TVar[]>;
-  const sortedGroupedVariables = Object.entries(groupedVariables).toSorted(
+  const groupedVariables: { [category: string]: TVar[] } = {};
+  for (const variable of variables) {
+    if (!groupedVariables[variable.category]) {
+      groupedVariables[variable.category] = [];
+    }
+
+    groupedVariables[variable.category].push(variable);
+  }
+
+  const sortedGroupedVariables = Object.entries(groupedVariables);
+  sortedGroupedVariables.sort(
     ([a, _], [b, __]) => categoryOrder.indexOf(a) - categoryOrder.indexOf(b),
   );
   return sortedGroupedVariables;
