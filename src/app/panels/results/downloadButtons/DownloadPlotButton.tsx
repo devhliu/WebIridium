@@ -117,6 +117,31 @@ const DownloadPlotButton = () => {
     promptDownloadString(downloadName, svg.outerHTML, "image/svg+xml");
   };
 
+  const handlePdfDownload = async () => {
+    const plotOptions = getPlotOptions();
+    if (!plotOptions) return;
+
+    // lazy import so it doesn't get downloaded at start
+    const { jsPDF } = await import("jspdf");
+
+    const canvas = document.createElement("canvas");
+    canvas.width = WIDTH;
+    canvas.height = HEIGHT;
+
+    const chart = echarts.init(canvas, null, {
+      renderer: "canvas",
+    });
+    chart.setOption(plotOptions);
+
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "px",
+      format: [WIDTH, HEIGHT],
+    });
+    pdf.addImage(canvas, "png", 0, 0, WIDTH, HEIGHT);
+    pdf.save(`${downloadName}.pdf`);
+  };
+
   return (
     <DropdownMenuRoot>
       <DropdownMenuTrigger>
@@ -128,6 +153,7 @@ const DownloadPlotButton = () => {
       <DropdownMenuContent>
         <DropdownMenuItem name="Download as PNG" onSelect={handlePngDownload} />
         <DropdownMenuItem name="Download as SVG" onSelect={handleSvgDownload} />
+        <DropdownMenuItem name="Download as PDF" onSelect={handlePdfDownload} />
       </DropdownMenuContent>
     </DropdownMenuRoot>
   );
