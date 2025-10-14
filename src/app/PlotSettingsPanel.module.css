@@ -15,3 +15,11 @@
   max-height: 400px;
   overflow-y: auto;
 }
+
+.gridButtonText {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  height: 100%;
+}
