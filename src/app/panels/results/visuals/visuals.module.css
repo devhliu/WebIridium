@@ -1,0 +1,16 @@
+.series-line-chart-3d {
+  background-color: white;
+  height: 100%;
+  width: 100%;
+}
+
+.array-table {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+}
+
+.array-bar-chart-3d {
+  flex-grow: 1;
+  background-color: white;
+}

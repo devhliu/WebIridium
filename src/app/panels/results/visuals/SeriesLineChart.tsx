@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import * as echarts from "echarts/core";
 import { type ECharts } from "echarts/core";
 
-import FloatingLegend from "./FloatingLegend";
+import FloatingLegend from "../FloatingLegend";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
@@ -13,19 +13,24 @@ import {
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
-import { generatePlotParameters } from "./generatePlotParameters";
+import { generatePlotParameters } from "../generatePlotParameters";
 
 import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
 import type { Dataset } from "@/globals/workspace/overlays";
 
-export interface ResultsPlotProps {
+export interface SeriesLineChartProps {
   result: SimulationResult;
   datasets: Dataset[];
   width: number;
   height: number;
 }
 
-const ResultsPlot = ({ result, datasets, width, height }: ResultsPlotProps) => {
+const SeriesLineChart = ({
+  result,
+  datasets,
+  width,
+  height,
+}: SeriesLineChartProps) => {
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const palette = useAtomValue(paletteAtom);
   const scanIndependentVariable = useScanIndependentVariable();
@@ -102,4 +107,4 @@ const ResultsPlot = ({ result, datasets, width, height }: ResultsPlotProps) => {
   );
 };
 
-export default ResultsPlot;
+export default SeriesLineChart;

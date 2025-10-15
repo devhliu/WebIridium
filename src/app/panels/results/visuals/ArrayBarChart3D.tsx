@@ -6,7 +6,7 @@ import { useRef, useLayoutEffect, useEffect } from "react";
 import * as echarts from "echarts/core";
 import { type ECharts } from "echarts/core";
 
-import styles from "./results.module.css";
+import styles from "./visuals.module.css";
 
 import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
 
@@ -17,7 +17,7 @@ const formatWithMaxDecimals = (n: number, maxDecimals: number): string => {
   return (Math.floor(n * 10 ** maxDecimals) / 10 ** maxDecimals).toString();
 };
 
-export interface Results3DBarChartProps {
+export interface ArrayBarChart3DProps {
   name: string;
   data: SteadyStateResultItem;
   x: string;
@@ -25,7 +25,7 @@ export interface Results3DBarChartProps {
   z: string;
 }
 
-const Results3DBarChart = ({ name, data, x, y, z }: Results3DBarChartProps) => {
+const ArrayBarChart3D = ({ name, data, x, y, z }: ArrayBarChart3DProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts | null>(null);
 
@@ -158,7 +158,7 @@ const Results3DBarChart = ({ name, data, x, y, z }: Results3DBarChartProps) => {
     );
   }, [name, data, x, y, z]);
 
-  return <div className={styles.steadyStateThreeDChart} ref={containerRef} />;
+  return <div className={styles.arrayBarChart3D} ref={containerRef} />;
 };
 
-export default Results3DBarChart;
+export default ArrayBarChart3D;

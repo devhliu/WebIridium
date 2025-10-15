@@ -4,7 +4,7 @@ import { useAtomValue } from "jotai";
 import styles from "./results.module.css";
 
 import SelectProperty from "@/components/property-list/SelectProperty";
-import Results3DBarChart from "./Results3DBarChart";
+import ArrayBarChart3D from "./visuals/ArrayBarChart3D";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
@@ -44,7 +44,7 @@ const SteadyState3DPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <div className={styles.steadyStateThreeD}>
+      <div className={styles.steadyState3DPanel}>
         <SelectProperty
           name="Item"
           value={item}
@@ -52,7 +52,7 @@ const SteadyState3DPanel = () => {
           onChange={setItem}
         />
 
-        <Results3DBarChart
+        <ArrayBarChart3D
           name={item}
           data={resultItem}
           x={AXES[item].x}

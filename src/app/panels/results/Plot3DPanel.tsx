@@ -2,11 +2,11 @@ import { useAtomValue } from "jotai";
 
 import styles from "./results.module.css";
 
-import Results3DLineChart from "./Results3DLineChart";
+import SeriesLineChart3D from "./visuals/SeriesLineChart3D";
 
 import { simulationResultAtom } from "@/globals/workspace/simulation";
 
-export const Chart3DLinePanel = () => {
+export const Plot3DPanel = () => {
   const result = useAtomValue(simulationResultAtom);
 
   if (!result || result?.type === "steadyState") {
@@ -15,9 +15,9 @@ export const Chart3DLinePanel = () => {
 
   return (
     <div className={styles.plotContainer}>
-      <Results3DLineChart result={result} />
+      <SeriesLineChart3D result={result} />
     </div>
   );
 };
 
-export default Chart3DLinePanel;
+export default Plot3DPanel;

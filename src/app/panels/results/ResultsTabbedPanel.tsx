@@ -10,7 +10,7 @@ import ThreeDIcon from "@/assets/icons/ThreeDIcon.svg?react";
 import TabbedPanel, { type TabInfo } from "@/components/TabbedPanel";
 import PlotPanel from "./PlotPanel";
 import TablePanel from "./TablePanel";
-import Chart3DLinePanel from "./Chart3DLinePanel";
+import Plot3DPanel from "./Plot3DPanel";
 import SteadyStateTablePanel from "./SteadyStateTablePanel";
 import SteadyState3DPanel from "./SteadyState3DPanel";
 
@@ -85,7 +85,7 @@ const ResultTabbedPanel = ({ onClose }: ResultTabbedPanelProps) => {
       {
         name: "3D",
         icon: <ThreeDIcon width="20" height="20" />,
-        render: () => <Chart3DLinePanel />,
+        render: () => <Plot3DPanel />,
         renderActions: () => (
           <>
             <IconButton label="Close" onClick={onClose}>

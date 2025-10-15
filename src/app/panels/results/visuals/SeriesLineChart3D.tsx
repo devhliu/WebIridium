@@ -7,11 +7,11 @@ import { useAtomValue } from "jotai";
 import * as echarts from "echarts/core";
 import { type ECharts } from "echarts/core";
 
-import styles from "./results.module.css";
+import styles from "./visuals.module.css";
 
-import { getColumnsFromResult } from "./getColumnsFromResult";
+import { getColumnsFromResult } from "../getColumnsFromResult";
 import { getDefaultParameterScanColor } from "@/features/colors";
-import { getParameterScanTitle } from "./getParameterScanTitle";
+import { getParameterScanTitle } from "../getParameterScanTitle";
 import { DASH_ARRAYS } from "@/features/lineStyle";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
@@ -25,11 +25,11 @@ import { useScanIndependentVariable } from "@/features/simulation/useScanIndepen
 // just make them hover to see what the value is
 const MAX_TITLES_TO_SHOW = 12;
 
-export interface Results3DLineChartProps {
+export interface SeriesLineChart3DProps {
   result: SimulationResult;
 }
 
-const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
+const SeriesLineChart3D = ({ result }: SeriesLineChart3DProps) => {
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const scanIndependentVariable = useScanIndependentVariable();
 
@@ -185,7 +185,7 @@ const Results3DLineChart = ({ result }: Results3DLineChartProps) => {
     timeCourseIndependentVariable,
   ]);
 
-  return <div className={styles.threeDLineChart} ref={containerRef} />;
+  return <div className={styles.seriesLineChart3D} ref={containerRef} />;
 };
 
-export default Results3DLineChart;
+export default SeriesLineChart3D;

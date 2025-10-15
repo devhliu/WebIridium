@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
 import { datasetsAtom } from "@/globals/workspace/overlays.ts";
 import styles from "./results.module.css";
-import ResultsPlot from "./ResultsPlot";
+import SeriesLineChart from "./visuals/SeriesLineChart";
 import { Allotment } from "allotment";
 import PlotQuickActionsPanel from "./PlotQuickActionsPanel.tsx";
 
@@ -50,7 +50,7 @@ export const PlotPanel = () => {
       <Allotment vertical>
         <div className={styles.plotContainer} ref={containerRef}>
           {simulationResults && (
-            <ResultsPlot
+            <SeriesLineChart
               result={simulationResults}
               datasets={datasets}
               height={height}

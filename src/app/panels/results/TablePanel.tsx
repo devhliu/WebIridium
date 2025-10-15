@@ -1,7 +1,7 @@
 import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
 import styles from "./results.module.css";
-import ResultsTable from "./ResultsTable.tsx";
+import ArrayTable from "./visuals/ArrayTable";
 
 export const TablePanel = () => {
   const simulationResults = useAtomValue(simulationResultAtom);
@@ -9,7 +9,7 @@ export const TablePanel = () => {
   return (
     <div className={styles.panel}>
       <div className={styles.tableContainer}>
-        {simulationResults && <ResultsTable result={simulationResults} />}
+        {simulationResults && <ArrayTable result={simulationResults} />}
       </div>
     </div>
   );

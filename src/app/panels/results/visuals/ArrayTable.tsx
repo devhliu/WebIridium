@@ -1,7 +1,7 @@
 import { memo } from "react";
 import { atom, useAtom, useAtomValue } from "jotai";
 
-import styles from "./results.module.css";
+import styles from "./visuals.module.css";
 
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import type { SimulationResult } from "@/features/simulation/Simulator";
@@ -9,7 +9,7 @@ import {
   independentVariableAtom,
   variableSettingssAtom,
 } from "@/globals/workspace/settings";
-import { generateTableParameters } from "./generateTableParameters";
+import { generateTableParameters } from "../generateTableParameters";
 
 import DataTable from "@/components/DataTable";
 import NumericSliderProperty from "@/components/property-list/NumericSliderProperty";
@@ -17,11 +17,11 @@ import NumericSliderProperty from "@/components/property-list/NumericSliderPrope
 // extract it so it persists
 const decimalPlacesAtom = atom(2);
 
-export interface ResultsTableProps {
+export interface ArrayTableProps {
   result: SimulationResult;
 }
 
-const ResultsTable = memo(({ result }: ResultsTableProps) => {
+const ArrayTable = memo(({ result }: ArrayTableProps) => {
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const scanIndepedentVariable = useScanIndependentVariable();
   const variableSettingss = useAtomValue(variableSettingssAtom);
@@ -36,7 +36,7 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
   );
 
   return (
-    <div className={styles.resultsTable}>
+    <div className={styles.arrayTable}>
       <NumericSliderProperty
         name="Decimal Places"
         value={decimalPlaces}
@@ -54,6 +54,4 @@ const ResultsTable = memo(({ result }: ResultsTableProps) => {
   );
 });
 
-ResultsTable.displayName = "ResultsTable";
-
-export default ResultsTable;
+export default ArrayTable;
