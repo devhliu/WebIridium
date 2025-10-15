@@ -99,7 +99,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
       </CancellableButton>
 
       <PropertyAccordion
-        defaultOpen={["Simulation", "First Parameter", "Variables"]}
+        defaultOpen={["Simulation", "Varying Parameter", "Variables"]}
       >
         <PropertyAccordionItem title="Simulation">
           <ToggleGroup
@@ -130,7 +130,7 @@ const ParameterScanPanel = ({ visible }: ParameterScanPanelProps) => {
           )}
         </PropertyAccordionItem>
 
-        <PropertyAccordionItem title="First Parameter">
+        <PropertyAccordionItem title="Varying Parameter">
           <PropertyList alignment="left">
             {parameterScanOptions.varyingParameter && (
               <SelectProperty
