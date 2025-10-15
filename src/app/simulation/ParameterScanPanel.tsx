@@ -15,7 +15,7 @@ import PropertyList from "@/components/property-list/PropertyList";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
 import SelectProperty from "@/components/property-list/SelectProperty";
-import UncontrolledVariableList from "@/app/panels/simulation/variable-list/UncontrolledVariableList";
+import UncontrolledVariableList from "@/app/simulation/variable-list/UncontrolledVariableList";
 import TimeCoursePropertyList from "./TimeCoursePropertyList";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
 import SimulationPanel from "./SimulationPanel";

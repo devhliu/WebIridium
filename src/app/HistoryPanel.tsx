@@ -2,7 +2,7 @@ import { useAtomValue, useSetAtom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
 import styles from "./HistoryPanel.module.css";
-import PanelTitle from "./PanelTitle";
+import PanelTitle from "../components/PanelTitle";
 
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 

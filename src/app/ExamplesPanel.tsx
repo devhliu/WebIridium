@@ -15,7 +15,7 @@ import {
 
 import PlayIcon from "@/assets/icons/PlayIcon.svg?react";
 
-import PanelTitle from "./PanelTitle";
+import PanelTitle from "../components/PanelTitle";
 import PulseLoader from "@/components/PulseLoader";
 
 import { setModelAtom } from "@/globals/workspace/model";

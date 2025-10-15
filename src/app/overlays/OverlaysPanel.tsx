@@ -10,7 +10,7 @@ import {
 } from "@/globals/workspace/overlays";
 
 import { useToast } from "@/components/Toast.tsx";
-import PanelTitle from "../PanelTitle";
+import PanelTitle from "../../components/PanelTitle.tsx";
 import IconButton from "@/components/IconButton.tsx";
 import CancellableButton from "@/components/CancellableButton";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion.tsx";

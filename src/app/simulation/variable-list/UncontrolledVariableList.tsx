@@ -4,7 +4,7 @@ import {
   variableSettingssAtom,
   type VariableSettings,
 } from "@/globals/workspace/settings";
-import VariableList from "@/app/panels/simulation/variable-list/VariableList";
+import VariableList from "@/app/simulation/variable-list/VariableList";
 import { useCallback } from "react";
 
 /**

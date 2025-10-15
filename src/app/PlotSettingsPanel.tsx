@@ -33,7 +33,7 @@ import PropertyList from "@/components/property-list/PropertyList";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
-import PanelTitle from "./PanelTitle";
+import PanelTitle from "../components/PanelTitle";
 import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
 import IconButton from "@/components/IconButton";
 

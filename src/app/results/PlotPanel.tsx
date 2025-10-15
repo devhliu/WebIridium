@@ -3,7 +3,7 @@ import { useAtomValue } from "jotai";
 import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
 import { datasetsAtom } from "@/globals/workspace/overlays.ts";
 import styles from "./results.module.css";
-import SeriesLineChart from "./visuals/SeriesLineChart";
+import SeriesLineChart from "./visuals/SeriesLineChart.tsx";
 import { Allotment } from "allotment";
 import PlotQuickActionsPanel from "./PlotQuickActionsPanel.tsx";
 

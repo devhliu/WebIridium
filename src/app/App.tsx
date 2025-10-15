@@ -27,19 +27,19 @@ import AppStatusBar from "./AppStatusBar";
 import { ToastProvider } from "@/components/Toast";
 import { TooltipProvider } from "@/components/Tooltip";
 
-import TimeCoursePanel from "./panels/simulation/TimeCoursePanel";
-import ParameterScanPanel from "./panels/simulation/ParameterScanPanel";
-import SteadyStatePanel from "./panels/simulation/SteadyStatePanel";
-import OverlaysPanel from "./panels/overlays/OverlaysPanel";
+import TimeCoursePanel from "./simulation/TimeCoursePanel";
+import ParameterScanPanel from "./simulation/ParameterScanPanel";
+import SteadyStatePanel from "./simulation/SteadyStatePanel";
+import OverlaysPanel from "./overlays/OverlaysPanel";
 
-import HistoryPanel from "./panels/HistoryPanel";
-import ExamplesPanel from "./panels/ExamplesPanel";
+import HistoryPanel from "./HistoryPanel";
+import ExamplesPanel from "./ExamplesPanel";
 
-import EditorPanel from "./panels/EditorPanel";
-import SlidersPanel from "./panels/sliders/SlidersPanel";
+import EditorPanel from "./EditorPanel";
+import SlidersPanel from "./sliders/SlidersPanel";
 
-import ResultTabbedPanel from "./panels/results/ResultsTabbedPanel";
-import PlotSettingsPanel from "./panels/PlotSettingsPanel";
+import ResultTabbedPanel from "./results/ResultsTabbedPanel";
+import PlotSettingsPanel from "./PlotSettingsPanel";
 
 const SAVE_INTERVAL = 60_000; // in ms
 

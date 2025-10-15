@@ -2,7 +2,7 @@ import { useAtom } from "jotai";
 
 import styles from "./simulation.module.css";
 
-import PanelTitle from "../PanelTitle";
+import PanelTitle from "../../components/PanelTitle";
 import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
 
 import { currentBottomPanelAtom } from "@/globals/workspace/layout";

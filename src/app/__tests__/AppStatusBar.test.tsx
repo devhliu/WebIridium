@@ -9,7 +9,7 @@ import {
 } from "@/testing-utils/mockWorker";
 
 import AppStatusBar from "../AppStatusBar";
-import TimeCoursePanel from "../panels/simulation/TimeCoursePanel";
+import TimeCoursePanel from "../simulation/TimeCoursePanel";
 
 afterEach(() => {
   resetWorkerResponseDelay();

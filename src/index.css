@@ -55,7 +55,9 @@
   --color-data-table-positive: #fa5757;
   --color-data-table-negative: #52e365;
 
-  /* Colors & Borders (derived from colors defined in individual themes */
+  /* Colors & Borders (derived from colors defined in individual themes
+   * (Concrete colors are defined witin individual theme files. Check `dark.css` for primary color tokens)
+   */
 
   --color-button-bg-translucent: oklch(
     from var(--color-button-fg) l c h / var(--opacity-translucent)

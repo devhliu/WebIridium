@@ -24,10 +24,10 @@ import {
 
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
-import ShareButton from "./ShareButton";
-import GlobalSettingsDialog from "./panels/globalSettings/GlobalSettingsDialog";
-import HelpDialog from "./panels/HelpDialog";
-import AboutDialog from "./panels/AboutDialog";
+import ShareButton from "./sharing/ShareButton";
+import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
+import HelpDialog from "./HelpDialog";
+import AboutDialog from "./AboutDialog";
 
 import {
   convertAntimonyToSbml,
