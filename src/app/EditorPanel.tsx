@@ -5,15 +5,12 @@ import * as monaco from "monaco-editor";
 import { useToast } from "@/components/Toast";
 
 import styles from "./EditorPanel.module.css";
-import {
-  editorContentAtom,
-  updateEditorContentAtom,
-} from "@/globals/workspace/model";
+import { editorContentAtom, updateEditorContentAtom } from "@/globals/model";
 import { editorFontSizeAtom, themeAtom } from "@/globals/appearance";
 import {
   editorActionsDispatcherAtom,
   type EditorActionsDispatcher,
-} from "@/globals/workspace/editorActions";
+} from "@/globals/editorActions";
 import {
   addVariablePresetToModel,
   createLoadPresetCommandHandler,
@@ -25,7 +22,7 @@ import {
   areSlidersActiveAtom,
   loadPresetAndSimulateAtom,
   variableSliderStatesAtom,
-} from "@/globals/workspace/slider";
+} from "@/globals/slider";
 import { monacoThemes } from "@/features/editor/theme";
 
 const SEMANTIC_CHECKER_DEBOUNCE = 100; // in ms

@@ -1,6 +1,6 @@
 import { atom, useAtom, useAtomValue } from "jotai";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { simulationResultAtom } from "@/globals/simulation";
 
 import styles from "./results.module.css";
 

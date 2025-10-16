@@ -1,4 +1,4 @@
-import type { EditableTimeCourseParameters } from "@/globals/workspace/settings";
+import type { EditableTimeCourseParameters } from "@/globals/settings";
 import type { SteadyStateParameters } from "./simulation/Simulator";
 
 /**

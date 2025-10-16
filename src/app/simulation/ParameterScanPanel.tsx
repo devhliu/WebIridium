@@ -28,15 +28,15 @@ import {
   cancelSimulationAtom,
   isSimulatingAtom,
   runParameterScanAtom,
-} from "@/globals/workspace/simulation";
-import { modelStatusAtom, variablesAtom } from "@/globals/workspace/model";
+} from "@/globals/simulation";
+import { modelStatusAtom, variablesAtom } from "@/globals/model";
 import {
   parameterScanOptionsAtom,
   variableSettingssAtom,
   type ParameterScanOptions,
-} from "@/globals/workspace/settings";
-import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
-import { simulatorAtom } from "@/globals/workspace/simulator";
+} from "@/globals/settings";
+import { isSliderSimulationQueuedAtom } from "@/globals/slider";
+import { simulatorAtom } from "@/globals/simulator";
 
 export interface ParameterScanPanelProps {
   visible: boolean;

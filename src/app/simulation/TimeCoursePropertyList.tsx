@@ -1,5 +1,5 @@
 import { type TimeCourseParameters } from "@/features/simulation/Simulator";
-import { type EditableTimeCourseParameters } from "@/globals/workspace/settings";
+import { type EditableTimeCourseParameters } from "@/globals/settings";
 
 import PropertyList from "@/components/property-list/PropertyList";
 import NumericProperty from "@/components/property-list/NumericProperty";

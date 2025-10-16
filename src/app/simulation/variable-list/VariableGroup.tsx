@@ -3,7 +3,7 @@ import { useId, useState } from "react";
 import styles from "./VariableList.module.css";
 
 import { type Variable } from "@/features/simulation/Simulator";
-import type { VariableSettings } from "@/globals/workspace/settings";
+import type { VariableSettings } from "@/globals/settings";
 import VariableItem from "./VariableItem";
 import { Tooltip } from "@/components/Tooltip";
 import Checkbox from "@/components/input/Checkbox";

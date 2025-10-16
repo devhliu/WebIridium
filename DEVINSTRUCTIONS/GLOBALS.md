@@ -6,7 +6,7 @@ Anything that must be accessible from any component or should persist sessions s
 
 ## conventions
 
-Take a look at `src/globals/workspace/model.ts` for how things should be layed out.
+Take a look at `src/globals/model.ts` for how things should be layed out.
 
 General format:
 

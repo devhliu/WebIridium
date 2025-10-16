@@ -1,6 +1,6 @@
 import styles from "./overlays.module.css";
 
-import type { Dataset, DatasetVariable } from "@/globals/workspace/overlays";
+import type { Dataset, DatasetVariable } from "@/globals/overlays";
 
 import DatasetVariableItem from "./DatasetVariableItem";
 

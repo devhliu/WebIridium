@@ -1,7 +1,7 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useState } from "react";
 
-import { timeCourseParametersAtom } from "@/globals/workspace/settings";
+import { timeCourseParametersAtom } from "@/globals/settings";
 
 import { useToast } from "@/components/Toast";
 import CancellableButton from "@/components/CancellableButton";
@@ -19,9 +19,9 @@ import {
   simulateTimeCourseAtom,
   cancelSimulationAtom,
   isSimulatingAtom,
-} from "@/globals/workspace/simulation";
-import { modelStatusAtom } from "@/globals/workspace/model";
-import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
+} from "@/globals/simulation";
+import { modelStatusAtom } from "@/globals/model";
+import { isSliderSimulationQueuedAtom } from "@/globals/slider";
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 
 export interface TimeCoursePanelProps {

@@ -9,9 +9,9 @@ import {
   cancelSimulationAtom,
   computeSteadyStateAtom,
   isSimulatingAtom,
-} from "@/globals/workspace/simulation";
-import { modelStatusAtom } from "@/globals/workspace/model";
-import { isSliderSimulationQueuedAtom } from "@/globals/workspace/slider";
+} from "@/globals/simulation";
+import { modelStatusAtom } from "@/globals/model";
+import { isSliderSimulationQueuedAtom } from "@/globals/slider";
 
 export interface SteadyStatePanelProps {
   visible: boolean;

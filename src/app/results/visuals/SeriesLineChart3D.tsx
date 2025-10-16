@@ -18,7 +18,7 @@ import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   independentVariableAtom,
   variableSettingssAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 
 // if it's too much, the labels get crowded

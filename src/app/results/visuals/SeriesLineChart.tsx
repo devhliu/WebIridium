@@ -11,12 +11,12 @@ import {
   independentVariableAtom,
   paletteAtom,
   variableSettingssAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "../generatePlotParameters";
 
-import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
-import type { Dataset } from "@/globals/workspace/overlays";
+import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/plot";
+import type { Dataset } from "@/globals/overlays";
 
 export interface SeriesLineChartProps {
   result: SimulationResult;

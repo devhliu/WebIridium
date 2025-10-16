@@ -4,11 +4,11 @@ import { memo } from "react";
 import styles from "./SlidersPanel.module.css";
 
 import type { SettableVariable } from "@/features/simulation/Simulator";
-import type { VariableSettings } from "@/globals/workspace/settings";
+import type { VariableSettings } from "@/globals/settings";
 import {
   type VariableSliderState,
   getInitialSliderState,
-} from "@/globals/workspace/slider";
+} from "@/globals/slider";
 
 import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 

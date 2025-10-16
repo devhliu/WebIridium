@@ -1,9 +1,9 @@
 import { useAtom, useAtomValue } from "jotai";
-import { variablesAtom } from "@/globals/workspace/model";
+import { variablesAtom } from "@/globals/model";
 import {
   variableSettingssAtom,
   type VariableSettings,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import VariableList from "@/app/simulation/variable-list/VariableList";
 import { useCallback } from "react";
 

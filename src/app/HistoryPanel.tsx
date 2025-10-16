@@ -6,11 +6,11 @@ import PanelTitle from "../components/PanelTitle";
 
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
-import { historyAtom, type HistoryRecord } from "@/globals/workspace/history";
+import { historyAtom, type HistoryRecord } from "@/globals/history";
 import { timeToAgoText } from "@/features/timeUtils";
-import { simulationResultAtom } from "@/globals/workspace/simulation";
-import { currentRightPanelAtom } from "@/globals/workspace/layout";
-import { updateEditorContentAtom } from "@/globals/workspace/model";
+import { simulationResultAtom } from "@/globals/simulation";
+import { currentRightPanelAtom } from "@/globals/layout";
+import { updateEditorContentAtom } from "@/globals/model";
 
 const HistoryItem = ({
   record,

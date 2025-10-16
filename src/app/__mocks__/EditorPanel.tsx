@@ -1,14 +1,11 @@
 import { useAtomValue, useSetAtom } from "jotai";
 
-import {
-  editorContentAtom,
-  updateEditorContentAtom,
-} from "@/globals/workspace/model";
+import { editorContentAtom, updateEditorContentAtom } from "@/globals/model";
 
 import {
   editorActionsDispatcherAtom,
   type EditorActionsDispatcher,
-} from "@/globals/workspace/editorActions";
+} from "@/globals/editorActions";
 import { useEffect } from "react";
 
 export const EditorPanel = () => {

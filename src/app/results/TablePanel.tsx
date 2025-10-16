@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
+import { simulationResultAtom } from "@/globals/simulation";
 import styles from "./results.module.css";
 import ArrayTable from "./visuals/ArrayTable";
 

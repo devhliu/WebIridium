@@ -6,9 +6,9 @@ import { useToast } from "@/components/Toast";
 
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
-import { variablesMapAtom } from "@/globals/workspace/model";
-import { variableSliderStatesAtom } from "@/globals/workspace/slider";
-import { editorActionsDispatcherAtom } from "@/globals/workspace/editorActions";
+import { variablesMapAtom } from "@/globals/model";
+import { variableSliderStatesAtom } from "@/globals/slider";
+import { editorActionsDispatcherAtom } from "@/globals/editorActions";
 
 const DEFAULT_PRESET_NAME = "Unnamed";
 

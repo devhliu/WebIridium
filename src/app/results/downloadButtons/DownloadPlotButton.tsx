@@ -12,17 +12,17 @@ import {
 } from "@/components/DropdownMenu";
 import { useToast } from "@/components/Toast";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
-import { datasetsAtom } from "@/globals/workspace/overlays";
+import { simulationResultAtom } from "@/globals/simulation";
+import { datasetsAtom } from "@/globals/overlays";
 import {
   graphSettingsAtom,
   variableSettingssAtom,
   paletteAtom,
   independentVariableAtom,
   nameAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
-import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/workspace/plot";
+import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/plot";
 import { generatePlotParameters } from "../generatePlotParameters";
 import { promptDownloadString, promptDownloadUrl } from "@/features/download";
 

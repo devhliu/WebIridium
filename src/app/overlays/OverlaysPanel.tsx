@@ -7,7 +7,7 @@ import {
   datasetsAtom,
   importCsvDatasetAtom,
   type Dataset,
-} from "@/globals/workspace/overlays";
+} from "@/globals/overlays.ts";
 
 import { useToast } from "@/components/Toast.tsx";
 import PanelTitle from "../../components/PanelTitle.tsx";

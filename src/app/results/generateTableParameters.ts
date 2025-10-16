@@ -1,7 +1,7 @@
 import type { DataTableProps } from "@/components/DataTable";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import type { VariableSettings } from "@/globals/workspace/settings";
+import type { VariableSettings } from "@/globals/settings";
 
 import { getColumnsFromResult } from "./getColumnsFromResult";
 import { getParameterScanTitle } from "./getParameterScanTitle";

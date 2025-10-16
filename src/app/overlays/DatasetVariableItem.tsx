@@ -1,7 +1,4 @@
-import {
-  markerSymbols,
-  type DatasetVariable,
-} from "@/globals/workspace/overlays";
+import { markerSymbols, type DatasetVariable } from "@/globals/overlays";
 import GenericVariableItem from "../simulation/variable-list/GenericVariableItem";
 import PropertyList from "@/components/property-list/PropertyList";
 import PropertyHeading from "@/components/property-list/PropertyHeading";

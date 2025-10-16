@@ -11,7 +11,7 @@ import TimeCoursePanel from "../simulation/TimeCoursePanel";
 import SteadyStatePanel from "../simulation/SteadyStatePanel";
 import ParameterScanPanel from "../simulation/ParameterScanPanel";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { simulationResultAtom } from "@/globals/simulation";
 import type { SimulationResult } from "@/features/simulation/Simulator";
 
 const getResultTypeText = (type: SimulationResult["type"] | undefined) =>

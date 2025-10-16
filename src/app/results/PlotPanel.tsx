@@ -1,7 +1,7 @@
 import { useRef, useState, useLayoutEffect } from "react";
 import { useAtomValue } from "jotai";
-import { simulationResultAtom } from "@/globals/workspace/simulation.ts";
-import { datasetsAtom } from "@/globals/workspace/overlays.ts";
+import { simulationResultAtom } from "@/globals/simulation.ts";
+import { datasetsAtom } from "@/globals/overlays.ts";
 import styles from "./results.module.css";
 import SeriesLineChart from "./visuals/SeriesLineChart.tsx";
 import { Allotment } from "allotment";

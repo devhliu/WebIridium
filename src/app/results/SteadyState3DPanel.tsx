@@ -6,7 +6,7 @@ import styles from "./results.module.css";
 import SelectProperty from "@/components/property-list/SelectProperty";
 import ArrayBarChart3D from "./visuals/ArrayBarChart3D";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { simulationResultAtom } from "@/globals/simulation";
 
 const ITEMS = [
   "Jacobian",

@@ -1,12 +1,9 @@
 import { useState } from "react";
 import { useAtomValue } from "jotai";
 
-import {
-  nameAtom,
-  timeCourseParametersAtom,
-} from "@/globals/workspace/settings";
-import { simulationResultAtom } from "@/globals/workspace/simulation";
-import { editorContentAtom } from "@/globals/workspace/model";
+import { nameAtom, timeCourseParametersAtom } from "@/globals/settings";
+import { simulationResultAtom } from "@/globals/simulation";
+import { editorContentAtom } from "@/globals/model";
 
 import { getShareUrlFragment, type ShareWorkspaceData } from "@/features/share";
 

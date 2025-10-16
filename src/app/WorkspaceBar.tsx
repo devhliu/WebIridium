@@ -18,9 +18,9 @@ import SearchIcon from "@/assets/icons/SearchIcon.svg?react";
 import PulseLoader from "@/components/PulseLoader";
 import { useToast } from "@/components/Toast";
 
-import { nameAtom } from "@/globals/workspace/settings";
+import { nameAtom } from "@/globals/settings";
 import { useSetAtom } from "jotai";
-import { setModelAtom } from "@/globals/workspace/model";
+import { setModelAtom } from "@/globals/model";
 
 type AutocompleteItems = { [group: string]: AutocompleteItem[] };
 

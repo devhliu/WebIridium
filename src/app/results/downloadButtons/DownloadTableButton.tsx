@@ -4,12 +4,12 @@ import DownloadIcon from "@/assets/icons/DownloadIcon.svg?react";
 
 import IconButton from "@/components/IconButton";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { simulationResultAtom } from "@/globals/simulation";
 import {
   variableSettingssAtom,
   independentVariableAtom,
   nameAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generateTableParameters } from "../generateTableParameters";
 import { promptDownloadString } from "@/features/download";

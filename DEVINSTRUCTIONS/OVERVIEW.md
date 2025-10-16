@@ -34,7 +34,6 @@ Please write tests for any changes you make, as much as is reasonable.
 ###
 
 - `src/globals`: Global state and actions
-- `src/globals/workspace`: the "workspace" is basically anything to do with the current model the user is editing
 
 ### Non-React Layer
 

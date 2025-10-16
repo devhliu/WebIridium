@@ -15,9 +15,9 @@ import {
   currentVeryRightPanelAtom,
   currentRightPanelAtom,
   availableLeftPanelsAtom,
-} from "@/globals/workspace/layout";
+} from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
-import { saveAtom } from "@/globals/workspace/saving";
+import { saveAtom } from "@/globals/saving";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";

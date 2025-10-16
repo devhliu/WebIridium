@@ -8,7 +8,7 @@ import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   independentVariableAtom,
   variableSettingssAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import { generateTableParameters } from "../generateTableParameters";
 
 import DataTable from "@/components/DataTable";

@@ -17,7 +17,7 @@ import SteadyState3DPanel from "./SteadyState3DPanel";
 import DownloadPlotButton from "./downloadButtons/DownloadPlotButton";
 import DownloadTableButton from "./downloadButtons/DownloadTableButton";
 
-import { simulationResultAtom } from "@/globals/workspace/simulation";
+import { simulationResultAtom } from "@/globals/simulation";
 import IconButton from "@/components/IconButton";
 
 export interface ResultTabbedPanelProps {

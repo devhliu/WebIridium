@@ -18,14 +18,14 @@ import PlayIcon from "@/assets/icons/PlayIcon.svg?react";
 import PanelTitle from "../components/PanelTitle";
 import PulseLoader from "@/components/PulseLoader";
 
-import { setModelAtom } from "@/globals/workspace/model";
+import { setModelAtom } from "@/globals/model";
 import { useToast } from "@/components/Toast";
-import { simulateTimeCourseAtom } from "@/globals/workspace/simulation";
+import { simulateTimeCourseAtom } from "@/globals/simulation";
 import {
   independentVariableAtom,
   nameAtom,
   timeCourseParametersAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 
 const ExampleButton = ({
   name,

@@ -2,7 +2,7 @@
 
 import styles from "./Sidebar.module.css";
 
-import { type LeftPanel } from "@/globals/workspace/layout";
+import { type LeftPanel } from "@/globals/layout";
 
 import TimeCourseIcon from "@/assets/icons//TimeCourseIcon.svg?react";
 import ParameterScanIcon from "@/assets/icons/ParameterScanIcon.svg?react";

@@ -5,19 +5,19 @@ import defaultModel from "@/assets/default.ant?raw";
 
 import { requestSavedData, type SavedDataV1 } from "@/features/saving";
 
-import { setModelAtom } from "@/globals/workspace/model";
+import { setModelAtom } from "@/globals/model";
 import { editorFontSizeAtom, themeOptionAtom } from "@/globals/appearance";
 import {
   graphSettingsAtom,
   timeCourseParametersAtom,
   variableSettingssAtom,
-} from "@/globals/workspace/settings";
+} from "@/globals/settings";
 import {
   computeSteadyStateAtom,
   simulateTimeCourseAtom,
-} from "@/globals/workspace/simulation";
+} from "@/globals/simulation";
 import { readShareUrlFragment } from "@/features/share";
-import { updateAllHistoryAtom } from "@/globals/workspace/history";
+import { updateAllHistoryAtom } from "@/globals/history";
 
 // simulation from share link will not be run if they use more number of points
 // than this.

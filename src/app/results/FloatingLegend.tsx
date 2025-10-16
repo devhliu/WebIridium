@@ -1,6 +1,6 @@
 import { useRef, useState, type CSSProperties } from "react";
 import styles from "./FloatingLegend.module.css";
-import type { LegendSettings } from "@/globals/workspace/settings";
+import type { LegendSettings } from "@/globals/settings";
 import { type LineStyle, DASH_ARRAYS } from "@/features/lineStyle";
 
 export interface LegendDataItem {

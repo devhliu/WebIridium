@@ -5,7 +5,7 @@ import styles from "./simulation.module.css";
 import PanelTitle from "../../components/PanelTitle";
 import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
 
-import { currentBottomPanelAtom } from "@/globals/workspace/layout";
+import { currentBottomPanelAtom } from "@/globals/layout";
 import { Tooltip } from "@/components/Tooltip";
 
 export interface SimulationPanelProps {

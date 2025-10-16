@@ -1,8 +1,5 @@
-import type {
-  GraphSettings,
-  VariableSettings,
-} from "@/globals/workspace/settings";
-import type { HistoryRecord } from "@/globals/workspace/history";
+import type { GraphSettings, VariableSettings } from "@/globals/settings";
+import type { HistoryRecord } from "@/globals/history";
 import type { ThemeOption } from "@/globals/appearance";
 
 const DATABASE_NAME = "testing_database4";

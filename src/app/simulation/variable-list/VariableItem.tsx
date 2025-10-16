@@ -3,7 +3,7 @@ import { memo } from "react";
 import { type Variable } from "@/features/simulation/Simulator";
 import { getVariableFullName } from "@/features/simulation/variableNames";
 
-import type { VariableSettings } from "@/globals/workspace/settings";
+import type { VariableSettings } from "@/globals/settings";
 
 import GenericVariableItem from "./GenericVariableItem";
 import VariableSettingsPropertyList from "./VariableSettingsPropertyList";

@@ -20,7 +20,7 @@ import {
   currentRightPanelAtom,
   currentBottomPanelAtom,
   availableLeftPanelsAtom,
-} from "@/globals/workspace/layout";
+} from "@/globals/layout";
 
 import { useToast } from "@/components/Toast";
 import WorkspaceBar from "./WorkspaceBar";
@@ -34,8 +34,8 @@ import {
   convertSbmlToAntimony,
 } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
-import { nameAtom } from "@/globals/workspace/settings";
-import { editorContentAtom, setModelAtom } from "@/globals/workspace/model";
+import { nameAtom } from "@/globals/settings";
+import { editorContentAtom, setModelAtom } from "@/globals/model";
 
 const AppMenubar = () => {
   const { toast } = useToast();

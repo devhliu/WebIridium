@@ -17,7 +17,7 @@ import {
 } from "@/testing-utils/mockWorker.ts";
 import { getToastHistory, resetToastHistory } from "@/testing-utils/mockToast";
 import { useSetAtom } from "jotai";
-import { updateEditorContentAtom } from "@/globals/workspace/model";
+import { updateEditorContentAtom } from "@/globals/model";
 
 afterEach(() => {
   resetWorkerResponseDelay();

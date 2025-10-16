@@ -9,11 +9,8 @@ import {
   type GraphSettings,
   type GridSettings,
   type LegendSettings,
-} from "@/globals/workspace/settings";
-import {
-  defaultXAxisTitleAtom,
-  defaultYAxisTitleAtom,
-} from "@/globals/workspace/plot";
+} from "@/globals/settings";
+import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
 
 import styles from "./PlotSettingsPanel.module.css";
 import buttonStyles from "@/components/Button.module.css";

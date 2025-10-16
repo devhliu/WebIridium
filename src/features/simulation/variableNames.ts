@@ -1,5 +1,5 @@
 import type { Variable } from "./Simulator";
-import type { VariableSettings } from "@/globals/workspace/settings";
+import type { VariableSettings } from "@/globals/settings";
 
 export const hasDisplayName = (
   variable: Variable,

@@ -6,7 +6,7 @@ import {
   SIMULATOR_LIST,
   simulatorAtom,
   updateSimulatorAtom,
-} from "@/globals/workspace/simulator";
+} from "@/globals/simulator";
 
 import styles from "./globalSettings.module.css";
 import PropertyList from "@/components/property-list/PropertyList";

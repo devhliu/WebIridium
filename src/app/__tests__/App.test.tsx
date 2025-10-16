@@ -6,7 +6,7 @@ import userEvent from "@testing-library/user-event";
 import { useSetAtom } from "jotai";
 
 import App, { AppContent } from "@/app/App";
-import { updateSimulatorAtom } from "@/globals/workspace/simulator";
+import { updateSimulatorAtom } from "@/globals/simulator";
 
 const RESULTS_PANEL_TEST_ID = "results-panel";
 

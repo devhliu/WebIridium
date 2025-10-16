@@ -1,4 +1,4 @@
-import type { EditableTimeCourseParameters } from "@/globals/workspace/settings";
+import type { EditableTimeCourseParameters } from "@/globals/settings";
 
 export interface ExamplePreset {
   parameters: EditableTimeCourseParameters;

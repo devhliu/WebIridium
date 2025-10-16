@@ -2,10 +2,7 @@ import { useAtomValue } from "jotai";
 
 import { LINE_STYLES } from "@/features/lineStyle";
 
-import {
-  paletteAtom,
-  type VariableSettings,
-} from "@/globals/workspace/settings";
+import { paletteAtom, type VariableSettings } from "@/globals/settings";
 
 import PropertyList from "@/components/property-list/PropertyList";
 
