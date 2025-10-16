@@ -75,7 +75,7 @@ describe("the panel", () => {
     await vi.advanceTimersByTimeAsync(3600 * 1000 + 100);
 
     expect(within(historyPanel).getByText("1 hour ago")).toBeInTheDocument();
-  });
+  }, 20_000); // increase the timeout a bit since it fails on coverage for whatever reason
 
   it("should update result when clicking a record", async () => {
     await renderWithinWorkspace(

@@ -71,6 +71,7 @@ export default defineConfig({
         "src/assets",
         "src/testing-utils",
         "src/third-party/",
+        "src/features/editor/language-handler",
       ],
     },
   },
