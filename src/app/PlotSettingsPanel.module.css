@@ -16,7 +16,7 @@
   overflow-y: auto;
 }
 
-.gridButtonText {
+.grid-button-text {
   display: flex;
   justify-content: center;
   align-items: center;
