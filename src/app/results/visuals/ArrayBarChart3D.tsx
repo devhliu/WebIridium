@@ -23,9 +23,21 @@ export interface ArrayBarChart3DProps {
   x: string;
   y: string;
   z: string;
+  isAutoscaledZ?: boolean;
+  minZ?: number;
+  maxZ?: number;
 }
 
-const ArrayBarChart3D = ({ name, data, x, y, z }: ArrayBarChart3DProps) => {
+const ArrayBarChart3D = ({
+  name,
+  data,
+  x,
+  y,
+  z,
+  isAutoscaledZ = true,
+  minZ,
+  maxZ,
+}: ArrayBarChart3DProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts | null>(null);
 
@@ -59,8 +71,12 @@ const ArrayBarChart3D = ({ name, data, x, y, z }: ArrayBarChart3DProps) => {
     }
 
     const allValues = data.values.flat();
-    const min = Math.min(...allValues);
-    const max = Math.max(...allValues);
+    const dataMin = Math.min(...allValues);
+    const dataMax = Math.max(...allValues);
+
+    // Use provided min/max or data min/max based on autoscale setting
+    const min = isAutoscaledZ ? dataMin : (minZ ?? dataMin);
+    const max = isAutoscaledZ ? dataMax : (maxZ ?? dataMax);
 
     chartRef.current?.setOption(
       {
@@ -92,6 +108,8 @@ const ArrayBarChart3D = ({ name, data, x, y, z }: ArrayBarChart3DProps) => {
         zAxis3D: {
           name: z,
           type: "value",
+          min: min,
+          max: max,
           axisPointer: {
             show: false,
           },
@@ -156,7 +174,7 @@ const ArrayBarChart3D = ({ name, data, x, y, z }: ArrayBarChart3DProps) => {
       },
       false,
     );
-  }, [name, data, x, y, z]);
+  }, [name, data, x, y, z, isAutoscaledZ, minZ, maxZ]);
 
   return <div className={styles.arrayBarChart3D} ref={containerRef} />;
 };

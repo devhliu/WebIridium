@@ -86,6 +86,10 @@ export interface GraphSettings {
   minY: number;
   maxY: number;
 
+  isAutoscaledZ: boolean;
+  minZ: number;
+  maxZ: number;
+
   margin: number;
 
   xAxis: AxisSettings;
@@ -161,6 +165,10 @@ export const defaultGraphSettings: GraphSettings = {
   isAutoscaledY: true,
   minY: 0,
   maxY: 10,
+
+  isAutoscaledZ: true,
+  minZ: 0,
+  maxZ: 10,
 
   margin: 70,
 

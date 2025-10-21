@@ -1,12 +1,17 @@
 import { useState } from "react";
-import { useAtomValue } from "jotai";
+import { useAtomValue, useAtom } from "jotai";
 
 import styles from "./results.module.css";
 
 import SelectProperty from "@/components/property-list/SelectProperty";
+import BooleanProperty from "@/components/property-list/BooleanProperty";
+import NumericProperty from "@/components/property-list/NumericProperty";
+import PropertyList from "@/components/property-list/PropertyList";
 import ArrayBarChart3D from "./visuals/ArrayBarChart3D";
+import { Allotment } from "allotment";
 
 import { simulationResultAtom } from "@/globals/simulation";
+import { graphSettingsAtom } from "@/globals/settings";
 
 const ITEMS = [
   "Jacobian",
@@ -28,8 +33,20 @@ type Item = (typeof ITEMS)[number];
 
 const SteadyState3DPanel = () => {
   const result = useAtomValue(simulationResultAtom);
+  const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
 
   const [item, setItem] = useState<Item>("Jacobian");
+
+  const handleZAxisChangeFor = (
+    setting: keyof Pick<
+      typeof graphSettings,
+      "isAutoscaledZ" | "minZ" | "maxZ"
+    >,
+  ): ((newValue: unknown) => void) => {
+    return (newValue) => {
+      setGraphSettings({ ...graphSettings, [setting]: newValue });
+    };
+  };
 
   if (result?.type !== "steadyState") {
     return null;
@@ -44,22 +61,59 @@ const SteadyState3DPanel = () => {
 
   return (
     <div className={styles.panel}>
-      <div className={styles.steadyState3DPanel}>
-        <SelectProperty
-          name="Item"
-          value={item}
-          options={ITEM_OPTIONS}
-          onChange={setItem}
-        />
+      <Allotment vertical>
+        <div className={styles.plotContainer}>
+          <div className={styles.steadyState3DPanel}>
+            <SelectProperty
+              name="Item"
+              value={item}
+              options={ITEM_OPTIONS}
+              onChange={setItem}
+            />
 
-        <ArrayBarChart3D
-          name={item}
-          data={resultItem}
-          x={AXES[item].x}
-          y={AXES[item].y}
-          z={AXES[item].z}
-        />
-      </div>
+            <ArrayBarChart3D
+              name={item}
+              data={resultItem}
+              x={AXES[item].x}
+              y={AXES[item].y}
+              z={AXES[item].z}
+              isAutoscaledZ={graphSettings.isAutoscaledZ}
+              minZ={graphSettings.minZ}
+              maxZ={graphSettings.maxZ}
+            />
+          </div>
+        </div>
+
+        <Allotment.Pane preferredSize={200}>
+          <div className={styles.quickActionsContainer}>
+            <div className={styles.quickActionsSettings}>
+              <PropertyList alignment="leftSmall">
+                <BooleanProperty
+                  name="Autoscale Z"
+                  value={graphSettings.isAutoscaledZ}
+                  onChange={handleZAxisChangeFor("isAutoscaledZ")}
+                />
+                {!graphSettings.isAutoscaledZ && (
+                  <NumericProperty
+                    name="Z Minimum"
+                    value={graphSettings.minZ}
+                    onChange={handleZAxisChangeFor("minZ")}
+                    validator={(newValue) => newValue < graphSettings.maxZ}
+                  />
+                )}
+                {!graphSettings.isAutoscaledZ && (
+                  <NumericProperty
+                    name="Z Maximum"
+                    value={graphSettings.maxZ}
+                    onChange={handleZAxisChangeFor("maxZ")}
+                    validator={(newValue) => newValue > graphSettings.minZ}
+                  />
+                )}
+              </PropertyList>
+            </div>
+          </div>
+        </Allotment.Pane>
+      </Allotment>
     </div>
   );
 };
