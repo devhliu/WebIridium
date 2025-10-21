@@ -18,6 +18,10 @@ import { PALETTES, type Palette } from "@/features/colors";
 
 import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
+import GridNoneIcon from "@/assets/icons/GridNoneIcon.svg?react";
+import GridXIcon from "@/assets/icons/GridXIcon.svg?react";
+import GridYIcon from "@/assets/icons/GridYIcon.svg?react";
+import GridXYIcon from "@/assets/icons/GridXYIcon.svg?react";
 
 import BooleanProperty from "@/components/property-list/BooleanProperty";
 import NumericProperty from "@/components/property-list/NumericProperty";
@@ -315,10 +319,26 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
                   });
               }}
             >
-              <ToggleGroupButton value="none">None</ToggleGroupButton>
-              <ToggleGroupButton value="x">X</ToggleGroupButton>
-              <ToggleGroupButton value="y">Y</ToggleGroupButton>
-              <ToggleGroupButton value="xy">XY</ToggleGroupButton>
+              <ToggleGroupButton value="none">
+                <span className={styles.gridButtonText}>
+                  <GridNoneIcon width="1.6em" height="1.6em" /> None
+                </span>
+              </ToggleGroupButton>
+              <ToggleGroupButton value="x">
+                <span className={styles.gridButtonText}>
+                  <GridXIcon width="1.6em" height="1.6em" /> X
+                </span>
+              </ToggleGroupButton>
+              <ToggleGroupButton value="y">
+                <span className={styles.gridButtonText}>
+                  <GridYIcon width="1.6em" height="1.6em" /> Y
+                </span>
+              </ToggleGroupButton>
+              <ToggleGroupButton value="xy">
+                <span className={styles.gridButtonText}>
+                  <GridXYIcon width="1.6em" height="1.6em" /> XY
+                </span>
+              </ToggleGroupButton>
             </ToggleGroup>
 
             <NumericSliderProperty

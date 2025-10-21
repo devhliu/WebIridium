@@ -7,6 +7,10 @@
   border-radius: var(--border-radius);
   box-shadow: var(--shadow-small);
   pointer-events: none;
+  z-index: 10000;
+  position: relative;
+  max-width: 200px;
+  word-wrap: break-word;
 }
 
 .arrow {
