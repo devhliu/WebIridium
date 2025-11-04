@@ -61,13 +61,6 @@ const GlobalSettingsPanel = () => {
             value={getSimulatorName(simulator)}
             onChange={(name) => updateSimulator(name)}
           />
-          <NumericSliderProperty
-            name="Max Threads"
-            min={1}
-            max={12}
-            value={4}
-            onChange={() => undefined}
-          />
         </PropertyList>
       </div>
     </div>

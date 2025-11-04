@@ -24,7 +24,11 @@ import {
   variablesAtom,
   variablesMapAtom,
 } from "./model";
-import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
+import {
+  nameAtom,
+  parameterScanOptionsAtom,
+  timeCourseParametersAtom,
+} from "./settings";
 import { variableSliderStatesAtom, areSlidersActiveAtom } from "./slider";
 import { currentRightPanelAtom } from "./layout";
 import { TaskTermination } from "@/features/taskPool";
@@ -108,12 +112,13 @@ const runSimulation = async (
 
     let canceled = false;
     try {
+      const modelName = get(nameAtom);
       const code = get(editorContentAtom);
 
       const result = await run(abortController.signal);
       set(simulationResultAtom, result);
       set(currentRightPanelAtom, "Results");
-      set(tryAddToHistoryAtom, { code, result });
+      set(tryAddToHistoryAtom, { modelName, code, result });
 
       return { type: "success" };
     } catch (err) {

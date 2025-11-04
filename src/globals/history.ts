@@ -4,6 +4,7 @@ import { atom } from "jotai";
 import { saveAtom } from "./saving";
 
 export interface HistoryRecord {
+  modelName: string;
   code: string;
   simulationResult: SimulationResult;
   unixTimestampMs: number;
@@ -23,11 +24,20 @@ const _historyAtom = atom<HistoryRecord[]>([]);
  */
 export const tryAddToHistoryAtom = atom(
   null,
-  (get, set, { code, result }: { code: string; result: SimulationResult }) => {
+  (
+    get,
+    set,
+    {
+      modelName,
+      code,
+      result,
+    }: { modelName: string; code: string; result: SimulationResult },
+  ) => {
     const history = get(_historyAtom);
 
     const lastRecord: HistoryRecord | undefined = history[history.length - 1];
     const record: HistoryRecord = {
+      modelName,
       code,
       simulationResult: result,
       unixTimestampMs: Date.now(),

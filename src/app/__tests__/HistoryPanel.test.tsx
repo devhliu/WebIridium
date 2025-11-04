@@ -42,14 +42,14 @@ describe("the panel", () => {
 
     // record shouldn't be added yet
     expect(
-      within(historyPanel).queryByText("Time Course Simulation"),
+      within(historyPanel).queryByText("Time Course", { exact: false }),
     ).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByText("Simulate"));
 
     // now the record should be there
     expect(
-      within(historyPanel).getByText("Time Course Simulation"),
+      within(historyPanel).getByText("Time Course", { exact: false }),
     ).toBeInTheDocument();
   });
 
@@ -67,14 +67,16 @@ describe("the panel", () => {
 
     // record shouldn't be added yet
     expect(
-      within(historyPanel).queryByText("Time Course Simulation"),
+      within(historyPanel).queryByText("Time Course", { exact: false }),
     ).not.toBeInTheDocument();
 
     await userEvent.click(screen.getByText("Simulate"));
 
     await vi.advanceTimersByTimeAsync(3600 * 1000 + 100);
 
-    expect(within(historyPanel).getByText("1 hour ago")).toBeInTheDocument();
+    expect(
+      within(historyPanel).getByText("1 hour ago", { exact: false }),
+    ).toBeInTheDocument();
   }, 20_000); // increase the timeout a bit since it fails on coverage for whatever reason
 
   it("should update result when clicking a record", async () => {
@@ -91,26 +93,26 @@ describe("the panel", () => {
 
     await userEvent.click(screen.getByText("Simulate"));
     expect(
-      screen.getByText(getResultTypeText("timeCourse")),
+      screen.getByText(getResultTypeText("timeCourse"), { exact: false }),
     ).toBeInTheDocument();
 
     await userEvent.click(screen.getByText("Compute"));
     expect(
-      screen.getByText(getResultTypeText("steadyState")),
+      screen.getByText(getResultTypeText("steadyState"), { exact: false }),
     ).toBeInTheDocument();
 
     // find the history record and click it
-    const firstRecord = within(historyPanel).getByText(
-      "Time Course Simulation",
-    );
+    const firstRecord = within(historyPanel).getByText("Time Course", {
+      exact: false,
+    });
     await userEvent.click(firstRecord);
 
     expect(
       within(historyPanel).getByRole("option", { selected: true }),
-    ).toHaveTextContent("Time Course Simulation");
+    ).toHaveTextContent("Time Course");
 
     expect(
-      screen.getByText(getResultTypeText("timeCourse")),
+      screen.getByText(getResultTypeText("timeCourse"), { exact: false }),
     ).toBeInTheDocument();
   });
 });
@@ -127,19 +129,19 @@ describe("history", () => {
     const historyPanel = screen.getByTestId("history-panel");
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(0);
-    await userEvent.click(screen.getByText("Simulate"));
+    await userEvent.click(screen.getByText("Simulate", { exact: false }));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(1);
 
     await userEvent.click(screen.getByText("Simulate"));
 
     // another records should not be added
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(1);
   });
 
@@ -156,13 +158,13 @@ describe("history", () => {
     vi.useFakeTimers({ toFake: ["Date"] });
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(0);
 
     await userEvent.click(screen.getByText("Simulate"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(1);
 
     vi.advanceTimersByTime(60_000);
@@ -171,7 +173,7 @@ describe("history", () => {
 
     // another records should be added
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(2);
   });
 
@@ -187,21 +189,21 @@ describe("history", () => {
     const historyPanel = screen.getByTestId("history-panel");
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(0);
     await userEvent.click(screen.getByText("Simulate"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(1);
 
     await userEvent.click(screen.getByText("Compute"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Simulation"),
+      within(historyPanel).queryAllByText("Time Course", { exact: false }),
     ).toHaveLength(1);
     expect(
-      within(historyPanel).queryAllByText("Steady State Simulation"),
+      within(historyPanel).queryAllByText("Steady State", { exact: false }),
     ).toHaveLength(1);
   });
 
@@ -216,19 +218,25 @@ describe("history", () => {
     const historyPanel = screen.getByTestId("history-panel");
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(0);
     await userEvent.click(screen.getByText("Run"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(1);
 
     await userEvent.click(screen.getByText("Run"));
 
     // another records should not be added
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(1);
   });
 
@@ -243,12 +251,16 @@ describe("history", () => {
     const historyPanel = screen.getByTestId("history-panel");
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(0);
     await userEvent.click(screen.getByText("Run"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(1);
 
     // switch to steady state mode
@@ -257,10 +269,14 @@ describe("history", () => {
     await userEvent.click(screen.getByText("Run"));
 
     expect(
-      within(historyPanel).queryAllByText("Time Course Parameter Scan"),
+      within(historyPanel).queryAllByText("Time Course Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(1);
     expect(
-      within(historyPanel).queryAllByText("Steady State Parameter Scan"),
+      within(historyPanel).queryAllByText("Steady State Parameter Scan", {
+        exact: false,
+      }),
     ).toHaveLength(1);
   });
 });

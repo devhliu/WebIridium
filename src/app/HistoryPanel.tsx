@@ -25,14 +25,14 @@ const HistoryItem = ({
   const [timestampMs, setTimestampMs] = useState(() => Date.now());
 
   // prettier-ignore
-  const title =
-    simulationResult.type === "timeCourse" ? "Time Course Simulation"
-    : simulationResult.type === "steadyState" ? "Steady State Simulation"
+  const simulationType =
+    simulationResult.type === "timeCourse" ? "Time Course"
+    : simulationResult.type === "steadyState" ? "Steady State"
     : simulationResult.type === "parameterScan" && simulationResult.mode === "timeCourse" ? "Time Course Parameter Scan"
     : simulationResult.type === "parameterScan" && simulationResult.mode === "steadyState" ? "Steady State Parameter Scan"
     : "Unknown";
 
-  const time = timeToAgoText(timestampMs - recordTimestampMs);
+  const time = timeToAgoText(timestampMs - recordTimestampMs).toLowerCase();
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -50,8 +50,10 @@ const HistoryItem = ({
       aria-selected={selected}
     >
       <div className={styles.buttonMain}>
-        <span className={styles.buttonTitle}>{title}</span>
-        <span className={styles.buttonTime}>{time}</span>
+        <span className={styles.buttonTitle}>{record.modelName}</span>
+        <span className={styles.buttonSubtitle}>
+          {simulationType}, {time}
+        </span>
       </div>
 
       <div className={styles.buttonCheck}>
