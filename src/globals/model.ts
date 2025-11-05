@@ -85,7 +85,7 @@ export const patchVariablesSettings = (
           variable.category === "ODEs",
         color: getDefaultColorForIndex(added),
         lineStyle: "solid",
-        width: 2,
+        width: 2.5,
       };
       added += 1;
     }

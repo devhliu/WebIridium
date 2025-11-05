@@ -90,6 +90,8 @@ export interface GraphSettings {
   minZ: number;
   maxZ: number;
 
+  colorScheme3D: Exclude<Palette, "Custom">;
+
   margin: number;
 
   xAxis: AxisSettings;
@@ -169,6 +171,8 @@ export const defaultGraphSettings: GraphSettings = {
   isAutoscaledZ: true,
   minZ: 0,
   maxZ: 10,
+
+  colorScheme3D: "BlueRed",
 
   margin: 70,
 

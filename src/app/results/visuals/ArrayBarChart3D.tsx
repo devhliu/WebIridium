@@ -9,6 +9,8 @@ import { type ECharts } from "echarts/core";
 import styles from "./visuals.module.css";
 
 import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
+import { getPaletteGradient } from "@/features/colors";
+import type { Palette } from "@/features/colors";
 
 const MAX_DECIMALS = 6;
 const HOVER_COLOR = "#080";
@@ -26,6 +28,7 @@ export interface ArrayBarChart3DProps {
   isAutoscaledZ?: boolean;
   minZ?: number;
   maxZ?: number;
+  colorScheme?: Exclude<Palette, "Custom">;
 }
 
 const ArrayBarChart3D = ({
@@ -37,6 +40,7 @@ const ArrayBarChart3D = ({
   isAutoscaledZ = true,
   minZ,
   maxZ,
+  colorScheme = "BlueRed",
 }: ArrayBarChart3DProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<ECharts | null>(null);
@@ -77,6 +81,8 @@ const ArrayBarChart3D = ({
     // Use provided min/max or data min/max based on autoscale setting
     const min = isAutoscaledZ ? dataMin : (minZ ?? dataMin);
     const max = isAutoscaledZ ? dataMax : (maxZ ?? dataMax);
+
+    const colorGradient = getPaletteGradient(colorScheme);
 
     chartRef.current?.setOption(
       {
@@ -126,19 +132,7 @@ const ArrayBarChart3D = ({
           max,
           show: false,
           inRange: {
-            color: [
-              "#313695",
-              "#4575b4",
-              "#74add1",
-              "#abd9e9",
-              "#e0f3f8",
-              "#ffffbf",
-              "#fee090",
-              "#fdae61",
-              "#f46d43",
-              "#d73027",
-              "#a50026",
-            ],
+            color: colorGradient,
           },
         },
         grid3D: {
@@ -174,7 +168,7 @@ const ArrayBarChart3D = ({
       },
       false,
     );
-  }, [name, data, x, y, z, isAutoscaledZ, minZ, maxZ]);
+  }, [name, data, x, y, z, isAutoscaledZ, minZ, maxZ, colorScheme]);
 
   return <div className={styles.arrayBarChart3D} ref={containerRef} />;
 };

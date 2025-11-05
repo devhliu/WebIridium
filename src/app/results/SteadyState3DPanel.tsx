@@ -12,6 +12,7 @@ import { Allotment } from "allotment";
 
 import { simulationResultAtom } from "@/globals/simulation";
 import { graphSettingsAtom } from "@/globals/settings";
+import { PALETTES } from "@/features/colors";
 
 const ITEMS = [
   "Jacobian",
@@ -40,13 +41,17 @@ const SteadyState3DPanel = () => {
   const handleZAxisChangeFor = (
     setting: keyof Pick<
       typeof graphSettings,
-      "isAutoscaledZ" | "minZ" | "maxZ"
+      "isAutoscaledZ" | "minZ" | "maxZ" | "colorScheme3D"
     >,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({ ...graphSettings, [setting]: newValue });
     };
   };
+
+  const colorSchemeOptions = Object.fromEntries(
+    Object.keys(PALETTES).map((name) => [name, name]),
+  );
 
   if (result?.type !== "steadyState") {
     return null;
@@ -80,6 +85,7 @@ const SteadyState3DPanel = () => {
               isAutoscaledZ={graphSettings.isAutoscaledZ}
               minZ={graphSettings.minZ}
               maxZ={graphSettings.maxZ}
+              colorScheme={graphSettings.colorScheme3D}
             />
           </div>
         </div>
@@ -109,6 +115,12 @@ const SteadyState3DPanel = () => {
                     validator={(newValue) => newValue > graphSettings.minZ}
                   />
                 )}
+                <SelectProperty
+                  name="Color Scheme"
+                  value={graphSettings.colorScheme3D}
+                  options={colorSchemeOptions}
+                  onChange={handleZAxisChangeFor("colorScheme3D") as (newValue: string) => void}
+                />
               </PropertyList>
             </div>
           </div>
