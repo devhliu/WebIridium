@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useAtomValue, useAtom } from "jotai";
 
 import styles from "./results.module.css";
@@ -11,7 +10,7 @@ import ArrayBarChart3D from "./visuals/ArrayBarChart3D";
 import { Allotment } from "allotment";
 
 import { simulationResultAtom } from "@/globals/simulation";
-import { graphSettingsAtom } from "@/globals/settings";
+import { graphSettingsAtom, steadyState3DItemAtom } from "@/globals/settings";
 import { PALETTES } from "@/features/colors";
 
 const ITEMS = [
@@ -30,13 +29,10 @@ const AXES: { [name: string]: { x: string; y: string; z: string } } = {
 
 const ITEM_OPTIONS = Object.fromEntries(ITEMS.map((i) => [i, i]));
 
-type Item = (typeof ITEMS)[number];
-
 const SteadyState3DPanel = () => {
   const result = useAtomValue(simulationResultAtom);
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
-
-  const [item, setItem] = useState<Item>("Jacobian");
+  const [item, setItem] = useAtom(steadyState3DItemAtom);
 
   const handleZAxisChangeFor = (
     setting: keyof Pick<
@@ -73,7 +69,7 @@ const SteadyState3DPanel = () => {
               name="Item"
               value={item}
               options={ITEM_OPTIONS}
-              onChange={setItem}
+              onChange={(newValue) => setItem(newValue as typeof item)}
             />
 
             <ArrayBarChart3D

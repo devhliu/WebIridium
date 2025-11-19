@@ -222,3 +222,6 @@ export const defaultGraphSettings: GraphSettings = {
 };
 
 export const graphSettingsAtom = atom(defaultGraphSettings);
+
+export type SteadyState3DItem = "Jacobian" | "Flux Control" | "Concentration Control" | "Elasticities";
+export const steadyState3DItemAtom = atom<SteadyState3DItem>("Jacobian");

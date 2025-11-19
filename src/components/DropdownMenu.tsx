@@ -43,7 +43,13 @@ export interface DropdownMenuItemProps {
 
 export const DropdownMenuItem = ({ name, onSelect }: DropdownMenuItemProps) => {
   return (
-    <RadixDropdownMenu.Item className={styles.item} onSelect={onSelect}>
+    <RadixDropdownMenu.Item
+      className={styles.item}
+      onSelect={(event) => {
+        event.preventDefault();
+        onSelect();
+      }}
+    >
       {name}
     </RadixDropdownMenu.Item>
   );
