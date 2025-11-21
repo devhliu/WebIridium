@@ -18,6 +18,7 @@ import {
 } from "@/globals/simulation";
 import { readShareUrlFragment } from "@/features/share";
 import { updateAllHistoryAtom } from "@/globals/history";
+import { updateAllChatHistoryAtom } from "@/globals/chat";
 import { apiKeyAtom } from "@/globals/chat";
 
 // simulation from share link will not be run if they use more number of points
@@ -38,6 +39,7 @@ const Initialize = ({
   const setThemeOption = useSetAtom(themeOptionAtom);
   const setEditorFontSize = useSetAtom(editorFontSizeAtom);
   const updateAllHistory = useSetAtom(updateAllHistoryAtom);
+  const updateAllChatHistory = useSetAtom(updateAllChatHistoryAtom);
   const setGraphSettings = useSetAtom(graphSettingsAtom);
   const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const setApiKey = useSetAtom(apiKeyAtom);
@@ -58,6 +60,7 @@ const Initialize = ({
           setThemeOption(savedData.theme);
           setEditorFontSize(savedData.editorFontSize);
           updateAllHistory(savedData.workspace.history);
+          updateAllChatHistory(savedData.workspace.chatHistory ?? []);
           setVariableSettingss(savedData.workspace.variableSettingss);
           setGraphSettings(savedData.workspace.graphSettings);
           setApiKey(savedData.workspace.apiKey ?? null);
@@ -123,6 +126,7 @@ const Initialize = ({
     setEditorFontSize,
     setVariableSettingss,
     updateAllHistory,
+    updateAllChatHistory,
     setApiKey,
   ]);
 
