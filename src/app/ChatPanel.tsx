@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useAtom, useSetAtom } from "jotai";
 import { saveAtom } from "@/globals/saving";
+import {
+  chatHistoryAtom,
+  activeConversationAtom,
+  upsertActiveConversationAtom,
+  apiKeyAtom,
+} from "@/globals/chat";
 import styles from "./ChatPanel.module.css";
 import PanelTitle from "../components/PanelTitle";
 import PulseLoader from "../components/PulseLoader";
@@ -8,7 +14,12 @@ import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
 import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
-import { apiKeyAtom } from "@/globals/chat";
+import { Tooltip } from "@/components/Tooltip";
+import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
+import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
+import type { ChatConversation } from "@/globals/chat";
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
+import { timeToAgoText } from "@/features/timeUtils";
 
 export interface ChatPanelProps {
   visible: boolean;
@@ -32,6 +43,14 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const setSave = useSetAtom(saveAtom);
+  const [showHistory, setShowHistory] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [chatHistory] = useAtom(chatHistoryAtom);
+  const [activeConversation, setActiveConversation] = useAtom(
+    activeConversationAtom,
+  );
+
+  const upsertActiveConversation = useSetAtom(upsertActiveConversationAtom);
 
   useEffect(() => {
     const el = messagesRef.current;
@@ -39,6 +58,27 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
       el.scrollTop = el.scrollHeight;
     }
   }, [messages]);
+
+  // Auto-save (create or update) the conversation whenever messages change
+  // and we're not waiting for a reply. This keeps the saved conversation in
+  // sync
+  useEffect(() => {
+    const nonThinking = messages.filter((m) => !m.thinking && m.text);
+    if (nonThinking.length === 0) return;
+    if (waitingForReply) return;
+
+    const conv = nonThinking.map((m) => ({
+      id: m.id,
+      role: m.role,
+      text: m.text,
+    }));
+
+    try {
+      void upsertActiveConversation({ messages: conv });
+    } catch (_e) {
+      void _e;
+    }
+  }, [messages, waitingForReply, upsertActiveConversation]);
 
   const saveApiKey = () => {
     // set the atom and trigger the global save flow which persists via commitSavedData
@@ -56,7 +96,65 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     }
   };
 
-  const [showOptions, setShowOptions] = useState(false);
+  const ConversationItem = ({
+    conv,
+    selected,
+  }: {
+    conv: ChatConversation;
+    selected: boolean;
+  }) => {
+    const [timestampMs, setTimestampMs] = useState(() => Date.now());
+    const time = timeToAgoText(
+      timestampMs - conv.unixTimestampMs,
+    ).toLowerCase();
+
+    useEffect(() => {
+      const id = setInterval(() => {
+        setTimestampMs(Date.now());
+      }, 60 * 1_000);
+
+      return () => clearInterval(id);
+    }, []);
+
+    return (
+      <button
+        key={conv.id}
+        className={styles.historyItem}
+        onClick={() => {
+          setMessages(
+            conv.messages.map((m) => ({
+              id: m.id,
+              role: m.role,
+              text: m.text,
+            })),
+          );
+          setShowHistory(false);
+          setActiveConversation(conv);
+        }}
+      >
+        <div className={styles.historyMain}>
+          <span className={styles.historyTitle}>{conv.title}</span>
+          <span className={styles.historySubtitle}>{time}</span>
+        </div>
+
+        <div className={styles.historyCheck}>
+          {selected && <CheckIcon width="1em" height="1em" aria-hidden />}
+        </div>
+      </button>
+    );
+  };
+
+  const openHistory = () => {
+    const show = showHistory;
+    setShowHistory(!show);
+    setShowSettings(false);
+  };
+
+  const openSettings = () => {
+    const show = showSettings;
+    setShowSettings(!show);
+    setShowHistory(false);
+  };
 
   const sendMessage = async () => {
     const trimmed = input.trim();
@@ -165,24 +263,37 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     <div className={styles.panel}>
       <div className={styles.titleRow}>
         <PanelTitle title="Chat" />
-        <button
-          type="button"
-          className={styles.optionsButton}
-          onClick={() => setShowOptions((s) => !s)}
-          aria-expanded={showOptions}
-          aria-label="Chat options"
-        >
-          Options
-        </button>
+        <div>
+          <button
+            className={styles.titleButton}
+            aria-expanded={showHistory}
+            aria-label="Chat History"
+            onClick={() => openHistory()}
+          >
+            <Tooltip text="Chat History">
+              <HistoryIcon height="0.75em" width="0.75em" />
+            </Tooltip>
+          </button>
+          <button
+            className={styles.titleButton}
+            aria-expanded={showSettings}
+            aria-label="Chat Settings"
+            onClick={() => openSettings()}
+          >
+            <Tooltip text="Chat Settings">
+              <SettingsIcon height="0.75em" width="0.75em" />
+            </Tooltip>
+          </button>
+        </div>
       </div>
 
       <div className={styles.chatBox} role="region" aria-label="Chat panel">
-        {showOptions ? (
-          <div className={styles.optionsPanel}>
-            <div className={styles.optionsRow}>
+        {showSettings ? (
+          <div className={styles.settingsPanel}>
+            <div className={styles.settingsRow}>
               <button
                 type="button"
-                className={styles.clearKeyButton}
+                className={styles.historyItem}
                 onClick={() => {
                   setApiKey(null);
                   try {
@@ -190,15 +301,37 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                   } catch (_e) {
                     void _e;
                   }
-                  setShowOptions(false);
+                  setShowSettings(false);
                 }}
                 disabled={waitingForReply || !apiKey}
               >
                 Clear API key
               </button>
-              <div className={styles.optionsNote}>
+              <div className={styles.settingsNote}>
                 Clearing the key will disable chat until a new key is saved.
               </div>
+            </div>
+          </div>
+        ) : null}
+
+        {showHistory ? (
+          <div className={styles.settingsPanel}>
+            <div className={styles.historyList}>
+              {chatHistory.length === 0 ? (
+                <div className={styles.settingsNote}>
+                  No saved conversations
+                </div>
+              ) : (
+                chatHistory
+                  .slice()
+                  .reverse()
+                  .map((conv) => (
+                    <ConversationItem
+                      selected={conv === activeConversation}
+                      conv={conv}
+                    />
+                  ))
+              )}
             </div>
           </div>
         ) : null}
