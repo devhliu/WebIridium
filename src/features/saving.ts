@@ -1,5 +1,6 @@
 import type { GraphSettings, VariableSettings } from "@/globals/settings";
 import type { HistoryRecord } from "@/globals/history";
+import type { ChatConversation } from "@/globals/chat";
 import type { ThemeOption } from "@/globals/appearance";
 
 const DATABASE_NAME = "testing_database4";
@@ -16,7 +17,7 @@ export interface SavedDataV1 {
     variableSettingss: Record<string, VariableSettings>;
     graphSettings: GraphSettings;
     history: HistoryRecord[];
-    // optional API key persisted with the workspace
+    chatHistory?: ChatConversation[];
     apiKey?: string | null;
   };
 }
