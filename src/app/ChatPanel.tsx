@@ -13,13 +13,17 @@ import PulseLoader from "../components/PulseLoader";
 import ReactMarkdown from "react-markdown";
 import rehypeSanitize from "rehype-sanitize";
 import remarkGfm from "remark-gfm";
-import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
+
+import { timeToAgoText } from "@/features/timeUtils";
 import { Tooltip } from "@/components/Tooltip";
+
 import SettingsIcon from "@/assets/icons/SettingsIcon.svg?react";
 import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
-import type { ChatConversation } from "@/globals/chat";
+import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
-import { timeToAgoText } from "@/features/timeUtils";
+
+import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
+import type { ChatConversation } from "@/globals/chat";
 
 export interface ChatPanelProps {
   visible: boolean;
@@ -282,6 +286,19 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
           >
             <Tooltip text="Chat Settings">
               <SettingsIcon height="0.75em" width="0.75em" />
+            </Tooltip>
+          </button>
+          <button
+            className={styles.titleButton}
+            aria-expanded={showSettings}
+            aria-label="New Chat"
+            onClick={() => {
+              setMessages([]);
+              setActiveConversation(null);
+            }}
+          >
+            <Tooltip text="New Chat">
+              <PlusIcon height="0.75em" width="0.75em" />
             </Tooltip>
           </button>
         </div>
