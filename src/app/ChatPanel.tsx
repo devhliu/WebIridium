@@ -414,10 +414,11 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                           const language =
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                             /language-(\w+)/.exec(className || "")?.[1] ?? "";
-                          
+
                           // Only render code block wrapper for triple-backtick code (has language or contains newlines)
-                          const isCodeBlock = language || codeText.includes("\n");
-                          
+                          const isCodeBlock =
+                            language || codeText.includes("\n");
+
                           return inline || !isCodeBlock ? (
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             <code {...props} className={className}>
@@ -442,7 +443,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                                 </button>
                               </div>
                               <div className={styles.codeBlockContentWrapper}>
-                                  <code {...props} >{children}</code>
+                                <code {...props}>{children}</code>
                               </div>
                             </div>
                           );
