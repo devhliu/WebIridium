@@ -9,7 +9,7 @@ const AboutDialog = ({ onClose }: AboutDialogProps) => {
   return (
     <Dialog
       title="About"
-      description="Information about Web Iridium"
+      description="Information about WebIridium"
       showDescription={false}
       onClose={onClose}
     >
