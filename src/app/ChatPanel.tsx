@@ -85,14 +85,12 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   }, [messages, waitingForReply, upsertActiveConversation]);
 
   const saveApiKey = () => {
-    // set the atom and trigger the global save flow which persists via commitSavedData
     if (apiKeyInput) {
       setApiKey(apiKeyInput);
     } else {
       setApiKey(null);
     }
     setApiKeyInput("");
-    // trigger a save (fire-and-forget)
     try {
       void setSave();
     } catch (_e) {
@@ -416,7 +414,11 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                           const language =
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                             /language-(\w+)/.exec(className || "")?.[1] ?? "";
-                          return inline ? (
+                          
+                          // Only render code block wrapper for triple-backtick code (has language or contains newlines)
+                          const isCodeBlock = language || codeText.includes("\n");
+                          
+                          return inline || !isCodeBlock ? (
                             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
                             <code {...props} className={className}>
                               {children}
@@ -439,7 +441,9 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                                   Copy
                                 </button>
                               </div>
-                              <code {...props}>{children}</code>
+                              <div className={styles.codeBlockContentWrapper}>
+                                  <code {...props} >{children}</code>
+                              </div>
                             </div>
                           );
                         },

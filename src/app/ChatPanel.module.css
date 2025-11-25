@@ -163,6 +163,8 @@
   border: var(--border-button);
   border-radius: var(--border-radius);
   padding: var(--spacing-2);
+  overflow: auto;
+  max-width: 100%;
 }
 
 .code-block-header {
@@ -171,6 +173,8 @@
   justify-content: space-between;
   margin: var(--spacing-2);
   border-bottom: var(--border-button);
+  flex-wrap: wrap;
+  gap: var(--spacing-2);
 }
 
 .code-block-title {
@@ -179,11 +183,9 @@
   font-weight: bold;
 }
 
-.code-block-wrapper pre {
-  padding: var(--spacing-2);
-  border-radius: var(--border-radius);
+.code-block-content-wrapper {
   overflow: auto;
-  margin: 0;
+  padding-right: var(--spacing-2);
 }
 
 .copy-button {
