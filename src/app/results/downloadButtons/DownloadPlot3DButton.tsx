@@ -10,7 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/DropdownMenu";
-import { useToast } from "@/components/Toast";
 
 import { simulationResultAtom } from "@/globals/simulation";
 import {
@@ -37,8 +36,6 @@ const DownloadPlot3DButton = () => {
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const workspaceName = useAtomValue(nameAtom);
   const graphSettings = useAtomValue(graphSettingsAtom);
-
-  const { toast } = useToast();
 
   const downloadName = `3D Plot of ${workspaceName}`;
 
@@ -123,12 +120,13 @@ const DownloadPlot3DButton = () => {
       xAxis3D: {
         name: independentVariableName,
         type: "value",
-        nameLocation: "middle",
-        nameGap: 30,
+        nameLocation: "end",
+        nameGap: 20,
         nameTextStyle: {
           fontSize: 14,
           color: "#000",
         },
+        nameRotate: 0,
         axisPointer: {
           show: false,
         },
@@ -143,11 +141,12 @@ const DownloadPlot3DButton = () => {
         type: "category",
         data: titles,
         nameLocation: "middle",
-        nameGap: 30,
+        nameGap: 20,
         nameTextStyle: {
           fontSize: 14,
           color: "#000",
         },
+        nameRotate: 90,
         axisPointer: {
           show: false,
         },
@@ -161,8 +160,8 @@ const DownloadPlot3DButton = () => {
       zAxis3D: {
         name: "Concentrations",
         type: "value",
-        nameLocation: "middle",
-        nameGap: 30,
+        nameLocation: "end",
+        nameGap: 15,
         nameTextStyle: {
           fontSize: 14,
           color: "#000",
@@ -188,6 +187,16 @@ const DownloadPlot3DButton = () => {
           autoRotate: false,
         },
         environment: "#ffffff",
+        axisLine: {
+          lineStyle: {
+            color: "#333",
+          },
+        },
+        axisLabel: {
+          textStyle: {
+            color: "#000",
+          },
+        },
       },
       series: series,
     };
@@ -212,9 +221,14 @@ const DownloadPlot3DButton = () => {
       height: HEIGHT,
     });
     chart.setOption(plotOptions);
+    // Force resize to ensure everything renders
+    chart.resize();
 
-    // Wait for chart to finish rendering
-    chart.on("finished", () => {
+    // Wait for chart to finish rendering - need extra delay for 3D axis titles
+    const capturePng = () => {
+      if (!container.parentNode) return;
+      // Force another resize to ensure axis titles render
+      chart.resize();
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         canvas.toBlob((blob) => {
@@ -234,32 +248,15 @@ const DownloadPlot3DButton = () => {
         document.body.removeChild(container);
         chart.dispose();
       }
+    };
+
+    chart.on("finished", () => {
+      // Extra delay to ensure axis titles are fully rendered
+      setTimeout(capturePng, 500);
     });
 
-    // Fallback timeout in case 'finished' event doesn't fire
-    setTimeout(() => {
-      if (container.parentNode) {
-        const canvas = chart.getRenderedCanvas();
-        if (canvas) {
-          canvas.toBlob((blob) => {
-            if (!blob) {
-              document.body.removeChild(container);
-              chart.dispose();
-              return;
-            }
-
-            const url = URL.createObjectURL(blob);
-            promptDownloadUrl(downloadName, url);
-            URL.revokeObjectURL(url);
-            document.body.removeChild(container);
-            chart.dispose();
-          });
-        } else {
-          document.body.removeChild(container);
-          chart.dispose();
-        }
-      }
-    }, 1000);
+    // Fallback timeout - longer for 3D rendering with axis titles
+    setTimeout(capturePng, 2000);
   };
 
   const handleSvgDownload = () => {
@@ -283,10 +280,14 @@ const DownloadPlot3DButton = () => {
       height: HEIGHT,
     });
     chart.setOption(plotOptions);
+    // Force resize to ensure everything renders
+    chart.resize();
 
-    // Wait for chart to finish rendering - need extra delay for 3D labels
+    // Wait for chart to finish rendering - need extra delay for 3D axis titles
     const captureSvg = () => {
       if (!container.parentNode) return;
+      // Force another resize to ensure axis titles render
+      chart.resize();
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         const dataUrl = canvas.toDataURL("image/png");
@@ -303,12 +304,12 @@ const DownloadPlot3DButton = () => {
     };
 
     chart.on("finished", () => {
-      // Extra delay to ensure axis labels are fully rendered
-      setTimeout(captureSvg, 300);
+      // Extra delay to ensure axis titles are fully rendered
+      setTimeout(captureSvg, 500);
     });
 
-    // Fallback timeout - longer for 3D rendering
-    setTimeout(captureSvg, 1500);
+    // Fallback timeout - longer for 3D rendering with axis titles
+    setTimeout(captureSvg, 2000);
   };
 
   const handlePdfDownload = async () => {
@@ -333,10 +334,14 @@ const DownloadPlot3DButton = () => {
       height: HEIGHT,
     });
     chart.setOption(plotOptions);
+    // Force resize to ensure everything renders
+    chart.resize();
 
-    // Wait for chart to finish rendering - need extra delay for 3D labels
+    // Wait for chart to finish rendering - need extra delay for 3D axis titles
     const captureAndSave = () => {
       if (!container.parentNode) return;
+      // Force another resize to ensure axis titles render
+      chart.resize();
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         const pdf = new jsPDF({
@@ -354,12 +359,12 @@ const DownloadPlot3DButton = () => {
     };
 
     chart.on("finished", () => {
-      // Extra delay to ensure axis labels are fully rendered
-      setTimeout(captureAndSave, 300);
+      // Extra delay to ensure axis titles are fully rendered
+      setTimeout(captureAndSave, 500);
     });
 
-    // Fallback timeout - longer for 3D rendering
-    setTimeout(captureAndSave, 1500);
+    // Fallback timeout - longer for 3D rendering with axis titles
+    setTimeout(captureAndSave, 2000);
   };
 
   if (!result || result.type === "steadyState") {
