@@ -3,6 +3,20 @@ import { saveAtom } from "./saving";
 
 export const apiKeyAtom = atom<string | null>(null);
 
+export const DEFAULT_SYSTEM_PROMPT =
+  "You are a systems biologist that specializes in a biological compound and reaction modeling language named Antimony that is based off of SBML, help the user debug and analyze their models that are written in Antimony";
+
+export const systemPromptAtom = atom<string>(DEFAULT_SYSTEM_PROMPT);
+
+export const AVAILABLE_MODELS = [
+  { id: "gpt-4o", name: "GPT-4o" },
+  { id: "gpt-4o-mini", name: "GPT-4o Mini" },
+  { id: "o1-preview", name: "o1 Preview" },
+  { id: "o1-mini", name: "o1 Mini" },
+];
+
+export const modelAtom = atom<string>("gpt-4o");
+
 export type ChatRole = "user" | "llm";
 
 export interface ChatMessage {
