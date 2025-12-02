@@ -6,6 +6,10 @@ import {
   activeConversationAtom,
   upsertActiveConversationAtom,
   apiKeyAtom,
+  systemPromptAtom,
+  DEFAULT_SYSTEM_PROMPT,
+  modelAtom,
+  AVAILABLE_MODELS,
 } from "@/globals/chat";
 import styles from "./ChatPanel.module.css";
 import PanelTitle from "../components/PanelTitle";
@@ -106,6 +110,13 @@ const ChatSettings = ({
   waitingForReply: boolean;
 }) => {
   const [keyInput, setKeyInput] = useState("");
+  const [systemPrompt, setSystemPrompt] = useAtom(systemPromptAtom);
+  const [promptInput, setPromptInput] = useState(systemPrompt);
+
+  // Sync local state when global state changes (e.g. reset)
+  useEffect(() => {
+    setPromptInput(systemPrompt);
+  }, [systemPrompt]);
 
   const handleSaveKey = () => {
     if (keyInput) {
@@ -121,6 +132,24 @@ const ChatSettings = ({
 
   const handleClearKey = () => {
     setApiKey(null);
+    try {
+      void setSave();
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  const handleSavePrompt = () => {
+    setSystemPrompt(promptInput);
+    try {
+      void setSave();
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  const handleResetPrompt = () => {
+    setSystemPrompt(DEFAULT_SYSTEM_PROMPT);
     try {
       void setSave();
     } catch (_e) {
@@ -176,6 +205,34 @@ const ChatSettings = ({
           Your API key is stored locally and never shared.
         </div>
       </div>
+
+      <div className={styles.settingsSection}>
+        <div className={styles.settingsLabel}>System Prompt</div>
+        <textarea
+          className={styles.settingsTextarea}
+          value={promptInput}
+          onChange={(e) => setPromptInput(e.target.value)}
+          placeholder="Enter system prompt..."
+          rows={4}
+          disabled={waitingForReply}
+        />
+        <div className={styles.settingsActions}>
+          <button
+            className={styles.secondaryButton}
+            onClick={handleResetPrompt}
+            disabled={waitingForReply || promptInput === DEFAULT_SYSTEM_PROMPT}
+          >
+            Reset to Default
+          </button>
+          <button
+            className={styles.primaryButton}
+            onClick={handleSavePrompt}
+            disabled={waitingForReply || promptInput === systemPrompt}
+          >
+            Save Prompt
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
@@ -187,6 +244,8 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [waitingForReply, setWaitingForReply] = useState(false);
 
   const [apiKey, setApiKey] = useAtom(apiKeyAtom);
+  const [systemPrompt] = useAtom(systemPromptAtom);
+  const [model, setModel] = useAtom(modelAtom);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const setSave = useSetAtom(saveAtom);
@@ -275,11 +334,10 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
           Authorization: `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: "gpt-4.1",
+          model: model,
           input: convo,
           max_output_tokens: 1024,
-          instructions:
-            "You are a systems biologist that specializes in a biological compound and reaction modeling language named Antimony that is based off of SBML, help the user debug and analyze their models that are written in Antimony",
+          instructions: systemPrompt,
         }),
       });
 
@@ -515,6 +573,19 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                 disabled={waitingForReply || !apiKey}
               />
               <div className={styles.inputToolbar}>
+                <select
+                  className={styles.modelSelector}
+                  value={model}
+                  onChange={(e) => setModel(e.target.value)}
+                  disabled={waitingForReply}
+                  aria-label="Select Model"
+                >
+                  {AVAILABLE_MODELS.map((m) => (
+                    <option key={m.id} value={m.id}>
+                      {m.name}
+                    </option>
+                  ))}
+                </select>
                 <button
                   id="chat-enter-button"
                   className={styles.sendButton}
