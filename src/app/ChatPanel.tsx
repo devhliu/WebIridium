@@ -48,12 +48,14 @@ const ConversationItem = ({
   setShowHistory,
   setActiveConversation,
   disabled,
+  disabled,
 }: {
   conv: ChatConversation;
   selected: boolean;
   setMessages: (to: Message[]) => void;
   setShowHistory: (to: boolean) => void;
   setActiveConversation: (to: ChatConversation) => void;
+  disabled?: boolean;
   disabled?: boolean;
 }) => {
   const [timestampMs, setTimestampMs] = useState(() => Date.now());
@@ -82,6 +84,7 @@ const ConversationItem = ({
         setShowHistory(false);
         setActiveConversation(conv);
       }}
+      disabled={disabled}
       disabled={disabled}
     >
       <div className={styles.historyMain}>
@@ -237,6 +240,94 @@ const ChatSettings = ({
   );
 };
 
+const ChatSettings = ({
+  apiKey,
+  setApiKey,
+  setSave,
+  onClose,
+  waitingForReply,
+}: {
+  apiKey: string | null;
+  setApiKey: (key: string | null) => void;
+  setSave: () => void;
+  onClose: () => void;
+  waitingForReply: boolean;
+}) => {
+  const [keyInput, setKeyInput] = useState("");
+
+  const handleSaveKey = () => {
+    if (keyInput) {
+      setApiKey(keyInput);
+      setKeyInput("");
+      try {
+        void setSave();
+      } catch (_e) {
+        void _e;
+      }
+    }
+  };
+
+  const handleClearKey = () => {
+    setApiKey(null);
+    try {
+      void setSave();
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  return (
+    <div className={styles.settingsPanel}>
+      <div className={styles.settingsHeader}>
+        <h3 className={styles.settingsTitle}>Settings</h3>
+        <button className={styles.closeButton} onClick={onClose}>
+          Close
+        </button>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <div className={styles.settingsLabel}>OpenAI API Key</div>
+        {apiKey ? (
+          <div className={styles.keyStatus}>
+            <div className={styles.keyActive}>
+              <CheckIcon width="1em" height="1em" />
+              <span>API Key is set</span>
+            </div>
+            <button
+              className={styles.clearKeyButton}
+              onClick={handleClearKey}
+              disabled={waitingForReply}
+            >
+              Clear Key
+            </button>
+          </div>
+        ) : (
+          <div className={styles.apiKeyRow}>
+            <input
+              type="password"
+              className={styles.apiKeyInput}
+              placeholder="Enter OpenAI API key"
+              value={keyInput}
+              onChange={(e) => setKeyInput(e.target.value)}
+              aria-label="OpenAI API key"
+            />
+            <button
+              className={styles.apiKeyButton}
+              onClick={handleSaveKey}
+              disabled={!keyInput}
+            >
+              Save
+            </button>
+          </div>
+        )}
+        <div className={styles.settingsNote}>
+          Your API key is stored locally and never shared.
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -382,7 +473,11 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
 
     const computedStyle = window.getComputedStyle(ta);
     const maxHeightStr = computedStyle.maxHeight || "0px";
+
+    const computedStyle = window.getComputedStyle(ta);
+    const maxHeightStr = computedStyle.maxHeight || "0px";
     const maxHeight = parseFloat(maxHeightStr.replace("px", "")) || Infinity;
+
 
     const newHeight = Math.min(ta.scrollHeight, maxHeight);
     ta.style.height = `${newHeight}px`;
@@ -441,6 +536,13 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
             onClose={() => setShowSettings(false)}
             waitingForReply={waitingForReply}
           />
+          <ChatSettings
+            apiKey={apiKey}
+            setApiKey={setApiKey}
+            setSave={setSave}
+            onClose={() => setShowSettings(false)}
+            waitingForReply={waitingForReply}
+          />
         ) : null}
 
         {showHistory ? (
@@ -461,6 +563,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                       setMessages={setMessages}
                       setActiveConversation={setActiveConversation}
                       setShowHistory={setShowHistory}
+                      disabled={waitingForReply}
                       disabled={waitingForReply}
                     />
                   ))
