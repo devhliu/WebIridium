@@ -254,6 +254,13 @@ const ChatSettings = ({
   waitingForReply: boolean;
 }) => {
   const [keyInput, setKeyInput] = useState("");
+  const [systemPrompt, setSystemPrompt] = useAtom(systemPromptAtom);
+  const [promptInput, setPromptInput] = useState(systemPrompt);
+
+  // Sync local state when global state changes (e.g. reset)
+  useEffect(() => {
+    setPromptInput(systemPrompt);
+  }, [systemPrompt]);
 
   const handleSaveKey = () => {
     if (keyInput) {
@@ -269,6 +276,24 @@ const ChatSettings = ({
 
   const handleClearKey = () => {
     setApiKey(null);
+    try {
+      void setSave();
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  const handleSavePrompt = () => {
+    setSystemPrompt(promptInput);
+    try {
+      void setSave();
+    } catch (_e) {
+      void _e;
+    }
+  };
+
+  const handleResetPrompt = () => {
+    setSystemPrompt(DEFAULT_SYSTEM_PROMPT);
     try {
       void setSave();
     } catch (_e) {
@@ -322,6 +347,34 @@ const ChatSettings = ({
         )}
         <div className={styles.settingsNote}>
           Your API key is stored locally and never shared.
+        </div>
+      </div>
+
+      <div className={styles.settingsSection}>
+        <div className={styles.settingsLabel}>System Prompt</div>
+        <textarea
+          className={styles.settingsTextarea}
+          value={promptInput}
+          onChange={(e) => setPromptInput(e.target.value)}
+          placeholder="Enter system prompt..."
+          rows={4}
+          disabled={waitingForReply}
+        />
+        <div className={styles.settingsActions}>
+          <button
+            className={styles.secondaryButton}
+            onClick={handleResetPrompt}
+            disabled={waitingForReply || promptInput === DEFAULT_SYSTEM_PROMPT}
+          >
+            Reset to Default
+          </button>
+          <button
+            className={styles.primaryButton}
+            onClick={handleSavePrompt}
+            disabled={waitingForReply || promptInput === systemPrompt}
+          >
+            Save Prompt
+          </button>
         </div>
       </div>
     </div>
