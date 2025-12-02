@@ -115,9 +115,6 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     }
   }, [messages]);
 
-  // Auto-save (create or update) the conversation whenever messages change
-  // and we're not waiting for a reply. This keeps the saved conversation in
-  // sync
   const saveConversation = (newMessages: Message[]) => {
     const nonThinking = newMessages.filter((m) => !m.thinking && m.text);
     if (nonThinking.length === 0) return;
