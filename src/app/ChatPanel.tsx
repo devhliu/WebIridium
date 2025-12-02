@@ -36,6 +36,58 @@ type Message = {
   thinking?: boolean;
 };
 
+const ConversationItem = ({
+  conv,
+  selected,
+  setMessages,
+  setShowHistory,
+  setActiveConversation,
+}: {
+  conv: ChatConversation;
+  selected: boolean;
+  setMessages: (to: Message[]) => void;
+  setShowHistory: (to: boolean) => void;
+  setActiveConversation: (to: ChatConversation) => void;
+}) => {
+  const [timestampMs, setTimestampMs] = useState(() => Date.now());
+  const time = timeToAgoText(timestampMs - conv.unixTimestampMs).toLowerCase();
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setTimestampMs(Date.now());
+    }, 60 * 1_000);
+
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <button
+      key={conv.id}
+      className={styles.historyItem}
+      onClick={() => {
+        setMessages(
+          conv.messages.map((m) => ({
+            id: m.id,
+            role: m.role,
+            text: m.text,
+          })),
+        );
+        setShowHistory(false);
+        setActiveConversation(conv);
+      }}
+    >
+      <div className={styles.historyMain}>
+        <span className={styles.historyTitle}>{conv.title}</span>
+        <span className={styles.historySubtitle}>{time}</span>
+      </div>
+
+      <div className={styles.historyCheck}>
+        {selected && <CheckIcon width="1em" height="1em" aria-hidden />}
+      </div>
+    </button>
+  );
+};
+
 const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
@@ -66,10 +118,9 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   // Auto-save (create or update) the conversation whenever messages change
   // and we're not waiting for a reply. This keeps the saved conversation in
   // sync
-  useEffect(() => {
-    const nonThinking = messages.filter((m) => !m.thinking && m.text);
+  const saveConversation = (newMessages: Message[]) => {
+    const nonThinking = newMessages.filter((m) => !m.thinking && m.text);
     if (nonThinking.length === 0) return;
-    if (waitingForReply) return;
 
     const conv = nonThinking.map((m) => ({
       id: m.id,
@@ -82,7 +133,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     } catch (_e) {
       void _e;
     }
-  }, [messages, waitingForReply, upsertActiveConversation]);
+  };
 
   const saveApiKey = () => {
     if (apiKeyInput) {
@@ -98,63 +149,13 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     }
   };
 
-  const ConversationItem = ({
-    conv,
-    selected,
-  }: {
-    conv: ChatConversation;
-    selected: boolean;
-  }) => {
-    const [timestampMs, setTimestampMs] = useState(() => Date.now());
-    const time = timeToAgoText(
-      timestampMs - conv.unixTimestampMs,
-    ).toLowerCase();
-
-    useEffect(() => {
-      const id = setInterval(() => {
-        setTimestampMs(Date.now());
-      }, 60 * 1_000);
-
-      return () => clearInterval(id);
-    }, []);
-
-    return (
-      <button
-        key={conv.id}
-        className={styles.historyItem}
-        onClick={() => {
-          setMessages(
-            conv.messages.map((m) => ({
-              id: m.id,
-              role: m.role,
-              text: m.text,
-            })),
-          );
-          setShowHistory(false);
-          setActiveConversation(conv);
-        }}
-      >
-        <div className={styles.historyMain}>
-          <span className={styles.historyTitle}>{conv.title}</span>
-          <span className={styles.historySubtitle}>{time}</span>
-        </div>
-
-        <div className={styles.historyCheck}>
-          {selected && <CheckIcon width="1em" height="1em" aria-hidden />}
-        </div>
-      </button>
-    );
-  };
-
-  const openHistory = () => {
-    const show = showHistory;
-    setShowHistory(!show);
+  const toggleHistory = () => {
+    setShowHistory((show) => !show);
     setShowSettings(false);
   };
 
-  const openSettings = () => {
-    const show = showSettings;
-    setShowSettings(!show);
+  const toggleSettings = () => {
+    setShowSettings((show) => !show);
     setShowHistory(false);
   };
 
@@ -184,7 +185,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     // reset inline height so textarea returns to default after send
     if (inputRef.current) inputRef.current.style.height = "";
     setWaitingForReply(true);
-
+    let finalizedMessages: Message[] = newMessages;
     try {
       const convo = newMessages
         .filter((m) => !m.thinking)
@@ -215,21 +216,19 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
 
       const data = (await resp.json()) as OpenAiResponse;
       const reply = data?.output?.[0]?.content[0]?.text ?? "(no response)";
-      setMessages((cur) =>
-        cur.map((m) =>
-          m.id === placeholderId ? { ...m, text: reply, thinking: false } : m,
-        ),
+      finalizedMessages = finalizedMessages.map((m) =>
+        m.id === placeholderId ? { ...m, text: reply, thinking: false } : m,
       );
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : String(err);
-      setMessages((cur) =>
-        cur.map((m) =>
-          m.id === placeholderId
-            ? { ...m, text: `Error: ${message}`, thinking: false }
-            : m,
-        ),
+      finalizedMessages = messages.map((m) =>
+        m.id === placeholderId
+          ? { ...m, text: `Error: ${message}`, thinking: false }
+          : m,
       );
     } finally {
+      setMessages(finalizedMessages);
+      saveConversation(finalizedMessages);
       setWaitingForReply(false);
     }
   };
@@ -270,7 +269,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
             className={styles.titleButton}
             aria-expanded={showHistory}
             aria-label="Chat History"
-            onClick={() => openHistory()}
+            onClick={toggleHistory}
           >
             <Tooltip text="Chat History">
               <HistoryIcon height="0.75em" width="0.75em" />
@@ -280,7 +279,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
             className={styles.titleButton}
             aria-expanded={showSettings}
             aria-label="Chat Settings"
-            onClick={() => openSettings()}
+            onClick={toggleSettings}
           >
             <Tooltip text="Chat Settings">
               <SettingsIcon height="0.75em" width="0.75em" />
@@ -344,6 +343,9 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                     <ConversationItem
                       selected={conv === activeConversation}
                       conv={conv}
+                      setMessages={setMessages}
+                      setActiveConversation={setActiveConversation}
+                      setShowHistory={setShowHistory}
                     />
                   ))
               )}
