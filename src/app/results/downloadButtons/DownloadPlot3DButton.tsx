@@ -229,6 +229,7 @@ const DownloadPlot3DButton = () => {
       if (!container.parentNode) return;
       // Force another resize to ensure axis titles render
       chart.resize();
+      // eslint-disable-next-line testing-library/render-result-naming-convention
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         canvas.toBlob((blob) => {
@@ -288,6 +289,7 @@ const DownloadPlot3DButton = () => {
       if (!container.parentNode) return;
       // Force another resize to ensure axis titles render
       chart.resize();
+      // eslint-disable-next-line testing-library/render-result-naming-convention
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         const dataUrl = canvas.toDataURL("image/png");
@@ -342,6 +344,7 @@ const DownloadPlot3DButton = () => {
       if (!container.parentNode) return;
       // Force another resize to ensure axis titles render
       chart.resize();
+      // eslint-disable-next-line testing-library/render-result-naming-convention
       const canvas = chart.getRenderedCanvas();
       if (canvas) {
         const pdf = new jsPDF({
