@@ -173,11 +173,11 @@ const catpuccinTheme: monaco.editor.IStandaloneThemeData = {
 
     { token: "compartment", foreground: "#cba6f7" },
 
-    { token: "const", foreground: "#eba0ac" },
+    { token: "const", foreground: "#b4befe" },
 
-    { token: "unit", foreground: "#eba0ac" },
+    { token: "unit", foreground: "#b4befe" },
 
-    { token: "var", foreground: "#eba0ac" },
+    { token: "var", foreground: "#b4befe" },
 
     { token: "keywords", foreground: "#cba6f7" },
     { token: "operator", foreground: "#94e2d5" },
@@ -188,7 +188,7 @@ const catpuccinTheme: monaco.editor.IStandaloneThemeData = {
 
     { token: "transform", foreground: "#94e2d5" },
 
-    { token: "annotation", foreground: "#f92672" },
+    { token: "annotation", foreground: "#eba0ac" },
 
     { token: "assign", foreground: "#94e2d5" },
 
