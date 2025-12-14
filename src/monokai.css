@@ -35,6 +35,10 @@
   --color-layer3-fg: var(--color-layer1-fg);
   --color-layer3-border: oklch(0.1 0.0152 280.63);
 
+  --color-container-bg: var(--color-layer2-bg);
+  --color-container-fg: var(--color-layer2-fg);
+  --color-container-border: var(--color-layer2-border);
+
   /* Specific-use Colors */
 
   --color-error: oklch(0.4471 0.142 4.86);

@@ -18,8 +18,8 @@
 .list {
   display: flex;
   flex-direction: column;
-  background-color: var(--color-input-bg);
-  border: var(--border-input);
+  background-color: var(--color-container-bg);
+  border: var(--border-container);
   border-radius: var(--border-radius);
   padding: var(--spacing-1);
 }

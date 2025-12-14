@@ -152,6 +152,55 @@ const monokaiTheme: monaco.editor.IStandaloneThemeData = {
   ],
 };
 
+const catpuccinTheme: monaco.editor.IStandaloneThemeData = {
+  base: "vs-dark",
+  inherit: false,
+  colors: {
+    "editor.foreground": "#cdd6f4",
+    "editor.background": "#1e1e2e",
+    "editor.selectionBackground": "#9399b233",
+    "editor.lineHighlightBackground": "#cdd6f412",
+    "editorCursor.foreground": "#ebd3e8",
+    "editorWhitespace.foreground": "#9399b266",
+    "editor.selectionHighlightBorder": "#9399b233",
+  },
+  rules: [
+    { token: "invalid", foreground: "#ff0000" },
+
+    { token: "species", foreground: "#b4befe" },
+
+    { token: "boundarySpecies", foreground: "#89b4fa", fontStyle: "italic" },
+
+    { token: "compartment", foreground: "#cba6f7" },
+
+    { token: "const", foreground: "#eba0ac" },
+
+    { token: "unit", foreground: "#eba0ac" },
+
+    { token: "var", foreground: "#eba0ac" },
+
+    { token: "keywords", foreground: "#cba6f7" },
+    { token: "operator", foreground: "#94e2d5" },
+
+    { token: "function", foreground: "#cba6f7" },
+    { token: "model", foreground: "#cba6f7" },
+    { token: "end", foreground: "#cba6f7" },
+
+    { token: "transform", foreground: "#94e2d5" },
+
+    { token: "annotation", foreground: "#f92672" },
+
+    { token: "assign", foreground: "#94e2d5" },
+
+    // { token: 'other', foreground: KEYWORD_COLOR },
+    { token: "react-remov", foreground: "#cba6f7" },
+    { token: "comment", foreground: "#9399b2" },
+    { token: "comment.preset", foreground: "#9399b2", fontStyle: "bold" },
+    { token: "string", foreground: "#a6e3a1" },
+    { token: "number", foreground: "#fab387" },
+  ],
+};
+
 export const monacoThemes: Record<
   Theme,
   { name: string; data: monaco.editor.IStandaloneThemeData }
@@ -159,4 +208,5 @@ export const monacoThemes: Record<
   Dark: { name: "iridiumDark", data: iridiumDarkTheme },
   Light: { name: "iridiumLight", data: iridiumLightTheme },
   Monokai: { name: "monokai", data: monokaiTheme },
+  Catpuccin: { name: "catpuccin", data: catpuccinTheme },
 };
