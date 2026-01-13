@@ -235,14 +235,10 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  gap: var(--spacing-1);
-}
-
-.input-toolbar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0;
+  --chat-input-min-height: 3.5rem;
+  --chat-input-max-height: 20rem;
+  min-height: var(--chat-input-min-height);
+  max-height: var(--chat-input-max-height);
 }
 
 .input {
