@@ -149,6 +149,7 @@ const ChatSettings = ({
   };
 
   const handleResetPrompt = () => {
+    setPromptInput(DEFAULT_SYSTEM_PROMPT);
     setSystemPrompt(DEFAULT_SYSTEM_PROMPT);
     try {
       void setSave();
