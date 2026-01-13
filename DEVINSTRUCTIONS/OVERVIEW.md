@@ -40,12 +40,12 @@ Please write tests for any changes you make, as much as is reasonable.
 - `src/features`: Everything else that doesn't have to deal with the UI or global state
 - `public`: Stuff that should not be processed during the build
   - includes worker scripts
- 
+
 ### Adding new example models
 
- - To add a new example model drop your new model (with .ant extension) into src/assests/examples
- - Use dash characters to represent spaces in your files name, this will be used to display the name to the user.
- - You might need to refresh your browser cache (F5 on windows) to see the change.
+- To add a new example model drop your new model (with .ant extension) into src/assests/examples
+- Use dash characters to represent spaces in your files name, this will be used to display the name to the user.
+- You might need to refresh your browser cache (F5 on windows) to see the change.
 
 # specific stuff
 

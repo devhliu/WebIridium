@@ -213,6 +213,7 @@
   gap: var(--spacing-2);
   align-items: stretch;
   margin-top: var(--spacing-2);
+  position: relative;
 }
 
 .message-llm .message-bubble {
@@ -230,42 +231,51 @@
   box-shadow: var(--shadow-small);
 }
 
-.input-row {
-  display: flex;
-  gap: var(--spacing-2);
-  align-items: stretch;
-  margin-top: var(--spacing-2);
-}
-
-.input-wrapper {
+.input-column {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  --chat-input-min-height: 3.5rem;
-  --chat-input-max-height: 20rem;
-  min-height: var(--chat-input-min-height);
-  max-height: var(--chat-input-max-height);
+  gap: var(--spacing-1);
+}
+
+.input-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0;
 }
 
 .input {
-  width: 100%;
-  min-height: var(--chat-input-min-height);
+  flex: 1 1 auto;
+  min-height: 3.5rem;
+  max-height: 12rem;
   padding: var(--spacing-2);
+  border: 1px solid var(--color-layer2-border);
   border-radius: var(--border-radius);
-  border-color: var(--color-layer2-border);
   resize: none;
   overflow: hidden;
   background: var(--color-layer1-bg);
   color: var(--color-layer1-fg);
   scrollbar-width: thin;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: var(--color-accent);
+  outline: 1px solid var(--color-accent);
 }
 
 .input::-webkit-scrollbar {
   width: 12px;
 }
+
 .input::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .input::-webkit-scrollbar-thumb {
   background: color-mix(in oklch, var(--color-layer2-fg) 45%, transparent);
   border: 3px solid transparent;
@@ -273,21 +283,35 @@
 }
 
 .send-button {
-  padding: 0 var(--spacing-3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
   border-radius: var(--border-radius);
-  background: var(--color-layer1-bg);
+  background: var(--color-accent);
   color: var(--color-accent-fg);
   border: none;
   cursor: pointer;
   opacity: 1;
+  flex-shrink: 0;
+  margin-bottom: 0;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
 }
 
-.input:disabled {
-  opacity: 0.6;
+.send-button:hover:not(:disabled) {
+  opacity: 0.9;
 }
 
 .send-button:disabled {
+  background: var(--color-layer2-bg);
+  color: var(--color-layer2-fg);
   cursor: not-allowed;
+}
+
+.input:disabled {
   opacity: 0.6;
 }
 
@@ -358,9 +382,11 @@
 .messages::-webkit-scrollbar {
   width: 12px;
 }
+
 .messages::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .messages::-webkit-scrollbar-thumb {
   border: 3px solid transparent;
   background-clip: padding-box;
@@ -387,6 +413,11 @@
   &:active {
     background-color: var(--color-button-bg-active);
   }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
 }
 
 .history-main {
@@ -412,4 +443,169 @@
   flex-direction: column;
   gap: var(--spacing-2);
   list-style: none;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--spacing-3);
+}
+
+.settings-title {
+  margin: 0;
+  font-size: var(--font-size-medium);
+  font-weight: bold;
+  color: var(--color-layer1-fg);
+}
+
+.close-button {
+  background: none;
+  border: none;
+  color: var(--color-layer1-fg);
+  cursor: pointer;
+  font-size: var(--font-size-small);
+  padding: var(--spacing-1);
+  opacity: 0.7;
+}
+
+.close-button:hover {
+  opacity: 1;
+}
+
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2);
+}
+
+.settings-label {
+  font-size: var(--font-size-small);
+  color: var(--color-layer1-fg);
+  font-weight: bold;
+}
+
+.key-status {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-layer2-bg);
+  padding: var(--spacing-2);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--color-layer2-border);
+}
+
+.key-active {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  color: var(--color-success);
+  font-size: var(--font-size-small);
+}
+
+.clear-key-button {
+  padding: var(--spacing-1) var(--spacing-2);
+  border-radius: var(--border-radius);
+  background: var(--color-button-bg);
+  color: var(--color-button-fg);
+  border: 1px solid var(--color-button-border);
+  cursor: pointer;
+  font-size: var(--font-size-small);
+}
+
+.clear-key-button:hover {
+  background: var(--color-button-bg-hover);
+}
+
+.clear-key-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.settings-textarea {
+  width: 100%;
+  padding: var(--spacing-2);
+  border: 1px solid var(--color-layer2-border);
+  border-radius: var(--border-radius);
+  background: var(--color-layer1-bg);
+  color: var(--color-layer1-fg);
+  font-family: inherit;
+  font-size: inherit;
+  resize: vertical;
+  min-height: 6rem;
+  margin-top: var(--spacing-1);
+}
+
+.settings-textarea:focus {
+  border-color: var(--color-accent);
+  outline: 1px solid var(--color-accent);
+}
+
+.settings-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-2);
+  margin-top: var(--spacing-2);
+}
+
+.primary-button,
+.secondary-button {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--border-radius);
+  font-size: 0.9em;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: opacity 0.2s;
+}
+
+.primary-button {
+  background: var(--color-accent);
+  color: var(--color-accent-fg);
+}
+
+.secondary-button {
+  background: transparent;
+  border-color: var(--color-layer2-border);
+  color: var(--color-layer1-fg);
+}
+
+.primary-button:hover:not(:disabled),
+.secondary-button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.primary-button:disabled,
+.secondary-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.model-selector {
+  background: transparent;
+  color: var(--color-layer1-fg);
+  border: 1px solid transparent;
+  border-radius: var(--border-radius);
+  padding: 2px var(--spacing-1);
+  font-size: 0.8em;
+  cursor: pointer;
+  opacity: 0.7;
+  transition:
+    opacity 0.2s,
+    background-color 0.2s;
+  outline: none;
+}
+
+.model-selector:hover:not(:disabled) {
+  opacity: 1;
+  background: var(--color-layer2-bg);
+}
+
+.model-selector:focus {
+  opacity: 1;
+  border-color: var(--color-accent);
+}
+
+.model-selector:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }

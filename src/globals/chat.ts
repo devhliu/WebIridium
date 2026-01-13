@@ -1,7 +1,26 @@
 import { atom } from "jotai";
 import { saveAtom } from "./saving";
 
+// TODO: Put all the settings under one chat settings object
+
 export const apiKeyAtom = atom<string | null>(null);
+
+export const DEFAULT_SYSTEM_PROMPT =
+  "You are a systems biologist that specializes in a biological compound and reaction modeling language named Antimony that is based off of SBML, help the user debug and analyze their models that are written in Antimony";
+
+export const systemPromptAtom = atom<string>(DEFAULT_SYSTEM_PROMPT);
+
+export const AVAILABLE_MODELS = [
+  { id: "gpt-5.2", name: "GPT-5.2" },
+  { id: "gpt-5.1", name: "GPT-5.1" },
+  { id: "gpt-5", name: "GPT-5" },
+  { id: "gpt-5-mini", name: "GPT-5 mini" },
+  { id: "gpt-5-nano", name: "GPT-5 nano" },
+  { id: "gpt-4o", name: "GPT-4o" },
+  { id: "gpt-4o-mini", name: "GPT-4o Mini" },
+];
+
+export const modelAtom = atom<string>("gpt-4o");
 
 export type ChatRole = "user" | "llm";
 
