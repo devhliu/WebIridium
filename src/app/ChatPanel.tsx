@@ -491,7 +491,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
       }
 
       const data = (await resp.json()) as OpenAiResponse;
-      const reply = data?.output?.[0]?.content[0]?.text ?? "(no response)";
+      const reply = data?.output?.find(i => i.type === "message")?.content[0]?.text ?? "(no response)";
       finalizedMessages = finalizedMessages.map((m) =>
         m.id === placeholderId ? { ...m, text: reply, thinking: false } : m,
       );
@@ -512,11 +512,8 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = async (
     e,
   ) => {
-    if (waitingForReply || !apiKey) return;
-    if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault();
-      await sendMessage();
-    }
+    // Prevent sending messages with keyboard shortcuts
+    // Users must use the send button instead
   };
 
   useEffect(() => {
