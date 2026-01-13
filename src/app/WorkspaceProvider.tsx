@@ -43,7 +43,7 @@ const Initialize = ({
   const setGraphSettings = useSetAtom(graphSettingsAtom);
   const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const setApiKey = useSetAtom(apiKeyAtom);
-  const setChatPrompt = useSetAtom(systemPromptAtom)
+  const setChatPrompt = useSetAtom(systemPromptAtom);
 
   useEffect(() => {
     if (!didInitialLoadRef.current) {
@@ -128,6 +128,7 @@ const Initialize = ({
     updateAllHistory,
     updateAllChatHistory,
     setApiKey,
+    setChatPrompt,
   ]);
 
   return null;
