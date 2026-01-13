@@ -1,8 +1,6 @@
 import { atom } from "jotai";
 import { saveAtom } from "./saving";
 
-// TODO: Put all the settings under one chat settings object
-
 export const apiKeyAtom = atom<string | null>(null);
 
 export const DEFAULT_SYSTEM_PROMPT =

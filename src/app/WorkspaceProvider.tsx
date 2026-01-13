@@ -18,7 +18,7 @@ import {
 } from "@/globals/simulation";
 import { readShareUrlFragment } from "@/features/share";
 import { updateAllHistoryAtom } from "@/globals/history";
-import { systemPromptAtom, updateAllChatHistoryAtom } from "@/globals/chat";
+import { updateAllChatHistoryAtom } from "@/globals/chat";
 import { apiKeyAtom } from "@/globals/chat";
 
 // simulation from share link will not be run if they use more number of points
@@ -43,7 +43,6 @@ const Initialize = ({
   const setGraphSettings = useSetAtom(graphSettingsAtom);
   const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const setApiKey = useSetAtom(apiKeyAtom);
-  const setChatPrompt = useSetAtom(systemPromptAtom)
 
   useEffect(() => {
     if (!didInitialLoadRef.current) {
@@ -63,7 +62,6 @@ const Initialize = ({
           setVariableSettingss(savedData.workspace.variableSettingss);
           setGraphSettings(savedData.workspace.graphSettings);
           setApiKey(savedData.workspace.apiKey ?? null);
-          setChatPrompt(savedData.workspace.chatSystemPrompt);
         }
 
         const shareResult = await readShareUrlFragment(

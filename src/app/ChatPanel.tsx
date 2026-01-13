@@ -26,7 +26,6 @@ import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import SendIcon from "@/assets/icons/SendIcon.svg?react";
-import SendIcon from "@/assets/icons/SendIcon.svg?react";
 
 import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
 import type { ChatConversation } from "@/globals/chat";
@@ -338,8 +337,6 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [apiKey, setApiKey] = useAtom(apiKeyAtom);
   const [systemPrompt] = useAtom(systemPromptAtom);
   const [model, setModel] = useAtom(modelAtom);
-  const [systemPrompt] = useAtom(systemPromptAtom);
-  const [model, setModel] = useAtom(modelAtom);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const setSave = useSetAtom(saveAtom);
@@ -429,10 +426,8 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
         },
         body: JSON.stringify({
           model: model,
-          model: model,
           input: convo,
           max_output_tokens: 1024,
-          instructions: systemPrompt,
           instructions: systemPrompt,
         }),
       });
@@ -443,7 +438,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
       }
 
       const data = (await resp.json()) as OpenAiResponse;
-      const reply = data?.output?.find(i => i.type === "message")?.content[0]?.text ?? "(no response)";
+      const reply = data?.output?.[0]?.content[0]?.text ?? "(no response)";
       finalizedMessages = finalizedMessages.map((m) =>
         m.id === placeholderId ? { ...m, text: reply, thinking: false } : m,
       );
@@ -464,8 +459,11 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const handleKeyDown: React.KeyboardEventHandler<HTMLTextAreaElement> = async (
     e,
   ) => {
-    // Prevent sending messages with keyboard shortcuts
-    // Users must use the send button instead
+    if (waitingForReply || !apiKey) return;
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      await sendMessage();
+    }
   };
 
   useEffect(() => {
@@ -665,14 +663,6 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               </div>
             ) : null}
             <div className={styles.inputColumn}>
-            {!apiKey ? (
-              <div className={styles.overlay} aria-hidden="true">
-                <div className={styles.overlayContent}>
-                  <div>Please enter an OpenAI API key in settings</div>
-                </div>
-              </div>
-            ) : null}
-            <div className={styles.inputColumn}>
               <textarea
                 ref={inputRef}
                 className={styles.input}
@@ -685,31 +675,6 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                 onKeyDown={handleKeyDown}
                 disabled={waitingForReply || !apiKey}
               />
-              <div className={styles.inputToolbar}>
-                <select
-                  className={styles.modelSelector}
-                  value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                  disabled={waitingForReply}
-                  aria-label="Select Model"
-                >
-                  {AVAILABLE_MODELS.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name}
-                    </option>
-                  ))}
-                </select>
-                <button
-                  id="chat-enter-button"
-                  className={styles.sendButton}
-                  aria-label="Send message"
-                  onClick={sendMessage}
-                  disabled={waitingForReply || !apiKey || !input.trim()}
-                >
-                  <SendIcon width="1em" height="1em" />
-                </button>
-              </div>
-            </div>
               <div className={styles.inputToolbar}>
                 <select
                   className={styles.modelSelector}
