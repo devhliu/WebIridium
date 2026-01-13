@@ -67,7 +67,7 @@ export const requestSavedData = (): Promise<SavedDataV1 | null> => {
         const data = (event.target as IDBRequest).result as SavedDataV1;
 
         // simple dumb migration for now
-        if (data.workspace.graphSettings.globalWidth === undefined) {
+        if (data && data.workspace.graphSettings.globalWidth === undefined) {
           data.workspace.graphSettings.globalWidth = 1;
         }
 
