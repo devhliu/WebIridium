@@ -15,7 +15,7 @@ export interface SavedDataV1 {
     graphSettings: GraphSettings;
     history: HistoryRecord[];
     chatHistory?: ChatConversation[];
-    chatSystemPrompt: string;
+    chatSystemPrompt?: string | null;
     apiKey?: string | null;
   };
 }
