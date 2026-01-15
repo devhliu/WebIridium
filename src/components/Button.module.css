@@ -1,4 +1,5 @@
 .default,
+.primary,
 .ghost,
 .ghost-text {
   --button-spacing: var(--spacing-2);
@@ -33,6 +34,35 @@
   &:disabled {
     color: var(--color-button-fg-disabled);
     background-color: var(--color-button-bg-disabled);
+  }
+}
+
+.primary {
+  color: var(--color-accent-fg);
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: var(--button-spacing);
+  cursor: pointer;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--button-spacing);
+
+  &:hover {
+    color: color-mix(in hsl, var(--color-accent-fg) 95%, transparent);
+    background-color: color-mix(in hsl, var(--color-accent) 93%, transparent);
+  }
+
+  &:active {
+    color: color-mix(in hsl, var(--color-accent-fg) 97%, transparent);
+    background-color: color-mix(in hsl, var(--color-accent) 92%, transparent);
+  }
+
+  &:disabled {
+    color: color-mix(in hsl, var(--color-accent-fg) 60%, transparent);
+    background: color-mix(in hsl, var(--color-accent) 60%, transparent);
   }
 }
 

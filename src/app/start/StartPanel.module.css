@@ -1,0 +1,29 @@
+.panel {
+  display: grid;
+  grid-template-columns: 0.75fr 1fr;
+  padding: 18px;
+  gap: 18px;
+  max-width: 1200px;
+}
+
+.models-title {
+  font-size: var(--font-size-big);
+  color: var(--color-layer1-fg-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  padding-block-end: var(--spacing-5);
+}
+
+.model-actions {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-3);
+}
+
+.model-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-4);
+}

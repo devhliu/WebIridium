@@ -41,6 +41,9 @@ import SlidersPanel from "./sliders/SlidersPanel";
 import ResultTabbedPanel from "./results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./PlotSettingsPanel";
 import ChatPanel from "./ChatPanel";
+import { StartPanel } from "./start/StartPanel";
+
+import { editorContentAtom } from "@/globals/model";
 
 const SAVE_INTERVAL = 60_000; // in ms
 
@@ -77,6 +80,8 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
+  const editorContent = useAtomValue(editorContentAtom);
+
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
 
   return (
@@ -110,7 +115,7 @@ const AppContent = () => {
             <Allotment.Pane priority={LayoutPriority.High}>
               <Allotment vertical>
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  <EditorPanel />
+                  {editorContent === "" ? <StartPanel /> : <EditorPanel />}
                 </Allotment.Pane>
 
                 <Allotment.Pane
