@@ -5,11 +5,17 @@
   background: var(--color-layer1-bg);
   border-right: var(--border-layer1);
   width: var(--size-6);
+  box-sizing: content-box;
+
+  &[data-collapsed="true"] {
+    border-right: none;
+  }
 }
 
 .list {
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
 }
 
 .trigger {

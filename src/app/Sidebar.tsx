@@ -69,7 +69,7 @@ const Sidebar = ({ panels, currentPanel, onPanelChange }: SidebarProps) => {
   };
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-collapsed={currentPanel === null}>
       <div className={styles.list}>
         {panels
           .filter((t) => TOP_PANELS.has(t))

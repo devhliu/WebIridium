@@ -48,12 +48,18 @@ export const MenubarMenu = ({
 export const MenubarItem = ({
   name,
   onSelect,
+  disabled,
 }: {
   name: string;
   onSelect: () => void;
+  disabled?: boolean;
 }) => {
   return (
-    <RadixMenubar.Item className={styles.item} onSelect={onSelect}>
+    <RadixMenubar.Item
+      className={styles.item}
+      onSelect={onSelect}
+      disabled={disabled}
+    >
       {name}
     </RadixMenubar.Item>
   );

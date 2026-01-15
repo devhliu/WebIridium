@@ -15,7 +15,7 @@ export type VeryRightPanel = "Plot Settings" | "Overlays";
 
 export type BottomPanel = "Sliders";
 
-const DEFAULT_LEFT_PANEL: LeftPanel = "Time Course";
+const DEFAULT_LEFT_PANEL: LeftPanel | null = null;
 
 const _currentVeryRightPanelAtom = atom<VeryRightPanel | null>(null);
 // used to restore the left panel after its closed by opening the very right panel (via Plot Settings as of july)

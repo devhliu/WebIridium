@@ -9,7 +9,7 @@ export interface SearchItemProps {
 const getFirstSentence = (synopysis: string): string =>
   synopysis.slice(0, synopysis.indexOf(".") + 1);
 
-export const SearchItem = ({ info }: SearchItemProps) => {
+const SearchItem = ({ info }: SearchItemProps) => {
   return (
     <div className={styles.item}>
       <button className={styles.main}>
@@ -27,3 +27,5 @@ export const SearchItem = ({ info }: SearchItemProps) => {
     </div>
   );
 };
+
+export default SearchItem;

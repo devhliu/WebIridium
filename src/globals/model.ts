@@ -37,6 +37,10 @@ const _editorContentAtom = atom(defaultModel);
 const _variablesAtom = atom<Variable[]>([]);
 const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
 
+export const activeModelFileAtom = atom<string | null>(null);
+export const hasActiveModelAtom = atom(
+  (get) => get(activeModelFileAtom) !== null,
+);
 export const editorContentAtom = atom((get) => get(_editorContentAtom));
 export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
 export const variablesAtom = atom((get) => get(_variablesAtom));

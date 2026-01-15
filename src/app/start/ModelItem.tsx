@@ -6,7 +6,7 @@ export interface ModelItemProps {
   name: string;
 }
 
-export const ModelItem = ({ name }: ModelItemProps) => {
+const ModelItem = ({ name }: ModelItemProps) => {
   return (
     <div className={styles.item}>
       <button className={styles.main}>
@@ -27,3 +27,5 @@ export const ModelItem = ({ name }: ModelItemProps) => {
     </div>
   );
 };
+
+export default ModelItem;

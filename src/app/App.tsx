@@ -18,6 +18,7 @@ import {
 } from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/saving";
+import { activeModelFileAtom } from "@/globals/model";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";
@@ -41,9 +42,7 @@ import SlidersPanel from "./sliders/SlidersPanel";
 import ResultTabbedPanel from "./results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./PlotSettingsPanel";
 import ChatPanel from "./ChatPanel";
-import { StartPanel } from "./start/StartPanel";
-
-import { editorContentAtom } from "@/globals/model";
+import StartPanel from "./start/StartPanel";
 
 const SAVE_INTERVAL = 60_000; // in ms
 
@@ -80,8 +79,7 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
-  const editorContent = useAtomValue(editorContentAtom);
-
+  const activeModelFile = useAtomValue(activeModelFileAtom);
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
 
   return (
@@ -115,7 +113,7 @@ const AppContent = () => {
             <Allotment.Pane priority={LayoutPriority.High}>
               <Allotment vertical>
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  {editorContent === "" ? <StartPanel /> : <EditorPanel />}
+                  {activeModelFile === null ? <StartPanel /> : <EditorPanel />}
                 </Allotment.Pane>
 
                 <Allotment.Pane

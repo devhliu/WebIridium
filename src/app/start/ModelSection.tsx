@@ -1,11 +1,11 @@
 import styles from "./ModelSection.module.css";
 import buttonStyles from "@/components/Button.module.css";
 
-import { ModelItem } from "./ModelItem";
+import ModelItem from "./ModelItem";
 
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
-export const ModelSection = () => {
+const ModelSection = () => {
   const models = [
     "test model",
     "hello world",
@@ -48,3 +48,5 @@ export const ModelSection = () => {
     </div>
   );
 };
+
+export default ModelSection;

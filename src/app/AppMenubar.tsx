@@ -36,6 +36,7 @@ import {
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/settings";
 import { editorContentAtom, setModelAtom } from "@/globals/model";
+import { hasActiveModelAtom } from "@/globals/model";
 
 const AppMenubar = () => {
   const { toast } = useToast();
@@ -43,6 +44,7 @@ const AppMenubar = () => {
   const editorContent = useAtomValue(editorContentAtom);
   const setModel = useSetAtom(setModelAtom);
   const workspaceName = useAtomValue(nameAtom);
+  const hasActiveModel = useAtomValue(hasActiveModelAtom);
 
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
@@ -151,8 +153,13 @@ const AppMenubar = () => {
           <MenubarItem
             name="Download as Antimony"
             onSelect={handleDownloadAntimony}
+            disabled={!hasActiveModel}
           />
-          <MenubarItem name="Download as SBML" onSelect={handleDownloadSbml} />
+          <MenubarItem
+            name="Download as SBML"
+            disabled={!hasActiveModel}
+            onSelect={handleDownloadSbml}
+          />
         </MenubarMenu>
 
         <MenubarMenu name="View">
@@ -211,11 +218,11 @@ const AppMenubar = () => {
       </MenubarRoot>
 
       <div className={styles.menubarCenter}>
-        <SearchBar />
+        {hasActiveModel && <SearchBar />}
       </div>
 
       <div className={styles.menubarRight}>
-        <ShareButton />
+        {hasActiveModel && <ShareButton />}
       </div>
     </div>
   );

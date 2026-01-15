@@ -1,10 +1,10 @@
 import styles from "./StartPanel.module.css";
-import { ModelSection } from "./ModelSection.tsx";
-import { SearchSection } from "./SearchSection.tsx";
+import ModelSection from "./ModelSection.tsx";
+import SearchSection from "./SearchSection.tsx";
 
 export interface StartPanelProps {}
 
-export const StartPanel = () => {
+const StartPanel = () => {
   return (
     <div className={styles.panel}>
       <ModelSection />
@@ -12,3 +12,5 @@ export const StartPanel = () => {
     </div>
   );
 };
+
+export default StartPanel;

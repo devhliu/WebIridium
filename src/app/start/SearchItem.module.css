@@ -39,14 +39,17 @@
   color: var(--color-layer1-fg);
   font-weight: normal;
   margin: 0;
+  font-size: var(--font-size-medium);
 }
 
 .number {
   color: var(--color-layer1-fg-dim);
+  font-size: var(--font-size-medium);
 }
 
 .citation,
 .synopsis {
+  font-size: var(--font-size-medium);
   margin: 0;
 }
 

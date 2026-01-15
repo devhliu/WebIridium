@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import styles from "./SearchSection.module.css";
 import SearchBox from "@/components/input/SearchBox";
 import { useSearchBiomodels } from "@/features/biomodels";
-import { SearchItem } from "./SearchItem";
+import SearchItem from "./SearchItem";
 import PulseLoader from "@/components/PulseLoader";
 
 const LIMIT = 50;
 
-export const SearchSection = () => {
+const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const { biomodels, isLoading, error, searchBiomodels } = useSearchBiomodels();
@@ -43,3 +43,5 @@ export const SearchSection = () => {
     </div>
   );
 };
+
+export default SearchSection;

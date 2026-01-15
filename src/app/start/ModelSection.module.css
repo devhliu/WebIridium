@@ -32,4 +32,5 @@
 .no-models {
   color: var(--color-layer1-fg);
   text-align: center;
+  font-size: var(--font-size-medium);
 }
