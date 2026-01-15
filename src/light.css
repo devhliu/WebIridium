@@ -26,11 +26,11 @@
 
   --color-layer2-bg: oklch(0.928 0 0);
   --color-layer2-fg: oklch(0.1344 0 0);
-  --color-layer2-border: oklch(0.7252 0 0);
+  --color-layer2-border: oklch(0.8252 0 0);
 
   --color-layer3-bg: oklch(0.9551 0 0);
   --color-layer3-fg: oklch(0.1344 0 0);
-  --color-layer3-border: oklch(0.6368 0 0);
+  --color-layer3-border: oklch(0.7968 0 0);
 
   --color-container-bg: var(--color-input-bg);
   --color-container-fg: var(--color-input-fg);
