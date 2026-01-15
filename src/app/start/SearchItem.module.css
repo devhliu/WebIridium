@@ -1,0 +1,59 @@
+.item {
+  display: flex;
+  flex-direction: row;
+
+  background: transparent;
+  border: 1px solid
+    oklch(
+      from var(--color-layer1-fg) l c h / calc(0.5 * var(--opacity-very-dim))
+    );
+  border-radius: var(--border-radius);
+
+  &:hover {
+    background-color: var(--color-ghost-button-hover-bg);
+  }
+
+  &:active {
+    background-color: var(--color-ghost-button-active-bg);
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-3);
+
+  cursor: pointer;
+  text-align: left;
+  flex-grow: 1;
+  background: none;
+  border: none;
+  padding: var(--spacing-4);
+
+  &:focus-visible {
+    outline: var(--outline-focused);
+  }
+}
+
+.name {
+  color: var(--color-layer1-fg);
+  font-weight: normal;
+  margin: 0;
+}
+
+.number {
+  color: var(--color-layer1-fg-dim);
+}
+
+.citation,
+.synopsis {
+  margin: 0;
+}
+
+.citation {
+  color: color-mix(in oklch, var(--color-layer3-fg), var(--color-accent) 60%);
+}
+
+.synopsis {
+  color: var(--color-layer3-fg-dim);
+}

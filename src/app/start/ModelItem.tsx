@@ -15,8 +15,8 @@ export const ModelItem = ({ name }: ModelItemProps) => {
         </div>
         <div className={styles.details}>
           <h4 className={styles.name}>Test Model.ant</h4>
+          <span className={styles.date}>Created: NN/NN/NN</span>
           <span className={styles.date}>Updated: NN/NN/NN</span>
-          <span className={styles.date}>Accessed: NN/NN/NN</span>
         </div>
       </button>
       <div className={styles.moreContainer}>
