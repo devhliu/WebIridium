@@ -18,6 +18,7 @@ export const SearchSection = () => {
 
   return (
     <div className={styles.section}>
+      <h3 className={styles.title}>BioModels</h3>
       <SearchBox
         name="biomodelsSearch"
         value={searchTerm}

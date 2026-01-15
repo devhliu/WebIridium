@@ -1,37 +1,9 @@
 .panel {
   display: grid;
-  grid-template-columns: 0.75fr 1fr;
+  grid-template-columns: 1fr 60%;
   grid-template-rows: 100%;
   padding: 18px;
   gap: 18px;
   height: 100%;
-}
-
-.section-title {
-  font-size: var(--font-size-big);
-  color: var(--color-layer1-fg-dim);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0;
-  padding-block-end: var(--spacing-5);
-  height: var(--size-4);
-}
-
-.model-actions {
-  display: flex;
-  flex-direction: row;
-  gap: var(--spacing-3);
-}
-
-.model-list {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-4);
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
+  width: 100%;
 }

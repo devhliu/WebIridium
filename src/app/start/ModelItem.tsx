@@ -14,7 +14,7 @@ export const ModelItem = ({ name }: ModelItemProps) => {
           <span className={styles.iconText}>{name[0].toUpperCase()}</span>
         </div>
         <div className={styles.details}>
-          <h4 className={styles.name}>Test Model.ant</h4>
+          <h4 className={styles.name}>{name}</h4>
           <span className={styles.date}>Created: NN/NN/NN</span>
           <span className={styles.date}>Updated: NN/NN/NN</span>
         </div>
