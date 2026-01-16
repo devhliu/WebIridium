@@ -56,7 +56,6 @@ export class CopasiSimulator extends Simulator {
         title,
         values: result.columns[index],
       })),
-      columnSet: new Set(result.titles),
     };
   }
 

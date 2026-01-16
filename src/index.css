@@ -79,6 +79,9 @@
   --color-button-fg-dim: oklch(
     from var(--color-button-fg) l c h / var(--opacity-dim)
   );
+  --color-card-fg-dim: oklch(
+    from var(--color-card-fg) l c h / var(--opacity-dim)
+  );
   --color-input-fg-dim: oklch(
     from var(--color-input-fg) l c h / var(--opacity-dim)
   );
@@ -94,6 +97,9 @@
 
   --color-button-fg-very-dim: oklch(
     from var(--color-button-fg) l c h / var(--opacity-very-dim)
+  );
+  --color-card-fg-very-dim: oklch(
+    from var(--color-card-fg) l c h / var(--opacity-very-dim)
   );
   --color-input-fg-very-dim: oklch(
     from var(--color-input-fg) l c h / var(--opacity-very-dim)
@@ -112,6 +118,7 @@
     color-mix(in hsl, 40% var(--color-accent-fg), var(--color-accent));
 
   --border-button: 1px solid var(--color-button-border);
+  --border-card: 1px solid var(--color-card-border);
   --border-layer1: 1px solid var(--color-layer1-border);
   --border-layer2: 1px solid var(--color-layer2-border);
   --border-layer3: 1px solid var(--color-layer3-border);
@@ -139,6 +146,27 @@
   --color-button-fg-disabled: color-mix(
     in oklch,
     var(--color-button-fg) 70%,
+    var(--color-layer1-bg)
+  );
+
+  --color-card-bg-hover: color-mix(
+    in oklch,
+    var(--color-card-bg) 95%,
+    var(--color-card-fg)
+  );
+  --color-card-bg-active: color-mix(
+    in oklch,
+    var(--color-card-bg) 90%,
+    var(--color-card-fg)
+  );
+  --color-card-bg-disabled: color-mix(
+    in oklch,
+    var(--color-card-bg) 60%,
+    var(--color-layer1-bg)
+  );
+  --color-card-fg-disabled: color-mix(
+    in oklch,
+    var(--color-card-fg) 70%,
     var(--color-layer1-bg)
   );
 
