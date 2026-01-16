@@ -24,7 +24,6 @@ const ModelSection = () => {
     "model",
     "biomodel",
   ];
-  models.splice(0, models.length);
 
   return (
     <div className={styles.section}>

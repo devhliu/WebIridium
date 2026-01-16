@@ -20,6 +20,7 @@ import {
   currentRightPanelAtom,
   currentBottomPanelAtom,
   availableLeftPanelsAtom,
+  ALL_LEFT_PANELS,
 } from "@/globals/layout";
 
 import { useToast } from "@/components/Toast";
@@ -167,8 +168,12 @@ const AppMenubar = () => {
             value={currentLeftPanel}
             onValueChange={setCurrentLeftPanel as (newValue: string) => void}
           >
-            {availableLeftPanels.map((panel) => (
-              <MenubarRadioItem key={panel} value={panel}>
+            {ALL_LEFT_PANELS.map((panel) => (
+              <MenubarRadioItem
+                key={panel}
+                value={panel}
+                disabled={!availableLeftPanels.includes(panel)}
+              >
                 {panel}
               </MenubarRadioItem>
             ))}

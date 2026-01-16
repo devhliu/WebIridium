@@ -103,13 +103,19 @@ export const MenubarRadioGroup = ({
 
 export const MenubarRadioItem = ({
   value,
+  disabled,
   children,
 }: {
   value: string | null;
+  disabled?: boolean;
   children: React.ReactNode;
 }) => {
   return (
-    <RadixMenubar.RadioItem className={styles.item} value={value!}>
+    <RadixMenubar.RadioItem
+      className={styles.item}
+      value={value!}
+      disabled={disabled}
+    >
       <RadixMenubar.ItemIndicator className={styles.itemIndicator}>
         <DotFilledIcon />
       </RadixMenubar.ItemIndicator>
