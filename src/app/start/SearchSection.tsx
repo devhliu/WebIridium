@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import styles from "./SearchSection.module.css";
 import SearchBox from "@/components/input/SearchBox";
-import { useSearchBiomodels } from "@/features/biomodels";
+import { getSearchTypeFromSearchTerm, useSearchBiomodels } from "@/features/biomodels";
 import SearchItem from "./SearchItem";
 import PulseLoader from "@/components/PulseLoader";
 
@@ -9,6 +9,7 @@ const LIMIT = 50;
 
 const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const searchType = searchTerm && getSearchTypeFromSearchTerm(searchTerm);
 
   const { biomodels, isLoading, error, searchBiomodels } = useSearchBiomodels();
 
@@ -36,7 +37,7 @@ const SearchSection = () => {
       ) : (
         <div className={styles.list}>
           {biomodels.map((info) => (
-            <SearchItem info={info} />
+            <SearchItem info={info} isEmphasizeId={searchType === "id"} />
           ))}
         </div>
       )}

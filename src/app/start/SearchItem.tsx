@@ -4,18 +4,19 @@ import { biomodelsDateToEnglish } from "@/features/formatUtils";
 
 export interface SearchItemProps {
   info: BiomodelInfo;
+  isEmphasizeId: boolean;
 }
 
 const getFirstSentence = (synopysis: string): string =>
   synopysis.slice(0, synopysis.indexOf(".") + 1);
 
-const SearchItem = ({ info }: SearchItemProps) => {
+const SearchItem = ({ info, isEmphasizeId }: SearchItemProps) => {
   return (
     <div className={styles.item}>
       <button className={styles.main}>
         <h4 className={styles.name}>
-          {info.name}
-          <span className={styles.number}> ({info.id})</span>
+          {isEmphasizeId ? info.id : info.name}
+          <span className={styles.number}> ({isEmphasizeId ? info.name : info.id})</span>
         </h4>
         <p className={styles.citation}>
           <span>{info.authors.join(", ")}</span>
