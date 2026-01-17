@@ -64,7 +64,7 @@ export interface ResultsDataV1 {
   list: {
     modelName: string;
     code: string;
-    simulationResult: SimulationResult
+    simulationResult: SimulationResult;
     unixTimestampMs: number;
-  },
-};
+  };
+}

@@ -16,7 +16,10 @@ const SearchItem = ({ info, isEmphasizeId }: SearchItemProps) => {
       <button className={styles.main}>
         <h4 className={styles.name}>
           {isEmphasizeId ? info.id : info.name}
-          <span className={styles.number}> ({isEmphasizeId ? info.name : info.id})</span>
+          <span className={styles.number}>
+            {" "}
+            ({isEmphasizeId ? info.name : info.id})
+          </span>
         </h4>
         <p className={styles.citation}>
           <span>{info.authors.join(", ")}</span>

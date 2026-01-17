@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from "./SearchSection.module.css";
 import SearchBox from "@/components/input/SearchBox";
-import { getSearchTypeFromSearchTerm, useSearchBiomodels } from "@/features/biomodels";
+import {
+  getSearchTypeFromSearchTerm,
+  useSearchBiomodels,
+} from "@/features/biomodels";
 import SearchItem from "./SearchItem";
 import PulseLoader from "@/components/PulseLoader";
 

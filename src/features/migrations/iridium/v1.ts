@@ -15,7 +15,7 @@ interface GridSettings {
   yWidth: number;
   numXGrids: number;
   numYGrids: number;
-};
+}
 
 export interface IridiumDataV1 {
   versionTag: 1;
@@ -25,14 +25,14 @@ export interface IridiumDataV1 {
       visible: boolean;
       color: string;
       width: number;
-      lineStyle: 
+      lineStyle:
         | "solid"
         | "dash"
         | "dot"
         | "dashdot"
         | "longdash"
         | "longdashdot";
-    },
+    };
   };
   graphSettings: {
     backgroundColor: string;

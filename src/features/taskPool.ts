@@ -12,26 +12,30 @@
  * When comments refer "task runner" it is either a web worker or web socket.
  */
 
-export type Action = {
+export type Action<
+  Name extends string = string,
+  Payload = unknown,
+  InternalState = unknown,
+> = {
   id: number;
-  type: string;
-  payload: unknown;
+  type: Name;
+  payload: Payload;
 
   /**
    * This value is synchronized with the actual task runner. It is only sent to
    * the runner when changed.
    * For simulationWorker, "internalState" is the antimony code.
    */
-  internalState: unknown;
+  internalState: InternalState;
 };
 
-export type Result = {
+export type Result<Data = unknown> = {
   /**
    * This should be the same as the id of the action that
    * triggered this result.
    */
   id: number;
-  data: unknown;
+  data: Data;
 };
 
 export type ErrorResult = {
@@ -39,12 +43,12 @@ export type ErrorResult = {
   errorMessage: string;
 };
 
-type Task<RunnerInfo> = {
+type Task<RunnerInfo, Payload = unknown, InternalState = unknown> = {
   id: number;
   state: "waiting" | "working" | "done" | "terminated" | "failed";
   actionType: string;
-  payload: unknown;
-  internalState: unknown;
+  payload: Payload;
+  internalState: InternalState;
   resolve: (res: unknown) => void;
   reject: (reason: unknown) => void;
   /**
@@ -86,12 +90,15 @@ export abstract class TaskPool<RunnerInfo> {
    *                        This data is only sent if it has changed since the
    *                        last run.
    */
-  runTask(
-    type: string,
-    payload: unknown,
-    internalState: unknown,
+  runTask<
+    T extends Action = Action<string, unknown, unknown>,
+    U extends Result = Result<unknown>,
+  >(
+    type: T["type"],
+    payload: T["payload"],
+    internalState: T["internalState"],
     abortSignal?: AbortSignal,
-  ): Promise<unknown> {
+  ): Promise<U["data"]> {
     const id = this.#idCounter++;
     return new Promise((resolve, reject) => {
       const task: Task<RunnerInfo> = {
