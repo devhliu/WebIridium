@@ -37,7 +37,7 @@ import {
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/settings";
 import { editorContentAtom, setModelAtom } from "@/globals/model";
-import { hasActiveModelAtom } from "@/globals/model";
+import { hasActiveModelAtom } from "@/globals/files";
 
 const AppMenubar = () => {
   const { toast } = useToast();

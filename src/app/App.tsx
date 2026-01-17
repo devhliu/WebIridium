@@ -18,7 +18,7 @@ import {
 } from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/saving";
-import { activeModelFileAtom } from "@/globals/model";
+import { activeModelFileAtom } from "@/globals/files";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";

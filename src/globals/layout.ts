@@ -1,6 +1,6 @@
 import { atom, type Atom } from "jotai";
 import { simulatorAtom } from "./simulator";
-import { hasActiveModelAtom } from "./model";
+import { hasActiveModelAtom } from "./files";
 
 export type LeftPanel = (typeof ALL_LEFT_PANELS)[number];
 

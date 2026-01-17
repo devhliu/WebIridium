@@ -14,18 +14,23 @@
  */
 
 import FileSystemWorker from "@/workers/FileSystemWorker?worker";
+import defaultModel from "@/assets/default.ant?raw";
 import {
-  type UnknownModelData,
+  migrateModelData,
   type Metadata,
   type ModelId,
+  type ModelData,
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
   ListModelsAction,
   ListModelsResult,
+  NewModelAction,
+  NewModelResult,
   OpenModelAction,
   OpenModelResult,
 } from "@/workers/FileSystemWorker";
+import { defaultGraphSettings } from "@/globals/settings";
 
 const fileWorker = new WorkerPool(() => new FileSystemWorker(), {
   maxWorkers: 1,
@@ -50,11 +55,49 @@ export const listModels = async (): Promise<Map<ModelId, Metadata>> => {
  * for it does not exist yet.
  * @returns the data associated with the model
  */
-export const openModel = async (id: ModelId): Promise<UnknownModelData> => {
+export const openModel = async (id: ModelId): Promise<ModelData> => {
   const result = await fileWorker.runTask<OpenModelAction, OpenModelResult>(
     "openModel",
     id,
     null,
   );
-  return result;
+  return migrateModelData(result);
+};
+
+const getNewModelId = (): ModelId => crypto.randomUUID() as ModelId;
+
+const getNewModelData = (): ModelData => {
+  return {
+    code: defaultModel,
+    metadata: {
+      versionTag: 1,
+      name: "Default Model",
+      created: Date.now(),
+      updated: Date.now(),
+    },
+    iridium: {
+      versionTag: 1,
+      graphSettings: defaultGraphSettings,
+      variableSettings: {},
+    },
+    results: {
+      versionTag: 1,
+      records: [],
+    },
+  };
+};
+
+/**
+ * Creates a new model and returns the model id and data for it.
+ */
+export const newModel = async (): Promise<[ModelId, ModelData]> => {
+  const id = getNewModelId();
+  const data = getNewModelData();
+  await fileWorker.runTask<NewModelAction, NewModelResult>(
+    "newModel",
+    { id, data },
+    null,
+  );
+
+  return [id, data];
 };

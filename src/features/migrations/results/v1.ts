@@ -59,12 +59,14 @@ type SimulationResult =
   | SteadyStateResult
   | ParameterScanResult;
 
+type HistoryRecord = {
+  modelName: string;
+  code: string;
+  simulationResult: SimulationResult;
+  unixTimestampMs: number;
+};
+
 export interface ResultsDataV1 {
   versionTag: 1;
-  list: {
-    modelName: string;
-    code: string;
-    simulationResult: SimulationResult;
-    unixTimestampMs: number;
-  };
+  records: HistoryRecord[];
 }

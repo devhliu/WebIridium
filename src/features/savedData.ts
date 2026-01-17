@@ -42,9 +42,8 @@ export interface ModelData {
  */
 export const migrateMetadata = (metadata: UnknownMetadata): Metadata => {
   switch (metadata.versionTag) {
-    case 1: {
+    case 1:
       return metadata;
-    }
   }
 };
 
@@ -56,9 +55,8 @@ export const migrateIridiumData = (
   iridiumData: UnknownIridiumData,
 ): IridiumData => {
   switch (iridiumData.versionTag) {
-    case 1: {
+    case 1:
       return iridiumData;
-    }
   }
 };
 
@@ -70,8 +68,21 @@ export const migrateResultsData = (
   resultsData: UnknownResultsData,
 ): ResultsData => {
   switch (resultsData.versionTag) {
-    case 1: {
+    case 1:
       return resultsData;
-    }
   }
+};
+
+export const migrateModelData = ({
+  code,
+  metadata,
+  iridium,
+  results,
+}: UnknownModelData): ModelData => {
+  return {
+    code: code,
+    metadata: migrateMetadata(metadata),
+    iridium: migrateIridiumData(iridium),
+    results: migrateResultsData(results),
+  };
 };

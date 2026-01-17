@@ -5,12 +5,13 @@ import buttonStyles from "@/components/Button.module.css";
 
 import ModelItem from "./ModelItem";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
-import { modelListAtom } from "@/globals/files";
+import { modelListAtom, useFileSystemActions } from "@/globals/files";
 import PulseLoader from "@/components/PulseLoader";
 import errorToDisplayString from "@/utils/errorToDisplayString";
 
 const ModelSection = () => {
   const modelList = useAtomValue(modelListAtom);
+  const { createAndOpenNewFile } = useFileSystemActions();
 
   return (
     <div className={styles.section}>
@@ -18,7 +19,10 @@ const ModelSection = () => {
         My Models
         <div className={styles.modelActions}>
           <button className={buttonStyles.default}>Open File</button>
-          <button className={buttonStyles.primary}>
+          <button
+            className={buttonStyles.primary}
+            onClick={() => createAndOpenNewFile()}
+          >
             <PlusIcon width="1em" height="1em" />
             New Model
           </button>
