@@ -6,7 +6,7 @@ import {
   type ModelData,
   type ModelId,
 } from "@/features/savedData";
-import { listModels, newModel } from "@/features/fileSystem";
+import { listModels, newModel, openModel } from "@/features/fileSystem";
 import { useToast } from "@/components/Toast";
 import errorToDisplayString from "@/utils/errorToDisplayString";
 import { setModelAtom } from "./model";
@@ -64,8 +64,13 @@ const _createAndOpenNewFileAtom = atom(null, async (_get, set) => {
   await set(_updateGlobalsFromModelDataAtom, [id, data]);
 });
 
+const _openFileAtom = atom(null, async (_get, set, id: ModelId) => {
+  const data = await openModel(id);
+  await set(_updateGlobalsFromModelDataAtom, [id, data]);
+});
+
 // used for debounce
-const _creatingFileRefAtom = atom({ current: false });
+const _openingFileRefAtom = atom({ current: false });
 
 /**
  * Hook that exposes functions to interact with the file system.
@@ -75,14 +80,15 @@ const _creatingFileRefAtom = atom({ current: false });
 export const useFileSystemActions = () => {
   const { toast } = useToast();
   const createAndOpenNewFile = useSetAtom(_createAndOpenNewFileAtom);
-  const createFileRef = useAtomValue(_creatingFileRefAtom);
+  const openFile = useSetAtom(_openFileAtom);
+  const openingFileRef = useAtomValue(_openingFileRefAtom);
 
   /**
    * @returns true if it succeeds
    */
   const createAndOpenNewFileWrapper = async (): Promise<boolean> => {
-    if (createFileRef.current) return false;
-    createFileRef.current = true;
+    if (openingFileRef.current) return false;
+    openingFileRef.current = true;
 
     try {
       await createAndOpenNewFile();
@@ -95,11 +101,34 @@ export const useFileSystemActions = () => {
       });
       return false;
     } finally {
-      createFileRef.current = false;
+      openingFileRef.current = false;
+    }
+  };
+
+  /**
+   * @returns true if it succeeds
+   */
+  const openFileWrapper = async (id: ModelId): Promise<boolean> => {
+    if (openingFileRef.current) return false;
+    openingFileRef.current = true;
+
+    try {
+      await openFile(id);
+      return true;
+    } catch (err) {
+      toast({
+        type: "error",
+        title: "Failed to open model",
+        description: errorToDisplayString(err),
+      });
+      return false;
+    } finally {
+      openingFileRef.current = false;
     }
   };
 
   return {
     createAndOpenNewFile: createAndOpenNewFileWrapper,
+    openFile: openFileWrapper,
   };
 };

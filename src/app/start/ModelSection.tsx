@@ -5,13 +5,18 @@ import buttonStyles from "@/components/Button.module.css";
 
 import ModelItem from "./ModelItem";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
-import { modelListAtom, useFileSystemActions } from "@/globals/files";
 import PulseLoader from "@/components/PulseLoader";
 import errorToDisplayString from "@/utils/errorToDisplayString";
+import type { ModelId } from "@/features/savedData";
+import { modelListAtom, useFileSystemActions } from "@/globals/files";
 
 const ModelSection = () => {
   const modelList = useAtomValue(modelListAtom);
-  const { createAndOpenNewFile } = useFileSystemActions();
+  const { createAndOpenNewFile, openFile } = useFileSystemActions();
+
+  const handleSelectFor = (id: ModelId) => async () => {
+    await openFile(id);
+  };
 
   return (
     <div className={styles.section}>
@@ -41,7 +46,11 @@ const ModelSection = () => {
           <p className={styles.error}>You have no models.</p>
         ) : (
           Array.from(modelList.data.entries()).map(([id, metadata]) => (
-            <ModelItem key={id} name={metadata.name} />
+            <ModelItem
+              key={id}
+              metadata={metadata}
+              onSelect={handleSelectFor(id)}
+            />
           ))
         )}
       </div>

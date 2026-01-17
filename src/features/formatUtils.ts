@@ -73,3 +73,6 @@ export const biomodelsDateToEnglish = (date: string): string => {
     return date;
   }
 };
+
+export const timestampToNumericDate = (timestamp: number): string =>
+  new Date(timestamp).toLocaleDateString();

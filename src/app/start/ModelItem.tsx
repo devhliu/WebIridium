@@ -1,22 +1,31 @@
+import type { Metadata } from "@/features/savedData";
 import styles from "./ModelItem.module.css";
 
 import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";
+import { timestampToNumericDate } from "@/features/formatUtils";
 
 export interface ModelItemProps {
-  name: string;
+  metadata: Metadata;
+  onSelect: () => void;
 }
 
-const ModelItem = ({ name }: ModelItemProps) => {
+const ModelItem = ({ metadata, onSelect }: ModelItemProps) => {
   return (
     <div className={styles.item}>
-      <button className={styles.main}>
+      <button className={styles.main} onClick={onSelect}>
         <div className={styles.icon}>
-          <span className={styles.iconText}>{name[0].toUpperCase()}</span>
+          <span className={styles.iconText}>
+            {metadata.name[0].toUpperCase()}
+          </span>
         </div>
         <div className={styles.details}>
-          <h4 className={styles.name}>{name}</h4>
-          <span className={styles.date}>Created: NN/NN/NN</span>
-          <span className={styles.date}>Updated: NN/NN/NN</span>
+          <h4 className={styles.name}>{metadata.name}</h4>
+          <span className={styles.date}>
+            Created: {timestampToNumericDate(metadata.created)}
+          </span>
+          <span className={styles.date}>
+            Updated: {timestampToNumericDate(metadata.updated)}
+          </span>
         </div>
       </button>
       <div className={styles.moreContainer}>

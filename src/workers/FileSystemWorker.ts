@@ -178,7 +178,7 @@ class ModelHandle {
     const results = JSON.parse(
       ModelHandle.#readHandleIntoString(this.#resultsHandle),
     ) as UnknownResultsData;
-    return { id: this.id, code, metadata, iridium, results };
+    return { code, metadata, iridium, results };
   }
 
   dispose(): void {
