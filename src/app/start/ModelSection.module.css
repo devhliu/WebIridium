@@ -30,8 +30,14 @@
   overflow-y: auto;
 }
 
-.no-models {
+.error {
   color: var(--color-layer1-fg);
   text-align: center;
   font-size: var(--font-size-medium);
+}
+
+.loader-container {
+  display: flex;
+  justify-content: center;
+  color: var(--color-layer1-fg-dim);
 }

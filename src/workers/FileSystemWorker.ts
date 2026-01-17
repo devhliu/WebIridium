@@ -180,7 +180,8 @@ const handleAction = async (
 self.onmessage = async (e) => {
   try {
     // eslint-disable-next-line
-    await handleAction(e.data);
+    const result = await handleAction(e.data);
+    self.postMessage(result);
   } catch (err) {
     self.postMessage({
       // eslint-disable-next-line

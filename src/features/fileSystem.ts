@@ -18,7 +18,6 @@ import {
   type UnknownModelData,
   type Metadata,
   type ModelId,
-  migrateMetadata,
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
@@ -27,7 +26,6 @@ import type {
   OpenModelAction,
   OpenModelResult,
 } from "@/workers/FileSystemWorker";
-import { useEffect, useRef, useState } from "react";
 
 const fileWorker = new WorkerPool(() => new FileSystemWorker(), {
   maxWorkers: 1,
@@ -59,34 +57,4 @@ export const openModel = async (id: ModelId): Promise<UnknownModelData> => {
     null,
   );
   return result;
-};
-
-/**
- * Hook to get a list of models.
- * NOTE: does not update if new models are added.
- */
-export const useModelList = () => {
-  const [models, setModels] = useState<Map<ModelId, Metadata>>(new Map());
-  const didRunRef = useRef(false);
-
-  useEffect(() => {
-    const run = async () => {
-      didRunRef.current = true;
-
-      const models = await listModels();
-      const migratedModels = new Map(
-        Array.from(models.entries()).map(([id, metadata]) => [
-          id,
-          migrateMetadata(metadata),
-        ]),
-      );
-      setModels(migratedModels);
-    };
-
-    if (!didRunRef.current) {
-      void run();
-    }
-  }, []);
-
-  return { models };
 };

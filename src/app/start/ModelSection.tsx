@@ -1,14 +1,16 @@
+import { useAtomValue } from "jotai";
+
 import styles from "./ModelSection.module.css";
 import buttonStyles from "@/components/Button.module.css";
 
 import ModelItem from "./ModelItem";
-
-import { useModelList } from "@/features/fileSystem";
-
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
+import { modelListAtom } from "@/globals/files";
+import PulseLoader from "@/components/PulseLoader";
+import errorToDisplayString from "@/utils/errorToDisplayString";
 
 const ModelSection = () => {
-  const { models } = useModelList();
+  const modelList = useAtomValue(modelListAtom);
 
   return (
     <div className={styles.section}>
@@ -23,10 +25,18 @@ const ModelSection = () => {
         </div>
       </h3>
       <div className={styles.modelList}>
-        {models.size === 0 ? (
-          <p className={styles.noModels}>You have no models.</p>
+        {modelList.state === "loading" ? (
+          <div className={styles.loaderContainer}>
+            <PulseLoader />
+          </div>
+        ) : modelList.state === "hasError" ? (
+          <p className={styles.error}>
+            Error: {errorToDisplayString(modelList.error)}
+          </p>
+        ) : modelList.data.size === 0 ? (
+          <p className={styles.error}>You have no models.</p>
         ) : (
-          Array.from(models.entries()).map(([id, metadata]) => (
+          Array.from(modelList.data.entries()).map(([id, metadata]) => (
             <ModelItem key={id} name={metadata.name} />
           ))
         )}
