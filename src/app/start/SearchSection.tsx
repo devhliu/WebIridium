@@ -40,7 +40,11 @@ const SearchSection = () => {
       ) : (
         <div className={styles.list}>
           {biomodels.map((info) => (
-            <SearchItem info={info} isEmphasizeId={searchType === "id"} />
+            <SearchItem
+              key={info.id}
+              info={info}
+              isEmphasizeId={searchType === "id"}
+            />
           ))}
         </div>
       )}

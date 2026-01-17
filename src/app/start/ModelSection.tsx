@@ -3,27 +3,12 @@ import buttonStyles from "@/components/Button.module.css";
 
 import ModelItem from "./ModelItem";
 
+import { useModelList } from "@/features/fileSystem";
+
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 
 const ModelSection = () => {
-  const models = [
-    "test model",
-    "hello world",
-    "model",
-    "biomodel",
-    "test model",
-    "test model",
-    "test model",
-    "hello world",
-    "model",
-    "biomodel",
-    "hello world",
-    "model",
-    "biomodel",
-    "hello world",
-    "model",
-    "biomodel",
-  ];
+  const { models } = useModelList();
 
   return (
     <div className={styles.section}>
@@ -38,10 +23,12 @@ const ModelSection = () => {
         </div>
       </h3>
       <div className={styles.modelList}>
-        {models.length === 0 ? (
+        {models.size === 0 ? (
           <p className={styles.noModels}>You have no models.</p>
         ) : (
-          models.map((name) => <ModelItem name={name} />)
+          Array.from(models.entries()).map(([id, metadata]) => (
+            <ModelItem key={id} name={metadata.name} />
+          ))
         )}
       </div>
     </div>

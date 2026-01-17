@@ -14,7 +14,7 @@ export type ListModelsResult = Result<Map<ModelId, UnknownMetadata>>;
 export type OpenModelAction = Action<"openModel", ModelId>;
 export type OpenModelResult = Result<UnknownModelData>;
 
-const MODELS_PATH = "models/";
+const MODELS_DIR_NAME = "models";
 
 let rootHandle: FileSystemDirectoryHandle | null = null;
 const getRootHandle = async (): Promise<FileSystemDirectoryHandle> => {
@@ -28,7 +28,7 @@ let modelsDirHandle: FileSystemDirectoryHandle | null = null;
 const getModelsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
   if (modelsDirHandle === null) {
     const root = await getRootHandle();
-    modelsDirHandle = await root.getDirectoryHandle(MODELS_PATH, {
+    modelsDirHandle = await root.getDirectoryHandle(MODELS_DIR_NAME, {
       create: true,
     });
   }
@@ -37,9 +37,9 @@ const getModelsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
 
 const getJsonFileContents = async (
   dir: FileSystemDirectoryHandle,
-  path: string,
+  name: string,
 ): Promise<unknown> => {
-  const handle = await dir.getFileHandle(path);
+  const handle = await dir.getFileHandle(name);
   const file = await handle.getFile();
   return JSON.parse(await file.text());
 };
@@ -179,19 +179,16 @@ const handleAction = async (
 
 self.onmessage = async (e) => {
   try {
-    // eslint-ignore-next-line: waste of time to validate
+    // eslint-disable-next-line
     await handleAction(e.data);
   } catch (err) {
-    if (err instanceof Error) {
-      console.error(err.message, err.stack);
-    } else {
-      console.error(err);
-    }
     self.postMessage({
-      // eslint-ignore-next-line: waste of time to validate
+      // eslint-disable-next-line
       id: e.data.id,
       errorMessage:
         err instanceof Error ? (err.stack ?? err.message) : String(err),
     } satisfies ErrorResult);
+
+    throw err;
   }
 };
