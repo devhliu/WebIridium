@@ -6,18 +6,12 @@ import defaultModel from "@/assets/default.ant?raw";
 import { requestSavedData, type SavedDataV1 } from "@/features/saving";
 
 import { setModelAtom } from "@/globals/model";
-import { editorFontSizeAtom, themeOptionAtom } from "@/globals/appearance";
-import {
-  graphSettingsAtom,
-  timeCourseParametersAtom,
-  variableSettingssAtom,
-} from "@/globals/settings";
+import { timeCourseParametersAtom } from "@/globals/settings";
 import {
   computeSteadyStateAtom,
   simulateTimeCourseAtom,
 } from "@/globals/simulation";
 import { readShareUrlFragment } from "@/features/share";
-import { updateAllHistoryAtom } from "@/globals/history";
 import {
   DEFAULT_SYSTEM_PROMPT,
   systemPromptAtom,
@@ -40,12 +34,7 @@ const Initialize = ({
   const simulateTimeCourse = useSetAtom(simulateTimeCourseAtom);
   const computeSteadyState = useSetAtom(computeSteadyStateAtom);
 
-  const setThemeOption = useSetAtom(themeOptionAtom);
-  const setEditorFontSize = useSetAtom(editorFontSizeAtom);
-  const updateAllHistory = useSetAtom(updateAllHistoryAtom);
   const updateAllChatHistory = useSetAtom(updateAllChatHistoryAtom);
-  const setGraphSettings = useSetAtom(graphSettingsAtom);
-  const setVariableSettingss = useSetAtom(variableSettingssAtom);
   const setApiKey = useSetAtom(apiKeyAtom);
   const setChatPrompt = useSetAtom(systemPromptAtom);
 
@@ -62,10 +51,7 @@ const Initialize = ({
         }
 
         if (savedData) {
-          updateAllHistory(savedData.workspace.history);
           updateAllChatHistory(savedData.workspace.chatHistory ?? []);
-          setVariableSettingss(savedData.workspace.variableSettingss);
-          setGraphSettings(savedData.workspace.graphSettings);
           setApiKey(savedData.workspace.apiKey ?? null);
           setChatPrompt(
             savedData.workspace.chatSystemPrompt ?? DEFAULT_SYSTEM_PROMPT,
@@ -98,12 +84,6 @@ const Initialize = ({
               await computeSteadyState();
             }
           }
-        } else if (savedData) {
-          await setModel({
-            name: savedData.workspace.name,
-            content: savedData.workspace.content,
-            resetCurrentResult: false,
-          });
         } else {
           await setModel({
             name: "Starter Model",
@@ -127,11 +107,6 @@ const Initialize = ({
     computeSteadyState,
     setTimeCourseParameters,
     simulateTimeCourse,
-    setGraphSettings,
-    setThemeOption,
-    setEditorFontSize,
-    setVariableSettingss,
-    updateAllHistory,
     updateAllChatHistory,
     setApiKey,
     setChatPrompt,

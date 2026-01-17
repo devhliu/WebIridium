@@ -1,5 +1,3 @@
-import type { GraphSettings, VariableSettings } from "@/globals/settings";
-import type { HistoryRecord } from "@/globals/history";
 import type { ChatConversation } from "@/globals/chat";
 
 const DATABASE_NAME = "testing_database4";
@@ -9,11 +7,6 @@ const MAIN_KEY_NAME = "main";
 
 export interface SavedDataV1 {
   workspace: {
-    name: string;
-    content: string;
-    variableSettingss: Record<string, VariableSettings>;
-    graphSettings: GraphSettings;
-    history: HistoryRecord[];
     chatHistory?: ChatConversation[];
     chatSystemPrompt?: string | null;
     apiKey?: string | null;
@@ -66,11 +59,6 @@ export const requestSavedData = (): Promise<SavedDataV1 | null> => {
 
       getRequest.onsuccess = (event) => {
         const data = (event.target as IDBRequest).result as SavedDataV1;
-
-        // simple dumb migration for now
-        if (data && data.workspace.graphSettings.globalWidth === undefined) {
-          data.workspace.graphSettings.globalWidth = 1;
-        }
 
         resolve(data);
       };
