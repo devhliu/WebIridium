@@ -97,6 +97,7 @@ const AppContent = () => {
           <Allotment>
             <Allotment.Pane
               minSize={290}
+              priority={LayoutPriority.Low}
               preferredSize={290}
               visible={currentLeftPanel !== null}
             >
@@ -130,6 +131,7 @@ const AppContent = () => {
             <Allotment.Pane
               visible={Boolean(currentRightPanel)}
               preferredSize={getDefaultResultsPanelWidth()}
+              priority={LayoutPriority.Low}
             >
               {currentRightPanel === "Results" && (
                 <ResultTabbedPanel onClose={() => setCurrentRightPanel(null)} />
@@ -139,6 +141,7 @@ const AppContent = () => {
             <Allotment.Pane
               visible={Boolean(currentVeryRightPanel)}
               preferredSize={450}
+              priority={LayoutPriority.Normal}
             >
               {currentVeryRightPanel === "Plot Settings" && (
                 <PlotSettingsPanel
