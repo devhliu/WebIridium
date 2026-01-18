@@ -23,11 +23,13 @@ import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
 import { graphSettingsAtom } from "./settings";
 import {
+  currentBottomPanelAtom,
   currentLeftPanelAtom,
   currentRightPanelAtom,
   currentVeryRightPanelAtom,
 } from "./layout";
 import { loadBiomodelSbml, type BiomodelInfo } from "@/features/biomodels";
+import { simulationResultAtom } from "./simulation";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
@@ -108,6 +110,8 @@ const _closeCurrentModelAtom = atom(null, async (_get, set) => {
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);
   set(currentVeryRightPanelAtom, null);
+  set(currentBottomPanelAtom, null);
+  set(simulationResultAtom, null);
 });
 
 // used for debounce

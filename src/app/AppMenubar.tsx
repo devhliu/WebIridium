@@ -134,6 +134,7 @@ const AppMenubar = () => {
                 ? setCurrentBottomPanel("Sliders")
                 : setCurrentBottomPanel(null)
             }
+            disabled={!hasActiveModel}
           >
             Sliders
           </MenubarCheckboxItem>

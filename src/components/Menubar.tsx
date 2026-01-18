@@ -127,10 +127,12 @@ export const MenubarRadioItem = ({
 export const MenubarCheckboxItem = ({
   checked,
   onCheckedChange,
+  disabled,
   children,
 }: {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
+  disabled?: boolean;
   children: React.ReactNode;
 }) => {
   return (
@@ -138,6 +140,7 @@ export const MenubarCheckboxItem = ({
       className={styles.item}
       checked={checked}
       onCheckedChange={onCheckedChange}
+      disabled={disabled}
     >
       <RadixMenubar.ItemIndicator className={styles.itemIndicator}>
         <CheckIcon />
