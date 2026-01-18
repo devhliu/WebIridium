@@ -3,11 +3,8 @@ import type { ScatterSeriesOption } from "echarts/types/src/chart/scatter/Scatte
 import type { LineSeriesOption } from "echarts/types/src/chart/line/LineSeries.js";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
-import {
-  getVariableSettingsFrom,
-  type GraphSettings,
-  type VariableSettings,
-} from "@/globals/settings";
+import { getVariableSettingsFrom } from "@/globals/model";
+import { type GraphSettings, type VariableSettings } from "@/globals/settings";
 import type { Dataset } from "@/globals/overlays";
 
 import type { LegendDataItem } from "./FloatingLegend";

@@ -17,9 +17,9 @@ import { DASH_ARRAYS } from "@/features/lineStyle";
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import {
   getVariableSettingsFrom,
-  independentVariableAtom,
   variableSettingssAtom,
-} from "@/globals/settings";
+} from "@/globals/model";
+import { independentVariableAtom } from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 
 // if it's too much, the labels get crowded

@@ -8,11 +8,12 @@ import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import WarningIcon from "@/assets/icons/WarningIcon.svg?react";
 
-import { variablesAtom, modelStatusAtom } from "@/globals/model";
 import {
-  independentVariableAtom,
+  variablesAtom,
   variableSettingssAtom,
-} from "@/globals/settings";
+  modelStatusAtom,
+} from "@/globals/model";
+import { independentVariableAtom } from "@/globals/settings";
 import { isSimulatingAtom, simulationResultAtom } from "@/globals/simulation";
 
 const ModelStatusItem = () => {

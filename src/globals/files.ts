@@ -11,8 +11,9 @@ import { useToast } from "@/components/Toast";
 import errorToDisplayString from "@/utils/errorToDisplayString";
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
-import { graphSettingsAtom, variableSettingssAtom } from "./settings";
+import { graphSettingsAtom } from "./settings";
 import { useAtomValue } from "jotai";
+import { currentLeftPanelAtom } from "./layout";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
@@ -50,23 +51,29 @@ const _updateGlobalsFromModelDataAtom = atom(
   ) => {
     set(updateAllHistoryAtom, results.records);
     set(graphSettingsAtom, iridium.graphSettings);
-    set(variableSettingssAtom, iridium.variableSettings);
     await set(setModelAtom, {
       name: metadata.name,
       content: code,
+      variableSettingss: iridium.variableSettings,
     });
     set(activeModelFileAtom, id);
   },
 );
 
-const _createAndOpenNewFileAtom = atom(null, async (_get, set) => {
+const _createAndOpenNewFileAtom = atom(null, async (get, set) => {
   const [id, data] = await newModel();
   await set(_updateGlobalsFromModelDataAtom, [id, data]);
+  if (get(currentLeftPanelAtom) === null) {
+    set(currentLeftPanelAtom, "Time Course");
+  }
 });
 
-const _openFileAtom = atom(null, async (_get, set, id: ModelId) => {
+const _openFileAtom = atom(null, async (get, set, id: ModelId) => {
   const data = await openModel(id);
   await set(_updateGlobalsFromModelDataAtom, [id, data]);
+  if (get(currentLeftPanelAtom) === null) {
+    set(currentLeftPanelAtom, "Time Course");
+  }
 });
 
 // used for debounce

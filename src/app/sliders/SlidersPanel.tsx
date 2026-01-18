@@ -7,17 +7,14 @@ import { type SettableVariable } from "@/features/simulation/Simulator";
 import { groupVariables, type Category } from "@/features/category";
 import { hasDisplayName } from "@/features/simulation/variableNames";
 
-import { variablesAtom } from "@/globals/model";
+import { variablesAtom, variableSettingssAtom } from "@/globals/model";
 import {
   getInitialSliderState,
   updateSliderAndSimulateAtom,
   variableSliderStatesAtom,
   type VariableSliderState,
 } from "@/globals/slider";
-import {
-  parameterScanOptionsAtom,
-  variableSettingssAtom,
-} from "@/globals/settings";
+import { parameterScanOptionsAtom } from "@/globals/settings";
 import { simulationResultAtom } from "@/globals/simulation";
 
 import VariableSlider from "./VariableSlider";

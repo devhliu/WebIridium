@@ -16,11 +16,7 @@ import {
   type VariableSettings,
 } from "./settings";
 import { simulatorAtom } from "./simulator";
-import {
-  independentVariableAtom,
-  parameterScanOptionsAtom,
-  variableSettingssAtom,
-} from "./settings";
+import { independentVariableAtom, parameterScanOptionsAtom } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
 import type { Atom } from "jotai";
 import { simulationResultAtom } from "./simulation";
@@ -34,15 +30,64 @@ const MODEL_LOAD_DEBOUNCE = 200; // in ms
 
 const _updateAbortControllerAtom = atom<AbortController | null>(null);
 const _editorContentAtom = atom(defaultModel);
-const _variablesAtom = atom<Variable[]>([]);
 const _modelStatusAtom = atom<ModelStatus>({ type: "loading" });
+
+type VariableSettingss = {
+  [id: string]: VariableSettings;
+};
+// this stores variables and their settings in one object so we can update them simultaneously
+// (important since we can NEVER have variable without corresponding variable settings)
+// note that variable settings will always be a superset of
+// variables because the settings are retained even if the
+// variables are no longer in the model.
+const _variablesAtom = atom<{
+  variables: Variable[];
+  settingss: VariableSettingss;
+}>({
+  variables: [],
+  settingss: {},
+});
 
 export const editorContentAtom = atom((get) => get(_editorContentAtom));
 export const modelStatusAtom = atom((get) => get(_modelStatusAtom));
-export const variablesAtom = atom((get) => get(_variablesAtom));
+export const variablesAtom = atom((get) => get(_variablesAtom).variables);
 export const variablesMapAtom: Atom<Map<string, Variable>> = atom(
   (get) => new Map(get(variablesAtom).map((v) => [v.name, v])),
 );
+export const variableSettingssAtom = atom(
+  (get) => get(_variablesAtom).settingss,
+  (
+    get,
+    set,
+    param: VariableSettingss | ((old: VariableSettingss) => VariableSettingss),
+  ) => {
+    const old = get(_variablesAtom);
+    const newValue = typeof param === "function" ? param(old.settingss) : param;
+    set(_variablesAtom, {
+      ...get(_variablesAtom),
+      settingss: newValue,
+    });
+  },
+);
+
+/**
+ * Get variable settings for variable with the given name.
+ * If not found, uses fallback settings.
+ */
+export const getVariableSettingsFrom = (
+  variableSettingss: Record<string, VariableSettings>,
+  name: string,
+): VariableSettings => {
+  return (
+    variableSettingss[name] ?? {
+      displayName: name,
+      color: "#777",
+      lineStyle: "solid",
+      visible: true,
+      width: 2.5,
+    }
+  );
+};
 
 /**
  * Only exported so it can be unit tested.
@@ -126,7 +171,8 @@ export interface UpdateEditorContentOptions {
   /** default: false */
   skipDebounce?: boolean;
   /** Whether or not to reset variable settings associated with the model. default: false */
-  resetVariableSettings?: boolean;
+  resetPresentVariableSettings?: boolean;
+  variableSettingss?: VariableSettingss;
 }
 
 export type UpdateEditorContentResult =
@@ -145,7 +191,8 @@ export const updateEditorContentAtom = atom(
     {
       content,
       skipDebounce = false,
-      resetVariableSettings = false,
+      resetPresentVariableSettings: resetVariableSettings = false,
+      variableSettingss,
     }: UpdateEditorContentOptions,
   ): Promise<UpdateEditorContentResult> => {
     // the !skipDebounce is for initial loads
@@ -253,16 +300,15 @@ export const updateEditorContentAtom = atom(
       });
     }
 
-    set(
-      variableSettingssAtom,
-      patchVariablesSettings(
+    set(_variablesAtom, {
+      variables: newVariables,
+      settingss: patchVariablesSettings(
         get(variablesAtom),
-        get(variableSettingssAtom),
+        variableSettingss ?? get(variableSettingssAtom),
         newVariables,
         resetVariableSettings,
       ),
-    );
-    set(_variablesAtom, newVariables);
+    });
     set(_modelStatusAtom, { type: "success" });
 
     // TODO: unit test this
@@ -300,6 +346,14 @@ export interface SetModelOptions {
    * default: true
    */
   resetCurrentResult?: boolean;
+
+  /**
+   * Set the variable settingss to do this once the model is updated (then patch any
+   * new variables in).
+   *
+   * This is used when opening a new model.
+   */
+  variableSettingss?: VariableSettingss;
 }
 
 /**
@@ -311,7 +365,12 @@ export const setModelAtom = atom(
   async (
     _get,
     set,
-    { name, content, resetCurrentResult = true }: SetModelOptions,
+    {
+      name,
+      content,
+      resetCurrentResult = true,
+      variableSettingss,
+    }: SetModelOptions,
   ): Promise<boolean> => {
     set(nameAtom, name);
 
@@ -325,7 +384,8 @@ export const setModelAtom = atom(
     const updateResult = await set(updateEditorContentAtom, {
       content,
       skipDebounce: true,
-      resetVariableSettings: resetCurrentResult,
+      resetPresentVariableSettings: resetCurrentResult,
+      variableSettingss: variableSettingss,
     });
 
     return updateResult.type !== "failure";

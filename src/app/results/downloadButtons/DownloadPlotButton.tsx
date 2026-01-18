@@ -14,9 +14,9 @@ import { useToast } from "@/components/Toast";
 
 import { simulationResultAtom } from "@/globals/simulation";
 import { datasetsAtom } from "@/globals/overlays";
+import { variableSettingssAtom } from "@/globals/model";
 import {
   graphSettingsAtom,
-  variableSettingssAtom,
   paletteAtom,
   independentVariableAtom,
   nameAtom,
