@@ -1,6 +1,7 @@
 .item {
   display: flex;
   flex-direction: row;
+  position: relative;
 
   background: var(--color-card-bg);
   border: var(--border-card);
@@ -12,6 +13,10 @@
 
   &:active {
     background-color: var(--color-card-bg-active);
+  }
+
+  &:has(.main:disabled) {
+    background-color: var(--color-card-bg-disabled);
   }
 }
 
@@ -30,17 +35,21 @@
   &:focus-visible {
     outline: var(--outline-focused);
   }
+
+  &:disabled * {
+    color: var(--color-card-fg-very-dim);
+  }
 }
 
 .name {
-  color: var(--color-layer1-fg);
+  color: var(--color-card-fg);
   font-weight: normal;
   margin: 0;
   font-size: var(--font-size-medium);
 }
 
 .number {
-  color: var(--color-layer1-fg-dim);
+  color: var(--color-card-fg-dim);
   font-size: var(--font-size-medium);
 }
 
@@ -51,9 +60,18 @@
 }
 
 .citation {
-  color: color-mix(in oklch, var(--color-layer3-fg), var(--color-accent) 60%);
+  color: color-mix(in oklch, var(--color-card-fg), var(--color-accent) 60%);
 }
 
 .synopsis {
   color: var(--color-layer3-fg-dim);
+}
+
+.loader {
+  display: block;
+  position: absolute;
+  color: var(--color-card-fg-dim);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
