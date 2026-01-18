@@ -1,21 +1,32 @@
-import { atom, useSetAtom, type Atom } from "jotai";
+import { useRef } from "react";
+import { atom, useSetAtom, useAtomValue, type Atom } from "jotai";
 import { loadable } from "jotai/utils";
+
 import {
   migrateMetadata,
   type Metadata,
   type ModelData,
   type ModelId,
 } from "@/features/savedData";
-import { listModels, newModel, openModel } from "@/features/fileSystem";
+import {
+  closeCurrentModel,
+  listModels,
+  newModel,
+  openModel,
+} from "@/features/fileSystem";
+import { convertSbmlToAntimony } from "@/features/antimony";
+
 import { useToast } from "@/components/Toast";
 import errorToDisplayString from "@/utils/errorToDisplayString";
+
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
 import { graphSettingsAtom } from "./settings";
-import { useAtomValue } from "jotai";
-import { currentLeftPanelAtom } from "./layout";
-import { useRef } from "react";
-import { convertSbmlToAntimony } from "@/features/antimony";
+import {
+  currentLeftPanelAtom,
+  currentRightPanelAtom,
+  currentVeryRightPanelAtom,
+} from "./layout";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
@@ -32,12 +43,14 @@ const _modelListAtom: Atom<Promise<Map<ModelId, Metadata>>> = atom(
     get(_changeIdAtom);
 
     const models = await listModels();
-    const migratedModels = new Map(
-      Array.from(models.entries()).map(([id, metadata]) => [
-        id,
-        migrateMetadata(metadata),
-      ]),
-    );
+    const migratedModels: Map<ModelId, Metadata> = new Map();
+
+    const entries = Array.from(models.entries());
+    entries.sort((a, b) => b[1].updated - a[1].updated);
+
+    for (const [id, metadata] of entries) {
+      migratedModels.set(id, migrateMetadata(metadata));
+    }
 
     return migratedModels;
   },
@@ -88,6 +101,14 @@ const _openModelAtom = atom(null, async (get, set, id: ModelId) => {
   }
 });
 
+const _closeCurrentModelAtom = atom(null, async (_get, set) => {
+  await closeCurrentModel();
+  set(activeModelFileAtom, null);
+  set(currentLeftPanelAtom, null);
+  set(currentRightPanelAtom, null);
+  set(currentVeryRightPanelAtom, null);
+});
+
 // used for debounce
 const _openingModelRefAtom = atom({ current: false });
 
@@ -100,6 +121,7 @@ export const useFileSystemActions = () => {
   const { toast } = useToast();
   const createNewModel = useSetAtom(_createNewModelAtom);
   const openModel = useSetAtom(_openModelAtom);
+  const closeCurrentModel = useSetAtom(_closeCurrentModelAtom);
   const openingModelRef = useAtomValue(_openingModelRefAtom);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -123,6 +145,10 @@ export const useFileSystemActions = () => {
     } finally {
       openingModelRef.current = false;
     }
+  };
+
+  const closeCurrentModelWrapper = async () => {
+    await closeCurrentModel();
   };
 
   /** @returns true if it succeeds */
@@ -203,6 +229,7 @@ export const useFileSystemActions = () => {
     createNewModel: createNewModelWrapper,
     openModel: openModelWrapper,
     promptModelFromFile: promptModelFromFile,
+    closeCurrentModel: closeCurrentModelWrapper,
     FileInput: FileInput,
   };
 };

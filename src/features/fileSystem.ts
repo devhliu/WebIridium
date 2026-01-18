@@ -23,6 +23,8 @@ import {
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
+  CloseCurrentModelAction,
+  CloseCurrentModelResult,
   ListModelsAction,
   ListModelsResult,
   NewModelAction,
@@ -62,6 +64,18 @@ export const openModel = async (id: ModelId): Promise<ModelData> => {
     null,
   );
   return migrateModelData(result);
+};
+
+/**
+ * Closes the current model. The model ID parameter should match the currently open
+ * model (by the worker), otherwise this will throw.
+ */
+export const closeCurrentModel = async (): Promise<void> => {
+  await fileWorker.runTask<CloseCurrentModelAction, CloseCurrentModelResult>(
+    "closeCurrentModel",
+    null,
+    null,
+  );
 };
 
 const getNewModelId = (): ModelId => crypto.randomUUID() as ModelId;

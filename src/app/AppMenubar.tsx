@@ -54,7 +54,7 @@ const AppMenubar = () => {
   const [isHelpOpen, setHelpOpen] = useState(false);
   const [isAboutOpen, setAboutOpen] = useState(false);
 
-  const { createNewModel, promptModelFromFile, FileInput } =
+  const { createNewModel, promptModelFromFile, closeCurrentModel, FileInput } =
     useFileSystemActions();
 
   const handleDownloadAntimony = () => {
@@ -101,6 +101,12 @@ const AppMenubar = () => {
             name="Download as SBML"
             disabled={!hasActiveModel}
             onSelect={handleDownloadSbml}
+          />
+          <MenubarSeparator />
+          <MenubarItem
+            name="Close Model"
+            disabled={!hasActiveModel}
+            onSelect={closeCurrentModel}
           />
         </MenubarMenu>
 

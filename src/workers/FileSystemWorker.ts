@@ -15,6 +15,9 @@ export type ListModelsResult = Result<Map<ModelId, UnknownMetadata>>;
 export type OpenModelAction = Action<"openModel", ModelId>;
 export type OpenModelResult = Result<UnknownModelData>;
 
+export type CloseCurrentModelAction = Action<"closeCurrentModel", null>;
+export type CloseCurrentModelResult = Result<null>;
+
 export type NewModelAction = Action<
   "newModel",
   {
@@ -204,19 +207,31 @@ const newModel = async (
   return null;
 };
 
+const closeModel = () => {
+  const handle = ModelHandle.getCurrent();
+  handle?.dispose();
+  return null;
+};
+
 const wrapResult = (action: Action, data: unknown): Result => ({
   id: action.id,
   data: data,
 });
 
 const handleAction = async (
-  action: ListModelsAction | OpenModelAction | NewModelAction,
+  action:
+    | ListModelsAction
+    | OpenModelAction
+    | CloseCurrentModelAction
+    | NewModelAction,
 ): Promise<Result> => {
   switch (action.type) {
     case "listModels":
       return wrapResult(action, await listModels());
     case "openModel":
       return wrapResult(action, await openModel(action.payload));
+    case "closeCurrentModel":
+      return wrapResult(action, closeModel());
     case "newModel":
       return wrapResult(
         action,
