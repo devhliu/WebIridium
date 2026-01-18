@@ -32,7 +32,7 @@ export const createWorker = (type: WorkerType) => {
               /* eslint-disable */
               const exhaustivenessCheck: never = action;
               throw new Error(`unhandled action: ${exhaustivenessCheck}`);
-              /* eslint-enable */
+            /* eslint-enable */
           }
         }),
       );
