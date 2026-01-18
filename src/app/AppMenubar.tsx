@@ -1,8 +1,6 @@
-import { useState, useRef } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
 import styles from "./AppMenubar.module.css";
-
-import defaultModel from "@/assets/default.ant?raw";
 
 import {
   MenubarRoot,
@@ -30,20 +28,16 @@ import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
 
-import {
-  convertAntimonyToSbml,
-  convertSbmlToAntimony,
-} from "@/features/antimony";
+import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/settings";
-import { editorContentAtom, setModelAtom } from "@/globals/model";
-import { hasActiveModelAtom } from "@/globals/files";
+import { editorContentAtom } from "@/globals/model";
+import { hasActiveModelAtom, useFileSystemActions } from "@/globals/files";
 
 const AppMenubar = () => {
   const { toast } = useToast();
 
   const editorContent = useAtomValue(editorContentAtom);
-  const setModel = useSetAtom(setModelAtom);
   const workspaceName = useAtomValue(nameAtom);
   const hasActiveModel = useAtomValue(hasActiveModelAtom);
 
@@ -60,14 +54,8 @@ const AppMenubar = () => {
   const [isHelpOpen, setHelpOpen] = useState(false);
   const [isAboutOpen, setAboutOpen] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleNew = () => {
-    void setModel({
-      name: "Starter Model",
-      content: defaultModel,
-    });
-  };
+  const { createNewModel, promptModelFromFile, FileInput } =
+    useFileSystemActions();
 
   const handleDownloadAntimony = () => {
     promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
@@ -88,47 +76,9 @@ const AppMenubar = () => {
     }
   };
 
-  const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files?.length !== 1) {
-      toast({
-        type: "error",
-        title: "File open failed",
-        description: "A single file must be selected",
-      });
-      return;
-    }
-
-    const file = files[0];
-    const nameWithoutExtension = file.name.split(".")[0];
-    const isSbml =
-      file.name.toLowerCase().endsWith(".sbml") ||
-      file.name.toLowerCase().endsWith(".xml");
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = async () => {
-      let content = reader.result as string;
-      if (isSbml) {
-        try {
-          content = await convertSbmlToAntimony(content);
-        } catch (e) {
-          // silently fail and use the content directly
-          console.error(e);
-        }
-      }
-      void setModel({ name: nameWithoutExtension, content });
-    };
-  };
-
   return (
     <div className={styles.root}>
-      <input
-        style={{ display: "none" }}
-        ref={fileInputRef}
-        type="file"
-        onChange={handleFileOpen}
-        accept=".ant,.txt,.xml,.sbml"
-      />
+      <FileInput />
 
       {isSettingsOpen && (
         <GlobalSettingsDialog onClose={() => setSettingsOpen(false)} />
@@ -140,17 +90,8 @@ const AppMenubar = () => {
 
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
-          <MenubarItem name="New" onSelect={handleNew} />
-          <MenubarItem
-            name="Open..."
-            onSelect={() => {
-              const fileInput = fileInputRef.current;
-              if (fileInput) {
-                fileInput.value = "";
-                fileInput.click();
-              }
-            }}
-          />
+          <MenubarItem name="New" onSelect={() => createNewModel()} />
+          <MenubarItem name="Open..." onSelect={promptModelFromFile} />
           <MenubarItem
             name="Download as Antimony"
             onSelect={handleDownloadAntimony}

@@ -12,21 +12,28 @@ import { modelListAtom, useFileSystemActions } from "@/globals/files";
 
 const ModelSection = () => {
   const modelList = useAtomValue(modelListAtom);
-  const { createAndOpenNewFile, openFile } = useFileSystemActions();
+  const { createNewModel, openModel, promptModelFromFile, FileInput } =
+    useFileSystemActions();
 
   const handleSelectFor = (id: ModelId) => async () => {
-    await openFile(id);
+    await openModel(id);
   };
 
   return (
     <div className={styles.section}>
+      <FileInput />
       <h3 className={styles.title}>
         My Models
         <div className={styles.modelActions}>
-          <button className={buttonStyles.default}>Open File</button>
+          <button
+            className={buttonStyles.default}
+            onClick={promptModelFromFile}
+          >
+            Open File
+          </button>
           <button
             className={buttonStyles.primary}
-            onClick={() => createAndOpenNewFile()}
+            onClick={() => createNewModel()}
           >
             <PlusIcon width="1em" height="1em" />
             New Model

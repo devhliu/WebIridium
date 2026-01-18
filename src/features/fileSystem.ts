@@ -89,10 +89,24 @@ const getNewModelData = (): ModelData => {
 
 /**
  * Creates a new model and returns the model id and data for it.
+ * @param name - default name of them model
+ * @param code - default code of the model
  */
-export const newModel = async (): Promise<[ModelId, ModelData]> => {
+export const newModel = async (
+  name?: string,
+  code?: string,
+): Promise<[ModelId, ModelData]> => {
   const id = getNewModelId();
   const data = getNewModelData();
+
+  if (name !== undefined) {
+    data.metadata.name = name;
+  }
+
+  if (code !== undefined) {
+    data.code = code;
+  }
+
   await fileWorker.runTask<NewModelAction, NewModelResult>(
     "newModel",
     { id, data },

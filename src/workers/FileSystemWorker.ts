@@ -104,7 +104,7 @@ class ModelHandle {
     { create = false }: { create?: boolean } = {},
   ): Promise<ModelHandle> {
     if (this.#current) {
-      throw new Error("another model is already open");
+      this.#current.dispose();
     }
 
     const model = new ModelHandle(id);
