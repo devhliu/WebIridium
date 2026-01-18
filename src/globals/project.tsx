@@ -128,11 +128,8 @@ export const useProjectActions = () => {
   const openProject = useSetAtom(_openProjectAtom);
   const closeCurrentProject = useSetAtom(_closeCurrentProjectAtom);
   const openingProjectRef = useAtomValue(_openingProjectRefAtom);
-  const setModel = useSetAtom(setModelAtom);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  // used for import file, whether to create a new project or import into the current
-  const isReplacingRef = useRef<boolean>(false);
 
   /** @returns true if it succeeds */
   const createNewProjectWrapper = async (
@@ -233,21 +230,11 @@ export const useProjectActions = () => {
         }
       }
 
-      if (!isReplacingRef.current) {
-        void setModel({
-          name: nameWithoutExtension,
-          content: content,
-        });
-      } else {
-        void createNewProjectWrapper([nameWithoutExtension, content]);
-      }
+      void createNewProjectWrapper([nameWithoutExtension, content]);
     };
   };
 
-  const promptProjectFromFile = ({
-    isReplacing = true,
-  }: { isReplacing?: boolean } = {}) => {
-    isReplacingRef.current = isReplacing;
+  const promptProjectFromFile = () => {
     if (inputRef.current) {
       inputRef.current.value = "";
       inputRef.current.click();

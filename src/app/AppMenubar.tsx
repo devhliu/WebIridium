@@ -95,9 +95,8 @@ const AppMenubar = () => {
         <MenubarMenu name="File">
           <MenubarItem name="New Project" onSelect={() => createNewProject()} />
           <MenubarItem
-            name="Import Model..."
-            disabled={!hasActiveProject}
-            onSelect={() => promptProjectFromFile({ isReplacing: false })}
+            name="Import File..."
+            onSelect={() => promptProjectFromFile()}
           />
           <MenubarItem
             name="Download as Antimony"
