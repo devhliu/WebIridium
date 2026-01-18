@@ -17,8 +17,10 @@ import type { ModelId } from "@/features/savedData";
 
 const Initialize = ({
   didInitialLoadRef,
+  shouldStubActiveFile,
 }: {
   didInitialLoadRef: React.RefObject<boolean>;
+  shouldStubActiveFile?: boolean;
 }) => {
   const setModel = useSetAtom(setModelAtom);
 
@@ -35,7 +37,7 @@ const Initialize = ({
       const loadWithInitial = async () => {
         // temporary stub for tests until we remove this component and
         // replace with something better
-        if (process.env.VITEST) {
+        if (shouldStubActiveFile) {
           setActiveModelFile("stub" as ModelId);
           await setModel({
             name: "Starter Model",
@@ -70,6 +72,7 @@ const Initialize = ({
     updateAllChatHistory,
     setApiKey,
     setChatPrompt,
+    shouldStubActiveFile,
   ]);
 
   return null;
@@ -77,14 +80,19 @@ const Initialize = ({
 
 const WorkspaceProvider = ({
   didInitialLoadRef,
+  shouldStubActiveFile,
   children,
 }: {
   didInitialLoadRef: React.RefObject<boolean>;
+  shouldStubActiveFile?: boolean;
   children: React.ReactNode;
 }) => {
   return (
     <Provider>
-      <Initialize didInitialLoadRef={didInitialLoadRef} />
+      <Initialize
+        didInitialLoadRef={didInitialLoadRef}
+        shouldStubActiveFile={shouldStubActiveFile}
+      />
       {children}
     </Provider>
   );

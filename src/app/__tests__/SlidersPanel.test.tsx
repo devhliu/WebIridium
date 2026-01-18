@@ -4,8 +4,11 @@ import { screen } from "@testing-library/react";
 
 import { renderWithinWorkspace } from "@/testing-utils/render";
 import SlidersPanel from "../sliders/SlidersPanel";
+import { itShouldShowNoActiveModelPanel } from "./sharedPanelTests";
 
 // TODO: add more tests
+
+itShouldShowNoActiveModelPanel(() => <SlidersPanel onClose={vi.fn()} />);
 
 it("should run close on click", async () => {
   const onClose = vi.fn();

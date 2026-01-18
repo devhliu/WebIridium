@@ -42,7 +42,7 @@ const ModelSection = () => {
             className={buttonStyles.primary}
             onClick={() => createNewModel()}
           >
-            <PlusIcon width="1em" height="1em" />
+            <PlusIcon aria-hidden width="1em" height="1em" />
             New Model
           </button>
         </div>

@@ -7,8 +7,11 @@ import {
   itShouldDisplayPlot,
   itShouldBeLoadingWhenModelIsLoading,
   ForceModelUpdateButton,
-} from "./testButton";
+  itShouldShowNoActiveModelPanel,
+} from "./sharedPanelTests.tsx";
 import ParameterScanPanel from "../simulation/ParameterScanPanel.tsx";
+
+itShouldShowNoActiveModelPanel(() => <ParameterScanPanel visible />);
 
 describe("run button", () => {
   const testButtonOptions = {

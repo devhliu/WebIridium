@@ -18,6 +18,7 @@ import {
 import { getToastHistory, resetToastHistory } from "@/testing-utils/mockToast";
 import { useSetAtom } from "jotai";
 import { updateEditorContentAtom } from "@/globals/model";
+import { renderWithinWorkspace } from "@/testing-utils/render";
 
 afterEach(() => {
   resetWorkerResponseDelay();
@@ -142,5 +143,17 @@ export const itShouldBeLoadingWhenModelIsLoading = ({
 
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
+  });
+};
+
+export const itShouldShowNoActiveModelPanel = (
+  render: () => React.ReactNode,
+) => {
+  it("should show no active model panel", async () => {
+    await renderWithinWorkspace(render(), { shouldStubActiveFile: false });
+
+    const button = screen.getByRole("button");
+
+    expect(button).toHaveTextContent("New Model");
   });
 };
