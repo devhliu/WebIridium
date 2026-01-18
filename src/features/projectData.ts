@@ -2,6 +2,10 @@
  * Read `DEVINSTRUCTIONS/MIGRATIONS.md` for how this works/how to add your own migrations.
  */
 
+import defaultModel from "@/assets/default.ant?raw";
+import { defaultGraphSettings } from "@/globals/settings";
+import { getRandomCssGradient } from "./cssGradients";
+
 import type { MetadataV1 } from "./migrations/metadata/v1";
 import type { IridiumDataV1 } from "./migrations/iridium/v1";
 import type { ResultsDataV1 } from "./migrations/results/v1";
@@ -84,5 +88,32 @@ export const migrateProjectData = ({
     metadata: migrateMetadata(metadata),
     iridium: migrateIridiumData(iridium),
     results: migrateResultsData(results),
+  };
+};
+
+export const getNewProjectId = (): ProjectId =>
+  crypto.randomUUID() as ProjectId;
+
+export const getNewProjectData = (): ProjectData => {
+  return {
+    code: defaultModel,
+    metadata: {
+      versionTag: 1,
+      name: "Starter Project",
+      created: Date.now(),
+      updated: Date.now(),
+      icon: {
+        color: getRandomCssGradient(),
+      },
+    },
+    iridium: {
+      versionTag: 1,
+      graphSettings: defaultGraphSettings,
+      variableSettings: {},
+    },
+    results: {
+      versionTag: 1,
+      records: [],
+    },
   };
 };

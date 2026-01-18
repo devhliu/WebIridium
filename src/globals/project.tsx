@@ -7,7 +7,7 @@ import {
   type Metadata,
   type ProjectData,
   type ProjectId,
-} from "@/features/savedData";
+} from "@/features/projectData";
 import {
   closeCurrentProject,
   listProjects,

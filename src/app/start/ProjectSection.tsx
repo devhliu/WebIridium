@@ -8,7 +8,7 @@ import ModelItem from "./ModelItem";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import PulseLoader from "@/components/PulseLoader";
 import errorToDisplayString from "@/utils/errorToDisplayString";
-import type { ProjectId } from "@/features/savedData";
+import type { ProjectId } from "@/features/projectData";
 import { projectListAtom, useProjectActions } from "@/globals/project";
 
 const ProjectSection = () => {

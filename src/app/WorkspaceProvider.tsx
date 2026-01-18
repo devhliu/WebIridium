@@ -13,7 +13,7 @@ import {
 } from "@/globals/chat";
 import { apiKeyAtom } from "@/globals/chat";
 import { activeProjectFileAtom } from "@/globals/project";
-import type { ProjectId } from "@/features/savedData";
+import type { ProjectId } from "@/features/projectData";
 
 const Initialize = ({
   didInitialLoadRef,

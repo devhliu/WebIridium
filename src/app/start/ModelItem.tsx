@@ -1,4 +1,4 @@
-import type { Metadata } from "@/features/savedData";
+import type { Metadata } from "@/features/projectData";
 import styles from "./ModelItem.module.css";
 
 import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";

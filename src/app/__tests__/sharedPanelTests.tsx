@@ -156,4 +156,16 @@ export const itShouldShowNoActiveProjectPanel = (
 
     expect(button).toHaveTextContent("New Project");
   });
+
+  it("should let you create a project", async () => {
+    await renderWithinWorkspace(render(), { shouldStubActiveFile: false });
+
+    const button = screen.getByRole("button");
+
+    expect(button).toHaveTextContent("New Project");
+
+    await userEvent.click(button);
+
+    expect(button).not.toBeInTheDocument();
+  });
 };

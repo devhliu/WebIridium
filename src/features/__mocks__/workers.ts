@@ -5,28 +5,32 @@ import {
   MockWorker,
 } from "@/testing-utils/mockWorker.ts";
 import type { FileSystemAction } from "@/workers/FileSystemWorker.ts";
-import { getNewProjectData } from "../fileSystem.ts";
-import type { ProjectId, UnknownProjectData } from "../savedData.ts";
+import { getNewProjectData } from "../projectData.ts";
+import { getMockFiles, setMockFile } from "@/testing-utils/mockFileSystem.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
 
   switch (type) {
     case "fileSystem": {
-      const files = new Map<ProjectId, UnknownProjectData>();
       worker.port.addEventListener(
         "message",
         createMockWorkerMessageHandler(worker, (unknownAction) => {
           const action = unknownAction as FileSystemAction;
           switch (action.type) {
-            case "listProjects":
-              return files;
+            case "listProjects": {
+              const map = new Map();
+              for (const [id, data] of getMockFiles()) {
+                map.set(id, data.metadata);
+              }
+              return map;
+            }
             case "openProject":
               return getNewProjectData();
             case "closeCurrentProject":
               return null;
             case "newProject":
-              files.set(action.payload.id, action.payload.data);
+              setMockFile(action.payload.id, action.payload.data);
               return null;
             default:
               /* eslint-disable */

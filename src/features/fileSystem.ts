@@ -13,13 +13,14 @@
          \- project.ant
  */
 
-import defaultModel from "@/assets/default.ant?raw";
 import {
   migrateProjectData,
   type Metadata,
   type ProjectId,
   type ProjectData,
-} from "./savedData";
+  getNewProjectId,
+  getNewProjectData,
+} from "./projectData";
 import { WorkerPool } from "./taskPool";
 import type {
   CloseCurrentProjectAction,
@@ -31,9 +32,7 @@ import type {
   OpenProjectAction,
   OpenProjectResult,
 } from "@/workers/FileSystemWorker";
-import { defaultGraphSettings } from "@/globals/settings";
-import { getRandomCssGradient } from "./cssGradients";
-import { createWorker } from "./workers";
+import { createWorker } from "@/features/workers";
 
 const fileWorker = new WorkerPool(() => createWorker("fileSystem"), {
   maxWorkers: 1,
@@ -75,33 +74,6 @@ export const closeCurrentProject = async (): Promise<void> => {
     CloseCurrentProjectAction,
     CloseCurrentProjectResult
   >("closeCurrentProject", null, null);
-};
-
-const getNewProjectId = (): ProjectId => crypto.randomUUID() as ProjectId;
-
-/** exported so it can be used in mocks */
-export const getNewProjectData = (): ProjectData => {
-  return {
-    code: defaultModel,
-    metadata: {
-      versionTag: 1,
-      name: "Starter Project",
-      created: Date.now(),
-      updated: Date.now(),
-      icon: {
-        color: getRandomCssGradient(),
-      },
-    },
-    iridium: {
-      versionTag: 1,
-      graphSettings: defaultGraphSettings,
-      variableSettings: {},
-    },
-    results: {
-      versionTag: 1,
-      records: [],
-    },
-  };
 };
 
 /**

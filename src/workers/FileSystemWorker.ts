@@ -5,8 +5,8 @@ import type {
   UnknownMetadata,
   UnknownProjectData,
   UnknownResultsData,
-} from "@/features/savedData";
-import type { Metadata } from "@/features/savedData";
+} from "@/features/projectData";
+import type { Metadata } from "@/features/projectData";
 import type { Action, ErrorResult, Result } from "@/features/taskPool";
 
 export type ListProjectsAction = Action<"listProjects", null>;
