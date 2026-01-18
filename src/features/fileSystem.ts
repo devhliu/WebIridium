@@ -33,6 +33,7 @@ import type {
   OpenModelResult,
 } from "@/workers/FileSystemWorker";
 import { defaultGraphSettings } from "@/globals/settings";
+import { getRandomCssGradient } from "./cssGradients";
 
 const fileWorker = new WorkerPool(() => new FileSystemWorker(), {
   maxWorkers: 1,
@@ -88,6 +89,9 @@ const getNewModelData = (): ModelData => {
       name: "Default Model",
       created: Date.now(),
       updated: Date.now(),
+      icon: {
+        color: getRandomCssGradient(),
+      },
     },
     iridium: {
       versionTag: 1,
@@ -126,6 +130,5 @@ export const newModel = async (
     { id, data },
     null,
   );
-
   return [id, data];
 };

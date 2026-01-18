@@ -37,18 +37,14 @@
   justify-content: center;
   align-items: center;
 
-  background: #47a89b;
-  background: linear-gradient(
-    0deg,
-    rgba(71, 168, 155, 1) 2%,
-    rgba(118, 207, 205, 1) 100%
-  );
+  background: var(--gradient-pink);
   height: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 2px;
 }
 
 .icon-text {
+  color: #eee;
   font-size: var(--font-size-big);
 }
 
