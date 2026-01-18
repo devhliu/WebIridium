@@ -23,7 +23,6 @@ import {
 
 import { useToast } from "@/components/Toast";
 import SearchBar from "./SearchBar";
-import ShareButton from "./sharing/ShareButton";
 import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
@@ -173,9 +172,7 @@ const AppMenubar = () => {
         {hasActiveModel && <SearchBar />}
       </div>
 
-      <div className={styles.menubarRight}>
-        {hasActiveModel && <ShareButton />}
-      </div>
+      <div className={styles.menubarRight}></div>
     </div>
   );
 };
