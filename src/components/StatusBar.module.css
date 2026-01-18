@@ -12,6 +12,7 @@
   font-size: var(--font-size-small);
   border-bottom: var(--border-layer1);
   border-top: var(--border-layer1);
+  height: 24px;
 }
 
 .item {

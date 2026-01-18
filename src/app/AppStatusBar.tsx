@@ -15,6 +15,7 @@ import {
 } from "@/globals/model";
 import { independentVariableAtom } from "@/globals/settings";
 import { isSimulatingAtom, simulationResultAtom } from "@/globals/simulation";
+import { hasActiveModelAtom } from "@/globals/files";
 
 const ModelStatusItem = () => {
   const status = useAtomValue(modelStatusAtom);
@@ -119,9 +120,10 @@ const MissingDataStatusItem = () => {
 };
 
 const AppStatusBar = () => {
+  const hasActiveModel = useAtomValue(hasActiveModelAtom);
   return (
     <StatusBar>
-      <ModelStatusItem />
+      {hasActiveModel && <ModelStatusItem />}
       <MissingDataStatusItem />
     </StatusBar>
   );
