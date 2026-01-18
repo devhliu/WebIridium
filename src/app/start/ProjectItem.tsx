@@ -1,12 +1,12 @@
 import type { Metadata } from "@/features/projectData";
-import styles from "./ModelItem.module.css";
+import styles from "./ProjectItem.module.css";
 
 import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";
 import { timestampToNumericDate } from "@/features/formatUtils";
 import { getPropertyFromCssGradient } from "@/features/cssGradients";
 import PulseLoader from "@/components/PulseLoader";
 
-export interface ModelItemProps {
+export interface ProjectItemProps {
   metadata: Metadata;
   isLoading: boolean;
   onSelect: () => void;
@@ -23,7 +23,7 @@ const getIconTextFromName = (name: string) => {
   }
 };
 
-const ModelItem = ({ metadata, isLoading, onSelect }: ModelItemProps) => {
+const ProjectItem = ({ metadata, isLoading, onSelect }: ProjectItemProps) => {
   return (
     <div className={styles.item}>
       <button className={styles.main} disabled={isLoading} onClick={onSelect}>
@@ -60,4 +60,4 @@ const ModelItem = ({ metadata, isLoading, onSelect }: ModelItemProps) => {
   );
 };
 
-export default ModelItem;
+export default ProjectItem;

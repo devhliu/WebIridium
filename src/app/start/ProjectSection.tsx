@@ -4,7 +4,7 @@ import { useState } from "react";
 import styles from "./ProjectSection.module.css";
 import buttonStyles from "@/components/Button.module.css";
 
-import ModelItem from "./ModelItem";
+import ProjectItem from "./ProjectItem";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import PulseLoader from "@/components/PulseLoader";
 import errorToDisplayString from "@/utils/errorToDisplayString";
@@ -60,7 +60,7 @@ const ProjectSection = () => {
           <p className={styles.error}>You have no projects.</p>
         ) : (
           Array.from(projectList.data.entries()).map(([id, metadata]) => (
-            <ModelItem
+            <ProjectItem
               key={id}
               metadata={metadata}
               isLoading={openingProject === id}
