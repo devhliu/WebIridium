@@ -19,10 +19,10 @@ import {
   graphSettingsAtom,
   paletteAtom,
   independentVariableAtom,
-  nameAtom,
 } from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/plot";
+import { metadataAtom } from "@/globals/project";
 import { generatePlotParameters } from "../generatePlotParameters";
 import { promptDownloadString, promptDownloadUrl } from "@/features/download";
 
@@ -36,14 +36,14 @@ const DownloadPlotButton = () => {
   const scanIndependentVariable = useScanIndependentVariable();
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
   const graphSettings = useAtomValue(graphSettingsAtom);
-  const workspaceName = useAtomValue(nameAtom);
+  const metadata = useAtomValue(metadataAtom);
   const xAxisTitle = useAtomValue(xAxisTitleAtom);
   const yAxisTitle = useAtomValue(yAxisTitleAtom);
   const datasets = useAtomValue(datasetsAtom);
 
   const { toast } = useToast();
 
-  const downloadName = `Plot of ${workspaceName}`;
+  const downloadName = `Plot of ${metadata?.name ?? "unknown"}`;
 
   const getPlotOptions = () => {
     if (!result) return;

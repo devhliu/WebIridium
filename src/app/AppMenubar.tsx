@@ -22,22 +22,25 @@ import {
 } from "@/globals/layout";
 
 import { useToast } from "@/components/Toast";
-import SearchBar from "./SearchBar";
 import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
 
 import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
-import { nameAtom } from "@/globals/settings";
 import { editorContentAtom } from "@/globals/model";
-import { hasActiveProjectAtom, useProjectActions } from "@/globals/project";
+import {
+  hasActiveProjectAtom,
+  metadataAtom,
+  useProjectActions,
+} from "@/globals/project";
+import ProjectName from "./ProjectName";
 
 const AppMenubar = () => {
   const { toast } = useToast();
 
   const editorContent = useAtomValue(editorContentAtom);
-  const workspaceName = useAtomValue(nameAtom);
+  const [metadata, setMetadata] = useAtom(metadataAtom);
   const hasActiveProject = useAtomValue(hasActiveProjectAtom);
 
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
@@ -61,13 +64,17 @@ const AppMenubar = () => {
   } = useProjectActions();
 
   const handleDownloadAntimony = () => {
-    promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
+    promptDownloadString(
+      `${metadata?.name ?? "unknown"}.ant`,
+      editorContent,
+      "ant",
+    );
   };
 
   const handleDownloadSbml = async () => {
     try {
       const sbml = await convertAntimonyToSbml(editorContent);
-      promptDownloadString(`${workspaceName}.xml`, sbml, "xml");
+      promptDownloadString(`${metadata?.name ?? "unknown"}.xml`, sbml, "xml");
     } catch (e) {
       if (e instanceof Error) {
         toast({
@@ -177,7 +184,14 @@ const AppMenubar = () => {
       </MenubarRoot>
 
       <div className={styles.menubarCenter}>
-        {hasActiveProject && <SearchBar />}
+        {metadata && (
+          <ProjectName
+            metadata={metadata}
+            onNameChange={(newName) =>
+              setMetadata({ ...metadata, name: newName })
+            }
+          />
+        )}
       </div>
 
       <div className={styles.menubarRight}></div>

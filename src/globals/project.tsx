@@ -39,6 +39,7 @@ export const activeProjectFileAtom = atom<ProjectId | null>(null);
 export const hasActiveProjectAtom = atom(
   (get) => get(activeProjectFileAtom) !== null,
 );
+export const metadataAtom = atom<Metadata | null>(null);
 
 const _projectListAtom: Atom<Promise<Map<ProjectId, Metadata>>> = atom(
   async (get) => {
@@ -74,6 +75,7 @@ const _updateGlobalsFromProjectDataAtom = atom(
     });
     set(updateAllHistoryAtom, results.records);
     set(graphSettingsAtom, iridium.graphSettings);
+    set(metadataAtom, metadata);
     set(activeProjectFileAtom, id);
   },
 );
@@ -107,6 +109,7 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
 const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   await closeCurrentProject();
   set(activeProjectFileAtom, null);
+  set(metadataAtom, null);
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);
   set(currentVeryRightPanelAtom, null);

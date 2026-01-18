@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAtomValue } from "jotai";
 
-import { nameAtom, timeCourseParametersAtom } from "@/globals/settings";
+import { timeCourseParametersAtom } from "@/globals/settings";
 import { simulationResultAtom } from "@/globals/simulation";
 import { editorContentAtom } from "@/globals/model";
 
@@ -13,7 +13,7 @@ import ShareDialog from "./ShareDialog";
 import { useToast } from "@/components/Toast";
 
 const ShareButton = () => {
-  const workspaceName = useAtomValue(nameAtom);
+  const workspaceName = "stub";
   const editorContent = useAtomValue(editorContentAtom);
   const timeCourseParameters = useAtomValue(timeCourseParametersAtom);
   const simulationResult = useAtomValue(simulationResultAtom);

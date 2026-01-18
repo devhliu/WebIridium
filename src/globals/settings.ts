@@ -107,7 +107,6 @@ export interface VariableSettings {
   lineStyle: LineStyle;
 }
 
-export const nameAtom = atom("Starter Model");
 export const paletteAtom = atom<Palette>("Custom");
 export const independentVariableAtom = atom<string | null>(null);
 

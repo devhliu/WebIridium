@@ -1,0 +1,17 @@
+.icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: var(--gradient-pink);
+  width: calc(1em + var(--spacing-3));
+  height: calc(1em + var(--spacing-3));
+  padding: var(--spacing-2);
+  border-radius: 2px;
+}
+
+.icon-text {
+  line-height: 0;
+  color: #eee;
+  font-size: 1.1em;
+}

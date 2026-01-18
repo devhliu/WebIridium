@@ -11,7 +11,6 @@ import { getDefaultColorForIndex } from "@/features/colors";
 import {
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
-  nameAtom,
   timeCourseParametersAtom,
   type VariableSettings,
 } from "./settings";
@@ -365,15 +364,8 @@ export const setModelAtom = atom(
   async (
     _get,
     set,
-    {
-      name,
-      content,
-      resetCurrentResult = true,
-      variableSettingss,
-    }: SetModelOptions,
+    { content, resetCurrentResult = true, variableSettingss }: SetModelOptions,
   ): Promise<boolean> => {
-    set(nameAtom, name);
-
     set(timeCourseParametersAtom, defaultTimeCourseParameters);
     set(parameterScanOptionsAtom, defaultParameterScanOptions);
 

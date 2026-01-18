@@ -6,7 +6,8 @@ import IconButton from "@/components/IconButton";
 
 import { simulationResultAtom } from "@/globals/simulation";
 import { variableSettingssAtom } from "@/globals/model";
-import { independentVariableAtom, nameAtom } from "@/globals/settings";
+import { independentVariableAtom } from "@/globals/settings";
+import { metadataAtom } from "@/globals/project";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generateTableParameters } from "../generateTableParameters";
 import { promptDownloadString } from "@/features/download";
@@ -17,7 +18,7 @@ const DownloadTableButton = () => {
   const variableSettingss = useAtomValue(variableSettingssAtom);
   const scanIndependentVariable = useScanIndependentVariable();
   const timeCourseIndependentVariable = useAtomValue(independentVariableAtom);
-  const workspaceName = useAtomValue(nameAtom);
+  const metadata = useAtomValue(metadataAtom);
 
   const handleClick = () => {
     if (!result) return;
@@ -31,7 +32,11 @@ const DownloadTableButton = () => {
 
     const csv = convertColumnsToCsv(columns);
 
-    promptDownloadString(`Table of ${workspaceName}`, csv, "text/csv");
+    promptDownloadString(
+      `Table of ${metadata?.name ?? "unknown"}`,
+      csv,
+      "text/csv",
+    );
   };
 
   return (
