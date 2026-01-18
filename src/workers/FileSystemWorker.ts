@@ -27,6 +27,12 @@ export type NewModelAction = Action<
 >;
 export type NewModelResult = Result<null>;
 
+export type FileSystemAction =
+  | ListModelsAction
+  | OpenModelAction
+  | CloseCurrentModelAction
+  | NewModelAction;
+
 const MODELS_DIR_NAME = "models";
 
 let rootHandle: FileSystemDirectoryHandle | null = null;
@@ -218,13 +224,7 @@ const wrapResult = (action: Action, data: unknown): Result => ({
   data: data,
 });
 
-const handleAction = async (
-  action:
-    | ListModelsAction
-    | OpenModelAction
-    | CloseCurrentModelAction
-    | NewModelAction,
-): Promise<Result> => {
+const handleAction = async (action: FileSystemAction): Promise<Result> => {
   switch (action.type) {
     case "listModels":
       return wrapResult(action, await listModels());

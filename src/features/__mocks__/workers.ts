@@ -4,11 +4,40 @@ import {
   createMockWorkerMessageHandler,
   MockWorker,
 } from "@/testing-utils/mockWorker.ts";
+import type { FileSystemAction } from "@/workers/FileSystemWorker.ts";
+import { getNewModelData } from "../fileSystem.ts";
+import type { ModelId, UnknownModelData } from "../savedData.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
 
   switch (type) {
+    case "fileSystem": {
+      const files = new Map<ModelId, UnknownModelData>();
+      worker.port.addEventListener(
+        "message",
+        createMockWorkerMessageHandler(worker, (unknownAction) => {
+          const action = unknownAction as FileSystemAction;
+          switch (action.type) {
+            case "listModels":
+              return files;
+            case "openModel":
+              return getNewModelData();
+            case "closeCurrentModel":
+              return null;
+            case "newModel":
+              files.set(action.payload.id, action.payload.data);
+              return null;
+            default:
+              /* eslint-disable */
+              const exhaustivenessCheck: never = action;
+              throw new Error(`unhandled action: ${exhaustivenessCheck}`);
+              /* eslint-enable */
+          }
+        }),
+      );
+      break;
+    }
     case "copasi": {
       worker.port.addEventListener(
         "message",

@@ -13,7 +13,6 @@
          \- model.ant
  */
 
-import FileSystemWorker from "@/workers/FileSystemWorker?worker";
 import defaultModel from "@/assets/default.ant?raw";
 import {
   migrateModelData,
@@ -34,8 +33,9 @@ import type {
 } from "@/workers/FileSystemWorker";
 import { defaultGraphSettings } from "@/globals/settings";
 import { getRandomCssGradient } from "./cssGradients";
+import { createWorker } from "./workers";
 
-const fileWorker = new WorkerPool(() => new FileSystemWorker(), {
+const fileWorker = new WorkerPool(() => createWorker("fileSystem"), {
   maxWorkers: 1,
 });
 
@@ -81,7 +81,8 @@ export const closeCurrentModel = async (): Promise<void> => {
 
 const getNewModelId = (): ModelId => crypto.randomUUID() as ModelId;
 
-const getNewModelData = (): ModelData => {
+/** exported so it can be used in mocks */
+export const getNewModelData = (): ModelData => {
   return {
     code: defaultModel,
     metadata: {
