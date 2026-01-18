@@ -14,22 +14,22 @@ export type UnknownResultsData = ResultsDataV1;
 // Keep these up-to-date with the latest versions
 export type Metadata = MetadataV1;
 /**
- * Iridium data is any model data that is specific to the app, such as variable/graph settings.
+ * Iridium data is any project data that is specific to the app, such as variable/graph settings.
  */
 export type IridiumData = IridiumDataV1;
 export type ResultsData = ResultsDataV1;
 
 // https://www.learningtypescript.com/articles/branded-types
-export type ModelId = string & { __brand: "modelId" };
+export type ProjectId = string & { __brand: "projectId" };
 
-export interface UnknownModelData {
+export interface UnknownProjectData {
   metadata: UnknownMetadata;
   iridium: UnknownIridiumData;
   results: UnknownResultsData;
   code: string;
 }
 
-export interface ModelData {
+export interface ProjectData {
   metadata: Metadata;
   iridium: IridiumData;
   results: ResultsData;
@@ -73,12 +73,12 @@ export const migrateResultsData = (
   }
 };
 
-export const migrateModelData = ({
+export const migrateProjectData = ({
   code,
   metadata,
   iridium,
   results,
-}: UnknownModelData): ModelData => {
+}: UnknownProjectData): ProjectData => {
   return {
     code: code,
     metadata: migrateMetadata(metadata),

@@ -18,7 +18,7 @@ import {
 } from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
 import { saveAtom } from "@/globals/saving";
-import { activeModelFileAtom } from "@/globals/files";
+import { activeProjectFileAtom } from "@/globals/project";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";
@@ -79,7 +79,7 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
-  const activeModelFile = useAtomValue(activeModelFileAtom);
+  const activeProjectFile = useAtomValue(activeProjectFileAtom);
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
 
   return (
@@ -114,7 +114,11 @@ const AppContent = () => {
             <Allotment.Pane priority={LayoutPriority.High}>
               <Allotment vertical>
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  {activeModelFile === null ? <StartPanel /> : <EditorPanel />}
+                  {activeProjectFile === null ? (
+                    <StartPanel />
+                  ) : (
+                    <EditorPanel />
+                  )}
                 </Allotment.Pane>
 
                 <Allotment.Pane

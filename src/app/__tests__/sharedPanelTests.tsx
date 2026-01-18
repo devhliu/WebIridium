@@ -146,14 +146,14 @@ export const itShouldBeLoadingWhenModelIsLoading = ({
   });
 };
 
-export const itShouldShowNoActiveModelPanel = (
+export const itShouldShowNoActiveProjectPanel = (
   render: () => React.ReactNode,
 ) => {
-  it("should show no active model panel", async () => {
+  it("should show no active project panel", async () => {
     await renderWithinWorkspace(render(), { shouldStubActiveFile: false });
 
     const button = screen.getByRole("button");
 
-    expect(button).toHaveTextContent("New Model");
+    expect(button).toHaveTextContent("New Project");
   });
 };

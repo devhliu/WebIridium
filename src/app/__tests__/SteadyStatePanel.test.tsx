@@ -8,10 +8,10 @@ import {
   itShouldDisplayToasts,
   itShouldBeLoadingWhenModelIsLoading,
   ForceModelUpdateButton,
-  itShouldShowNoActiveModelPanel,
+  itShouldShowNoActiveProjectPanel,
 } from "./sharedPanelTests.tsx";
 
-itShouldShowNoActiveModelPanel(() => <SteadyStatePanel visible />);
+itShouldShowNoActiveProjectPanel(() => <SteadyStatePanel visible />);
 
 describe("compute button", () => {
   const testButtonOptions = {

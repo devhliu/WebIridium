@@ -16,7 +16,7 @@ import {
 } from "@/globals/slider";
 import { parameterScanOptionsAtom } from "@/globals/settings";
 import { simulationResultAtom } from "@/globals/simulation";
-import { hasActiveModelAtom } from "@/globals/files";
+import { hasActiveProjectAtom } from "@/globals/project";
 
 import VariableSlider from "./VariableSlider";
 import CopyToModelButton from "./CopyToModelButton";
@@ -27,7 +27,7 @@ import ClosedEyeIcon from "@/assets/icons/ClosedEyeIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import IconButton from "@/components/IconButton";
 import Select from "@/components/input/Select";
-import NoActiveModelPanel from "../NoActiveModelPanel";
+import NoActiveProjectPanel from "../NoActiveProjectPanel";
 
 const SLIDER_CATEGORY_ORDER: Category[] = [
   "Parameters",
@@ -49,7 +49,7 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
   const updateSliderAndSimulate = useSetAtom(updateSliderAndSimulateAtom);
   const parameterScanOptions = useAtomValue(parameterScanOptionsAtom);
   const simulationResult = useAtomValue(simulationResultAtom);
-  const hasActiveModel = useAtomValue(hasActiveModelAtom);
+  const hasActiveProject = useAtomValue(hasActiveProjectAtom);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [showingInactive, setShowingInactive] = useState(true);
@@ -113,8 +113,8 @@ const SlidersPanel = ({ onClose }: SlidersPanelProps) => {
     [setVariableSliderStates],
   );
 
-  if (!hasActiveModel) {
-    return <NoActiveModelPanel />;
+  if (!hasActiveProject) {
+    return <NoActiveProjectPanel />;
   }
 
   return (

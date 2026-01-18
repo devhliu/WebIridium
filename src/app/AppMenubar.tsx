@@ -31,14 +31,14 @@ import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
 import { nameAtom } from "@/globals/settings";
 import { editorContentAtom } from "@/globals/model";
-import { hasActiveModelAtom, useFileSystemActions } from "@/globals/files";
+import { hasActiveProjectAtom, useProjectActions } from "@/globals/project";
 
 const AppMenubar = () => {
   const { toast } = useToast();
 
   const editorContent = useAtomValue(editorContentAtom);
   const workspaceName = useAtomValue(nameAtom);
-  const hasActiveModel = useAtomValue(hasActiveModelAtom);
+  const hasActiveProject = useAtomValue(hasActiveProjectAtom);
 
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
@@ -53,8 +53,12 @@ const AppMenubar = () => {
   const [isHelpOpen, setHelpOpen] = useState(false);
   const [isAboutOpen, setAboutOpen] = useState(false);
 
-  const { createNewModel, promptModelFromFile, closeCurrentModel, FileInput } =
-    useFileSystemActions();
+  const {
+    createNewProject,
+    promptProjectFromFile,
+    closeCurrentProject,
+    FileInput,
+  } = useProjectActions();
 
   const handleDownloadAntimony = () => {
     promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
@@ -89,23 +93,27 @@ const AppMenubar = () => {
 
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
-          <MenubarItem name="New" onSelect={() => createNewModel()} />
-          <MenubarItem name="Open..." onSelect={promptModelFromFile} />
+          <MenubarItem name="New Project" onSelect={() => createNewProject()} />
+          <MenubarItem
+            name="Import Model..."
+            disabled={!hasActiveProject}
+            onSelect={() => promptProjectFromFile({ isReplacing: false })}
+          />
           <MenubarItem
             name="Download as Antimony"
             onSelect={handleDownloadAntimony}
-            disabled={!hasActiveModel}
+            disabled={!hasActiveProject}
           />
           <MenubarItem
             name="Download as SBML"
-            disabled={!hasActiveModel}
+            disabled={!hasActiveProject}
             onSelect={handleDownloadSbml}
           />
           <MenubarSeparator />
           <MenubarItem
-            name="Close Model"
-            disabled={!hasActiveModel}
-            onSelect={closeCurrentModel}
+            name="Close Project"
+            disabled={!hasActiveProject}
+            onSelect={closeCurrentProject}
           />
         </MenubarMenu>
 
@@ -134,7 +142,7 @@ const AppMenubar = () => {
                 ? setCurrentBottomPanel("Sliders")
                 : setCurrentBottomPanel(null)
             }
-            disabled={!hasActiveModel}
+            disabled={!hasActiveProject}
           >
             Sliders
           </MenubarCheckboxItem>
@@ -170,7 +178,7 @@ const AppMenubar = () => {
       </MenubarRoot>
 
       <div className={styles.menubarCenter}>
-        {hasActiveModel && <SearchBar />}
+        {hasActiveProject && <SearchBar />}
       </div>
 
       <div className={styles.menubarRight}></div>

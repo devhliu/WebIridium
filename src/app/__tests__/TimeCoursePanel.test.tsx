@@ -9,10 +9,10 @@ import {
   itShouldDisplayToasts,
   itShouldBeLoadingWhenModelIsLoading,
   ForceModelUpdateButton,
-  itShouldShowNoActiveModelPanel,
+  itShouldShowNoActiveProjectPanel,
 } from "./sharedPanelTests.tsx";
 
-itShouldShowNoActiveModelPanel(() => <TimeCoursePanel visible />);
+itShouldShowNoActiveProjectPanel(() => <TimeCoursePanel visible />);
 
 describe("simulation button", () => {
   const testButtonOptions = {

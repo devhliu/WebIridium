@@ -7,8 +7,8 @@ import SlidersIcon from "@/assets/icons/SlidersIcon.svg?react";
 
 import { currentBottomPanelAtom } from "@/globals/layout";
 import { Tooltip } from "@/components/Tooltip";
-import { hasActiveModelAtom } from "@/globals/files";
-import NoActiveModelPanel from "../NoActiveModelPanel";
+import { hasActiveProjectAtom } from "@/globals/project";
+import NoActiveProjectPanel from "../NoActiveProjectPanel";
 
 export interface SimulationPanelProps {
   title: string;
@@ -28,7 +28,7 @@ const SimulationPanel = ({
   const [currentBottomPanel, setCurrentBottomPanel] = useAtom(
     currentBottomPanelAtom,
   );
-  const hasActiveModel = useAtomValue(hasActiveModelAtom);
+  const hasActiveProject = useAtomValue(hasActiveProjectAtom);
 
   const toggleSliders = () => {
     if (currentBottomPanel === "Sliders") {
@@ -40,8 +40,8 @@ const SimulationPanel = ({
 
   if (!visible) {
     return null;
-  } else if (!hasActiveModel) {
-    return <NoActiveModelPanel />;
+  } else if (!hasActiveProject) {
+    return <NoActiveProjectPanel />;
   } else {
     return (
       <div data-testid={testId} className={styles.simulationPanel}>

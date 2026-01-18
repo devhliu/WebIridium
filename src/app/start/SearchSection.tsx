@@ -8,7 +8,7 @@ import {
 } from "@/features/biomodels";
 import SearchItem from "./SearchItem";
 import PulseLoader from "@/components/PulseLoader";
-import { useFileSystemActions } from "@/globals/files";
+import { useProjectActions } from "@/globals/project";
 
 const LIMIT = 50;
 
@@ -16,16 +16,16 @@ const SearchSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const searchType = searchTerm && getSearchTypeFromSearchTerm(searchTerm);
 
-  const [openingModel, setOpeningModel] = useState<string | null>(null);
-  const { createNewModelFromBiomodel } = useFileSystemActions();
+  const [openingProject, setOpeningProject] = useState<string | null>(null);
+  const { createNewProjectFromBiomodel } = useProjectActions();
   const { biomodels, isLoading, error, searchBiomodels } = useSearchBiomodels();
 
   const handleSelectFor = (info: BiomodelInfo) => async () => {
-    if (openingModel) return;
+    if (openingProject) return;
 
-    setOpeningModel(info.id);
-    await createNewModelFromBiomodel(info);
-    setOpeningModel(null);
+    setOpeningProject(info.id);
+    await createNewProjectFromBiomodel(info);
+    setOpeningProject(null);
   };
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const SearchSection = () => {
               key={info.id}
               info={info}
               isEmphasizeId={searchType === "id"}
-              isLoading={openingModel === info.id}
+              isLoading={openingProject === info.id}
               onSelect={handleSelectFor(info)}
             />
           ))}

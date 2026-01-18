@@ -1,11 +1,11 @@
 import styles from "./StartPanel.module.css";
-import ModelSection from "./ModelSection.tsx";
+import ProjectSection from "./ProjectSection.tsx";
 import SearchSection from "./SearchSection.tsx";
 
 const StartPanel = () => {
   return (
     <div className={styles.panel}>
-      <ModelSection />
+      <ProjectSection />
       <SearchSection />
     </div>
   );

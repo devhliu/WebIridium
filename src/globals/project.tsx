@@ -5,14 +5,14 @@ import { loadable } from "jotai/utils";
 import {
   migrateMetadata,
   type Metadata,
-  type ModelData,
-  type ModelId,
+  type ProjectData,
+  type ProjectId,
 } from "@/features/savedData";
 import {
-  closeCurrentModel,
-  listModels,
-  newModel,
-  openModel,
+  closeCurrentProject,
+  listProjects,
+  newProject,
+  openProject,
 } from "@/features/fileSystem";
 import { convertSbmlToAntimony } from "@/features/antimony";
 
@@ -35,37 +35,37 @@ import { simulationResultAtom } from "./simulation";
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
 const _changeIdAtom = atom(0);
 
-export const activeModelFileAtom = atom<ModelId | null>(null);
-export const hasActiveModelAtom = atom(
-  (get) => get(activeModelFileAtom) !== null,
+export const activeProjectFileAtom = atom<ProjectId | null>(null);
+export const hasActiveProjectAtom = atom(
+  (get) => get(activeProjectFileAtom) !== null,
 );
 
-const _modelListAtom: Atom<Promise<Map<ModelId, Metadata>>> = atom(
+const _projectListAtom: Atom<Promise<Map<ProjectId, Metadata>>> = atom(
   async (get) => {
     // do this to update the atom on any file system changes
     get(_changeIdAtom);
 
-    const models = await listModels();
-    const migratedModels: Map<ModelId, Metadata> = new Map();
+    const projects = await listProjects();
+    const migratedProjects: Map<ProjectId, Metadata> = new Map();
 
-    const entries = Array.from(models.entries());
+    const entries = Array.from(projects.entries());
     entries.sort((a, b) => b[1].updated - a[1].updated);
 
     for (const [id, metadata] of entries) {
-      migratedModels.set(id, migrateMetadata(metadata));
+      migratedProjects.set(id, migrateMetadata(metadata));
     }
 
-    return migratedModels;
+    return migratedProjects;
   },
 );
-export const modelListAtom = loadable(_modelListAtom);
+export const projectListAtom = loadable(_projectListAtom);
 
-const _updateGlobalsFromModelDataAtom = atom(
+const _updateGlobalsFromProjectDataAtom = atom(
   null,
   async (
     _get,
     set,
-    [id, { metadata, iridium, code, results }]: [ModelId, ModelData],
+    [id, { metadata, iridium, code, results }]: [ProjectId, ProjectData],
   ) => {
     await set(setModelAtom, {
       name: metadata.name,
@@ -74,17 +74,17 @@ const _updateGlobalsFromModelDataAtom = atom(
     });
     set(updateAllHistoryAtom, results.records);
     set(graphSettingsAtom, iridium.graphSettings);
-    set(activeModelFileAtom, id);
+    set(activeProjectFileAtom, id);
   },
 );
 
-const _createNewModelAtom = atom(
+const _createNewProjectAtom = atom(
   null,
   async (get, set, params: [name: string, code: string] | undefined) => {
     const [name, code] = params ?? [];
-    const [id, data] = await newModel(name, code);
+    const [id, data] = await newProject(name, code);
 
-    await set(_updateGlobalsFromModelDataAtom, [id, data]);
+    await set(_updateGlobalsFromProjectDataAtom, [id, data]);
 
     if (get(currentLeftPanelAtom) === null) {
       set(currentLeftPanelAtom, "Time Course");
@@ -94,19 +94,19 @@ const _createNewModelAtom = atom(
   },
 );
 
-const _openModelAtom = atom(null, async (get, set, id: ModelId) => {
-  const data = await openModel(id);
+const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
+  const data = await openProject(id);
 
-  await set(_updateGlobalsFromModelDataAtom, [id, data]);
+  await set(_updateGlobalsFromProjectDataAtom, [id, data]);
 
   if (get(currentLeftPanelAtom) === null) {
     set(currentLeftPanelAtom, "Time Course");
   }
 });
 
-const _closeCurrentModelAtom = atom(null, async (_get, set) => {
-  await closeCurrentModel();
-  set(activeModelFileAtom, null);
+const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
+  await closeCurrentProject();
+  set(activeProjectFileAtom, null);
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);
   set(currentVeryRightPanelAtom, null);
@@ -115,88 +115,92 @@ const _closeCurrentModelAtom = atom(null, async (_get, set) => {
 });
 
 // used for debounce
-const _openingModelRefAtom = atom({ current: false });
+const _openingProjectRefAtom = atom({ current: false });
 
 /**
  * Hook that exposes functions to interact with the file system.
  * These will handle the complete interaction, including reporting any
  * errors to the user.
  */
-export const useFileSystemActions = () => {
+export const useProjectActions = () => {
   const { toast } = useToast();
-  const createNewModel = useSetAtom(_createNewModelAtom);
-  const openModel = useSetAtom(_openModelAtom);
-  const closeCurrentModel = useSetAtom(_closeCurrentModelAtom);
-  const openingModelRef = useAtomValue(_openingModelRefAtom);
+  const createNewProject = useSetAtom(_createNewProjectAtom);
+  const openProject = useSetAtom(_openProjectAtom);
+  const closeCurrentProject = useSetAtom(_closeCurrentProjectAtom);
+  const openingProjectRef = useAtomValue(_openingProjectRefAtom);
+  const setModel = useSetAtom(setModelAtom);
+
   const inputRef = useRef<HTMLInputElement>(null);
+  // used for import file, whether to create a new project or import into the current
+  const isReplacingRef = useRef<boolean>(false);
 
   /** @returns true if it succeeds */
-  const createNewModelWrapper = async (
+  const createNewProjectWrapper = async (
     params?: [name: string, code: string],
   ): Promise<boolean> => {
-    if (openingModelRef.current) return false;
-    openingModelRef.current = true;
+    if (openingProjectRef.current) return false;
+    openingProjectRef.current = true;
 
     try {
-      await createNewModel(params);
+      await createNewProject(params);
       return true;
     } catch (err) {
       toast({
         type: "error",
-        title: "Failed to create model",
+        title: "Failed to create project",
         description: errorToDisplayString(err),
       });
       return false;
     } finally {
-      openingModelRef.current = false;
+      openingProjectRef.current = false;
     }
   };
 
   /** returns true on success */
-  const createNewModelFromBiomodel = async (
+  const createNewProjectFromBiomodel = async (
     info: BiomodelInfo,
   ): Promise<boolean> => {
-    if (openingModelRef.current) return false;
-    openingModelRef.current = true;
+    if (openingProjectRef.current) return false;
+    openingProjectRef.current = true;
 
     try {
       const sbml = await loadBiomodelSbml(info);
       const antimony = await convertSbmlToAntimony(sbml);
-      await createNewModel([info.name, antimony]);
+      await createNewProject([info.name, antimony]);
       return true;
     } catch (err) {
       toast({
         type: "error",
-        title: "Failed to create model",
+        title: "Failed to create project",
         description: errorToDisplayString(err),
       });
       return false;
     } finally {
-      openingModelRef.current = false;
+      openingProjectRef.current = false;
     }
   };
 
-  const closeCurrentModelWrapper = async () => {
-    await closeCurrentModel();
+  const closeCurrentProjectWrapper = async () => {
+    await closeCurrentProject();
   };
 
   /** @returns true if it succeeds */
-  const openModelWrapper = async (id: ModelId): Promise<boolean> => {
-    if (openingModelRef.current) return false;
-    openingModelRef.current = true;
+  const openProjectWrapper = async (id: ProjectId): Promise<boolean> => {
+    if (openingProjectRef.current) return false;
+    openingProjectRef.current = true;
 
     try {
-      await openModel(id);
+      await openProject(id);
       return true;
     } catch (err) {
       toast({
         type: "error",
-        title: "Failed to open model",
+        title: "Failed to open project",
         description: errorToDisplayString(err),
       });
       return false;
     } finally {
-      openingModelRef.current = false;
+      openingProjectRef.current = false;
     }
   };
 
@@ -228,11 +232,22 @@ export const useFileSystemActions = () => {
           console.error(e);
         }
       }
-      void createNewModelWrapper([nameWithoutExtension, content]);
+
+      if (!isReplacingRef.current) {
+        void setModel({
+          name: nameWithoutExtension,
+          content: content,
+        });
+      } else {
+        void createNewProjectWrapper([nameWithoutExtension, content]);
+      }
     };
   };
 
-  const promptModelFromFile = () => {
+  const promptProjectFromFile = ({
+    isReplacing = true,
+  }: { isReplacing?: boolean } = {}) => {
+    isReplacingRef.current = isReplacing;
     if (inputRef.current) {
       inputRef.current.value = "";
       inputRef.current.click();
@@ -240,7 +255,7 @@ export const useFileSystemActions = () => {
   };
 
   /**
-   * Render this somewhere so that promptModelFromFile works.
+   * Render this somewhere so that promptProjectFromFile works.
    */
   const FileInput = () => {
     return (
@@ -255,11 +270,11 @@ export const useFileSystemActions = () => {
   };
 
   return {
-    createNewModel: createNewModelWrapper,
-    createNewModelFromBiomodel: createNewModelFromBiomodel,
-    openModel: openModelWrapper,
-    promptModelFromFile: promptModelFromFile,
-    closeCurrentModel: closeCurrentModelWrapper,
+    createNewProject: createNewProjectWrapper,
+    createNewProjectFromBiomodel: createNewProjectFromBiomodel,
+    openProject: openProjectWrapper,
+    promptProjectFromFile: promptProjectFromFile,
+    closeCurrentProject: closeCurrentProjectWrapper,
     FileInput: FileInput,
   };
 };

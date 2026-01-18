@@ -1,6 +1,6 @@
 import { atom, type Atom } from "jotai";
 import { simulatorAtom } from "./simulator";
-import { hasActiveModelAtom } from "./files";
+import { hasActiveProjectAtom } from "./project";
 
 export type LeftPanel = (typeof ALL_LEFT_PANELS)[number];
 
@@ -54,7 +54,7 @@ export const availableLeftPanelsAtom: Atom<LeftPanel[]> = atom((get) => {
 
   available.push("Parameter Scan");
 
-  if (get(hasActiveModelAtom)) {
+  if (get(hasActiveProjectAtom)) {
     available.push("History");
     available.push("Examples");
   }

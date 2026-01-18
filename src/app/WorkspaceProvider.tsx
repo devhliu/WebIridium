@@ -12,8 +12,8 @@ import {
   updateAllChatHistoryAtom,
 } from "@/globals/chat";
 import { apiKeyAtom } from "@/globals/chat";
-import { activeModelFileAtom } from "@/globals/files";
-import type { ModelId } from "@/features/savedData";
+import { activeProjectFileAtom } from "@/globals/project";
+import type { ProjectId } from "@/features/savedData";
 
 const Initialize = ({
   didInitialLoadRef,
@@ -28,7 +28,7 @@ const Initialize = ({
   const setApiKey = useSetAtom(apiKeyAtom);
   const setChatPrompt = useSetAtom(systemPromptAtom);
 
-  const setActiveModelFile = useSetAtom(activeModelFileAtom);
+  const setActiveProjectFile = useSetAtom(activeProjectFileAtom);
 
   useEffect(() => {
     if (!didInitialLoadRef.current) {
@@ -38,7 +38,7 @@ const Initialize = ({
         // temporary stub for tests until we remove this component and
         // replace with something better
         if (shouldStubActiveFile) {
-          setActiveModelFile("stub" as ModelId);
+          setActiveProjectFile("stub" as ProjectId);
           await setModel({
             name: "Starter Model",
             content: defaultModel,
@@ -68,7 +68,7 @@ const Initialize = ({
   }, [
     didInitialLoadRef,
     setModel,
-    setActiveModelFile,
+    setActiveProjectFile,
     updateAllChatHistory,
     setApiKey,
     setChatPrompt,

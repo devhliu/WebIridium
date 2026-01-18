@@ -5,27 +5,27 @@ import {
   MockWorker,
 } from "@/testing-utils/mockWorker.ts";
 import type { FileSystemAction } from "@/workers/FileSystemWorker.ts";
-import { getNewModelData } from "../fileSystem.ts";
-import type { ModelId, UnknownModelData } from "../savedData.ts";
+import { getNewProjectData } from "../fileSystem.ts";
+import type { ProjectId, UnknownProjectData } from "../savedData.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
 
   switch (type) {
     case "fileSystem": {
-      const files = new Map<ModelId, UnknownModelData>();
+      const files = new Map<ProjectId, UnknownProjectData>();
       worker.port.addEventListener(
         "message",
         createMockWorkerMessageHandler(worker, (unknownAction) => {
           const action = unknownAction as FileSystemAction;
           switch (action.type) {
-            case "listModels":
+            case "listProjects":
               return files;
-            case "openModel":
-              return getNewModelData();
-            case "closeCurrentModel":
+            case "openProject":
+              return getNewProjectData();
+            case "closeCurrentProject":
               return null;
-            case "newModel":
+            case "newProject":
               files.set(action.payload.id, action.payload.data);
               return null;
             default:

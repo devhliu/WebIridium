@@ -1,35 +1,35 @@
 /*
  Directory structure:
-   \- models
-      \- {model UUID}
+   \- projects
+      \- {project UUID}
         \- metadata.json: this contains the name, creation date, updated date
-        \- iridium.json: WebIridium-specific parts of the model such as graph settings
+        \- iridium.json: WebIridium-specific parts of the project such as graph settings
         \- results.json: results stored from every simulation
-        \- model.ant: the actual antimony
-      \- {model UUID}: another model
+        \- project.ant: the actual antimony
+      \- {project UUID}: another project
         \- metadata.json
         \- iridium.json
         \- results.json
-         \- model.ant
+         \- project.ant
  */
 
 import defaultModel from "@/assets/default.ant?raw";
 import {
-  migrateModelData,
+  migrateProjectData,
   type Metadata,
-  type ModelId,
-  type ModelData,
+  type ProjectId,
+  type ProjectData,
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
-  CloseCurrentModelAction,
-  CloseCurrentModelResult,
-  ListModelsAction,
-  ListModelsResult,
-  NewModelAction,
-  NewModelResult,
-  OpenModelAction,
-  OpenModelResult,
+  CloseCurrentProjectAction,
+  CloseCurrentProjectResult,
+  ListProjectsAction,
+  ListProjectsResult,
+  NewProjectAction,
+  NewProjectResult,
+  OpenProjectAction,
+  OpenProjectResult,
 } from "@/workers/FileSystemWorker";
 import { defaultGraphSettings } from "@/globals/settings";
 import { getRandomCssGradient } from "./cssGradients";
@@ -40,54 +40,52 @@ const fileWorker = new WorkerPool(() => createWorker("fileSystem"), {
 });
 
 /**
- * Lists the users moodels/ directory and returns a map of model IDs and the
+ * Lists the users projects/ directory and returns a map of project IDs and the
  * corresponding metadata
  */
-export const listModels = async (): Promise<Map<ModelId, Metadata>> => {
-  const result = await fileWorker.runTask<ListModelsAction, ListModelsResult>(
-    "listModels",
-    null,
-    null,
-  );
+export const listProjects = async (): Promise<Map<ProjectId, Metadata>> => {
+  const result = await fileWorker.runTask<
+    ListProjectsAction,
+    ListProjectsResult
+  >("listProjects", null, null);
 
   return result;
 };
 
 /**
- * Opens a model and acquires a lock for it. Creates the model if it the file
+ * Opens a project and acquires a lock for it. Creates the project if it the file
  * for it does not exist yet.
- * @returns the data associated with the model
+ * @returns the data associated with the project
  */
-export const openModel = async (id: ModelId): Promise<ModelData> => {
-  const result = await fileWorker.runTask<OpenModelAction, OpenModelResult>(
-    "openModel",
+export const openProject = async (id: ProjectId): Promise<ProjectData> => {
+  const result = await fileWorker.runTask<OpenProjectAction, OpenProjectResult>(
+    "openProject",
     id,
     null,
   );
-  return migrateModelData(result);
+  return migrateProjectData(result);
 };
 
 /**
- * Closes the current model. The model ID parameter should match the currently open
- * model (by the worker), otherwise this will throw.
+ * Closes the current project. The project ID parameter should match the currently open
+ * project (by the worker), otherwise this will throw.
  */
-export const closeCurrentModel = async (): Promise<void> => {
-  await fileWorker.runTask<CloseCurrentModelAction, CloseCurrentModelResult>(
-    "closeCurrentModel",
-    null,
-    null,
-  );
+export const closeCurrentProject = async (): Promise<void> => {
+  await fileWorker.runTask<
+    CloseCurrentProjectAction,
+    CloseCurrentProjectResult
+  >("closeCurrentProject", null, null);
 };
 
-const getNewModelId = (): ModelId => crypto.randomUUID() as ModelId;
+const getNewProjectId = (): ProjectId => crypto.randomUUID() as ProjectId;
 
 /** exported so it can be used in mocks */
-export const getNewModelData = (): ModelData => {
+export const getNewProjectData = (): ProjectData => {
   return {
     code: defaultModel,
     metadata: {
       versionTag: 1,
-      name: "Default Model",
+      name: "Starter Project",
       created: Date.now(),
       updated: Date.now(),
       icon: {
@@ -107,16 +105,16 @@ export const getNewModelData = (): ModelData => {
 };
 
 /**
- * Creates a new model and returns the model id and data for it.
- * @param name - default name of them model
- * @param code - default code of the model
+ * Creates a new project and returns the project id and data for it.
+ * @param name - default name of them project
+ * @param code - default code of the project
  */
-export const newModel = async (
+export const newProject = async (
   name?: string,
   code?: string,
-): Promise<[ModelId, ModelData]> => {
-  const id = getNewModelId();
-  const data = getNewModelData();
+): Promise<[ProjectId, ProjectData]> => {
+  const id = getNewProjectId();
+  const data = getNewProjectData();
 
   if (name !== undefined) {
     data.metadata.name = name;
@@ -126,8 +124,8 @@ export const newModel = async (
     data.code = code;
   }
 
-  await fileWorker.runTask<NewModelAction, NewModelResult>(
-    "newModel",
+  await fileWorker.runTask<NewProjectAction, NewProjectResult>(
+    "newProject",
     { id, data },
     null,
   );

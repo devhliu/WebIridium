@@ -1,39 +1,39 @@
 import type {
-  ModelData,
-  ModelId,
+  ProjectData,
+  ProjectId,
   UnknownIridiumData,
   UnknownMetadata,
-  UnknownModelData,
+  UnknownProjectData,
   UnknownResultsData,
 } from "@/features/savedData";
 import type { Metadata } from "@/features/savedData";
 import type { Action, ErrorResult, Result } from "@/features/taskPool";
 
-export type ListModelsAction = Action<"listModels", null>;
-export type ListModelsResult = Result<Map<ModelId, UnknownMetadata>>;
+export type ListProjectsAction = Action<"listProjects", null>;
+export type ListProjectsResult = Result<Map<ProjectId, UnknownMetadata>>;
 
-export type OpenModelAction = Action<"openModel", ModelId>;
-export type OpenModelResult = Result<UnknownModelData>;
+export type OpenProjectAction = Action<"openProject", ProjectId>;
+export type OpenProjectResult = Result<UnknownProjectData>;
 
-export type CloseCurrentModelAction = Action<"closeCurrentModel", null>;
-export type CloseCurrentModelResult = Result<null>;
+export type CloseCurrentProjectAction = Action<"closeCurrentProject", null>;
+export type CloseCurrentProjectResult = Result<null>;
 
-export type NewModelAction = Action<
-  "newModel",
+export type NewProjectAction = Action<
+  "newProject",
   {
-    id: ModelId;
-    data: ModelData;
+    id: ProjectId;
+    data: ProjectData;
   }
 >;
-export type NewModelResult = Result<null>;
+export type NewProjectResult = Result<null>;
 
 export type FileSystemAction =
-  | ListModelsAction
-  | OpenModelAction
-  | CloseCurrentModelAction
-  | NewModelAction;
+  | ListProjectsAction
+  | OpenProjectAction
+  | CloseCurrentProjectAction
+  | NewProjectAction;
 
-const MODELS_DIR_NAME = "models";
+const PROJECTS_DIR_NAME = "projects";
 
 let rootHandle: FileSystemDirectoryHandle | null = null;
 const getRootHandle = async (): Promise<FileSystemDirectoryHandle> => {
@@ -43,15 +43,15 @@ const getRootHandle = async (): Promise<FileSystemDirectoryHandle> => {
   return rootHandle;
 };
 
-let modelsDirHandle: FileSystemDirectoryHandle | null = null;
-const getModelsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
-  if (modelsDirHandle === null) {
+let projectsDirHandle: FileSystemDirectoryHandle | null = null;
+const getProjectsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
+  if (projectsDirHandle === null) {
     const root = await getRootHandle();
-    modelsDirHandle = await root.getDirectoryHandle(MODELS_DIR_NAME, {
+    projectsDirHandle = await root.getDirectoryHandle(PROJECTS_DIR_NAME, {
       create: true,
     });
   }
-  return modelsDirHandle;
+  return projectsDirHandle;
 };
 
 const getJsonFileContents = async (
@@ -63,11 +63,11 @@ const getJsonFileContents = async (
   return JSON.parse(await file.text());
 };
 
-const listModels = async (): Promise<ListModelsResult["data"]> => {
-  const map = new Map<ModelId, Metadata>();
-  const modelsDirectory = await getModelsDirHandle();
+const listProjects = async (): Promise<ListProjectsResult["data"]> => {
+  const map = new Map<ProjectId, Metadata>();
+  const projectsDirectory = await getProjectsDirHandle();
 
-  for await (const [id, handle] of modelsDirectory.entries()) {
+  for await (const [id, handle] of projectsDirectory.entries()) {
     if (handle.kind !== "directory") continue;
     const dir = handle as FileSystemDirectoryHandle;
     try {
@@ -75,7 +75,7 @@ const listModels = async (): Promise<ListModelsResult["data"]> => {
         dir,
         "metadata.json",
       )) as UnknownMetadata;
-      map.set(id as ModelId, metadata);
+      map.set(id as ProjectId, metadata);
     } catch (err) {
       if (err instanceof DOMException && err.name === "NotFoundError") {
         // skip if it is not shaped correctly
@@ -89,55 +89,57 @@ const listModels = async (): Promise<ListModelsResult["data"]> => {
   return map;
 };
 
-class ModelHandle {
-  id: ModelId;
+class ProjectHandle {
+  id: ProjectId;
   #dirHandle!: FileSystemDirectoryHandle;
   #codeHandle!: FileSystemSyncAccessHandle;
   #metadataHandle!: FileSystemSyncAccessHandle;
   #iridiumHandle!: FileSystemSyncAccessHandle;
   #resultsHandle!: FileSystemSyncAccessHandle;
 
-  static #current: ModelHandle | null = null;
+  static #current: ProjectHandle | null = null;
 
-  private constructor(id: ModelId) {
+  private constructor(id: ProjectId) {
     this.id = id;
   }
 
   /**
-   * Open a ModelHandle for the given model, if the model does not exist, create it.
+   * Open a ProjectHandle for the given project, if the project does not exist, create it.
    * @throws if something happens while trying to acquire the file handles (e.g. someone else has it open)
-   * @throws if another model is currently opened by the app
+   * @throws if another project is currently opened by the app
    */
   static async open(
-    id: ModelId,
+    id: ProjectId,
     { create = false }: { create?: boolean } = {},
-  ): Promise<ModelHandle> {
+  ): Promise<ProjectHandle> {
     if (this.#current) {
       this.#current.dispose();
     }
 
-    const model = new ModelHandle(id);
-    const modelsDirectory = await getModelsDirHandle();
-    model.#dirHandle = await modelsDirectory.getDirectoryHandle(id, { create });
-    model.#codeHandle = await (
-      await model.#dirHandle.getFileHandle("source.ant", { create })
+    const project = new ProjectHandle(id);
+    const projectsDirectory = await getProjectsDirHandle();
+    project.#dirHandle = await projectsDirectory.getDirectoryHandle(id, {
+      create,
+    });
+    project.#codeHandle = await (
+      await project.#dirHandle.getFileHandle("source.ant", { create })
     ).createSyncAccessHandle();
-    model.#metadataHandle = await (
-      await model.#dirHandle.getFileHandle("metadata.json", { create })
+    project.#metadataHandle = await (
+      await project.#dirHandle.getFileHandle("metadata.json", { create })
     ).createSyncAccessHandle();
-    model.#iridiumHandle = await (
-      await model.#dirHandle.getFileHandle("iridium.json", { create })
+    project.#iridiumHandle = await (
+      await project.#dirHandle.getFileHandle("iridium.json", { create })
     ).createSyncAccessHandle();
-    model.#resultsHandle = await (
-      await model.#dirHandle.getFileHandle("results.json", { create })
+    project.#resultsHandle = await (
+      await project.#dirHandle.getFileHandle("results.json", { create })
     ).createSyncAccessHandle();
 
-    ModelHandle.#current = model;
-    return model;
+    ProjectHandle.#current = project;
+    return project;
   }
 
-  static getCurrent(): ModelHandle | null {
-    return ModelHandle.#current;
+  static getCurrent(): ProjectHandle | null {
+    return ProjectHandle.#current;
   }
 
   /**
@@ -160,32 +162,32 @@ class ModelHandle {
     handle.write(array);
   }
 
-  setData(data: ModelData): void {
-    ModelHandle.#writeStringToHandle(this.#codeHandle, data.code);
-    ModelHandle.#writeStringToHandle(
+  setData(data: ProjectData): void {
+    ProjectHandle.#writeStringToHandle(this.#codeHandle, data.code);
+    ProjectHandle.#writeStringToHandle(
       this.#metadataHandle,
       JSON.stringify(data.metadata),
     );
-    ModelHandle.#writeStringToHandle(
+    ProjectHandle.#writeStringToHandle(
       this.#iridiumHandle,
       JSON.stringify(data.iridium),
     );
-    ModelHandle.#writeStringToHandle(
+    ProjectHandle.#writeStringToHandle(
       this.#resultsHandle,
       JSON.stringify(data.results),
     );
   }
 
-  getData(): UnknownModelData {
-    const code = ModelHandle.#readHandleIntoString(this.#codeHandle);
+  getData(): UnknownProjectData {
+    const code = ProjectHandle.#readHandleIntoString(this.#codeHandle);
     const metadata = JSON.parse(
-      ModelHandle.#readHandleIntoString(this.#metadataHandle),
+      ProjectHandle.#readHandleIntoString(this.#metadataHandle),
     ) as UnknownMetadata;
     const iridium = JSON.parse(
-      ModelHandle.#readHandleIntoString(this.#iridiumHandle),
+      ProjectHandle.#readHandleIntoString(this.#iridiumHandle),
     ) as UnknownIridiumData;
     const results = JSON.parse(
-      ModelHandle.#readHandleIntoString(this.#resultsHandle),
+      ProjectHandle.#readHandleIntoString(this.#resultsHandle),
     ) as UnknownResultsData;
     return { code, metadata, iridium, results };
   }
@@ -195,26 +197,28 @@ class ModelHandle {
     this.#metadataHandle.close();
     this.#iridiumHandle.close();
     this.#resultsHandle.close();
-    ModelHandle.#current = null;
+    ProjectHandle.#current = null;
   }
 }
 
-const openModel = async (id: ModelId): Promise<OpenModelResult["data"]> => {
-  const handle = await ModelHandle.open(id);
+const openProject = async (
+  id: ProjectId,
+): Promise<OpenProjectResult["data"]> => {
+  const handle = await ProjectHandle.open(id);
   return handle.getData();
 };
 
-const newModel = async (
-  id: ModelId,
-  data: ModelData,
-): Promise<NewModelResult["data"]> => {
-  const handle = await ModelHandle.open(id, { create: true });
+const newProject = async (
+  id: ProjectId,
+  data: ProjectData,
+): Promise<NewProjectResult["data"]> => {
+  const handle = await ProjectHandle.open(id, { create: true });
   handle.setData(data);
   return null;
 };
 
-const closeModel = () => {
-  const handle = ModelHandle.getCurrent();
+const closeProject = () => {
+  const handle = ProjectHandle.getCurrent();
   handle?.dispose();
   return null;
 };
@@ -226,16 +230,16 @@ const wrapResult = (action: Action, data: unknown): Result => ({
 
 const handleAction = async (action: FileSystemAction): Promise<Result> => {
   switch (action.type) {
-    case "listModels":
-      return wrapResult(action, await listModels());
-    case "openModel":
-      return wrapResult(action, await openModel(action.payload));
-    case "closeCurrentModel":
-      return wrapResult(action, closeModel());
-    case "newModel":
+    case "listProjects":
+      return wrapResult(action, await listProjects());
+    case "openProject":
+      return wrapResult(action, await openProject(action.payload));
+    case "closeCurrentProject":
+      return wrapResult(action, closeProject());
+    case "newProject":
       return wrapResult(
         action,
-        await newModel(action.payload.id, action.payload.data),
+        await newProject(action.payload.id, action.payload.data),
       );
     default:
       throw new Error("unknown action type");
