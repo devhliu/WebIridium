@@ -4,6 +4,7 @@
   height: 100%;
   width: 100%;
   gap: var(--spacing-5);
+  min-width: 0; /* fixes resizing for whatever reason */
 }
 
 .title {
