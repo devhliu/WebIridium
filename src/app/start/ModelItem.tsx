@@ -4,9 +4,11 @@ import styles from "./ModelItem.module.css";
 import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";
 import { timestampToNumericDate } from "@/features/formatUtils";
 import { getPropertyFromCssGradient } from "@/features/cssGradients";
+import PulseLoader from "@/components/PulseLoader";
 
 export interface ModelItemProps {
   metadata: Metadata;
+  isLoading: boolean;
   onSelect: () => void;
 }
 
@@ -21,10 +23,10 @@ const getIconTextFromName = (name: string) => {
   }
 };
 
-const ModelItem = ({ metadata, onSelect }: ModelItemProps) => {
+const ModelItem = ({ metadata, isLoading, onSelect }: ModelItemProps) => {
   return (
     <div className={styles.item}>
-      <button className={styles.main} onClick={onSelect}>
+      <button className={styles.main} disabled={isLoading} onClick={onSelect}>
         <div
           className={styles.icon}
           style={{
@@ -47,7 +49,11 @@ const ModelItem = ({ metadata, onSelect }: ModelItemProps) => {
       </button>
       <div className={styles.moreContainer}>
         <button className={styles.more}>
-          <ThreeDotsIcon className={styles.moreIcon} />
+          {isLoading ? (
+            <PulseLoader size="0.3rem" />
+          ) : (
+            <ThreeDotsIcon className={styles.moreIcon} />
+          )}
         </button>
       </div>
     </div>

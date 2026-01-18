@@ -13,6 +13,10 @@
   &:active {
     background-color: var(--color-card-bg-active);
   }
+
+  &:has(.main:disabled) {
+    background-color: var(--color-card-bg-disabled);
+  }
 }
 
 .main {
@@ -30,6 +34,10 @@
 
   &:focus-visible {
     outline: var(--outline-focused);
+  }
+
+  &:disabled *:not(.icon-text) {
+    color: var(--color-card-fg-very-dim);
   }
 }
 
@@ -59,7 +67,7 @@
 }
 
 .name {
-  color: var(--color-layer1-fg);
+  color: var(--color-card-fg);
   font-weight: 500;
   margin: 0;
   font-size: var(--font-size-medium);
@@ -70,7 +78,7 @@
 
 .date {
   font-size: var(--font-size-small);
-  color: var(--color-layer1-fg-dim);
+  color: var(--color-card-fg-dim);
   font-size: var(--font-size-medium);
 }
 
@@ -107,4 +115,8 @@
 .more-icon {
   width: var(--size-3);
   height: var(--size-3);
+}
+
+.loader {
+  color: var(--color-card-fg-dim);
 }

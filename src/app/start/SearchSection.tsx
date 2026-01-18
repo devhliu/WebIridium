@@ -3,14 +3,12 @@ import styles from "./SearchSection.module.css";
 import SearchBox from "@/components/input/SearchBox";
 import {
   getSearchTypeFromSearchTerm,
-  loadBiomodelSbml,
   useSearchBiomodels,
   type BiomodelInfo,
 } from "@/features/biomodels";
 import SearchItem from "./SearchItem";
 import PulseLoader from "@/components/PulseLoader";
 import { useFileSystemActions } from "@/globals/files";
-import { convertSbmlToAntimony } from "@/features/antimony";
 
 const LIMIT = 50;
 
@@ -19,22 +17,15 @@ const SearchSection = () => {
   const searchType = searchTerm && getSearchTypeFromSearchTerm(searchTerm);
 
   const [openingModel, setOpeningModel] = useState<string | null>(null);
-  const { createNewModel } = useFileSystemActions();
+  const { createNewModelFromBiomodel } = useFileSystemActions();
   const { biomodels, isLoading, error, searchBiomodels } = useSearchBiomodels();
 
   const handleSelectFor = (info: BiomodelInfo) => async () => {
-    if (openingModel) {
-      return;
-    }
+    if (openingModel) return;
 
     setOpeningModel(info.id);
-    try {
-      const sbml = await loadBiomodelSbml(info);
-      const antimony = await convertSbmlToAntimony(sbml);
-      await createNewModel([info.name, antimony]);
-    } finally {
-      setOpeningModel(null);
-    }
+    await createNewModelFromBiomodel(info);
+    setOpeningModel(null);
   };
 
   useEffect(() => {

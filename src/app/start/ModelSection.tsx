@@ -1,4 +1,5 @@
 import { useAtomValue } from "jotai";
+import { useState } from "react";
 
 import styles from "./ModelSection.module.css";
 import buttonStyles from "@/components/Button.module.css";
@@ -15,8 +16,14 @@ const ModelSection = () => {
   const { createNewModel, openModel, promptModelFromFile, FileInput } =
     useFileSystemActions();
 
+  const [openingModel, setOpeningModel] = useState<ModelId | null>(null);
+
   const handleSelectFor = (id: ModelId) => async () => {
+    if (openingModel) return;
+
+    setOpeningModel(id);
     await openModel(id);
+    setOpeningModel(null);
   };
 
   return (
@@ -56,6 +63,7 @@ const ModelSection = () => {
             <ModelItem
               key={id}
               metadata={metadata}
+              isLoading={openingModel === id}
               onSelect={handleSelectFor(id)}
             />
           ))

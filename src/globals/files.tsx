@@ -27,6 +27,7 @@ import {
   currentRightPanelAtom,
   currentVeryRightPanelAtom,
 } from "./layout";
+import { loadBiomodelSbml, type BiomodelInfo } from "@/features/biomodels";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
@@ -147,6 +148,30 @@ export const useFileSystemActions = () => {
     }
   };
 
+  /** returns true on success */
+  const createNewModelFromBiomodel = async (
+    info: BiomodelInfo,
+  ): Promise<boolean> => {
+    if (openingModelRef.current) return false;
+    openingModelRef.current = true;
+
+    try {
+      const sbml = await loadBiomodelSbml(info);
+      const antimony = await convertSbmlToAntimony(sbml);
+      await createNewModel([info.name, antimony]);
+      return true;
+    } catch (err) {
+      toast({
+        type: "error",
+        title: "Failed to create model",
+        description: errorToDisplayString(err),
+      });
+      return false;
+    } finally {
+      openingModelRef.current = false;
+    }
+  };
+
   const closeCurrentModelWrapper = async () => {
     await closeCurrentModel();
   };
@@ -227,6 +252,7 @@ export const useFileSystemActions = () => {
 
   return {
     createNewModel: createNewModelWrapper,
+    createNewModelFromBiomodel: createNewModelFromBiomodel,
     openModel: openModelWrapper,
     promptModelFromFile: promptModelFromFile,
     closeCurrentModel: closeCurrentModelWrapper,
