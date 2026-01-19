@@ -31,6 +31,8 @@ import type {
   NewProjectResult,
   OpenProjectAction,
   OpenProjectResult,
+  SaveProjectAction,
+  SaveProjectResult,
 } from "@/workers/FileSystemWorker";
 import { createWorker } from "@/features/workers";
 
@@ -102,4 +104,18 @@ export const newProject = async (
     null,
   );
   return [id, data];
+};
+
+/**
+ * Save part of or all of project data.
+ * You should prefer to use the saveAtom in globals/saving.
+ */
+export const saveProject = async (
+  data: Partial<ProjectData>,
+): Promise<void> => {
+  await fileWorker.runTask<SaveProjectAction, SaveProjectResult>(
+    "saveProject",
+    data,
+    null,
+  );
 };

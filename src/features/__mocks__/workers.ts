@@ -21,6 +21,7 @@ export const createWorker = (type: WorkerType) => {
         "message",
         createMockWorkerMessageHandler(worker, (unknownAction) => {
           const action = unknownAction as FileSystemAction;
+          let currentId: string | null = null;
           switch (action.type) {
             case "listProjects": {
               const map = new Map();
@@ -34,12 +35,23 @@ export const createWorker = (type: WorkerType) => {
               if (data === undefined) {
                 throw new Error("Project was deleted somewhere else.");
               }
+              currentId = action.payload;
               return data;
             }
             case "closeCurrentProject":
+              currentId = null;
               return null;
             case "newProject":
               setMockFile(action.payload.id, action.payload.data);
+              return null;
+            case "saveProject":
+              if (!currentId) {
+                throw new Error("No project open.");
+              }
+              setMockFile(currentId, {
+                ...(getMockFile(currentId) as object),
+                ...action.payload,
+              });
               return null;
             default:
               /* eslint-disable */

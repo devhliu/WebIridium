@@ -25,6 +25,7 @@ import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
+import ProjectAutoSaver from "./ProjectAutoSaver";
 import { ToastProvider } from "@/components/Toast";
 import { TooltipProvider } from "@/components/Tooltip";
 
@@ -186,6 +187,7 @@ const ThemeUpdater = () => {
   return null;
 };
 
+// TODO: delete this
 const DataSaver = () => {
   const save = useSetAtom(saveAtom);
 
@@ -216,6 +218,7 @@ const App = () => {
       <AppProvider>
         <ThemeUpdater />
         <DataSaver />
+        <ProjectAutoSaver />
         <AppContent />
       </AppProvider>
     </AppErrorWrapperPage>

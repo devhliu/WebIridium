@@ -30,10 +30,11 @@ import {
 } from "./layout";
 import { loadBiomodelSbml, type BiomodelInfo } from "@/features/biomodels";
 import { simulationResultAtom } from "./simulation";
+import { saveFullProjectAtom } from "./saving";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
-const _changeIdAtom = atom(0);
+export const fileSystemChangeIdAtom = atom(0);
 
 export const activeProjectFileAtom = atom<ProjectId | null>(null);
 export const hasActiveProjectAtom = atom(
@@ -44,7 +45,7 @@ export const metadataAtom = atom<Metadata | null>(null);
 const _projectListAtom: Atom<Promise<Map<ProjectId, Metadata>>> = atom(
   async (get) => {
     // do this to update the atom on any file system changes
-    get(_changeIdAtom);
+    get(fileSystemChangeIdAtom);
 
     const projects = await listProjects();
     const migratedProjects: Map<ProjectId, Metadata> = new Map();
@@ -92,7 +93,7 @@ const _createNewProjectAtom = atom(
       set(currentLeftPanelAtom, "Time Course");
     }
 
-    set(_changeIdAtom, (prev) => prev + 1);
+    set(fileSystemChangeIdAtom, (prev) => prev + 1);
   },
 );
 
@@ -107,6 +108,7 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
 });
 
 const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
+  await set(saveFullProjectAtom);
   await closeCurrentProject();
   set(activeProjectFileAtom, null);
   set(metadataAtom, null);

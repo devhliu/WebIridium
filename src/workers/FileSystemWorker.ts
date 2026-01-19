@@ -28,11 +28,15 @@ export type NewProjectAction = Action<
 >;
 export type NewProjectResult = Result<null>;
 
+export type SaveProjectAction = Action<"saveProject", Partial<ProjectData>>;
+export type SaveProjectResult = Result<null>;
+
 export type FileSystemAction =
   | ListProjectsAction
   | OpenProjectAction
   | CloseCurrentProjectAction
-  | NewProjectAction;
+  | NewProjectAction
+  | SaveProjectAction;
 
 const PROJECTS_DIR_NAME = "projects";
 
@@ -160,23 +164,36 @@ class ProjectHandle {
   ): void {
     const encoder = new TextEncoder();
     const array = encoder.encode(data);
-    handle.write(array);
+    handle.truncate(0);
+    handle.write(array, { at: 0 });
+    handle.flush();
   }
 
-  setData(data: ProjectData): void {
-    ProjectHandle.#writeStringToHandle(this.#codeHandle, data.code);
-    ProjectHandle.#writeStringToHandle(
-      this.#metadataHandle,
-      JSON.stringify(data.metadata),
-    );
-    ProjectHandle.#writeStringToHandle(
-      this.#iridiumHandle,
-      JSON.stringify(data.iridium),
-    );
-    ProjectHandle.#writeStringToHandle(
-      this.#resultsHandle,
-      JSON.stringify(data.results),
-    );
+  setData(data: Partial<ProjectData>): void {
+    if (data.code !== undefined) {
+      ProjectHandle.#writeStringToHandle(this.#codeHandle, data.code);
+    }
+
+    if (data.metadata !== undefined) {
+      ProjectHandle.#writeStringToHandle(
+        this.#metadataHandle,
+        JSON.stringify(data.metadata),
+      );
+    }
+
+    if (data.iridium !== undefined) {
+      ProjectHandle.#writeStringToHandle(
+        this.#iridiumHandle,
+        JSON.stringify(data.iridium),
+      );
+    }
+
+    if (data.results !== undefined) {
+      ProjectHandle.#writeStringToHandle(
+        this.#resultsHandle,
+        JSON.stringify(data.results),
+      );
+    }
   }
 
   getData(): UnknownProjectData {
@@ -236,6 +253,13 @@ const closeProject = () => {
   return null;
 };
 
+const saveProject = (data: Partial<ProjectData>) => {
+  const handle = ProjectHandle.getCurrent();
+  if (!handle) throw new Error("No project opened.");
+  handle.setData(data);
+  return null;
+};
+
 const wrapResult = (action: Action, data: unknown): Result => ({
   id: action.id,
   data: data,
@@ -254,6 +278,8 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
         action,
         await newProject(action.payload.id, action.payload.data),
       );
+    case "saveProject":
+      return wrapResult(action, saveProject(action.payload));
     default:
       throw new Error("unknown action type");
   }
