@@ -98,17 +98,18 @@
   background: none;
   border: none;
   padding: var(--spacing-3);
+  color: var(--color-ghost-button-fg);
+  background-color: var(--color-ghost-button-bg);
 
   &:focus-visible {
     outline: var(--outline-focused);
   }
 
-  color: var(--color-ghost-text-button);
   &:hover {
-    color: var(--color-ghost-text-button-hover);
+    color: var(--color-ghost-button-bg-hover);
   }
   &:active {
-    color: var(--color-ghost-text-button-active);
+    color: var(--color-ghost-button-bg-active);
   }
 }
 

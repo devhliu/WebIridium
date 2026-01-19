@@ -32,10 +32,8 @@
 
 .close {
   line-height: 0;
-  background-color: transparent;
   border: none;
-  color: var(--color-layer1-fg-dim);
-  padding: 0;
+  padding: var(--spacing-1);
   cursor: pointer;
 
   &:focus-visible {

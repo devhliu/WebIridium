@@ -1,3 +1,5 @@
+@layer base;
+
 @import "@/light.css";
 @import "@/dark.css";
 @import "@/monokai.css";
@@ -240,27 +242,6 @@
   );
   --color-ghost-button-disabled-fg: var(--color-layer1-fg-dim);
   --color-ghost-button-disabled-bg: transparent;
-
-  --color-ghost-text-button: color-mix(
-    in oklch,
-    var(--color-layer1-fg) 80%,
-    var(--color-layer1-bg)
-  );
-  --color-ghost-text-button-hover: color-mix(
-    in oklch,
-    var(--color-layer1-fg) 87.5%,
-    var(--color-layer1-bg)
-  );
-  --color-ghost-text-button-active: color-mix(
-    in oklch,
-    var(--color-layer1-fg) 92.5%,
-    var(--color-layer1-bg)
-  );
-  --color-ghost-text-button-disabled: color-mix(
-    in oklch,
-    var(--color-layer1-fg) 50%,
-    var(--color-layer1-bg)
-  );
 }
 
 *,
