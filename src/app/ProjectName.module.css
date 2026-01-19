@@ -11,7 +11,7 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: var(--spacing-4);
+  gap: var(--spacing-5);
   color: var(--color-layer1-fg);
   font-size: var(--font-size-medium);
   cursor: pointer;
@@ -34,6 +34,11 @@
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
+}
+
+.pencil-icon {
+  color: var(--color-layer1-fg-dim);
+  flex-shrink: 0;
 }
 
 .input-container {

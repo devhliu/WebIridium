@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import styles from "./ProjectName.module.css";
-import ProjectIcon from "./ProjectIcon";
+import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 import type { Metadata } from "@/features/projectData";
 import IconButton from "@/components/IconButton";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
@@ -35,8 +35,8 @@ const ProjectName = ({ metadata, onNameChange }: ProjectNameProps) => {
           className={styles.trigger}
           onClick={() => setInput(metadata.name)}
         >
-          <ProjectIcon metadata={metadata} />
           <span className={styles.name}>{metadata.name}</span>
+          <PencilIcon className={styles.pencilIcon} width="1em" height="1em" />
         </button>
       ) : (
         <div className={styles.inputContainer}>
