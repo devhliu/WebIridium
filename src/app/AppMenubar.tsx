@@ -25,6 +25,7 @@ import { useToast } from "@/components/Toast";
 import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
+import CloseProjectButton from "./CloseProjectButton";
 
 import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
@@ -194,7 +195,11 @@ const AppMenubar = () => {
         )}
       </div>
 
-      <div className={styles.menubarRight}></div>
+      <div className={styles.menubarRight}>
+        {hasActiveProject && (
+          <CloseProjectButton onClose={closeCurrentProject} />
+        )}
+      </div>
     </div>
   );
 };
