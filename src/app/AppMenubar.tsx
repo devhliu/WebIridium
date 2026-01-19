@@ -26,6 +26,7 @@ import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
 import CloseProjectButton from "./CloseProjectButton";
+import ProjectName from "./ProjectName";
 
 import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
@@ -35,7 +36,6 @@ import {
   metadataAtom,
   useProjectActions,
 } from "@/globals/project";
-import ProjectName from "./ProjectName";
 
 const AppMenubar = () => {
   const { toast } = useToast();
@@ -88,7 +88,7 @@ const AppMenubar = () => {
   };
 
   return (
-    <div className={styles.root}>
+    <div className={styles.root} data-testid="app-menubar">
       <FileInput />
 
       {isSettingsOpen && (

@@ -1,6 +1,4 @@
-import type { ProjectId, UnknownProjectData } from "@/features/projectData";
-
-const files: Map<ProjectId, UnknownProjectData> = new Map();
+const files: Map<string, unknown> = new Map();
 
 export const resetMockFiles = () => {
   files.clear();
@@ -8,10 +6,14 @@ export const resetMockFiles = () => {
 
 export const getMockFiles = () => files;
 
-export const getMockFile = (name: string): UnknownProjectData | undefined => {
-  return files.get(name as ProjectId);
+export const getMockFile = (name: string): unknown => {
+  return files.get(name);
 };
 
-export const setMockFile = (name: string, value: UnknownProjectData): void => {
-  files.set(name as ProjectId, value);
+export const setMockFile = (name: string, value: unknown): void => {
+  files.set(name, value);
+};
+
+export const removeMockFile = (name: string): void => {
+  files.delete(name);
 };

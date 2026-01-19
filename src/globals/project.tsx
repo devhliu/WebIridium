@@ -17,7 +17,7 @@ import {
 import { convertSbmlToAntimony } from "@/features/antimony";
 
 import { useToast } from "@/components/Toast";
-import errorToDisplayString from "@/utils/errorToDisplayString";
+import { errorToDisplayString } from "@/features/formatUtils";
 
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";

@@ -76,3 +76,18 @@ export const biomodelsDateToEnglish = (date: string): string => {
 
 export const timestampToNumericDate = (timestamp: number): string =>
   new Date(timestamp).toLocaleString();
+
+/**
+ * Converts an arbitrary error into a string to be read by users.
+ */
+export const errorToDisplayString = (err: unknown): string => {
+  if (err instanceof Error) {
+    return err.message;
+  } else if (err instanceof DOMException) {
+    return err.message;
+  } else if (typeof err === "string") {
+    return err;
+  } else {
+    return "an unknown error occurred";
+  }
+};

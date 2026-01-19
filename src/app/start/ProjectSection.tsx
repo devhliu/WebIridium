@@ -7,7 +7,7 @@ import buttonStyles from "@/components/Button.module.css";
 import ProjectItem from "./ProjectItem";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import PulseLoader from "@/components/PulseLoader";
-import errorToDisplayString from "@/utils/errorToDisplayString";
+import { errorToDisplayString } from "@/features/formatUtils";
 import type { ProjectId } from "@/features/projectData";
 import { projectListAtom, useProjectActions } from "@/globals/project";
 

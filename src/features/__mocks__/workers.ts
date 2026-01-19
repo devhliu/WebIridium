@@ -5,8 +5,12 @@ import {
   MockWorker,
 } from "@/testing-utils/mockWorker.ts";
 import type { FileSystemAction } from "@/workers/FileSystemWorker.ts";
-import { getNewProjectData } from "../projectData.ts";
-import { getMockFiles, setMockFile } from "@/testing-utils/mockFileSystem.ts";
+import {
+  getMockFile,
+  getMockFiles,
+  setMockFile,
+} from "@/testing-utils/mockFileSystem.ts";
+import type { ProjectData } from "../projectData.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
@@ -21,12 +25,17 @@ export const createWorker = (type: WorkerType) => {
             case "listProjects": {
               const map = new Map();
               for (const [id, data] of getMockFiles()) {
-                map.set(id, data.metadata);
+                map.set(id, (data as ProjectData).metadata);
               }
               return map;
             }
-            case "openProject":
-              return getNewProjectData();
+            case "openProject": {
+              const data = getMockFile(action.payload);
+              if (data === undefined) {
+                throw new Error("Project was deleted somewhere else.");
+              }
+              return data;
+            }
             case "closeCurrentProject":
               return null;
             case "newProject":

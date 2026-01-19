@@ -1,3 +1,4 @@
+import { errorToDisplayString } from "@/features/formatUtils";
 import type {
   ProjectData,
   ProjectId,
@@ -204,8 +205,20 @@ class ProjectHandle {
 const openProject = async (
   id: ProjectId,
 ): Promise<OpenProjectResult["data"]> => {
-  const handle = await ProjectHandle.open(id);
-  return handle.getData();
+  try {
+    const handle = await ProjectHandle.open(id);
+    return handle.getData();
+  } catch (err) {
+    if (
+      err instanceof DOMException &&
+      err.name === "NoModificationAllowedError"
+    ) {
+      throw new Error("Project is already open in another tab.");
+    } else if (err instanceof DOMException && err.name === "NotFoundError") {
+      throw new Error("Project was deleted somewhere else.");
+    }
+    throw err;
+  }
 };
 
 const newProject = async (
@@ -255,8 +268,7 @@ self.onmessage = async (e) => {
     self.postMessage({
       // eslint-disable-next-line
       id: e.data.id,
-      errorMessage:
-        err instanceof Error ? (err.stack ?? err.message) : String(err),
+      errorMessage: errorToDisplayString(err),
     } satisfies ErrorResult);
 
     throw err;
