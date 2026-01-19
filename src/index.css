@@ -228,7 +228,7 @@
 
   /* Button types */
 
-  --color-ghost-button-fg: var(--color-layer1-fg);
+  --color-ghost-button-fg: var(--color-layer1-fg-dim);
   --color-ghost-button-bg: transparent;
   --color-ghost-button-hover-bg: color-mix(
     in oklch,
@@ -240,7 +240,7 @@
     var(--color-layer1-fg) 15%,
     transparent
   );
-  --color-ghost-button-disabled-fg: var(--color-layer1-fg-dim);
+  --color-ghost-button-disabled-fg: var(--color-layer1-fg-very-dim);
   --color-ghost-button-disabled-bg: transparent;
 }
 

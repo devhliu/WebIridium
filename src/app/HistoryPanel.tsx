@@ -89,7 +89,7 @@ const HistoryPanel = ({ visible }: HistoryPanelProps) => {
       <div className={styles.panel} data-testid="history-panel">
         <PanelTitle title="History" />
         {history.length === 0 ? (
-          <p className={styles.noHistory}>No history</p>
+          <p className={styles.noHistory}>No history.</p>
         ) : (
           <ul className={styles.list}>
             {reversedHistory.map((record) => (
