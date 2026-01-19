@@ -30,7 +30,11 @@ import {
   currentVeryRightPanelAtom,
 } from "./layout";
 import { loadBiomodelSbml, type BiomodelInfo } from "@/features/biomodels";
-import { simulationResultAtom } from "./simulation";
+import {
+  cancelSimulationAtom,
+  simulateTimeCourseAtom,
+  simulationResultAtom,
+} from "./simulation";
 import { saveFullProjectAtom } from "./saving";
 
 // Increments every time a change is made to the file system
@@ -92,17 +96,30 @@ const _updateGlobalsFromProjectDataAtom = atom(
 
 const _createNewProjectAtom = atom(
   null,
-  async (get, set, params: [name: string, code: string] | undefined) => {
-    const [name, code] = params ?? [];
-    const [id, data] = await newProject(name, code);
+  async (
+    get,
+    set,
+    params?: {
+      name: string;
+      code: string;
+      shouldSimulateImmediately?: boolean;
+    },
+  ) => {
+    const [id, data] = params
+      ? await newProject(params.name, params.code)
+      : await newProject();
 
     await set(_updateGlobalsFromProjectDataAtom, [id, data]);
+
+    set(fileSystemChangeIdAtom, (prev) => prev + 1);
 
     if (get(currentLeftPanelAtom) === null) {
       set(currentLeftPanelAtom, "Time Course");
     }
 
-    set(fileSystemChangeIdAtom, (prev) => prev + 1);
+    if (params?.shouldSimulateImmediately) {
+      void set(simulateTimeCourseAtom);
+    }
   },
 );
 
@@ -110,6 +127,14 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
   const data = await openProject(id);
 
   await set(_updateGlobalsFromProjectDataAtom, [id, data]);
+
+  if (data.results.records.length >= 0) {
+    set(
+      simulationResultAtom,
+      data.results.records.at(-1)?.simulationResult ?? null,
+    );
+    set(currentRightPanelAtom, "Results");
+  }
 
   if (get(currentLeftPanelAtom) === null) {
     set(currentLeftPanelAtom, "Time Course");
@@ -119,6 +144,7 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
 const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   await set(saveFullProjectAtom);
   await closeCurrentProject();
+  set(cancelSimulationAtom);
   set(activeProjectFileAtom, null);
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);
@@ -151,9 +177,11 @@ export const useProjectActions = () => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   /** @returns true if it succeeds */
-  const createNewProjectWrapper = async (
-    params?: [name: string, code: string],
-  ): Promise<boolean> => {
+  const createNewProjectWrapper = async (params?: {
+    name: string;
+    code: string;
+    shouldSimulateImmediately?: boolean;
+  }): Promise<boolean> => {
     if (inTransactionRef.current) return false;
     inTransactionRef.current = true;
 
@@ -182,7 +210,11 @@ export const useProjectActions = () => {
     try {
       const sbml = await loadBiomodelSbml(info);
       const antimony = await convertSbmlToAntimony(sbml);
-      await createNewProject([info.name, antimony]);
+      await createNewProject({
+        name: info.name,
+        code: antimony,
+        shouldSimulateImmediately: true,
+      });
       return true;
     } catch (err) {
       toast({
@@ -269,7 +301,10 @@ export const useProjectActions = () => {
         }
       }
 
-      void createNewProjectWrapper([nameWithoutExtension, content]);
+      void createNewProjectWrapper({
+        name: nameWithoutExtension,
+        code: content,
+      });
     };
   };
 
