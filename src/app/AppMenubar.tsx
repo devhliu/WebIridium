@@ -185,7 +185,7 @@ const AppMenubar = () => {
       </MenubarRoot>
 
       <div className={styles.menubarCenter}>
-        {metadata && (
+        {hasActiveProject && (
           <ProjectName
             metadata={metadata}
             onNameChange={(newName) =>

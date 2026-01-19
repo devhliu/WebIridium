@@ -270,9 +270,12 @@ const deleteProject = async (id: ProjectId) => {
     await projectsDirectory.removeEntry(id, { recursive: true });
     return null;
   } catch (err) {
-    if (err instanceof DOMException && err.name === "NotAllowedError") {
+    if (
+      err instanceof DOMException &&
+      err.name === "NoModificationAllowedError"
+    ) {
       throw new Error("Project is opened in another tab.");
-    } else if (err instanceof DOMException && err.name === "NotFound") {
+    } else if (err instanceof DOMException && err.name === "NotFoundError") {
       throw new Error("Project was deleted already.");
     } else {
       throw err;

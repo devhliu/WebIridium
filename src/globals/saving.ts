@@ -54,7 +54,27 @@ export const savePartialProjectAtom = atom(
 
     set(_isSavingAtom, get(_isSavingAtom) + 1);
     try {
-      await saveProject(data);
+      // make sure to always update the Updated timestamp
+      let savingData = data;
+      if (data.metadata === undefined) {
+        savingData = {
+          ...savingData,
+          metadata: {
+            ...get(savedMetadataAtom),
+            updated: Date.now(),
+          },
+        };
+      } else {
+        savingData = {
+          ...savingData,
+          metadata: {
+            ...data.metadata,
+            updated: Date.now(),
+          },
+        };
+      }
+
+      await saveProject(savingData);
     } finally {
       set(fileSystemChangeIdAtom, (old) => old + 1);
       // add a little delay so it doesn't go too fast
