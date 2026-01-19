@@ -4,6 +4,7 @@ import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 import type { Metadata } from "@/features/projectData";
 import IconButton from "@/components/IconButton";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
+import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
 export interface ProjectNameProps {
   metadata: Metadata;
@@ -18,13 +19,20 @@ const ProjectName = ({ metadata, onNameChange }: ProjectNameProps) => {
     setInput(null);
   };
 
+  const confirm = () => {
+    const input = inputRef.current;
+    if (input) {
+      onNameChange(input.value);
+      input.blur();
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const input = e.target as HTMLInputElement;
     if (e.key === "Escape") {
       input.blur();
     } else if (e.key === "Enter") {
-      onNameChange(input.value);
-      input.blur();
+      confirm();
     }
   };
 
@@ -54,6 +62,13 @@ const ProjectName = ({ metadata, onNameChange }: ProjectNameProps) => {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
           />
+          <IconButton
+            label="Confirm"
+            onClick={confirm}
+            onPointerDown={(e) => e.preventDefault()}
+          >
+            <CheckIcon width="1em" height="1em" />
+          </IconButton>
           <IconButton label="Cancel" onClick={() => inputRef?.current?.blur()}>
             <CrossIcon width="1em" height="1em" />
           </IconButton>
