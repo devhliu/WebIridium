@@ -10,6 +10,7 @@ import {
 } from "@/features/projectData";
 import {
   closeCurrentProject,
+  deleteProject,
   listProjects,
   newProject,
   openProject,
@@ -119,8 +120,13 @@ const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   set(simulationResultAtom, null);
 });
 
+const _deleteProjectAtom = atom(null, async (_get, set, id: ProjectId) => {
+  await deleteProject(id);
+  set(fileSystemChangeIdAtom, (old) => old + 1);
+});
+
 // used for debounce
-const _openingProjectRefAtom = atom({ current: false });
+const _inTransactionRefAtom = atom({ current: false });
 
 /**
  * Hook that exposes functions to interact with the file system.
@@ -132,7 +138,8 @@ export const useProjectActions = () => {
   const createNewProject = useSetAtom(_createNewProjectAtom);
   const openProject = useSetAtom(_openProjectAtom);
   const closeCurrentProject = useSetAtom(_closeCurrentProjectAtom);
-  const openingProjectRef = useAtomValue(_openingProjectRefAtom);
+  const deleteProject = useSetAtom(_deleteProjectAtom);
+  const inTransactionRef = useAtomValue(_inTransactionRefAtom);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -140,8 +147,8 @@ export const useProjectActions = () => {
   const createNewProjectWrapper = async (
     params?: [name: string, code: string],
   ): Promise<boolean> => {
-    if (openingProjectRef.current) return false;
-    openingProjectRef.current = true;
+    if (inTransactionRef.current) return false;
+    inTransactionRef.current = true;
 
     try {
       await createNewProject(params);
@@ -154,7 +161,7 @@ export const useProjectActions = () => {
       });
       return false;
     } finally {
-      openingProjectRef.current = false;
+      inTransactionRef.current = false;
     }
   };
 
@@ -162,8 +169,8 @@ export const useProjectActions = () => {
   const createNewProjectFromBiomodel = async (
     info: BiomodelInfo,
   ): Promise<boolean> => {
-    if (openingProjectRef.current) return false;
-    openingProjectRef.current = true;
+    if (inTransactionRef.current) return false;
+    inTransactionRef.current = true;
 
     try {
       const sbml = await loadBiomodelSbml(info);
@@ -178,7 +185,7 @@ export const useProjectActions = () => {
       });
       return false;
     } finally {
-      openingProjectRef.current = false;
+      inTransactionRef.current = false;
     }
   };
 
@@ -188,8 +195,8 @@ export const useProjectActions = () => {
 
   /** @returns true if it succeeds */
   const openProjectWrapper = async (id: ProjectId): Promise<boolean> => {
-    if (openingProjectRef.current) return false;
-    openingProjectRef.current = true;
+    if (inTransactionRef.current) return false;
+    inTransactionRef.current = true;
 
     try {
       await openProject(id);
@@ -202,7 +209,27 @@ export const useProjectActions = () => {
       });
       return false;
     } finally {
-      openingProjectRef.current = false;
+      inTransactionRef.current = false;
+    }
+  };
+
+  /** @returns true if it succeeds */
+  const deleteProjectWrapper = async (id: ProjectId): Promise<boolean> => {
+    if (inTransactionRef.current) return false;
+    inTransactionRef.current = true;
+
+    try {
+      await deleteProject(id);
+      return true;
+    } catch (err) {
+      toast({
+        type: "error",
+        title: "Failed to delete project",
+        description: errorToDisplayString(err),
+      });
+      return false;
+    } finally {
+      inTransactionRef.current = false;
     }
   };
 
@@ -265,6 +292,7 @@ export const useProjectActions = () => {
     createNewProject: createNewProjectWrapper,
     createNewProjectFromBiomodel: createNewProjectFromBiomodel,
     openProject: openProjectWrapper,
+    deleteProject: deleteProjectWrapper,
     promptProjectFromFile: promptProjectFromFile,
     closeCurrentProject: closeCurrentProjectWrapper,
     FileInput: FileInput,

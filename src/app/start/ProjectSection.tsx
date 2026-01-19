@@ -13,8 +13,13 @@ import { projectListAtom, useProjectActions } from "@/globals/project";
 
 const ProjectSection = () => {
   const projectList = useAtomValue(projectListAtom);
-  const { createNewProject, openProject, promptProjectFromFile, FileInput } =
-    useProjectActions();
+  const {
+    createNewProject,
+    openProject,
+    deleteProject,
+    promptProjectFromFile,
+    FileInput,
+  } = useProjectActions();
 
   const [openingProject, setOpeningProject] = useState<ProjectId | null>(null);
 
@@ -24,6 +29,12 @@ const ProjectSection = () => {
     setOpeningProject(id);
     await openProject(id);
     setOpeningProject(null);
+  };
+
+  const handleDeleteFor = (id: ProjectId) => async () => {
+    if (openingProject) return;
+
+    await deleteProject(id);
   };
 
   return (
@@ -65,6 +76,7 @@ const ProjectSection = () => {
               metadata={metadata}
               isLoading={openingProject === id}
               onSelect={handleSelectFor(id)}
+              onDelete={handleDeleteFor(id)}
             />
           ))
         )}

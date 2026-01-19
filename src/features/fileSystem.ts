@@ -25,6 +25,8 @@ import { WorkerPool } from "./taskPool";
 import type {
   CloseCurrentProjectAction,
   CloseCurrentProjectResult,
+  DeleteProjectAction,
+  DeleteProjectResult,
   ListProjectsAction,
   ListProjectsResult,
   NewProjectAction,
@@ -116,6 +118,14 @@ export const saveProject = async (
   await fileWorker.runTask<SaveProjectAction, SaveProjectResult>(
     "saveProject",
     data,
+    null,
+  );
+};
+
+export const deleteProject = async (id: ProjectId): Promise<void> => {
+  await fileWorker.runTask<DeleteProjectAction, DeleteProjectResult>(
+    "deleteProject",
+    id,
     null,
   );
 };

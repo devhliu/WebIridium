@@ -188,3 +188,47 @@ describe("creating a project", () => {
     });
   });
 });
+
+describe("deleting", () => {
+  it("should remove an item from the list", async () => {
+    setMockFile("1", getProjectDataWithName("test"));
+
+    await renderWithinWorkspace(
+      <>
+        <TimeCoursePanel visible />
+        <StartPanel />
+      </>,
+      { shouldStubActiveFile: false },
+    );
+
+    expect(screen.getByText("test")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByLabelText("More"));
+    await userEvent.click(screen.getByText("Delete"));
+
+    expect(screen.queryByText("test")).not.toBeInTheDocument();
+  });
+
+  it("should not do anything if opening a file", async () => {
+    setMockFile("1", getProjectDataWithName("test"));
+
+    await renderWithinWorkspace(
+      <>
+        <TimeCoursePanel visible />
+        <StartPanel />
+      </>,
+      { shouldStubActiveFile: false },
+    );
+
+    expect(screen.getByText("test")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByText("test"));
+
+    await userEvent.click(screen.getByLabelText("More"));
+
+    setWorkerResponseDelay(100);
+    await userEvent.click(screen.getByText("Delete"));
+
+    expect(screen.getByText("test")).toBeInTheDocument();
+  });
+});

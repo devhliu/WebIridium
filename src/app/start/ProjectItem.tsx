@@ -2,14 +2,24 @@ import type { Metadata } from "@/features/projectData";
 import styles from "./ProjectItem.module.css";
 
 import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";
+import TrashIcon from "@/assets/icons/TrashIcon.svg?react";
+
 import { timestampToNumericDate } from "@/features/formatUtils";
 import { getPropertyFromCssGradient } from "@/features/cssGradients";
+
 import PulseLoader from "@/components/PulseLoader";
+import {
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuRoot,
+  DropdownMenuTrigger,
+} from "@/components/DropdownMenu";
 
 export interface ProjectItemProps {
   metadata: Metadata;
   isLoading: boolean;
   onSelect: () => void;
+  onDelete: () => void;
 }
 
 const getIconTextFromName = (name: string) => {
@@ -23,7 +33,12 @@ const getIconTextFromName = (name: string) => {
   }
 };
 
-const ProjectItem = ({ metadata, isLoading, onSelect }: ProjectItemProps) => {
+const ProjectItem = ({
+  metadata,
+  isLoading,
+  onSelect,
+  onDelete,
+}: ProjectItemProps) => {
   return (
     <div className={styles.item}>
       <button className={styles.main} disabled={isLoading} onClick={onSelect}>
@@ -48,13 +63,24 @@ const ProjectItem = ({ metadata, isLoading, onSelect }: ProjectItemProps) => {
         </div>
       </button>
       <div className={styles.moreContainer}>
-        <button className={styles.more}>
-          {isLoading ? (
-            <PulseLoader size="0.3rem" />
-          ) : (
-            <ThreeDotsIcon className={styles.moreIcon} />
-          )}
-        </button>
+        {isLoading ? (
+          <PulseLoader className={styles.loader} size="0.3rem" />
+        ) : (
+          <DropdownMenuRoot>
+            <DropdownMenuTrigger>
+              <button className={styles.more} aria-label="More">
+                <ThreeDotsIcon className={styles.moreIcon} aria-hidden />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem
+                name="Delete"
+                onSelect={onDelete}
+                icon={<TrashIcon width="1em" height="1em" />}
+              />
+            </DropdownMenuContent>
+          </DropdownMenuRoot>
+        )}
       </div>
     </div>
   );

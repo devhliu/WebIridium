@@ -31,12 +31,16 @@ export type NewProjectResult = Result<null>;
 export type SaveProjectAction = Action<"saveProject", Partial<ProjectData>>;
 export type SaveProjectResult = Result<null>;
 
+export type DeleteProjectAction = Action<"deleteProject", ProjectId>;
+export type DeleteProjectResult = Result<null>;
+
 export type FileSystemAction =
   | ListProjectsAction
   | OpenProjectAction
   | CloseCurrentProjectAction
   | NewProjectAction
-  | SaveProjectAction;
+  | SaveProjectAction
+  | DeleteProjectAction;
 
 const PROJECTS_DIR_NAME = "projects";
 
@@ -260,6 +264,22 @@ const saveProject = (data: Partial<ProjectData>) => {
   return null;
 };
 
+const deleteProject = async (id: ProjectId) => {
+  try {
+    const projectsDirectory = await getProjectsDirHandle();
+    await projectsDirectory.removeEntry(id, { recursive: true });
+    return null;
+  } catch (err) {
+    if (err instanceof DOMException && err.name === "NotAllowedError") {
+      throw new Error("Project is opened in another tab.");
+    } else if (err instanceof DOMException && err.name === "NotFound") {
+      throw new Error("Project was deleted already.");
+    } else {
+      throw err;
+    }
+  }
+};
+
 const wrapResult = (action: Action, data: unknown): Result => ({
   id: action.id,
   data: data,
@@ -280,6 +300,8 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
       );
     case "saveProject":
       return wrapResult(action, saveProject(action.payload));
+    case "deleteProject":
+      return wrapResult(action, await deleteProject(action.payload));
     default:
       throw new Error("unknown action type");
   }

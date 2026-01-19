@@ -6,11 +6,11 @@
   border: var(--border-card);
   border-radius: var(--border-radius);
 
-  &:hover {
+  &:has(.main:hover) {
     background-color: var(--color-card-bg-hover);
   }
 
-  &:active {
+  &:has(.main:active) {
     background-color: var(--color-card-bg-active);
   }
 
@@ -88,6 +88,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-2);
+  padding-right: var(--spacing-4);
 }
 
 .more {
@@ -95,21 +96,21 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  background: none;
   border: none;
-  padding: var(--spacing-3);
+  padding: var(--spacing-2) 0;
   color: var(--color-ghost-button-fg);
   background-color: var(--color-ghost-button-bg);
+  border-radius: var(--border-radius);
 
   &:focus-visible {
     outline: var(--outline-focused);
   }
 
   &:hover {
-    color: var(--color-ghost-button-bg-hover);
+    background-color: var(--color-ghost-button-hover-bg);
   }
   &:active {
-    color: var(--color-ghost-button-bg-active);
+    background-color: var(--color-ghost-button-active-bg);
   }
 }
 
@@ -120,4 +121,5 @@
 
 .loader {
   color: var(--color-card-fg-dim);
+  padding-inline: var(--spacing-4);
 }

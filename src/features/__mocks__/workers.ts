@@ -8,6 +8,7 @@ import type { FileSystemAction } from "@/workers/FileSystemWorker.ts";
 import {
   getMockFile,
   getMockFiles,
+  removeMockFile,
   setMockFile,
 } from "@/testing-utils/mockFileSystem.ts";
 import type { ProjectData } from "../projectData.ts";
@@ -52,6 +53,9 @@ export const createWorker = (type: WorkerType) => {
                 ...(getMockFile(currentId) as object),
                 ...action.payload,
               });
+              return null;
+            case "deleteProject":
+              removeMockFile(action.payload);
               return null;
             default:
               /* eslint-disable */
