@@ -38,7 +38,6 @@ Please write tests for any changes you make, as much as is reasonable.
 ### Non-React Layer
 
 - `src/features`: Everything else that doesn't have to deal with the UI or global state
-- `src/utils`: Generic utilities that don't have anything to do with app functionality
 - `public`: Stuff that should not be processed during the build
   - includes worker scripts
 
