@@ -69,7 +69,11 @@ const ProjectName = ({ metadata, onNameChange }: ProjectNameProps) => {
           >
             <CheckIcon width="1em" height="1em" />
           </IconButton>
-          <IconButton label="Cancel" onClick={() => inputRef?.current?.blur()}>
+          <IconButton
+            label="Cancel"
+            onClick={() => inputRef?.current?.blur()}
+            onPointerDown={(e) => e.preventDefault()}
+          >
             <CrossIcon width="1em" height="1em" />
           </IconButton>
         </div>

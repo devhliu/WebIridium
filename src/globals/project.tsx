@@ -36,6 +36,7 @@ import {
   simulationResultAtom,
 } from "./simulation";
 import { saveFullProjectAtom } from "./saving";
+import { variableSliderStatesAtom } from "./slider";
 
 // Increments every time a change is made to the file system
 // Other atoms should `get` this if they want to re-evaluate when the file system changes.
@@ -145,6 +146,7 @@ const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   await set(saveFullProjectAtom);
   await closeCurrentProject();
   set(cancelSimulationAtom);
+  set(variableSliderStatesAtom, {});
   set(activeProjectFileAtom, null);
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);
