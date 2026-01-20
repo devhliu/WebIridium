@@ -21,20 +21,22 @@ const ProjectSection = () => {
     FileInput,
   } = useProjectActions();
 
-  const [openingProject, setOpeningProject] = useState<ProjectId | null>(null);
+  const [interactingProject, setInteractingProject] = useState<ProjectId | null>(null);
 
   const handleSelectFor = (id: ProjectId) => async () => {
-    if (openingProject) return;
+    if (interactingProject) return;
 
-    setOpeningProject(id);
+    setInteractingProject(id);
     await openProject(id);
-    setOpeningProject(null);
+    setInteractingProject(null);
   };
 
   const handleDeleteFor = (id: ProjectId) => async () => {
-    if (openingProject) return;
+    if (interactingProject) return;
 
+    setInteractingProject(id);
     await deleteProject(id);
+    setInteractingProject(null);
   };
 
   return (
@@ -74,7 +76,7 @@ const ProjectSection = () => {
             <ProjectItem
               key={id}
               metadata={metadata}
-              isLoading={openingProject === id}
+              isLoading={interactingProject === id}
               onSelect={handleSelectFor(id)}
               onDelete={handleDeleteFor(id)}
             />
