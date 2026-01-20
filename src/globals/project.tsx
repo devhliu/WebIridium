@@ -22,7 +22,7 @@ import { errorToDisplayString } from "@/features/formatUtils";
 
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
-import { graphSettingsAtom } from "./settings";
+import { graphSettingsAtom, independentVariableAtom } from "./settings";
 import {
   currentBottomPanelAtom,
   currentLeftPanelAtom,
@@ -87,9 +87,13 @@ const _updateGlobalsFromProjectDataAtom = atom(
       name: metadata.name,
       content: code,
       variableSettingss: iridium.variableSettings,
+      timeCourseParameters: iridium.timeCourseParameters,
+      parameterScanOptions: iridium.parameterScanOptions,
     });
     set(updateAllHistoryAtom, results.records);
+
     set(graphSettingsAtom, iridium.graphSettings);
+
     set(metadataAtom, metadata);
     set(activeProjectFileAtom, id);
   },
@@ -147,6 +151,7 @@ const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   await closeCurrentProject();
   set(cancelSimulationAtom);
   set(variableSliderStatesAtom, {});
+  set(independentVariableAtom, null);
   set(activeProjectFileAtom, null);
   set(currentLeftPanelAtom, null);
   set(currentRightPanelAtom, null);

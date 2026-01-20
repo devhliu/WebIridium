@@ -66,7 +66,7 @@ type HistoryRecord = {
   unixTimestampMs: number;
 };
 
-export interface ResultsDataV1 {
+export type ResultsDataV1 = {
   versionTag: 1;
   records: HistoryRecord[];
-}
+};

@@ -12,6 +12,8 @@ import {
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
   timeCourseParametersAtom,
+  type EditableTimeCourseParameters,
+  type ParameterScanOptions,
   type VariableSettings,
 } from "./settings";
 import { simulatorAtom } from "./simulator";
@@ -353,6 +355,9 @@ export interface SetModelOptions {
    * This is used when opening a new model.
    */
   variableSettingss?: VariableSettingss;
+
+  timeCourseParameters?: EditableTimeCourseParameters;
+  parameterScanOptions?: ParameterScanOptions;
 }
 
 /**
@@ -364,10 +369,22 @@ export const setModelAtom = atom(
   async (
     _get,
     set,
-    { content, resetCurrentResult = true, variableSettingss }: SetModelOptions,
+    {
+      content,
+      resetCurrentResult = true,
+      variableSettingss,
+      timeCourseParameters,
+      parameterScanOptions,
+    }: SetModelOptions,
   ): Promise<boolean> => {
-    set(timeCourseParametersAtom, defaultTimeCourseParameters);
-    set(parameterScanOptionsAtom, defaultParameterScanOptions);
+    set(
+      timeCourseParametersAtom,
+      timeCourseParameters ?? defaultTimeCourseParameters,
+    );
+    set(
+      parameterScanOptionsAtom,
+      parameterScanOptions ?? defaultParameterScanOptions,
+    );
 
     if (resetCurrentResult) {
       set(simulationResultAtom, null);

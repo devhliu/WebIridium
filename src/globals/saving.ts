@@ -13,7 +13,11 @@ import type {
   ProjectData,
   ResultsData,
 } from "@/features/projectData";
-import { graphSettingsAtom } from "./settings";
+import {
+  graphSettingsAtom,
+  parameterScanOptionsAtom,
+  timeCourseParametersAtom,
+} from "./settings";
 import { historyAtom } from "./history";
 import { saveProject } from "@/features/fileSystem";
 
@@ -37,9 +41,11 @@ export const savedCodeAtom = atom((get) => get(editorContentAtom));
 export const savedIridiumAtom = atom(
   (get) =>
     ({
-      versionTag: 1,
+      versionTag: 2,
       graphSettings: get(graphSettingsAtom),
       variableSettings: get(variableSettingssAtom),
+      timeCourseParameters: get(timeCourseParametersAtom),
+      parameterScanOptions: get(parameterScanOptionsAtom),
     }) satisfies IridiumData,
 );
 

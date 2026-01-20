@@ -8,7 +8,7 @@ type IconColor =
   | "purple"
   | "pink";
 
-export interface MetadataV1 {
+export type MetadataV1 = {
   versionTag: 1;
   name: string;
   created: number;
@@ -16,4 +16,4 @@ export interface MetadataV1 {
   icon: {
     color: IconColor;
   };
-}
+};

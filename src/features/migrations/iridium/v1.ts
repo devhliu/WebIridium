@@ -1,10 +1,10 @@
-interface AxisSettings {
+type AxisSettings = {
   includeTitle: boolean;
   title: string;
   color: string;
-}
+};
 
-interface GridSettings {
+type GridSettings = {
   enabled: {
     x: boolean;
     y: boolean;
@@ -15,9 +15,9 @@ interface GridSettings {
   yWidth: number;
   numXGrids: number;
   numYGrids: number;
-}
+};
 
-export interface IridiumDataV1 {
+export type IridiumDataV1 = {
   versionTag: 1;
   variableSettings: {
     [variableName: string]: {
@@ -68,4 +68,4 @@ export interface IridiumDataV1 {
       lineLength: number;
     };
   };
-}
+};

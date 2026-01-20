@@ -49,6 +49,7 @@ Please write tests for any changes you make, as much as is reasonable.
 
 # specific stuff
 
+- [migrations](./MIGRATIONS.md) (IMPORTANT IF YOU ARE MODIFYING SAVE DATA)
 - [global state management](./GLOBALS.md)
 - [styling](./STYLING.md)
 - [simulation + copasi/antimony](./SIMULATION.md)
