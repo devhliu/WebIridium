@@ -40,7 +40,7 @@ help ensure they are met.
 
 1.  In `features/projectData.ts`, import the type and migration function. Find the appropriate
     `Unknown[data]` (e.g `UnknownIridiumData`) and add the type you just made to the union.
-2.  Update the `[data]` (e.g. `IridiumData`) type so to the latest version of the data.
+2.  Update the `[data]` (e.g. `IridiumData`) type to the latest version of the data.
 3.  At this point, you should be getting a few type errors. We will need to fix all of these,
     and once we do, we can be pretty confident the migration will work.
 

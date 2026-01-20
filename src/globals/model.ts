@@ -352,7 +352,7 @@ export interface SetModelOptions {
    * Set the variable settingss to do this once the model is updated (then patch any
    * new variables in).
    *
-   * This is used when opening a new model.
+   * This is used when opening a new project.
    */
   variableSettingss?: VariableSettingss;
 

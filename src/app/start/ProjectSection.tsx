@@ -21,7 +21,8 @@ const ProjectSection = () => {
     FileInput,
   } = useProjectActions();
 
-  const [interactingProject, setInteractingProject] = useState<ProjectId | null>(null);
+  const [interactingProject, setInteractingProject] =
+    useState<ProjectId | null>(null);
 
   const handleSelectFor = (id: ProjectId) => async () => {
     if (interactingProject) return;
