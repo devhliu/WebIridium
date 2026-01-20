@@ -133,7 +133,7 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
 
   await set(_updateGlobalsFromProjectDataAtom, [id, data]);
 
-  if (data.results.records.length >= 0) {
+  if (data.results.records.length > 0) {
     set(
       simulationResultAtom,
       data.results.records.at(-1)?.simulationResult ?? null,
