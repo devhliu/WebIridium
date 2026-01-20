@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useSetAtom, useAtomValue } from "jotai";
 import { saveAtom } from "@/globals/saving";
 import {
   chatHistoryAtom,
@@ -11,6 +11,7 @@ import {
   modelAtom,
   AVAILABLE_MODELS,
 } from "@/globals/chat";
+import { editorContentAtom } from "@/globals/model";
 import styles from "./ChatPanel.module.css";
 import PanelTitle from "../components/PanelTitle";
 import PulseLoader from "../components/PulseLoader";
@@ -26,6 +27,8 @@ import HistoryIcon from "@/assets/icons/HistoryIcon.svg?react";
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 import SendIcon from "@/assets/icons/SendIcon.svg?react";
+
+import Select from "@/components/input/Select";
 
 import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
 import type { ChatConversation } from "@/globals/chat";
@@ -242,11 +245,13 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [messages, setMessages] = useState<Message[]>([]);
 
   const [input, setInput] = useState("");
+  const [includeModel, setIncludeModel] = useState(true);
   const [waitingForReply, setWaitingForReply] = useState(false);
 
   const [apiKey, setApiKey] = useAtom(apiKeyAtom);
   const [systemPrompt] = useAtom(systemPromptAtom);
   const [model, setModel] = useAtom(modelAtom);
+  const editorContent = useAtomValue(editorContentAtom);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   const setSave = useSetAtom(saveAtom);
@@ -261,7 +266,19 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
 
   useEffect(() => {
     const el = messagesRef.current;
-    if (el) {
+    if (!el) return;
+
+    const lastMessage = messages[messages.length - 1];
+    if (!lastMessage) return;
+
+    if (lastMessage.role === "llm" && !lastMessage.thinking) {
+      // If the last message is a completed LLM response, scroll to its top
+      requestAnimationFrame(() => {
+        const lastMessageEl = el.lastElementChild;
+        lastMessageEl?.scrollIntoView({ block: "start", behavior: "smooth" });
+      });
+    } else {
+      // Otherwise (user message or thinking), scroll to bottom
       el.scrollTop = el.scrollHeight;
     }
   }, [messages]);
@@ -304,6 +321,12 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
       role: "user",
       text: trimmed,
     };
+
+    let contextMessage = "";
+    if (includeModel) {
+      contextMessage = `\n\nContext:\nCurrent Model:\n\`\`\`antimony\n${editorContent}\n\`\`\``;
+    }
+
     const placeholderId = `llm-pending-${Date.now()}`;
     const llmPlaceholder: Message = {
       id: placeholderId,
@@ -327,6 +350,19 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
           role: m.role === "user" ? "user" : "assistant",
           content: m.text,
         }));
+
+      // Replace the last user message with the one containing context
+      let lastUserMsgIndex = -1;
+      for (let i = convo.length - 1; i >= 0; i--) {
+        if (convo[i].role === "user") {
+          lastUserMsgIndex = i;
+          break;
+        }
+      }
+
+      if (lastUserMsgIndex !== -1 && includeModel) {
+        convo[lastUserMsgIndex].content += contextMessage;
+      }
 
       const resp = await fetch("https://api.openai.com/v1/responses", {
         method: "POST",
@@ -560,9 +596,20 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               </div>
             ) : null}
             <div className={styles.inputColumn}>
+              <div className={styles.contextBar}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={includeModel}
+                    onChange={(e) => setIncludeModel(e.target.checked)}
+                  />
+                  Include current model as context
+                </label>
+              </div>
               <textarea
                 ref={inputRef}
-                className={styles.input}
+                className={`${styles.input} ${includeModel ? styles.inputWithContext : ""
+                  }`}
                 placeholder="Type a message..."
                 aria-label="Message input"
                 value={input}
@@ -573,19 +620,16 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                 disabled={waitingForReply || !apiKey}
               />
               <div className={styles.inputToolbar}>
-                <select
-                  className={styles.modelSelector}
+                <Select
+                  name="Model"
                   value={model}
-                  onChange={(e) => setModel(e.target.value)}
-                  disabled={waitingForReply}
+                  onChange={setModel}
+                  options={Object.fromEntries(
+                    AVAILABLE_MODELS.map((m) => [m.name, m.id]),
+                  )}
+                  className={styles.modelSelector}
                   aria-label="Select Model"
-                >
-                  {AVAILABLE_MODELS.map((m) => (
-                    <option key={m.id} value={m.id}>
-                      {m.name}
-                    </option>
-                  ))}
-                </select>
+                />
                 <button
                   id="chat-enter-button"
                   className={styles.sendButton}
