@@ -608,8 +608,9 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               </div>
               <textarea
                 ref={inputRef}
-                className={`${styles.input} ${includeModel ? styles.inputWithContext : ""
-                  }`}
+                className={`${styles.input} ${
+                  includeModel ? styles.inputWithContext : ""
+                }`}
                 placeholder="Type a message..."
                 aria-label="Message input"
                 value={input}
