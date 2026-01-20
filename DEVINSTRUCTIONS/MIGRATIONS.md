@@ -4,8 +4,9 @@ When modifying the saved data, you must implement migrations for older data so u
 end up in an invalid state. We use TypeScript's type system to model this requirement and
 help ensure they are met.
 
-[!IMPORTANT] **Never modify the old migrations.** Once they are committed, they must never be changed
-to ensure user data is always valid. If you must fix something, add another migration.
+> [!IMPORTANT]
+> Never modify the old migrations. Once they are committed, they must never be changed
+> to ensure user data is always valid. If you must fix something, add another migration.
 
 ## what data goes in what
 
@@ -15,9 +16,10 @@ to ensure user data is always valid. If you must fix something, add another migr
 
 ## how to modify change saved data
 
-[!TIP] When implementing a migration, prefer not to test manually as you might mess up your data.
-Instead, add a test in `src/features/migration/__tests__/migrations.ts` and run `npm run test src/features/migrations`
-then once everything is passing, test manually.
+> [!TIP]
+> When implementing a migration, prefer not to test manually as you might mess up your data.
+> Instead, add a test in `src/features/migration/__tests__/migrations.ts` and run `npm run test src/features/migrations`
+> then once everything is passing, test manually.
 
 ### 1. defining the migration
 
