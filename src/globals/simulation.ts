@@ -116,7 +116,7 @@ const runSimulation = async (
       set(simulationResultAtom, result);
       set(currentRightPanelAtom, "Results");
       set(tryAddToHistoryAtom, {
-        modelName: metadata?.name ?? "unknown",
+        modelName: metadata.name,
         code,
         result,
       });

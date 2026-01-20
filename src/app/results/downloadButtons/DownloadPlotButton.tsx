@@ -43,7 +43,7 @@ const DownloadPlotButton = () => {
 
   const { toast } = useToast();
 
-  const downloadName = `Plot of ${metadata?.name ?? "unknown"}`;
+  const downloadName = `Plot of ${metadata.name}`;
 
   const getPlotOptions = () => {
     if (!result) return;

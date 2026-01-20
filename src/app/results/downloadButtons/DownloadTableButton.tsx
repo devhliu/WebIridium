@@ -32,11 +32,7 @@ const DownloadTableButton = () => {
 
     const csv = convertColumnsToCsv(columns);
 
-    promptDownloadString(
-      `Table of ${metadata?.name ?? "unknown"}`,
-      csv,
-      "text/csv",
-    );
+    promptDownloadString(`Table of ${metadata.name}`, csv, "text/csv");
   };
 
   return (

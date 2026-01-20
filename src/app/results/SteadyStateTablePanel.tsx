@@ -36,7 +36,7 @@ const Section = ({
     const csv = convertColumnsToCsv(columns);
 
     promptDownloadString(
-      `${metadata?.name ?? "unknown"} Steady State ${title}`,
+      `${metadata.name} Steady State ${title}`,
       csv,
       "text/csv",
     );

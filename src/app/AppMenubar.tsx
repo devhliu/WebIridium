@@ -65,17 +65,13 @@ const AppMenubar = () => {
   } = useProjectActions();
 
   const handleDownloadAntimony = () => {
-    promptDownloadString(
-      `${metadata?.name ?? "unknown"}.ant`,
-      editorContent,
-      "ant",
-    );
+    promptDownloadString(`${metadata.name}.ant`, editorContent, "ant");
   };
 
   const handleDownloadSbml = async () => {
     try {
       const sbml = await convertAntimonyToSbml(editorContent);
-      promptDownloadString(`${metadata?.name ?? "unknown"}.xml`, sbml, "xml");
+      promptDownloadString(`${metadata.name}.xml`, sbml, "xml");
     } catch (e) {
       if (e instanceof Error) {
         toast({
