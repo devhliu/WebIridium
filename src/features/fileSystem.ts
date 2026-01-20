@@ -45,8 +45,10 @@ const fileWorker = new WorkerPool(() => createWorker("fileSystem"), {
 /**
  * Lists the users projects/ directory and returns a map of project IDs and the
  * corresponding metadata
+ *
+ * Prefer to use the `projectListAtom` in `globals/project`
  */
-export const listProjects = async (): Promise<Map<ProjectId, Metadata>> => {
+export const listProjectsRaw = async (): Promise<Map<ProjectId, Metadata>> => {
   const result = await fileWorker.runTask<
     ListProjectsAction,
     ListProjectsResult
@@ -58,9 +60,12 @@ export const listProjects = async (): Promise<Map<ProjectId, Metadata>> => {
 /**
  * Opens a project and acquires a lock for it. Creates the project if it the file
  * for it does not exist yet.
+ *
+ * Prefer to use the one in `useProjectActions`
+ *
  * @returns the data associated with the project
  */
-export const openProject = async (id: ProjectId): Promise<ProjectData> => {
+export const openProjectRaw = async (id: ProjectId): Promise<ProjectData> => {
   const result = await fileWorker.runTask<OpenProjectAction, OpenProjectResult>(
     "openProject",
     id,
@@ -72,8 +77,10 @@ export const openProject = async (id: ProjectId): Promise<ProjectData> => {
 /**
  * Closes the current project. The project ID parameter should match the currently open
  * project (by the worker), otherwise this will throw.
+ *
+ * Prefer to use the one in `useProjectActions`
  */
-export const closeCurrentProject = async (): Promise<void> => {
+export const closeCurrentProjectRaw = async (): Promise<void> => {
   await fileWorker.runTask<
     CloseCurrentProjectAction,
     CloseCurrentProjectResult
@@ -82,10 +89,13 @@ export const closeCurrentProject = async (): Promise<void> => {
 
 /**
  * Creates a new project and returns the project id and data for it.
+ *
+ * Prefer to use the one in `useProjectActions`
+ *
  * @param name - default name of them project
  * @param code - default code of the project
  */
-export const newProject = async (
+export const newProjectRaw = async (
   name?: string,
   code?: string,
 ): Promise<[ProjectId, ProjectData]> => {
@@ -112,7 +122,7 @@ export const newProject = async (
  * Save part of or all of project data.
  * You should prefer to use the saveAtom in globals/saving.
  */
-export const saveProject = async (
+export const saveProjectRaw = async (
   data: Partial<ProjectData>,
 ): Promise<void> => {
   await fileWorker.runTask<SaveProjectAction, SaveProjectResult>(
@@ -122,7 +132,13 @@ export const saveProject = async (
   );
 };
 
-export const deleteProject = async (id: ProjectId): Promise<void> => {
+/**
+ * Delete a project.
+ * @throws if the project is already deleted or is being edited.
+ *
+ * Prefer to use the one in `useProjectActions`
+ */
+export const deleteProjectRaw = async (id: ProjectId): Promise<void> => {
   await fileWorker.runTask<DeleteProjectAction, DeleteProjectResult>(
     "deleteProject",
     id,

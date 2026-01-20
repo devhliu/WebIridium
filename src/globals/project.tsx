@@ -9,11 +9,11 @@ import {
   type ProjectId,
 } from "@/features/projectData";
 import {
-  closeCurrentProject,
-  deleteProject,
-  listProjects,
-  newProject,
-  openProject,
+  closeCurrentProjectRaw,
+  deleteProjectRaw,
+  listProjectsRaw,
+  newProjectRaw,
+  openProjectRaw,
 } from "@/features/fileSystem";
 import { convertSbmlToAntimony } from "@/features/antimony";
 
@@ -61,7 +61,7 @@ const _projectListAtom: Atom<Promise<Map<ProjectId, Metadata>>> = atom(
     // do this to update the atom on any file system changes
     get(fileSystemChangeIdAtom);
 
-    const projects = await listProjects();
+    const projects = await listProjectsRaw();
     const migratedProjects: Map<ProjectId, Metadata> = new Map();
 
     const entries = Array.from(projects.entries());
@@ -111,8 +111,8 @@ const _createNewProjectAtom = atom(
     },
   ) => {
     const [id, data] = params
-      ? await newProject(params.name, params.code)
-      : await newProject();
+      ? await newProjectRaw(params.name, params.code)
+      : await newProjectRaw();
 
     await set(_updateGlobalsFromProjectDataAtom, [id, data]);
 
@@ -129,7 +129,7 @@ const _createNewProjectAtom = atom(
 );
 
 const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
-  const data = await openProject(id);
+  const data = await openProjectRaw(id);
 
   await set(_updateGlobalsFromProjectDataAtom, [id, data]);
 
@@ -148,7 +148,7 @@ const _openProjectAtom = atom(null, async (get, set, id: ProjectId) => {
 
 const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
   await set(saveFullProjectAtom);
-  await closeCurrentProject();
+  await closeCurrentProjectRaw();
   set(cancelSimulationAtom);
   set(variableSliderStatesAtom, {});
   set(independentVariableAtom, null);
@@ -161,7 +161,7 @@ const _closeCurrentProjectAtom = atom(null, async (_get, set) => {
 });
 
 const _deleteProjectAtom = atom(null, async (_get, set, id: ProjectId) => {
-  await deleteProject(id);
+  await deleteProjectRaw(id);
   set(fileSystemChangeIdAtom, (old) => old + 1);
 });
 

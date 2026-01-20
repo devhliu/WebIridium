@@ -19,7 +19,7 @@ import {
   timeCourseParametersAtom,
 } from "./settings";
 import { historyAtom } from "./history";
-import { saveProject } from "@/features/fileSystem";
+import { saveProjectRaw } from "@/features/fileSystem";
 
 export const saveAtom = atom(null, async (get, _set): Promise<void> => {
   await commitSavedData({
@@ -80,7 +80,7 @@ export const savePartialProjectAtom = atom(
         };
       }
 
-      await saveProject(savingData);
+      await saveProjectRaw(savingData);
     } finally {
       set(fileSystemChangeIdAtom, (old) => old + 1);
       // add a little delay so it doesn't go too fast
