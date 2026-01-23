@@ -597,28 +597,43 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               </div>
             ) : null}
             <div className={styles.inputColumn}>
-              <div className={styles.contextBar}>
-                <label>
-                  <input
-                    type="checkbox"
-                    checked={includeModel}
-                    onChange={(e) => setIncludeModel(e.target.checked)}
-                  />
-                  Include current model as context
-                </label>
+              <div
+                className={clsx(
+                  styles.inputWrapper,
+                  includeModel && styles.inputWrapperConnected,
+                )}
+              >
+                <div
+                  className={clsx(
+                    styles.contextBar,
+                    includeModel && styles.contextBarConnected,
+                  )}
+                >
+                  <label>
+                    <input
+                      type="checkbox"
+                      checked={includeModel}
+                      onChange={(e) => setIncludeModel(e.target.checked)}
+                    />
+                    Include current model as context
+                  </label>
+                </div>
+                <textarea
+                  ref={inputRef}
+                  className={clsx(
+                    styles.input,
+                    includeModel && styles.inputWithContext,
+                  )}
+                  placeholder="Type a message..."
+                  aria-label="Message input"
+                  value={input}
+                  onChange={(e) => {
+                    setInput(e.target.value);
+                  }}
+                  onKeyDown={handleKeyDown}
+                  disabled={waitingForReply || !apiKey}
+                />
               </div>
-              <textarea
-                ref={inputRef}
-                className={clsx(styles.input, includeModel && styles.inputWithContext)}
-                placeholder="Type a message..."
-                aria-label="Message input"
-                value={input}
-                onChange={(e) => {
-                  setInput(e.target.value);
-                }}
-                onKeyDown={handleKeyDown}
-                disabled={waitingForReply || !apiKey}
-              />
               <div className={styles.inputToolbar}>
                 <Select
                   name="Model"
