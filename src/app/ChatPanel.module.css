@@ -252,11 +252,15 @@
   padding: var(--spacing-1) var(--spacing-2);
   background: var(--color-layer2-bg);
   border: 1px solid var(--color-layer2-border);
-  border-bottom: none;
-  border-top-left-radius: var(--border-radius);
-  border-top-right-radius: var(--border-radius);
+  border-radius: var(--border-radius);
   font-size: var(--font-size-small);
   color: var(--color-layer1-fg);
+}
+
+.context-bar-connected {
+  border-bottom: none;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .context-bar label {
@@ -613,4 +617,14 @@
 
 .model-selector {
   min-width: 140px;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-1);
+}
+
+.input-wrapper-connected {
+  gap: 0;
 }
