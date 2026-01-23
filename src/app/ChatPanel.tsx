@@ -32,6 +32,7 @@ import Select from "@/components/input/Select";
 
 import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
 import type { ChatConversation } from "@/globals/chat";
+import clsx from "clsx";
 
 export interface ChatPanelProps {
   visible: boolean;
@@ -608,9 +609,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               </div>
               <textarea
                 ref={inputRef}
-                className={`${styles.input} ${
-                  includeModel ? styles.inputWithContext : ""
-                }`}
+                className={clsx(styles.input, includeModel && styles.inputWithContext)}
                 placeholder="Type a message..."
                 aria-label="Message input"
                 value={input}
