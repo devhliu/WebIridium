@@ -11,7 +11,8 @@ import type {
   ResultsData,
 } from "@/features/projectData";
 import {
-  graphSettingsAtom,
+  currentGraphPresetAtom,
+  customGraphSettingsAtom,
   parameterScanOptionsAtom,
   timeCourseParametersAtom,
 } from "./settings";
@@ -28,8 +29,9 @@ export const savedCodeAtom = atom((get) => get(editorContentAtom));
 export const savedIridiumAtom = atom(
   (get) =>
     ({
-      versionTag: 2,
-      graphSettings: get(graphSettingsAtom),
+      versionTag: 3,
+      currentGraphPreset: get(currentGraphPresetAtom),
+      graphSettings: get(customGraphSettingsAtom),
       variableSettings: get(variableSettingssAtom),
       timeCourseParameters: get(timeCourseParametersAtom),
       parameterScanOptions: get(parameterScanOptionsAtom),

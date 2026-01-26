@@ -22,7 +22,8 @@ import { errorToDisplayString } from "@/features/formatUtils";
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
 import {
-  graphSettingsAtom,
+  currentGraphPresetAtom,
+  customGraphSettingsAtom,
   independentVariableAtom,
   parameterScanOptionsAtom,
   timeCourseParametersAtom,
@@ -128,7 +129,8 @@ const _updateGlobalsFromProjectDataAtom = atom(
     });
     set(updateAllHistoryAtom, results.records);
 
-    set(graphSettingsAtom, iridium.graphSettings);
+    set(currentGraphPresetAtom, iridium.currentGraphPreset);
+    set(customGraphSettingsAtom, iridium.graphSettings);
 
     set(metadataAtom, metadata);
     set(activeProjectFileAtom, id);

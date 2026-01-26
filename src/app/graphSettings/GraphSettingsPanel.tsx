@@ -1,22 +1,22 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom, useSetAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 
 import {
-  defaultGraphSettings,
   graphSettingsAtom,
   paletteAtom,
+  updateGraphSettingsAtom,
+} from "@/globals/settings";
+import {
   type AxisSettings,
   type GraphSettings,
   type GridSettings,
   type LegendSettings,
-} from "@/globals/settings";
+} from "@/features/graphPresets";
 import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
 
 import styles from "./GraphSettingsPanel.module.css";
-import buttonStyles from "@/components/Button.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
 
-import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import GridNoneIcon from "@/assets/icons/GridNoneIcon.svg?react";
 import GridXIcon from "@/assets/icons/GridXIcon.svg?react";
@@ -34,16 +34,18 @@ import PropertyList from "@/components/property-list/PropertyList";
 import PropertyAccordion from "@/components/property-accordion/PropertyAccordion";
 import PropertyAccordionItem from "@/components/property-accordion/PropertyAccordionItem";
 import { ToggleGroupButton, ToggleGroup } from "@/components/input/ToggleGroup";
-import PanelTitle from "../components/PanelTitle";
-import UncontrolledVariableList from "./simulation/variable-list/UncontrolledVariableList";
+import PanelTitle from "@/components/PanelTitle";
+import UncontrolledVariableList from "@/app/simulation/variable-list/UncontrolledVariableList";
 import IconButton from "@/components/IconButton";
+import GraphSettingsControls from "./GraphSettingsControls";
 
 export interface PlotSettingsPanelProps {
   onClose: () => void;
 }
 
 const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
-  const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
+  const graphSettings = useAtomValue(graphSettingsAtom);
+  const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
   const [palette, setPalette] = useAtom(paletteAtom);
 
   const defaultXAxisTitle = useAtomValue(defaultXAxisTitleAtom);
@@ -61,7 +63,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
     setting: keyof GraphSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
-      setGraphSettings({ ...graphSettings, [setting]: newValue });
+      updateGraphSettings({ ...graphSettings, [setting]: newValue });
     };
   };
 
@@ -69,7 +71,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
     setting: keyof AxisSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
-      setGraphSettings({
+      updateGraphSettings({
         ...graphSettings,
         [selectedAxis]: {
           ...axisSettings,
@@ -83,7 +85,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
     setting: keyof GridSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
-      setGraphSettings({
+      updateGraphSettings({
         ...graphSettings,
         [selectedGrid]: {
           ...gridSettings,
@@ -97,7 +99,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
     setting: keyof LegendSettings,
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
-      setGraphSettings({
+      updateGraphSettings({
         ...graphSettings,
         legend: {
           ...graphSettings.legend,
@@ -115,13 +117,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
         </IconButton>
       </PanelTitle>
 
-      <button
-        className={buttonStyles.default}
-        onClick={() => setGraphSettings(defaultGraphSettings)}
-      >
-        <ResetIcon width="1em" height="1em" />
-        Reset to Default
-      </button>
+      <GraphSettingsControls />
 
       <PropertyAccordion
         defaultOpen={["Bounds", "Graph", "Series", "Axes", "Grids", "Legend"]}

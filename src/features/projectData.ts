@@ -4,10 +4,10 @@
 
 import defaultModel from "@/assets/default.ant?raw";
 import {
-  defaultGraphSettings,
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
 } from "@/globals/settings";
+import { defaultGraphSettings } from "./graphPresets";
 import { getRandomCssGradient } from "./cssGradients";
 
 import type { MetadataV1 } from "./migrations/metadata/v1";
@@ -17,17 +17,21 @@ import {
   migrateIridiumDataV1V2,
   type IridiumDataV2,
 } from "./migrations/iridium/v2_simulationParameters";
+import {
+  migrateIridiumDataV2V3,
+  type IridiumDataV3,
+} from "./migrations/iridium/v3_graphPresets";
 
 import type { ResultsDataV1 } from "./migrations/results/v1";
 
 // Should be union of every single version
 export type UnknownMetadata = MetadataV1;
-export type UnknownIridiumData = IridiumDataV1 | IridiumDataV2;
+export type UnknownIridiumData = IridiumDataV1 | IridiumDataV2 | IridiumDataV3;
 export type UnknownResultsData = ResultsDataV1;
 
 // Keep these up-to-date with the latest versions
 export type Metadata = MetadataV1;
-export type IridiumData = IridiumDataV2;
+export type IridiumData = IridiumDataV3;
 export type ResultsData = ResultsDataV1;
 
 // https://www.learningtypescript.com/articles/branded-types
@@ -69,6 +73,8 @@ export const migrateIridiumData = (
     case 1:
       return migrateIridiumData(migrateIridiumDataV1V2(iridiumData));
     case 2:
+      return migrateIridiumData(migrateIridiumDataV2V3(iridiumData));
+    case 3:
       return iridiumData;
   }
 };
@@ -116,7 +122,8 @@ export const getNewProjectData = (): ProjectData => {
       },
     },
     iridium: {
-      versionTag: 2,
+      versionTag: 3,
+      currentGraphPreset: "Custom",
       graphSettings: defaultGraphSettings,
       variableSettings: {},
       timeCourseParameters: defaultTimeCourseParameters,
