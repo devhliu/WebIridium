@@ -8,19 +8,11 @@ import type {
 import { TaskTermination } from "@/features/taskPool";
 import { getDefaultColorForIndex } from "@/features/colors";
 
-import {
-  defaultParameterScanOptions,
-  defaultTimeCourseParameters,
-  timeCourseParametersAtom,
-  type EditableTimeCourseParameters,
-  type ParameterScanOptions,
-  type VariableSettings,
-} from "./settings";
+import { type VariableSettings } from "./settings";
 import { simulatorAtom } from "./simulator";
 import { independentVariableAtom, parameterScanOptionsAtom } from "./settings";
 import { variableSliderStatesAtom } from "./slider";
 import type { Atom } from "jotai";
-import { simulationResultAtom } from "./simulation";
 
 export type ModelStatus =
   | { type: "loading" }
@@ -98,16 +90,19 @@ export const patchVariablesSettings = (
   currentVariables: Variable[],
   currentVariableSettingss: Record<string, VariableSettings>,
   newVariables: Variable[],
-  resetVariableSettings: boolean,
+  preserveVariableSettings: boolean,
 ): Record<string, VariableSettings> => {
   let added = Object.keys(currentVariableSettingss).length;
   const patches: Record<string, VariableSettings> = {};
 
   const hasVariableAlready = (variable: Variable): boolean =>
-    !resetVariableSettings &&
-    currentVariables.some(
-      (v) => v.name === variable.name && v.category === variable.category,
-    );
+    preserveVariableSettings
+      ? // when preserveVariableSettings is on, just keep the variable if it is in the settings
+        Object.hasOwn(currentVariableSettingss, variable.name)
+      : // when preserveVariableSettings is off, only keep if its in the model (i.e. currentVariables)
+        currentVariables.some(
+          (v) => v.name === variable.name && v.category === variable.category,
+        );
 
   const isPriorityVariable = (variable: Variable): boolean =>
     variable.category === "Floating Species";
@@ -171,8 +166,6 @@ export interface UpdateEditorContentOptions {
   content: string;
   /** default: false */
   skipDebounce?: boolean;
-  /** Whether or not to reset variable settings associated with the model. default: false */
-  resetPresentVariableSettings?: boolean;
   variableSettingss?: VariableSettingss;
 }
 
@@ -192,7 +185,6 @@ export const updateEditorContentAtom = atom(
     {
       content,
       skipDebounce = false,
-      resetPresentVariableSettings: resetVariableSettings = false,
       variableSettingss,
     }: UpdateEditorContentOptions,
   ): Promise<UpdateEditorContentResult> => {
@@ -307,7 +299,7 @@ export const updateEditorContentAtom = atom(
         get(variablesAtom),
         variableSettingss ?? get(variableSettingssAtom),
         newVariables,
-        resetVariableSettings,
+        !!variableSettingss, // preserve given variable settings since they are specified
       ),
     });
     set(_modelStatusAtom, { type: "success" });
@@ -343,25 +335,18 @@ export interface SetModelOptions {
   content: string;
 
   /**
-   * Whether or not to set the current simulation result to null.
-   * default: true
-   */
-  resetCurrentResult?: boolean;
-
-  /**
    * Set the variable settingss to do this once the model is updated (then patch any
    * new variables in).
    *
    * This is used when opening a new project.
    */
   variableSettingss?: VariableSettingss;
-
-  timeCourseParameters?: EditableTimeCourseParameters;
-  parameterScanOptions?: ParameterScanOptions;
 }
 
 /**
- * Set the model which updates the editor content, model name, and resets other relevant state.
+ * Set the model which updates the editor content and reloads the model
+ * immediately.
+ *
  * @returns if the model failed to load
  */
 export const setModelAtom = atom(
@@ -369,31 +354,11 @@ export const setModelAtom = atom(
   async (
     _get,
     set,
-    {
-      content,
-      resetCurrentResult = true,
-      variableSettingss,
-      timeCourseParameters,
-      parameterScanOptions,
-    }: SetModelOptions,
+    { content, variableSettingss }: SetModelOptions,
   ): Promise<boolean> => {
-    set(
-      timeCourseParametersAtom,
-      timeCourseParameters ?? defaultTimeCourseParameters,
-    );
-    set(
-      parameterScanOptionsAtom,
-      parameterScanOptions ?? defaultParameterScanOptions,
-    );
-
-    if (resetCurrentResult) {
-      set(simulationResultAtom, null);
-    }
-
     const updateResult = await set(updateEditorContentAtom, {
       content,
       skipDebounce: true,
-      resetPresentVariableSettings: resetCurrentResult,
       variableSettingss: variableSettingss,
     });
 

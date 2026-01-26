@@ -22,7 +22,12 @@ import { errorToDisplayString } from "@/features/formatUtils";
 
 import { setModelAtom } from "./model";
 import { updateAllHistoryAtom } from "./history";
-import { graphSettingsAtom, independentVariableAtom } from "./settings";
+import {
+  graphSettingsAtom,
+  independentVariableAtom,
+  parameterScanOptionsAtom,
+  timeCourseParametersAtom,
+} from "./settings";
 import {
   currentBottomPanelAtom,
   currentLeftPanelAtom,
@@ -83,12 +88,12 @@ const _updateGlobalsFromProjectDataAtom = atom(
     set,
     [id, { metadata, iridium, code, results }]: [ProjectId, ProjectData],
   ) => {
+    set(timeCourseParametersAtom, iridium.timeCourseParameters);
+    set(parameterScanOptionsAtom, iridium.parameterScanOptions);
     await set(setModelAtom, {
       name: metadata.name,
       content: code,
       variableSettingss: iridium.variableSettings,
-      timeCourseParameters: iridium.timeCourseParameters,
-      parameterScanOptions: iridium.parameterScanOptions,
     });
     set(updateAllHistoryAtom, results.records);
 
