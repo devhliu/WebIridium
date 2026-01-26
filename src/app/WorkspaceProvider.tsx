@@ -42,7 +42,6 @@ const Initialize = ({
           await setModel({
             name: "Starter Model",
             content: defaultModel,
-            resetCurrentResult: false,
           });
           return;
         }
