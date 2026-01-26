@@ -40,7 +40,7 @@ import EditorPanel from "./EditorPanel";
 import SlidersPanel from "./sliders/SlidersPanel";
 
 import ResultTabbedPanel from "./results/ResultsTabbedPanel";
-import PlotSettingsPanel from "./PlotSettingsPanel";
+import GraphSettingsPanel from "./GraphSettingsPanel";
 import ChatPanel from "./ChatPanel";
 import StartPanel from "./start/StartPanel";
 
@@ -146,7 +146,7 @@ const AppContent = () => {
               priority={LayoutPriority.Normal}
             >
               {currentVeryRightPanel === "Plot Settings" && (
-                <PlotSettingsPanel
+                <GraphSettingsPanel
                   onClose={() => setCurrentVeryRightPanel(null)}
                 />
               )}

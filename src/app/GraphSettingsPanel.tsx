@@ -12,7 +12,7 @@ import {
 } from "@/globals/settings";
 import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
 
-import styles from "./PlotSettingsPanel.module.css";
+import styles from "./GraphSettingsPanel.module.css";
 import buttonStyles from "@/components/Button.module.css";
 import { PALETTES, type Palette } from "@/features/colors";
 
@@ -109,7 +109,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
 
   return (
     <div className={styles.panel}>
-      <PanelTitle title="Plot Settings">
+      <PanelTitle title="Graph Settings">
         <IconButton onClick={onClose} label="Close">
           <CrossIcon width="1em" height="1em" aria-hidden />
         </IconButton>
