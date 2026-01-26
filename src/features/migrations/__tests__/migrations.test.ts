@@ -9,8 +9,8 @@ import {
   type UnknownMetadata,
   type UnknownResultsData,
 } from "@/features/projectData";
+import { defaultGraphSettings } from "@/features/graphPresets";
 import {
-  defaultGraphSettings,
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
 } from "@/globals/settings";
@@ -23,10 +23,18 @@ describe("iridium data", () => {
       graphSettings: defaultGraphSettings,
       variableSettings: {},
     },
+    {
+      versionTag: 2,
+      graphSettings: defaultGraphSettings,
+      variableSettings: {},
+      timeCourseParameters: defaultTimeCourseParameters,
+      parameterScanOptions: defaultParameterScanOptions,
+    },
   ];
 
   const finalVersion: IridiumData = {
-    versionTag: 2,
+    versionTag: 3,
+    currentGraphPreset: "Custom",
     graphSettings: defaultGraphSettings,
     variableSettings: {},
     timeCourseParameters: defaultTimeCourseParameters,

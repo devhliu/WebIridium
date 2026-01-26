@@ -1,0 +1,14 @@
+.controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  margin-block-end: var(--spacing-2);
+}
+
+.preset-label {
+  margin-inline-end: var(--spacing-4);
+}
+
+.preset-select {
+  flex-grow: 1;
+}

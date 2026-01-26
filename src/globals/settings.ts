@@ -11,6 +11,11 @@ import type {
   ParameterScanResult,
   TimeCourseParameters,
 } from "@/features/simulation/Simulator";
+import {
+  defaultGraphSettings,
+  graphPresets,
+  type GraphSettings,
+} from "@/features/graphPresets";
 
 /** Time course parameters that are editable by the user manually. */
 export type EditableTimeCourseParameters = Omit<
@@ -33,72 +38,6 @@ export interface ParameterScanOptions {
   useNumberList: boolean;
   numberList: string;
 }
-
-export interface AxisSettings {
-  includeTitle: boolean;
-  title: string;
-  color: string;
-}
-
-export interface GridSettings {
-  enabled: {
-    x: boolean;
-    y: boolean;
-  };
-  xColor: string;
-  yColor: string;
-  xWidth: number;
-  yWidth: number;
-  numXGrids: number;
-  numYGrids: number;
-}
-
-export interface LegendSettings {
-  visible: boolean;
-  isFloating: boolean;
-
-  // Floating only
-  textColor: string;
-  backgroundColor: string;
-  borderColor: string;
-  borderThickness: number;
-  padding: number;
-  lineLength: number;
-}
-
-export interface GraphSettings {
-  backgroundColor: string;
-  drawingAreaColor: string;
-
-  includeTitle: boolean;
-  title: string;
-  titleColor: string;
-
-  includeBorder: boolean;
-  borderColor: string;
-  borderThickness: number;
-
-  globalWidth: number;
-
-  isAutoscaledX: boolean;
-  minX: number;
-  maxX: number;
-
-  isAutoscaledY: boolean;
-  minY: number;
-  maxY: number;
-
-  margin: number;
-
-  xAxis: AxisSettings;
-  yAxis: AxisSettings;
-
-  majorGrid: GridSettings;
-  minorGrid: GridSettings;
-
-  legend: LegendSettings;
-}
-
 export interface VariableSettings {
   displayName: string;
   visible: boolean;
@@ -136,73 +75,34 @@ export const defaultParameterScanOptions: ParameterScanOptions = {
 };
 export const parameterScanOptionsAtom = atom(defaultParameterScanOptions);
 
-export const defaultGraphSettings: GraphSettings = {
-  backgroundColor: "#ffffff",
-  drawingAreaColor: "#f1e7f4",
+// GRAPH SETTINGS STUFF
 
-  includeTitle: true,
-  title: "Transition of substances in chemical reaction",
-  titleColor: "#000000",
+export const CUSTOM_PRESET = "Custom";
+export const currentGraphPresetAtom = atom(CUSTOM_PRESET);
 
-  includeBorder: true,
-  borderColor: "#000000",
-  borderThickness: 0.5,
+export const customGraphSettingsAtom = atom(defaultGraphSettings);
 
-  globalWidth: 1,
+export const graphPresetsAtom = atom(
+  graphPresets as Record<string, GraphSettings | undefined>,
+);
 
-  isAutoscaledX: true,
-  minX: 0,
-  maxX: 10,
-
-  isAutoscaledY: true,
-  minY: 0,
-  maxY: 10,
-
-  margin: 70,
-
-  xAxis: {
-    includeTitle: true,
-    title: "", // empty means use placeholder
-    color: "#000",
+export const graphSettingsAtom = atom(
+  (get) =>
+    get(graphPresetsAtom)[get(currentGraphPresetAtom)] ??
+    get(customGraphSettingsAtom),
+);
+export const updateGraphSettingsAtom = atom(
+  null,
+  (get, set, newSettings: GraphSettings) => {
+    const preset = get(currentGraphPresetAtom);
+    const presets = get(graphPresetsAtom);
+    if (preset === CUSTOM_PRESET) {
+      set(customGraphSettingsAtom, newSettings);
+    } else {
+      set(graphPresetsAtom, {
+        ...presets,
+        [preset]: newSettings,
+      });
+    }
   },
-
-  yAxis: {
-    includeTitle: true,
-    title: "", // empty means use placeholder
-    color: "#000",
-  },
-
-  majorGrid: {
-    enabled: { x: false, y: false },
-    xColor: "#888",
-    yColor: "#888",
-    xWidth: 0.5,
-    yWidth: 0.5,
-    numXGrids: 4,
-    numYGrids: 4,
-  },
-
-  minorGrid: {
-    enabled: { x: false, y: false },
-    xColor: "#888",
-    yColor: "#888",
-    xWidth: 0.5,
-    yWidth: 0.5,
-    numXGrids: 4,
-    numYGrids: 4,
-  },
-
-  legend: {
-    visible: true,
-    isFloating: true,
-
-    textColor: "#000",
-    backgroundColor: "#fff",
-    borderColor: "#000",
-    borderThickness: 1,
-    padding: 15,
-    lineLength: 50,
-  },
-};
-
-export const graphSettingsAtom = atom(defaultGraphSettings);
+);

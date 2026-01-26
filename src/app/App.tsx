@@ -40,7 +40,7 @@ import EditorPanel from "./EditorPanel";
 import SlidersPanel from "./sliders/SlidersPanel";
 
 import ResultTabbedPanel from "./results/ResultsTabbedPanel";
-import GraphSettingsPanel from "./GraphSettingsPanel";
+import GraphSettingsPanel from "./graphSettings/GraphSettingsPanel";
 import ChatPanel from "./ChatPanel";
 import StartPanel from "./start/StartPanel";
 
