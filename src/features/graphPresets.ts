@@ -135,23 +135,45 @@ export const defaultGraphSettings: GraphSettings = {
 export const graphPresets = {
   Dark: {
     ...defaultGraphSettings,
-    backgroundColor: "#222222",
+    backgroundColor: "#000000",
     drawingAreaColor: "#111111",
     titleColor: "#ffffff",
     borderColor: "#ffffff",
     xAxis: {
       ...defaultGraphSettings.xAxis,
-      color: "#000",
+      color: "#ffffff",
     },
     yAxis: {
       ...defaultGraphSettings.yAxis,
-      color: "#000",
+      color: "#ffffff",
     },
     legend: {
       ...defaultGraphSettings.legend,
       textColor: "#fff",
       backgroundColor: "#000",
       borderColor: "#fff",
+    },
+  } satisfies GraphSettings,
+
+  Winter: {
+    ...defaultGraphSettings,
+    backgroundColor: "#72b7f7",
+    drawingAreaColor: "#b6d5f2",
+    titleColor: "#010a12",
+    borderColor: "#010a12",
+    xAxis: {
+      ...defaultGraphSettings.xAxis,
+      color: "#010a12",
+    },
+    yAxis: {
+      ...defaultGraphSettings.yAxis,
+      color: "#010a12",
+    },
+    legend: {
+      ...defaultGraphSettings.legend,
+      textColor: "#010a12",
+      backgroundColor: "#b6d5f2",
+      borderColor: "#010a12",
     },
   } satisfies GraphSettings,
 } as const;
