@@ -33,6 +33,7 @@ import Select from "@/components/input/Select";
 import type { OpenAiResponse } from "@/features/chat/API-models/OpenAIModel";
 import type { ChatConversation } from "@/globals/chat";
 import clsx from "clsx";
+import { hasActiveProjectAtom } from "@/globals/project";
 
 export interface ChatPanelProps {
   visible: boolean;
@@ -259,11 +260,14 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [chatHistory] = useAtom(chatHistoryAtom);
+  const hasActiveProject = useAtomValue(hasActiveProjectAtom);
   const [activeConversation, setActiveConversation] = useAtom(
     activeConversationAtom,
   );
 
   const upsertActiveConversation = useSetAtom(upsertActiveConversationAtom);
+
+  const isContextActive = includeModel && hasActiveProject;
 
   useEffect(() => {
     const el = messagesRef.current;
@@ -324,7 +328,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
     };
 
     let contextMessage = "";
-    if (includeModel) {
+    if (isContextActive) {
       contextMessage = `\n\nContext:\nCurrent Model:\n\`\`\`antimony\n${editorContent}\n\`\`\``;
     }
 
@@ -353,16 +357,10 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
         }));
 
       // Replace the last user message with the one containing context
-      let lastUserMsgIndex = -1;
-      for (let i = convo.length - 1; i >= 0; i--) {
-        if (convo[i].role === "user") {
-          lastUserMsgIndex = i;
-          break;
-        }
-      }
+      const lastUserMsg = convo.findLast((m) => m.role === "user");
 
-      if (lastUserMsgIndex !== -1 && includeModel) {
-        convo[lastUserMsgIndex].content += contextMessage;
+      if (lastUserMsg && isContextActive) {
+        lastUserMsg.content += contextMessage;
       }
 
       const resp = await fetch("https://api.openai.com/v1/responses", {
@@ -600,20 +598,22 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
               <div
                 className={clsx(
                   styles.inputWrapper,
-                  includeModel && styles.inputWrapperConnected,
+                  isContextActive && styles.inputWrapperConnected,
                 )}
               >
                 <div
                   className={clsx(
                     styles.contextBar,
-                    includeModel && styles.contextBarConnected,
+                    isContextActive && styles.contextBarConnected,
+                    !hasActiveProject && styles.contextBarDisabled,
                   )}
                 >
                   <label>
                     <input
                       type="checkbox"
-                      checked={includeModel}
+                      checked={isContextActive}
                       onChange={(e) => setIncludeModel(e.target.checked)}
+                      disabled={!hasActiveProject}
                     />
                     Include current model as context
                   </label>
@@ -622,7 +622,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
                   ref={inputRef}
                   className={clsx(
                     styles.input,
-                    includeModel && styles.inputWithContext,
+                    isContextActive && styles.inputWithContext,
                   )}
                   placeholder="Type a message..."
                   aria-label="Message input"
