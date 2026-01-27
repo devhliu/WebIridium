@@ -1,6 +1,10 @@
 import { describe, it, expect } from "vitest";
 
-import { timeToAgoText, biomodelsDateToEnglish } from "../formatUtils";
+import {
+  timeToAgoText,
+  biomodelsDateToEnglish,
+  errorToDisplayString,
+} from "../formatUtils";
 
 describe("timeToAgoText", () => {
   it("should say just now when <0", () => {
@@ -43,5 +47,22 @@ describe("biomodelsDateToEnglish", () => {
 
   it("should give up if no match", () => {
     expect(biomodelsDateToEnglish("give up")).toEqual("give up");
+  });
+});
+
+describe("errorToDisplayString", () => {
+  it("should display error message", () => {
+    expect(errorToDisplayString(new Error("test"))).toEqual("test");
+    expect(errorToDisplayString(new DOMException("test"))).toEqual("test");
+  });
+
+  it("should display strings as is", () => {
+    expect(errorToDisplayString("hey")).toEqual("hey");
+  });
+
+  it("should display unknown error for other data types", () => {
+    expect(errorToDisplayString({ test: true })).toContain("unknown");
+    expect(errorToDisplayString(5)).toContain("unknown");
+    expect(errorToDisplayString(false)).toContain("unknown");
   });
 });

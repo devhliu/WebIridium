@@ -15,6 +15,10 @@
   --color-button-fg: oklch(0.9624 0.0042 236.5);
   --color-button-border: oklch(0.3989 0.0036 264.52);
 
+  --color-card-bg: oklch(0.2415 0.0067 248.03);
+  --color-card-fg: oklch(0.9624 0.0042 236.5);
+  --color-card-border: oklch(0.3289 0.0036 264.52);
+
   --color-input-bg: oklch(0.2329 0.0024 247.93);
   --color-input-fg: var(--color-layer2-fg);
   --color-input-border: oklch(0.3589 0.0036 264.52);

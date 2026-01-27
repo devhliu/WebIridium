@@ -18,6 +18,7 @@ import {
 import { getToastHistory, resetToastHistory } from "@/testing-utils/mockToast";
 import { useSetAtom } from "jotai";
 import { updateEditorContentAtom } from "@/globals/model";
+import { renderWithinWorkspace } from "@/testing-utils/render";
 
 afterEach(() => {
   resetWorkerResponseDelay();
@@ -142,5 +143,29 @@ export const itShouldBeLoadingWhenModelIsLoading = ({
 
     expect(button).toBeInTheDocument();
     expect(button).toBeDisabled();
+  });
+};
+
+export const itShouldShowNoActiveProjectPanel = (
+  render: () => React.ReactNode,
+) => {
+  it("should show no active project panel", async () => {
+    await renderWithinWorkspace(render(), { shouldStubActiveFile: false });
+
+    const button = screen.getByRole("button");
+
+    expect(button).toHaveTextContent("New Project");
+  });
+
+  it("should let you create a project", async () => {
+    await renderWithinWorkspace(render(), { shouldStubActiveFile: false });
+
+    const button = screen.getByRole("button");
+
+    expect(button).toHaveTextContent("New Project");
+
+    await userEvent.click(button);
+
+    expect(button).not.toBeInTheDocument();
   });
 };

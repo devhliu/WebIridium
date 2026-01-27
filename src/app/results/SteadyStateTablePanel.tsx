@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { atom, useAtom, useAtomValue } from "jotai";
 
 import { promptDownloadString } from "@/features/download";
@@ -13,10 +14,10 @@ import NumericSliderProperty from "@/components/property-list/NumericSliderPrope
 import { type SteadyStateResultItem } from "@/features/simulation/Simulator";
 import IconButton from "@/components/IconButton";
 
+import { metadataAtom } from "@/globals/project";
+
 import DownloadIcon from "@/assets/icons/DownloadIcon.svg?react";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
-import { nameAtom } from "@/globals/settings";
-import { useState } from "react";
 
 const decimalPlacesAtom = atom(2);
 
@@ -27,14 +28,18 @@ const Section = ({
   title: string;
   columns: DataTableProps["columns"];
 }) => {
-  const modelName = useAtomValue(nameAtom);
+  const metadata = useAtomValue(metadataAtom);
   const decimalPlaces = useAtomValue(decimalPlacesAtom);
   const [open, setOpen] = useState(true);
 
   const handleDownload = () => {
     const csv = convertColumnsToCsv(columns);
 
-    promptDownloadString(`${modelName} Steady State ${title}`, csv, "text/csv");
+    promptDownloadString(
+      `${metadata.name} Steady State ${title}`,
+      csv,
+      "text/csv",
+    );
   };
 
   const toggleOpen = () => {

@@ -59,7 +59,6 @@ export class LibSbmlSimSimulator extends Simulator {
     return {
       type: "timeCourse",
       columns: result.columns,
-      columnSet: new Set(result.columns.map((col) => col.title)),
     };
   }
 

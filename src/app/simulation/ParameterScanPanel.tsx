@@ -30,9 +30,9 @@ import {
   runParameterScanAtom,
 } from "@/globals/simulation";
 import { modelStatusAtom, variablesAtom } from "@/globals/model";
+import { variableSettingssAtom } from "@/globals/model";
 import {
   parameterScanOptionsAtom,
-  variableSettingssAtom,
   type ParameterScanOptions,
 } from "@/globals/settings";
 import { simulatorAtom } from "@/globals/simulator";

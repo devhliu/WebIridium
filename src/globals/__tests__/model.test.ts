@@ -85,17 +85,6 @@ describe("patchVariableSettings", () => {
     expect(result).toEqual(variableSettingss);
   });
 
-  it("should overwrite the variables when specified", () => {
-    const result = patchVariablesSettings(
-      variables,
-      variableSettingss,
-      variables,
-      true,
-    );
-
-    expect(result).not.toEqual(variableSettingss);
-  });
-
   it("should add new variables", () => {
     const result = patchVariablesSettings(
       variables,
@@ -161,5 +150,16 @@ describe("patchVariableSettings", () => {
         displayName: "different",
       },
     });
+  });
+
+  it("should preserve variables settings when told to", () => {
+    const result = patchVariablesSettings(
+      [],
+      variableSettingss,
+      variables,
+      true,
+    );
+
+    expect(result).toEqual(variableSettingss);
   });
 });

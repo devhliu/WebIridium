@@ -38,12 +38,18 @@ export const DropdownMenuContent = ({ children }: DropdownMenuContentProps) => {
 
 export interface DropdownMenuItemProps {
   name: string;
+  icon?: React.ReactNode;
   onSelect: () => void;
 }
 
-export const DropdownMenuItem = ({ name, onSelect }: DropdownMenuItemProps) => {
+export const DropdownMenuItem = ({
+  name,
+  icon,
+  onSelect,
+}: DropdownMenuItemProps) => {
   return (
     <RadixDropdownMenu.Item className={styles.item} onSelect={onSelect}>
+      {icon && <div className={styles.itemIcon}>{icon}</div>}
       {name}
     </RadixDropdownMenu.Item>
   );

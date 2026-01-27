@@ -6,11 +6,11 @@ import { type ECharts } from "echarts/core";
 import FloatingLegend from "../FloatingLegend";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
+import { variableSettingssAtom } from "@/globals/model";
 import {
   graphSettingsAtom,
   independentVariableAtom,
   paletteAtom,
-  variableSettingssAtom,
 } from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "../generatePlotParameters";

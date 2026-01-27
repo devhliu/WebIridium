@@ -1,8 +1,6 @@
-import { useState, useRef } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useState } from "react";
+import { useAtom, useAtomValue } from "jotai";
 import styles from "./AppMenubar.module.css";
-
-import defaultModel from "@/assets/default.ant?raw";
 
 import {
   MenubarRoot,
@@ -20,29 +18,31 @@ import {
   currentRightPanelAtom,
   currentBottomPanelAtom,
   availableLeftPanelsAtom,
+  ALL_LEFT_PANELS,
 } from "@/globals/layout";
 
 import { useToast } from "@/components/Toast";
-import SearchBar from "./SearchBar";
-import ShareButton from "./sharing/ShareButton";
 import GlobalSettingsDialog from "./globalSettings/GlobalSettingsDialog";
 import HelpDialog from "./HelpDialog";
 import AboutDialog from "./AboutDialog";
+import CloseProjectButton from "./CloseProjectButton";
+import ProjectName from "./ProjectName";
 
-import {
-  convertAntimonyToSbml,
-  convertSbmlToAntimony,
-} from "@/features/antimony";
+import { convertAntimonyToSbml } from "@/features/antimony";
 import { promptDownloadString } from "@/features/download";
-import { nameAtom } from "@/globals/settings";
-import { editorContentAtom, setModelAtom } from "@/globals/model";
+import { editorContentAtom } from "@/globals/model";
+import {
+  hasActiveProjectAtom,
+  metadataAtom,
+  useProjectActions,
+} from "@/globals/project";
 
 const AppMenubar = () => {
   const { toast } = useToast();
 
   const editorContent = useAtomValue(editorContentAtom);
-  const setModel = useSetAtom(setModelAtom);
-  const workspaceName = useAtomValue(nameAtom);
+  const [metadata, setMetadata] = useAtom(metadataAtom);
+  const hasActiveProject = useAtomValue(hasActiveProjectAtom);
 
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
   const [currentLeftPanel, setCurrentLeftPanel] = useAtom(currentLeftPanelAtom);
@@ -57,23 +57,21 @@ const AppMenubar = () => {
   const [isHelpOpen, setHelpOpen] = useState(false);
   const [isAboutOpen, setAboutOpen] = useState(false);
 
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleNew = () => {
-    void setModel({
-      name: "Starter Model",
-      content: defaultModel,
-    });
-  };
+  const {
+    createNewProject,
+    promptProjectFromFile,
+    closeCurrentProject,
+    FileInput,
+  } = useProjectActions();
 
   const handleDownloadAntimony = () => {
-    promptDownloadString(`${workspaceName}.ant`, editorContent, "ant");
+    promptDownloadString(`${metadata.name}.ant`, editorContent, "ant");
   };
 
   const handleDownloadSbml = async () => {
     try {
       const sbml = await convertAntimonyToSbml(editorContent);
-      promptDownloadString(`${workspaceName}.xml`, sbml, "xml");
+      promptDownloadString(`${metadata.name}.xml`, sbml, "xml");
     } catch (e) {
       if (e instanceof Error) {
         toast({
@@ -85,47 +83,9 @@ const AppMenubar = () => {
     }
   };
 
-  const handleFileOpen = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files?.length !== 1) {
-      toast({
-        type: "error",
-        title: "File open failed",
-        description: "A single file must be selected",
-      });
-      return;
-    }
-
-    const file = files[0];
-    const nameWithoutExtension = file.name.split(".")[0];
-    const isSbml =
-      file.name.toLowerCase().endsWith(".sbml") ||
-      file.name.toLowerCase().endsWith(".xml");
-    const reader = new FileReader();
-    reader.readAsText(file);
-    reader.onload = async () => {
-      let content = reader.result as string;
-      if (isSbml) {
-        try {
-          content = await convertSbmlToAntimony(content);
-        } catch (e) {
-          // silently fail and use the content directly
-          console.error(e);
-        }
-      }
-      void setModel({ name: nameWithoutExtension, content });
-    };
-  };
-
   return (
-    <div className={styles.root}>
-      <input
-        style={{ display: "none" }}
-        ref={fileInputRef}
-        type="file"
-        onChange={handleFileOpen}
-        accept=".ant,.txt,.xml,.sbml"
-      />
+    <div className={styles.root} data-testid="app-menubar">
+      <FileInput />
 
       {isSettingsOpen && (
         <GlobalSettingsDialog onClose={() => setSettingsOpen(false)} />
@@ -137,22 +97,27 @@ const AppMenubar = () => {
 
       <MenubarRoot className={styles.menubarLeft}>
         <MenubarMenu name="File">
-          <MenubarItem name="New" onSelect={handleNew} />
+          <MenubarItem name="New Project" onSelect={() => createNewProject()} />
           <MenubarItem
-            name="Open..."
-            onSelect={() => {
-              const fileInput = fileInputRef.current;
-              if (fileInput) {
-                fileInput.value = "";
-                fileInput.click();
-              }
-            }}
+            name="Import File..."
+            onSelect={() => promptProjectFromFile()}
           />
           <MenubarItem
             name="Download as Antimony"
             onSelect={handleDownloadAntimony}
+            disabled={!hasActiveProject}
           />
-          <MenubarItem name="Download as SBML" onSelect={handleDownloadSbml} />
+          <MenubarItem
+            name="Download as SBML"
+            disabled={!hasActiveProject}
+            onSelect={handleDownloadSbml}
+          />
+          <MenubarSeparator />
+          <MenubarItem
+            name="Close Project"
+            disabled={!hasActiveProject}
+            onSelect={closeCurrentProject}
+          />
         </MenubarMenu>
 
         <MenubarMenu name="View">
@@ -160,8 +125,12 @@ const AppMenubar = () => {
             value={currentLeftPanel}
             onValueChange={setCurrentLeftPanel as (newValue: string) => void}
           >
-            {availableLeftPanels.map((panel) => (
-              <MenubarRadioItem key={panel} value={panel}>
+            {ALL_LEFT_PANELS.map((panel) => (
+              <MenubarRadioItem
+                key={panel}
+                value={panel}
+                disabled={!availableLeftPanels.includes(panel)}
+              >
                 {panel}
               </MenubarRadioItem>
             ))}
@@ -176,6 +145,7 @@ const AppMenubar = () => {
                 ? setCurrentBottomPanel("Sliders")
                 : setCurrentBottomPanel(null)
             }
+            disabled={!hasActiveProject}
           >
             Sliders
           </MenubarCheckboxItem>
@@ -211,11 +181,20 @@ const AppMenubar = () => {
       </MenubarRoot>
 
       <div className={styles.menubarCenter}>
-        <SearchBar />
+        {hasActiveProject && (
+          <ProjectName
+            metadata={metadata}
+            onNameChange={(newName) =>
+              setMetadata({ ...metadata, name: newName })
+            }
+          />
+        )}
       </div>
 
       <div className={styles.menubarRight}>
-        <ShareButton />
+        {hasActiveProject && (
+          <CloseProjectButton onClose={closeCurrentProject} />
+        )}
       </div>
     </div>
   );

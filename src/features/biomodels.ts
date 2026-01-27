@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 export interface BiomodelInfo {
   name: string;
@@ -212,34 +212,41 @@ export const useSearchBiomodels = () => {
   const [error, setError] = useState<string | null>(null);
   const abortControllerRef = useRef<AbortController | null>(null);
 
-  const searchBiomodelsInternal = async (term: string, limit: number) => {
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
-    setIsLoading(true);
-
-    const abortController = new AbortController();
-    abortControllerRef.current = abortController;
-
-    try {
-      const result = await searchBiomodels(term, limit, abortController.signal);
-      setBiomodels(result);
-      setError(null);
-      setIsLoading(false);
-      abortControllerRef.current = null;
-    } catch (e) {
-      if (e instanceof DOMException && e.name === "AbortError") {
-        return;
+  const searchBiomodelsInternal = useCallback(
+    async (term: string, limit: number) => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
       }
 
-      setError(String(e));
-      setIsLoading(false);
-      throw e;
-    }
-  };
+      setIsLoading(true);
 
-  const cancelSearch = () => {
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      try {
+        const result = await searchBiomodels(
+          term,
+          limit,
+          abortController.signal,
+        );
+        setBiomodels(result);
+        setError(null);
+        setIsLoading(false);
+        abortControllerRef.current = null;
+      } catch (e) {
+        if (e instanceof DOMException && e.name === "AbortError") {
+          return;
+        }
+
+        setError(String(e));
+        setIsLoading(false);
+        throw e;
+      }
+    },
+    [abortControllerRef, setBiomodels, setError, setIsLoading],
+  );
+
+  const cancelSearch = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort();
       abortControllerRef.current = null;
@@ -247,13 +254,16 @@ export const useSearchBiomodels = () => {
     setBiomodels([]);
     setIsLoading(false);
     setError(null);
-  };
+  }, [abortControllerRef, setBiomodels, setIsLoading, setError]);
 
-  return {
-    biomodels,
-    isLoading,
-    error,
-    searchBiomodels: searchBiomodelsInternal,
-    cancelSearch,
-  };
+  return useMemo(
+    () => ({
+      biomodels,
+      isLoading,
+      error,
+      searchBiomodels: searchBiomodelsInternal,
+      cancelSearch,
+    }),
+    [biomodels, isLoading, error, searchBiomodelsInternal, cancelSearch],
+  );
 };

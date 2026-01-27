@@ -76,7 +76,6 @@ const ExamplesPanel = ({ visible }: ExamplesPanelProps) => {
     const wasModelSetSuccessful = await setModel({
       name: exampleFormattedNames[example],
       content: examples[example],
-      resetCurrentResult: false,
     });
 
     if (!wasModelSetSuccessful) {
