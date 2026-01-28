@@ -61,7 +61,7 @@ export default defineConfig({
           __dirname + "/node_modules/monaco-editor/esm/vs/editor/editor.api",
       },
     ],
-    setupFiles: ["./src/vitestSetup.ts"],
+    setupFiles: ["./src/vitestSetup.ts", "@vitest/web-worker"],
     environment: "jsdom",
     coverage: {
       include: ["src"],

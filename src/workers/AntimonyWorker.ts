@@ -15,6 +15,8 @@ const loadLibraries = () => {
 
   // override the libantimony.wasm import
   const locateFile = (name: string, root: string) => {
+    // special-case node for benchmarks
+    const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
       return LibAntimonyWasm;
     }

@@ -43,11 +43,13 @@ const loadLibraries = () => {
 
   // override the libsbmlsim.wasm import
   const locateFile = (name: string, root: string) => {
+    // special-case node for benchmarks
+    const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
       if (name.includes("antimony")) {
-        return LibAntimonyWasm;
+        return isNode ? "src/vendor/libantimony.wasm" : LibAntimonyWasm;
       } else {
-        return LibSbmlSimWasm;
+        return isNode ? "src/vendor/libsbmlsim.wasm" : LibSbmlSimWasm;
       }
     }
     return root + name;

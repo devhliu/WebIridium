@@ -19,11 +19,13 @@ const loadLibraries = () => {
 
   // override the wasm imports
   const locateFile = (name: string, root: string) => {
+    // special-case node for benchmarks
+    const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
       if (name.includes("antimony")) {
-        return LibAntimonyWasm;
+        return isNode ? "src/vendor/libantimony.wasm" : LibAntimonyWasm;
       } else {
-        return LibCopasiWasm;
+        return isNode ? "src/vendor/copasijs.wasm" : LibCopasiWasm;
       }
     }
     return root + name;
@@ -37,7 +39,10 @@ const loadLibraries = () => {
       (module) => (antimony = new AntimonyWrapper(module)),
     ),
     // if the load fails, reset the promise and try again next time
-  ]).catch(() => (loadedPromise = null));
+  ]).catch((err) => {
+    console.log(err);
+    loadedPromise = null;
+  });
 
   return loadedPromise;
 };
