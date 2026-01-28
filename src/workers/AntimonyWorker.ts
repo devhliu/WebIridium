@@ -4,6 +4,7 @@
 import LibAntimonyWasm from "@/vendor/libantimony.wasm?url";
 import libantimony from "@/vendor/libantimony.js";
 import AntimonyWrapper from "@/vendor/antimony_wrap";
+import wrapActionHandler from "./wrapActionHandler";
 
 let antimony = null;
 
@@ -31,10 +32,8 @@ const loadLibraries = () => {
   return loadedPromise;
 };
 
-const handleMessage = async (e) => {
+const handleAction = async (action) => {
   await loadLibraries();
-
-  const action = e.data;
 
   switch (action.type) {
     case "convertSbmlToAntimony": {
@@ -80,13 +79,4 @@ const handleMessage = async (e) => {
   }
 };
 
-self.onmessage = async (e) => {
-  // when the messgae handler fails, its error must be manually propagated
-  // since it will get eaten up by the promise otherwise
-  try {
-    await handleMessage(e);
-  } catch (err) {
-    console.error(err, err?.stack);
-    self.postMessage({ id: e.data.id, errorMessage: err.message });
-  }
-};
+self.onmessage = wrapActionHandler(self, handleAction);
