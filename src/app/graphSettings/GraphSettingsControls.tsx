@@ -15,9 +15,11 @@ import {
 import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import Select from "@/components/input/Select";
 
-const PRESET_OPTIONS = {
-  [CUSTOM_PRESET]: CUSTOM_PRESET,
-  ...Object.fromEntries(Object.keys(graphPresets).map((name) => [name, name])),
+const PRESET_GROUPS = {
+  Project: { Custom: CUSTOM_PRESET },
+  Shared: Object.fromEntries(
+    Object.keys(graphPresets).map((name) => [name, name]),
+  ),
 };
 
 const GraphSettingsControls = () => {
@@ -25,6 +27,11 @@ const GraphSettingsControls = () => {
     currentGraphPresetAtom,
   );
   const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
+
+  // prettier-ignore
+  const defaultPresetSettings = currentGraphPreset === CUSTOM_PRESET
+    ? defaultGraphSettings
+    : (graphPresets as Record<string, GraphSettings>)[currentGraphPreset];
 
   return (
     <div className={styles.controls}>
@@ -35,20 +42,12 @@ const GraphSettingsControls = () => {
         name="graphPreset"
         value={currentGraphPreset}
         className={styles.presetSelect}
-        options={PRESET_OPTIONS}
+        groups={PRESET_GROUPS}
         onChange={setCurrentGraphPreset}
       />
       <button
         className={buttonStyles.default}
-        onClick={() =>
-          updateGraphSettings(
-            currentGraphPreset === CUSTOM_PRESET
-              ? defaultGraphSettings
-              : ((graphPresets as Record<string, GraphSettings>)[
-                  currentGraphPreset
-                ] ?? defaultGraphSettings),
-          )
-        }
+        onClick={() => updateGraphSettings(defaultPresetSettings)}
       >
         <ResetIcon width="1em" height="1em" />
         Reset to Default

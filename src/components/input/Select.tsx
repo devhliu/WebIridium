@@ -4,26 +4,17 @@ import styles from "./Select.module.css";
 import ChevronDownIcon from "@/assets/icons/ChevronDownIcon.svg?react";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";
 
-export type SelectBaseProps = {
+export type SelectProps = {
   name: string;
   value: string;
   onChange: (newValue: string) => void;
   className?: string;
-
+  // display name -> value
+  readonly options?: { [name: string]: string };
+  // group name -> display name -> value
+  readonly groups?: { [group: string]: { [name: string]: string } };
   "aria-label"?: string;
 };
-
-export type SelectFlatProps = SelectBaseProps & {
-  // display name -> value
-  readonly options: { [name: string]: string };
-};
-
-export type SelectGroupedProps = SelectBaseProps & {
-  // group name -> display name -> value
-  readonly groups: { [group: string]: { [name: string]: string } };
-};
-
-export type SelectProps = SelectFlatProps | SelectGroupedProps;
 
 const SelectItem = ({
   children,
@@ -67,14 +58,14 @@ const Select = (props: SelectProps) => {
             <ChevronDownIcon />
           </RadixSelect.ScrollUpButton>
           <RadixSelect.Viewport>
-            {"options" in props &&
+            {props.options &&
               Object.entries(props.options).map(([name, value]) => (
                 <SelectItem key={value} value={value}>
                   {name}
                 </SelectItem>
               ))}
 
-            {"groups" in props &&
+            {props.groups &&
               Object.entries(props.groups).map(([group, options]) => (
                 <RadixSelect.Group key={group}>
                   <RadixSelect.Label className={styles.label}>

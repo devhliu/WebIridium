@@ -172,8 +172,30 @@ export const graphPresets = {
     legend: {
       ...defaultGraphSettings.legend,
       textColor: "#010a12",
-      backgroundColor: "#b6d5f2",
+      backgroundColor: "#b6f1f2",
       borderColor: "#010a12",
+    },
+  } satisfies GraphSettings,
+
+  Beach: {
+    ...defaultGraphSettings,
+    backgroundColor: "#e8e1c3",
+    drawingAreaColor: "#faf8f2",
+    titleColor: "#080600",
+    borderColor: "#080600",
+    xAxis: {
+      ...defaultGraphSettings.xAxis,
+      color: "#080600",
+    },
+    yAxis: {
+      ...defaultGraphSettings.yAxis,
+      color: "#080600",
+    },
+    legend: {
+      ...defaultGraphSettings.legend,
+      textColor: "#080600",
+      backgroundColor: "#e8c6ba",
+      borderColor: "#080600",
     },
   } satisfies GraphSettings,
 } as const;
