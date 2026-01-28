@@ -5,6 +5,7 @@ import { CopasiSimulator } from "../CopasiSimulator";
 import defaultModel from "@/assets/default.ant?raw";
 import kholodenkoMedium from "./kholodenko_medium.ant?raw";
 import firczukLarge from "./firczuk_large.ant?raw";
+import smallboneXlarge from "./smallbone_xlarge.ant?raw";
 
 {
   const simulator = new CopasiSimulator();
@@ -78,5 +79,30 @@ import firczukLarge from "./firczuk_large.ant?raw";
       });
     },
     { warmupIterations: 3, iterations: 50 },
+  );
+}
+
+{
+  const simulator = new CopasiSimulator();
+  const variables = await simulator.loadModel(smallboneXlarge);
+  const includedVariables = variables.filter(
+    (v) => v.category === "Floating Species",
+  );
+
+  bench(
+    "smallbone xlarge",
+    async () => {
+      await simulator.simulateTimeCourse(smallboneXlarge, {
+        parameters: {
+          startTime: 0,
+          endTime: 30,
+          includedVariables: includedVariables,
+          numberOfPoints: 300,
+          resetInitialConditions: false,
+        },
+        variableValues: {},
+      });
+    },
+    { warmupIterations: 3, iterations: 25 },
   );
 }
