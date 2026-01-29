@@ -40,3 +40,15 @@ describe("simple time course", async () => {
     );
   }
 });
+
+describe("load model", () => {
+  for (const [name, code] of Object.entries(models)) {
+    bench(
+      name,
+      async () => {
+        const simulator = new CopasiSimulator();
+        await simulator.loadModel(code);
+      },
+    );
+  }
+});
