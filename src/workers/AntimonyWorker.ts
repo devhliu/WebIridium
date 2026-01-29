@@ -19,7 +19,7 @@ const loadLibraries = () => {
     // special-case node for benchmarks
     const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
-      return LibAntimonyWasm;
+      return isNode ? "src/vendor/libantimony.wasm" : LibAntimonyWasm;
     }
     return root + name;
   };

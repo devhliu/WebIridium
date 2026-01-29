@@ -1,21 +1,11 @@
 import { describe, bench, vi } from "vitest";
 vi.unmock("@/features/workers");
-import { CopasiSimulator } from "../CopasiSimulator";
+import { CopasiSimulator } from "@/features/simulation/CopasiSimulator";
 
-import defaultModel from "@/assets/default.ant?raw";
-import kholodenkoMedium from "./kholodenko_medium.ant?raw";
-import firczukLarge from "./firczuk_large.ant?raw";
-import smallboneXlarge from "./smallbone_xlarge.ant?raw";
-
-const models = {
-  "default model": defaultModel,
-  "kholodenko medium": kholodenkoMedium,
-  "firczuk large": firczukLarge,
-  "smallbone xlarge": smallboneXlarge,
-};
+import { testModels } from "./testModels.ts";
 
 describe("simple time course", async () => {
-  for (const [name, code] of Object.entries(models)) {
+  for (const [name, code] of Object.entries(testModels)) {
     const simulator = new CopasiSimulator();
     const variables = await simulator.loadModel(code);
     const includedVariables = variables.filter(
@@ -42,13 +32,10 @@ describe("simple time course", async () => {
 });
 
 describe("load model", () => {
-  for (const [name, code] of Object.entries(models)) {
-    bench(
-      name,
-      async () => {
-        const simulator = new CopasiSimulator();
-        await simulator.loadModel(code);
-      },
-    );
+  for (const [name, code] of Object.entries(testModels)) {
+    bench(name, async () => {
+      const simulator = new CopasiSimulator();
+      await simulator.loadModel(code);
+    });
   }
 });
