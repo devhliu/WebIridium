@@ -1,19 +1,14 @@
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom } from "jotai";
 import styles from "./GraphSettingsControls.module.css";
-import buttonStyles from "@/components/Button.module.css";
-import {
-  currentGraphPresetAtom,
-  CUSTOM_PRESET,
-  updateGraphSettingsAtom,
-} from "@/globals/settings";
-import {
-  defaultGraphSettings,
-  graphPresets,
-  type GraphSettings,
-} from "@/features/graphPresets";
+import { currentGraphPresetAtom, CUSTOM_PRESET } from "@/globals/settings";
+import { graphPresets } from "@/features/graphPresets";
 
+import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
+import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
+import TrashIcon from "@/assets/icons/TrashIcon.svg?react";
 import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
 import Select from "@/components/input/Select";
+import IconButton from "@/components/IconButton";
 
 const PRESET_GROUPS = {
   Project: { Custom: CUSTOM_PRESET },
@@ -26,12 +21,9 @@ const GraphSettingsControls = () => {
   const [currentGraphPreset, setCurrentGraphPreset] = useAtom(
     currentGraphPresetAtom,
   );
-  const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
-
-  // prettier-ignore
-  const defaultPresetSettings = currentGraphPreset === CUSTOM_PRESET
-    ? defaultGraphSettings
-    : (graphPresets as Record<string, GraphSettings>)[currentGraphPreset];
+  const isSelectingBuiltin =
+    currentGraphPreset === CUSTOM_PRESET ||
+    Object.hasOwn(graphPresets, currentGraphPreset);
 
   return (
     <div className={styles.controls}>
@@ -45,13 +37,18 @@ const GraphSettingsControls = () => {
         groups={PRESET_GROUPS}
         onChange={setCurrentGraphPreset}
       />
-      <button
-        className={buttonStyles.default}
-        onClick={() => updateGraphSettings(defaultPresetSettings)}
-      >
+      <IconButton label="Add">
+        <PlusIcon width="1em" height="1em" />
+      </IconButton>
+      <IconButton label="Rename">
+        <PencilIcon width="1em" height="1em" />
+      </IconButton>
+      <IconButton label="Reset to Default">
         <ResetIcon width="1em" height="1em" />
-        Reset to Default
-      </button>
+      </IconButton>
+      <IconButton label="Delete" disabled={isSelectingBuiltin}>
+        <TrashIcon width="1em" height="1em" />
+      </IconButton>
     </div>
   );
 };
