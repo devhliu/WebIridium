@@ -297,7 +297,7 @@ textarea {
 
 @font-face {
   font-family: "Source Sans";
-  src: url("@/assets/fonts/SourceSans3-VariableFont_wdth,wght.ttf")
+  src: url("@/assets/fonts/SourceSans3-VariableFont_wght.ttf")
     format("truetype");
   font-weight: 100 900;
   font-style: normal;
@@ -306,7 +306,7 @@ textarea {
 
 @font-face {
   font-family: "Source Sans";
-  src: url("@/assets/fonts/SourceSans3-Italic-VariableFont_wdth,wght.ttf")
+  src: url("@/assets/fonts/SourceSans3-Italic-VariableFont_wght.ttf")
     format("truetype");
   font-weight: 100 900;
   font-style: italic;
