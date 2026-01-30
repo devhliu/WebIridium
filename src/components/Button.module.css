@@ -87,8 +87,8 @@
     }
 
     &:disabled {
-      color: var(--color-ghost-button-disable-fg);
-      background-color: var(--color-ghost-button-disable-bg);
+      color: var(--color-ghost-button-disabled-fg);
+      background-color: var(--color-ghost-button-disabled-bg);
     }
   }
 }
