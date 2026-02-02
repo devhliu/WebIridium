@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 
 import {
@@ -62,7 +62,6 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       setGraphSettings({ ...graphSettings, [setting]: newValue });
-      void save();
     };
   };
 
@@ -77,7 +76,6 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
           [setting]: newValue,
         },
       });
-      void save();
     };
   };
 
@@ -92,7 +90,6 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
           [setting]: newValue,
         },
       });
-      void save();
     };
   };
 
@@ -107,7 +104,6 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
           [setting]: newValue,
         },
       });
-      void save();
     };
   };
 

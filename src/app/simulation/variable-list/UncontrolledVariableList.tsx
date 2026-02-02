@@ -1,4 +1,4 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue } from "jotai";
 import { useCallback } from "react";
 import { variablesAtom, variableSettingssAtom } from "@/globals/model";
 import { type VariableSettings } from "@/globals/settings";
@@ -19,9 +19,8 @@ const UncontrolledVariableList = () => {
         ...old,
         [variableName]: newSettings,
       }));
-      void save();
     },
-    [setVariableSettingss, save],
+    [setVariableSettingss],
   );
 
   return (
