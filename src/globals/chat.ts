@@ -1,14 +1,17 @@
 import { atom } from "jotai";
-import { saveAtom } from "./saving";
+import { atomWithStorage } from "jotai/utils";
 
 // TODO: Put all the settings under one chat settings object
 
-export const apiKeyAtom = atom<string | null>(null);
+export const apiKeyAtom = atomWithStorage<string | null>("chat_apiKey", null);
 
 export const DEFAULT_SYSTEM_PROMPT =
   "You are a systems biologist that specializes in a biological compound and reaction modeling language named Antimony that is based off of SBML, help the user debug and analyze their models that are written in Antimony";
 
-export const systemPromptAtom = atom<string>(DEFAULT_SYSTEM_PROMPT);
+export const systemPromptAtom = atomWithStorage<string>(
+  "chat_systemPrompt",
+  DEFAULT_SYSTEM_PROMPT,
+);
 
 export const AVAILABLE_MODELS = [
   { id: "gpt-5.2", name: "GPT-5.2" },
@@ -39,7 +42,91 @@ export interface ChatConversation {
 
 const MAX_CHAT_HISTORY = 100;
 
-const _chatHistoryAtom = atom<ChatConversation[]>([]);
+const _chatHistoryAtom = atomWithStorage<ChatConversation[]>(
+  "chat_history",
+  [],
+);
+
+// Legacy migration logic
+
+const DATABASE_NAME = "testing_database4";
+const DATABASE_VERSION = 1;
+const MAIN_STORE_NAME = "main";
+const MAIN_KEY_NAME = "main";
+
+interface LegacySavedData {
+  workspace: {
+    chatHistory?: ChatConversation[];
+    chatSystemPrompt?: string | null;
+    apiKey?: string | null;
+  };
+}
+
+const requestSavedDataForMigration = (): Promise<LegacySavedData | null> => {
+  return new Promise((resolve) => {
+    if (typeof window.indexedDB === "undefined") {
+      resolve(null);
+      return;
+    }
+
+    const request = indexedDB.open(DATABASE_NAME, DATABASE_VERSION);
+
+    request.onerror = () => resolve(null);
+
+    request.onupgradeneeded = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      db.close();
+      resolve(null);
+    };
+
+    request.onsuccess = (event) => {
+      const db = (event.target as IDBOpenDBRequest).result;
+      try {
+        const transaction = db.transaction([MAIN_STORE_NAME], "readonly");
+        const getRequest = transaction
+          .objectStore(MAIN_STORE_NAME)
+          .get(MAIN_KEY_NAME);
+
+        getRequest.onsuccess = () => {
+          resolve(getRequest.result as LegacySavedData);
+        };
+        getRequest.onerror = () => resolve(null);
+      } catch {
+        resolve(null);
+      }
+    };
+  });
+};
+
+const MIGRATION_KEY = "chat_migration_v1_complete";
+
+export const migrateFromLegacyDbAtom = atom(null, async (_get, set) => {
+  const alreadyMigrated = localStorage.getItem(MIGRATION_KEY);
+  if (alreadyMigrated) {
+    console.log("Chat data already migrated, skipping.");
+    return;
+  }
+
+  console.log("Starting chat data migration from legacy DB...");
+  try {
+    const data = await requestSavedDataForMigration();
+    if (data && data.workspace) {
+      if (data.workspace.apiKey) {
+        set(apiKeyAtom, data.workspace.apiKey);
+      }
+      if (data.workspace.chatSystemPrompt) {
+        set(systemPromptAtom, data.workspace.chatSystemPrompt);
+      }
+      if (data.workspace.chatHistory) {
+        set(_chatHistoryAtom, data.workspace.chatHistory);
+      }
+      console.log("Chat data migration successful.");
+    }
+    localStorage.setItem(MIGRATION_KEY, "true");
+  } catch (e) {
+    console.error("Failed to migrate legacy chat data", e);
+  }
+});
 
 export const updateAllChatHistoryAtom = atom(
   null,
@@ -89,8 +176,5 @@ export const upsertActiveConversationAtom = atom(
       set(_chatHistoryAtom, newHistory);
       set(activeConversationAtom, record);
     }
-
-    // persist
-    void set(saveAtom);
   },
 );

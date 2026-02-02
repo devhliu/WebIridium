@@ -11,7 +11,6 @@ import {
   simulatorAtom,
   updateSimulatorAtom,
 } from "@/globals/simulator";
-import { saveAtom } from "@/globals/saving";
 
 import styles from "./globalSettings.module.css";
 import PropertyList from "@/components/property-list/PropertyList";
@@ -37,7 +36,6 @@ for (const simulator of SIMULATOR_LIST) {
 const GlobalSettingsPanel = () => {
   const [themeOption, setThemeOption] = useAtom(themeOptionAtom);
   const [editorFontSize, setEditorFontSize] = useAtom(editorFontSizeAtom);
-  const save = useSetAtom(saveAtom);
   const simulator = useAtomValue(simulatorAtom);
   const updateSimulator = useSetAtom(updateSimulatorAtom);
 
@@ -52,7 +50,6 @@ const GlobalSettingsPanel = () => {
             value={themeOption}
             onChange={(newTheme) => {
               setThemeOption(newTheme as ThemeOption);
-              void save();
             }}
           />
           <NumericSliderProperty
@@ -62,7 +59,6 @@ const GlobalSettingsPanel = () => {
             value={editorFontSize}
             onChange={(newSize) => {
               setEditorFontSize(newSize);
-              void save();
             }}
           />
 
@@ -73,7 +69,6 @@ const GlobalSettingsPanel = () => {
             value={getSimulatorName(simulator)}
             onChange={(name) => {
               updateSimulator(name);
-              void save();
             }}
           />
         </PropertyList>

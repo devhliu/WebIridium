@@ -2,14 +2,12 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useCallback } from "react";
 import { variablesAtom, variableSettingssAtom } from "@/globals/model";
 import { type VariableSettings } from "@/globals/settings";
-import { saveAtom } from "@/globals/saving";
 import VariableList from "@/app/simulation/variable-list/VariableList";
 
 /**
  * VariableList that manages variables itself using the global variable state.
  */
 const UncontrolledVariableList = () => {
-  const save = useSetAtom(saveAtom);
   const variables = useAtomValue(variablesAtom);
   const [variableSettingss, setVariableSettingss] = useAtom(
     variableSettingssAtom,

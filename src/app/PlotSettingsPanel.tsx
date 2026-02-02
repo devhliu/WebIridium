@@ -11,7 +11,6 @@ import {
   type LegendSettings,
 } from "@/globals/settings";
 import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
-import { saveAtom } from "@/globals/saving";
 
 import styles from "./PlotSettingsPanel.module.css";
 import buttonStyles from "@/components/Button.module.css";
@@ -44,7 +43,6 @@ export interface PlotSettingsPanelProps {
 }
 
 const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
-  const save = useSetAtom(saveAtom);
   const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
   const [palette, setPalette] = useAtom(paletteAtom);
 

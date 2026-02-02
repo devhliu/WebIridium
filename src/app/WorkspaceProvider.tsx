@@ -3,15 +3,7 @@ import { Provider, useSetAtom } from "jotai";
 
 import defaultModel from "@/assets/default.ant?raw";
 
-import { requestSavedData, type SavedDataV1 } from "@/features/saving";
-
 import { setModelAtom } from "@/globals/model";
-import {
-  DEFAULT_SYSTEM_PROMPT,
-  systemPromptAtom,
-  updateAllChatHistoryAtom,
-} from "@/globals/chat";
-import { apiKeyAtom } from "@/globals/chat";
 import { activeProjectFileAtom } from "@/globals/project";
 import type { ProjectId } from "@/features/projectData";
 
@@ -23,10 +15,6 @@ const Initialize = ({
   shouldStubActiveFile?: boolean;
 }) => {
   const setModel = useSetAtom(setModelAtom);
-
-  const updateAllChatHistory = useSetAtom(updateAllChatHistoryAtom);
-  const setApiKey = useSetAtom(apiKeyAtom);
-  const setChatPrompt = useSetAtom(systemPromptAtom);
 
   const setActiveProjectFile = useSetAtom(activeProjectFileAtom);
 
@@ -45,34 +33,11 @@ const Initialize = ({
           });
           return;
         }
-
-        let savedData: SavedDataV1 | null = null;
-        try {
-          savedData = await requestSavedData();
-        } catch (err) {
-          console.error(err);
-        }
-
-        if (savedData) {
-          updateAllChatHistory(savedData.workspace.chatHistory ?? []);
-          setApiKey(savedData.workspace.apiKey ?? null);
-          setChatPrompt(
-            savedData.workspace.chatSystemPrompt ?? DEFAULT_SYSTEM_PROMPT,
-          );
-        }
       };
 
       void loadWithInitial();
     }
-  }, [
-    didInitialLoadRef,
-    setModel,
-    setActiveProjectFile,
-    updateAllChatHistory,
-    setApiKey,
-    setChatPrompt,
-    shouldStubActiveFile,
-  ]);
+  }, [didInitialLoadRef, setModel, setActiveProjectFile, shouldStubActiveFile]);
 
   return null;
 };

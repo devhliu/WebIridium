@@ -17,7 +17,6 @@ import {
   availableLeftPanelsAtom,
 } from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
-import { saveAtom } from "@/globals/saving";
 import { activeProjectFileAtom } from "@/globals/project";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
@@ -44,8 +43,6 @@ import ResultTabbedPanel from "./results/ResultsTabbedPanel";
 import PlotSettingsPanel from "./PlotSettingsPanel";
 import ChatPanel from "./ChatPanel";
 import StartPanel from "./start/StartPanel";
-
-const SAVE_INTERVAL = 60_000; // in ms
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -187,37 +184,11 @@ const ThemeUpdater = () => {
   return null;
 };
 
-// TODO: delete this
-const DataSaver = () => {
-  const save = useSetAtom(saveAtom);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      void save();
-    }, SAVE_INTERVAL);
-
-    return () => clearInterval(id);
-  }, [save]);
-
-  useEffect(() => {
-    const handleUnload = () => {
-      void save();
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [save]);
-
-  return null;
-};
-
 const App = () => {
   return (
     <AppErrorWrapperPage>
       <AppProvider>
         <ThemeUpdater />
-        <DataSaver />
         <ProjectAutoSaver />
         <AppContent />
       </AppProvider>
