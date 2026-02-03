@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { useAtom, useSetAtom, useAtomValue } from "jotai";
-import { saveAtom } from "@/globals/saving";
+
 import {
   chatHistoryAtom,
   activeConversationAtom,
   upsertActiveConversationAtom,
+  migrateFromLegacyDbAtom,
   apiKeyAtom,
   systemPromptAtom,
   DEFAULT_SYSTEM_PROMPT,
@@ -104,17 +105,16 @@ const ConversationItem = ({
 const ChatSettings = ({
   apiKey,
   setApiKey,
-  setSave,
   onClose,
   waitingForReply,
 }: {
   apiKey: string | null;
   setApiKey: (key: string | null) => void;
-  setSave: () => void;
   onClose: () => void;
   waitingForReply: boolean;
 }) => {
   const [keyInput, setKeyInput] = useState("");
+
   const [systemPrompt, setSystemPrompt] = useAtom(systemPromptAtom);
   const [promptInput, setPromptInput] = useState(systemPrompt);
 
@@ -127,40 +127,20 @@ const ChatSettings = ({
     if (keyInput) {
       setApiKey(keyInput);
       setKeyInput("");
-      try {
-        void setSave();
-      } catch (_e) {
-        void _e;
-      }
     }
   };
 
   const handleClearKey = () => {
     setApiKey(null);
-    try {
-      void setSave();
-    } catch (_e) {
-      void _e;
-    }
   };
 
   const handleSavePrompt = () => {
     setSystemPrompt(promptInput);
-    try {
-      void setSave();
-    } catch (_e) {
-      void _e;
-    }
   };
 
   const handleResetPrompt = () => {
     setPromptInput(DEFAULT_SYSTEM_PROMPT);
     setSystemPrompt(DEFAULT_SYSTEM_PROMPT);
-    try {
-      void setSave();
-    } catch (_e) {
-      void _e;
-    }
   };
 
   return (
@@ -256,7 +236,7 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   const editorContent = useAtomValue(editorContentAtom);
   const messagesRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
-  const setSave = useSetAtom(saveAtom);
+
   const [showHistory, setShowHistory] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [chatHistory] = useAtom(chatHistoryAtom);
@@ -266,6 +246,11 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
   );
 
   const upsertActiveConversation = useSetAtom(upsertActiveConversationAtom);
+  const migrateChatData = useSetAtom(migrateFromLegacyDbAtom);
+
+  useEffect(() => {
+    void migrateChatData();
+  }, [migrateChatData]);
 
   const isContextActive = includeModel && hasActiveProject;
 
@@ -472,7 +457,6 @@ const ChatPanel = ({ visible }: ChatPanelProps) => {
           <ChatSettings
             apiKey={apiKey}
             setApiKey={setApiKey}
-            setSave={setSave}
             onClose={() => setShowSettings(false)}
             waitingForReply={waitingForReply}
           />

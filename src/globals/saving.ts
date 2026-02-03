@@ -1,7 +1,4 @@
 import { atom } from "jotai";
-import { commitSavedData } from "@/features/saving";
-import { apiKeyAtom, systemPromptAtom } from "./chat";
-import { chatHistoryAtom } from "./chat";
 import {
   fileSystemChangeIdAtom,
   hasActiveProjectAtom,
@@ -20,16 +17,6 @@ import {
 } from "./settings";
 import { historyAtom } from "./history";
 import { saveProjectRaw } from "@/features/fileSystem";
-
-export const saveAtom = atom(null, async (get, _set): Promise<void> => {
-  await commitSavedData({
-    workspace: {
-      chatHistory: get(chatHistoryAtom),
-      chatSystemPrompt: get(systemPromptAtom),
-      apiKey: get(apiKeyAtom),
-    },
-  });
-});
 
 const _isSavingAtom = atom(0);
 export const isSavingAtom = atom((get) => get(_isSavingAtom) > 0);
