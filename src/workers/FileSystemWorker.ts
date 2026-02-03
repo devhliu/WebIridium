@@ -1,5 +1,3 @@
-// eslint-ignore-all
-import { errorToDisplayString } from "@/features/formatUtils";
 import type {
   ProjectData,
   ProjectId,
@@ -9,7 +7,8 @@ import type {
   UnknownResultsData,
 } from "@/features/projectData";
 import type { Metadata } from "@/features/projectData";
-import type { Action, ErrorResult, Result } from "@/features/taskPool";
+import type { Action, Result } from "@/features/taskPool";
+import wrapActionHandler from "./wrapActionHandler";
 
 export type ListProjectsAction = Action<"listProjects", null>;
 export type ListProjectsResult = Result<Map<ProjectId, UnknownMetadata>>;
@@ -311,18 +310,4 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
   }
 };
 
-self.onmessage = async (e) => {
-  try {
-    // eslint-disable-next-line
-    const result = await handleAction(e.data);
-    self.postMessage(result);
-  } catch (err) {
-    self.postMessage({
-      // eslint-disable-next-line
-      id: e.data.id,
-      errorMessage: errorToDisplayString(err),
-    } satisfies ErrorResult);
-
-    throw err;
-  }
-};
+self.onmessage = wrapActionHandler(self, handleAction);

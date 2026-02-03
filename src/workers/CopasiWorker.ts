@@ -7,6 +7,7 @@ import createCpsModule from "@/vendor/copasijs.js";
 import COPASI from "@/vendor/copasi.js";
 import libantimony from "@/vendor/libantimony.js";
 import AntimonyWrapper from "@/vendor/antimony_wrap.js";
+import wrapActionHandler from "./wrapActionHandler";
 
 let copasi = null;
 let antimony = null;
@@ -19,11 +20,13 @@ const loadLibraries = () => {
 
   // override the wasm imports
   const locateFile = (name: string, root: string) => {
+    // special-case node for benchmarks
+    const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
       if (name.includes("antimony")) {
-        return LibAntimonyWasm;
+        return isNode ? "src/vendor/libantimony.wasm" : LibAntimonyWasm;
       } else {
-        return LibCopasiWasm;
+        return isNode ? "src/vendor/copasijs.wasm" : LibCopasiWasm;
       }
     }
     return root + name;
@@ -37,7 +40,10 @@ const loadLibraries = () => {
       (module) => (antimony = new AntimonyWrapper(module)),
     ),
     // if the load fails, reset the promise and try again next time
-  ]).catch(() => (loadedPromise = null));
+  ]).catch((err) => {
+    console.log(err);
+    loadedPromise = null;
+  });
 
   return loadedPromise;
 };
@@ -45,10 +51,8 @@ const loadLibraries = () => {
 let cachedModelInfo = null;
 let cachedBoundarySpeciesNames = null;
 let cachedReactionIds = null;
-const handleMessage = async (e) => {
+const handleAction = async (action) => {
   await loadLibraries();
-
-  const action = e.data;
 
   // Update loaded model if it changed
   const antimonyCode = action.internalState;
@@ -188,13 +192,4 @@ const handleMessage = async (e) => {
   }
 };
 
-self.onmessage = async (e) => {
-  // when the messgae handler fails, its error must be manually propagated
-  // since it will get eaten up by the promise otherwise
-  try {
-    await handleMessage(e);
-  } catch (err) {
-    console.error(err, err?.stack);
-    self.postMessage({ id: e.data.id, errorMessage: err.message });
-  }
-};
+self.onmessage = wrapActionHandler(self, handleAction);

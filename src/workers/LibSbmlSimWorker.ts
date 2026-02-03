@@ -7,6 +7,7 @@ import libsbmlsim from "@/vendor/libsbmlsim.js";
 import libantimony from "@/vendor/libantimony.js";
 import AntimonyWrapper from "@/vendor/antimony_wrap.js";
 import { type Simulator } from "@/vendor/libsbmlsim.d.ts";
+import wrapActionHandler from "./wrapActionHandler";
 
 let simulator: Simulator = null;
 let antimony = null;
@@ -43,11 +44,13 @@ const loadLibraries = () => {
 
   // override the libsbmlsim.wasm import
   const locateFile = (name: string, root: string) => {
+    // special-case node for benchmarks
+    const isNode = typeof process === "object" && !process.browser;
     if (name.endsWith(".wasm")) {
       if (name.includes("antimony")) {
-        return LibAntimonyWasm;
+        return isNode ? "src/vendor/libantimony.wasm" : LibAntimonyWasm;
       } else {
-        return LibSbmlSimWasm;
+        return isNode ? "src/vendor/libsbmlsim.wasm" : LibSbmlSimWasm;
       }
     }
     return root + name;
@@ -69,10 +72,8 @@ const loadLibraries = () => {
 let cachedFloatingSpecies = null;
 let cachedBoundarySpecies = null;
 let cachedParameters = null;
-const handleMessage = async (e) => {
+const handleAction = async (action) => {
   await loadLibraries();
-
-  const action = e.data;
 
   // Update loaded model if it changed
   const antimonyCode = action.internalState;
@@ -163,13 +164,4 @@ const handleMessage = async (e) => {
   }
 };
 
-self.onmessage = async (e) => {
-  // when the messgae handler fails, its error must be manually propagated
-  // since it will get eaten up by the promise otherwise
-  try {
-    await handleMessage(e);
-  } catch (err) {
-    console.error(err, err?.stack);
-    self.postMessage({ id: e.data.id, errorMessage: err.message });
-  }
-};
+self.onmessage = wrapActionHandler(self, handleAction);
