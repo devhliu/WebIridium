@@ -1,14 +1,16 @@
 import { useAtom } from "jotai";
 import styles from "./GraphSettingsControls.module.css";
 import { currentGraphPresetAtom, CUSTOM_PRESET } from "@/globals/settings";
-import { graphPresets } from "@/features/graphPresets";
+import { defaultGraphSettings, graphPresets } from "@/features/graphPresets";
 
 import PlusIcon from "@/assets/icons/PlusIcon.svg?react";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 import TrashIcon from "@/assets/icons/TrashIcon.svg?react";
 import ResetIcon from "@/assets/icons/ResetIcon.svg?react";
+import ThreeDotsIcon from "@/assets/icons/ThreeDotsIcon.svg?react";
 import Select from "@/components/input/Select";
 import IconButton from "@/components/IconButton";
+import { DropdownMenuContent, DropdownMenuItem, DropdownMenuRoot, DropdownMenuTrigger } from "@/components/DropdownMenu";
 
 const PRESET_GROUPS = {
   Project: { Custom: CUSTOM_PRESET },
@@ -40,15 +42,18 @@ const GraphSettingsControls = () => {
       <IconButton label="Add">
         <PlusIcon width="1em" height="1em" />
       </IconButton>
-      <IconButton label="Rename">
-        <PencilIcon width="1em" height="1em" />
-      </IconButton>
-      <IconButton label="Reset to Default">
-        <ResetIcon width="1em" height="1em" />
-      </IconButton>
-      <IconButton label="Delete" disabled={isSelectingBuiltin}>
-        <TrashIcon width="1em" height="1em" />
-      </IconButton>
+      <DropdownMenuRoot>
+        <DropdownMenuTrigger>
+          <IconButton label="Options">
+            <ThreeDotsIcon width="1em" height="1em" />
+          </IconButton>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem name="Rename" onSelect={() => {}} icon={<PencilIcon width="1em" height="1em" />} />
+          <DropdownMenuItem name="Reset to Default" onSelect={() => {}} icon={<ResetIcon width="1em" height="1em" />} />
+          <DropdownMenuItem name="Delete" onSelect={() => {}} icon={<TrashIcon width="1em" height="1em" />} />
+        </DropdownMenuContent>
+      </DropdownMenuRoot>
     </div>
   );
 };
