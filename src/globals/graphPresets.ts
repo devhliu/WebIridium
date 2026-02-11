@@ -1,3 +1,5 @@
+import { atom } from "jotai";
+
 export interface AxisSettings {
   includeTitle: boolean;
   title: string;
@@ -132,7 +134,7 @@ export const defaultGraphSettings: GraphSettings = {
   },
 };
 
-export const graphPresets = {
+export const builtinGraphPresets = {
   Dark: {
     ...defaultGraphSettings,
     backgroundColor: "#000000",
@@ -199,3 +201,33 @@ export const graphPresets = {
     },
   } satisfies GraphSettings,
 } as const;
+
+export const CUSTOM_PRESET = "Custom";
+export const currentGraphPresetAtom = atom(CUSTOM_PRESET);
+
+export const customGraphSettingsAtom = atom(defaultGraphSettings);
+
+export const graphPresetsAtom = atom(
+  builtinGraphPresets as Record<string, GraphSettings | undefined>,
+);
+
+export const graphSettingsAtom = atom(
+  (get) =>
+    get(graphPresetsAtom)[get(currentGraphPresetAtom)] ??
+    get(customGraphSettingsAtom),
+);
+export const updateGraphSettingsAtom = atom(
+  null,
+  (get, set, newSettings: GraphSettings) => {
+    const preset = get(currentGraphPresetAtom);
+    const presets = get(graphPresetsAtom);
+    if (preset === CUSTOM_PRESET) {
+      set(customGraphSettingsAtom, newSettings);
+    } else {
+      set(graphPresetsAtom, {
+        ...presets,
+        [preset]: newSettings,
+      });
+    }
+  },
+);

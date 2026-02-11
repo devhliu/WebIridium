@@ -2,16 +2,14 @@ import { useAtom, useSetAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 
 import {
-  graphSettingsAtom,
-  paletteAtom,
-  updateGraphSettingsAtom,
-} from "@/globals/settings";
-import {
   type AxisSettings,
   type GraphSettings,
   type GridSettings,
   type LegendSettings,
-} from "@/features/graphPresets";
+  graphSettingsAtom,
+  updateGraphSettingsAtom,
+} from "@/globals/graphPresets";
+import { paletteAtom } from "@/globals/settings";
 import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
 
 import styles from "./GraphSettingsPanel.module.css";
