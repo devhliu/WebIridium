@@ -7,7 +7,7 @@ import {
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
 } from "@/globals/settings";
-import { defaultGraphSettings } from "./graphPresets";
+import { defaultGraphSettings } from "@/globals/graphPresets";
 import { getRandomCssGradient } from "./cssGradients";
 
 import type { MetadataV1 } from "./migrations/metadata/v1";

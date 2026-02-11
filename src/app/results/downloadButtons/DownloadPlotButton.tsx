@@ -15,11 +15,8 @@ import { useToast } from "@/components/Toast";
 import { simulationResultAtom } from "@/globals/simulation";
 import { datasetsAtom } from "@/globals/overlays";
 import { variableSettingssAtom } from "@/globals/model";
-import {
-  graphSettingsAtom,
-  paletteAtom,
-  independentVariableAtom,
-} from "@/globals/settings";
+import { graphSettingsAtom } from "@/globals/graphPresets";
+import { paletteAtom, independentVariableAtom } from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { xAxisTitleAtom, yAxisTitleAtom } from "@/globals/plot";
 import { metadataAtom } from "@/globals/project";

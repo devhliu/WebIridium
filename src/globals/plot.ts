@@ -1,6 +1,7 @@
 import { atom } from "jotai";
 import { variableSettingssAtom } from "./model";
-import { graphSettingsAtom, independentVariableAtom } from "./settings";
+import { graphSettingsAtom } from "./graphPresets";
+import { independentVariableAtom } from "./settings";
 
 export const defaultXAxisTitleAtom = atom((get) => {
   const independentVariableName = get(independentVariableAtom);

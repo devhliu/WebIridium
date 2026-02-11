@@ -7,11 +7,8 @@ import FloatingLegend from "../FloatingLegend";
 
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import { variableSettingssAtom } from "@/globals/model";
-import {
-  graphSettingsAtom,
-  independentVariableAtom,
-  paletteAtom,
-} from "@/globals/settings";
+import { graphSettingsAtom } from "@/globals/graphPresets";
+import { independentVariableAtom, paletteAtom } from "@/globals/settings";
 import { useScanIndependentVariable } from "@/features/simulation/useScanIndependentVariable";
 import { generatePlotParameters } from "../generatePlotParameters";
 

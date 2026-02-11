@@ -9,7 +9,7 @@ import {
   type UnknownMetadata,
   type UnknownResultsData,
 } from "@/features/projectData";
-import { defaultGraphSettings } from "@/features/graphPresets";
+import { defaultGraphSettings } from "@/globals/graphPresets";
 import {
   defaultParameterScanOptions,
   defaultTimeCourseParameters,

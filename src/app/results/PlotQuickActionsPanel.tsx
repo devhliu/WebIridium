@@ -12,8 +12,11 @@ import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
 import LayersIcon from "@/assets/icons/LayersIcon.svg?react";
 
-import { graphSettingsAtom, updateGraphSettingsAtom } from "@/globals/settings";
-import { type GraphSettings } from "@/features/graphPresets";
+import {
+  graphSettingsAtom,
+  updateGraphSettingsAtom,
+  type GraphSettings,
+} from "@/globals/graphPresets";
 import { currentVeryRightPanelAtom } from "@/globals/layout";
 
 const PlotQuickActionsPanel = () => {

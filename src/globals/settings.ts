@@ -11,11 +11,6 @@ import type {
   ParameterScanResult,
   TimeCourseParameters,
 } from "@/features/simulation/Simulator";
-import {
-  defaultGraphSettings,
-  graphPresets,
-  type GraphSettings,
-} from "@/features/graphPresets";
 
 /** Time course parameters that are editable by the user manually. */
 export type EditableTimeCourseParameters = Omit<
@@ -74,35 +69,3 @@ export const defaultParameterScanOptions: ParameterScanOptions = {
   numberList: "1 2 3 4 5",
 };
 export const parameterScanOptionsAtom = atom(defaultParameterScanOptions);
-
-// GRAPH SETTINGS STUFF
-
-export const CUSTOM_PRESET = "Custom";
-export const currentGraphPresetAtom = atom(CUSTOM_PRESET);
-
-export const customGraphSettingsAtom = atom(defaultGraphSettings);
-
-export const graphPresetsAtom = atom(
-  graphPresets as Record<string, GraphSettings | undefined>,
-);
-
-export const graphSettingsAtom = atom(
-  (get) =>
-    get(graphPresetsAtom)[get(currentGraphPresetAtom)] ??
-    get(customGraphSettingsAtom),
-);
-export const updateGraphSettingsAtom = atom(
-  null,
-  (get, set, newSettings: GraphSettings) => {
-    const preset = get(currentGraphPresetAtom);
-    const presets = get(graphPresetsAtom);
-    if (preset === CUSTOM_PRESET) {
-      set(customGraphSettingsAtom, newSettings);
-    } else {
-      set(graphPresetsAtom, {
-        ...presets,
-        [preset]: newSettings,
-      });
-    }
-  },
-);

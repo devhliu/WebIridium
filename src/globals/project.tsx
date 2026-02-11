@@ -24,6 +24,8 @@ import { updateAllHistoryAtom } from "./history";
 import {
   currentGraphPresetAtom,
   customGraphSettingsAtom,
+} from "./graphPresets";
+import {
   independentVariableAtom,
   parameterScanOptionsAtom,
   timeCourseParametersAtom,

@@ -13,9 +13,8 @@ import type {
 import {
   currentGraphPresetAtom,
   customGraphSettingsAtom,
-  parameterScanOptionsAtom,
-  timeCourseParametersAtom,
-} from "./settings";
+} from "./graphPresets";
+import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
 import { historyAtom } from "./history";
 import { saveProjectRaw } from "@/features/fileSystem";
 
