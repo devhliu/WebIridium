@@ -72,6 +72,11 @@ const ProjectAutoSaver = () => {
   const savedIridium = useAtomValue(savedIridiumAtom);
 
   useEffect(() => {
+    if (import.meta.env.DEV) {
+      // this popup is annoying because of hot reload
+      return;
+    }
+
     const handleUnload = (e: Event) => {
       if (savingRef.current > 0 || isSaving) {
         e.preventDefault();
