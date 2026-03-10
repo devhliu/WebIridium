@@ -9,11 +9,7 @@ import {
   isSavingAtom,
 } from "@/globals/saving";
 import { hasActiveProjectAtom } from "@/globals/project";
-import type {
-  IridiumData,
-  Metadata,
-  ResultsData,
-} from "@/features/projectData";
+import type { IridiumData, Metadata, ResultsData } from "@/features/savedData";
 
 const SAVE_DEBOUNCE = 1_000;
 

@@ -9,7 +9,7 @@ import type {
   IridiumData,
   ProjectData,
   ResultsData,
-} from "@/features/projectData";
+} from "@/features/savedData";
 import { graphPresetNameAtom, projectGraphSettingsAtom } from "./graphPresets";
 import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
 import { historyAtom } from "./history";

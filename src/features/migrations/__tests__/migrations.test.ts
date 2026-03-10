@@ -8,7 +8,7 @@ import {
   type UnknownIridiumData,
   type UnknownMetadata,
   type UnknownResultsData,
-} from "@/features/projectData";
+} from "@/features/savedData";
 import { defaultGraphSettings } from "@/globals/graphPresets";
 import {
   defaultParameterScanOptions,

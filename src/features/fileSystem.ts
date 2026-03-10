@@ -11,6 +11,10 @@
         \- iridium.json
         \- results.json
          \- project.ant
+   \- presets (these are .json but not named so)
+      \- {preset name}
+      \- {preset name}
+      \- {preset name}
  */
 
 import {
@@ -20,13 +24,17 @@ import {
   type ProjectData,
   getNewProjectId,
   getNewProjectData,
-} from "./projectData";
+  type GraphSettings,
+  type UnknownGraphSettings,
+} from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
   CloseCurrentProjectAction,
   CloseCurrentProjectResult,
   DeleteProjectAction,
   DeleteProjectResult,
+  GetAllPresetsAction,
+  GetAllPresetsResult,
   ListProjectsAction,
   ListProjectsResult,
   NewProjectAction,
@@ -35,6 +43,8 @@ import type {
   OpenProjectResult,
   SaveProjectAction,
   SaveProjectResult,
+  WritePresetAction,
+  WritePresetResult,
 } from "@/workers/FileSystemWorker";
 import { createWorker } from "@/features/workers";
 
@@ -142,6 +152,33 @@ export const deleteProjectRaw = async (id: ProjectId): Promise<void> => {
   await fileWorker.runTask<DeleteProjectAction, DeleteProjectResult>(
     "deleteProject",
     id,
+    null,
+  );
+};
+
+/**
+ * Write to a preset. Not guaranteed to go through.
+ */
+export const writePresetRaw = async (
+  name: string,
+  settings: GraphSettings,
+): Promise<void> => {
+  await fileWorker.runTask<WritePresetAction, WritePresetResult>(
+    "writePreset",
+    { name, settings },
+    null,
+  );
+};
+
+/**
+ * Get a list of all presets. May fail.
+ */
+export const getAllPresetsRaw = async (): Promise<
+  Map<string, UnknownGraphSettings>
+> => {
+  return await fileWorker.runTask<GetAllPresetsAction, GetAllPresetsResult>(
+    "getAllPresets",
+    null,
     null,
   );
 };

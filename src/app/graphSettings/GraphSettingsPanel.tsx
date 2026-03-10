@@ -2,13 +2,10 @@ import { useAtom, useSetAtom, useAtomValue } from "jotai";
 import { useState } from "react";
 
 import {
-  type AxisSettings,
-  type GraphSettings,
-  type GridSettings,
-  type LegendSettings,
   graphSettingsAtom,
   updateGraphSettingsAtom,
 } from "@/globals/graphPresets";
+import type { GraphSettings } from "@/features/savedData";
 import { paletteAtom } from "@/globals/settings";
 import { defaultXAxisTitleAtom, defaultYAxisTitleAtom } from "@/globals/plot";
 
@@ -66,7 +63,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   };
 
   const handleAxisChangeFor = (
-    setting: keyof AxisSettings,
+    setting: keyof GraphSettings["xAxis"],
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       updateGraphSettings({
@@ -80,7 +77,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   };
 
   const handleGridChangeFor = (
-    setting: keyof GridSettings,
+    setting: keyof GraphSettings["majorGrid"],
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       updateGraphSettings({
@@ -94,7 +91,7 @@ const PlotSettingsPanel = ({ onClose }: PlotSettingsPanelProps) => {
   };
 
   const handleLegendChangeFor = (
-    setting: keyof LegendSettings,
+    setting: keyof GraphSettings["legend"],
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
       updateGraphSettings({

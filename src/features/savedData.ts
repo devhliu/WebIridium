@@ -22,17 +22,22 @@ import {
 } from "./migrations/iridium/v3_graphPresets";
 
 import type { ResultsDataV1 } from "./migrations/results/v1";
+
+import type { GraphSettingsV1 } from "./migrations/graphSettings/v1";
+
 import { defaultGraphSettings } from "@/globals/graphPresets";
 
 // Should be union of every single version
 export type UnknownMetadata = MetadataV1;
 export type UnknownIridiumData = IridiumDataV1 | IridiumDataV2 | IridiumDataV3;
 export type UnknownResultsData = ResultsDataV1;
+export type UnknownGraphSettings = GraphSettingsV1;
 
 // Keep these up-to-date with the latest versions
 export type Metadata = MetadataV1;
 export type IridiumData = IridiumDataV3;
 export type ResultsData = ResultsDataV1;
+export type GraphSettings = GraphSettingsV1;
 
 // https://www.learningtypescript.com/articles/branded-types
 export type ProjectId = string & { __brand: "projectId" };
@@ -89,6 +94,19 @@ export const migrateResultsData = (
   switch (resultsData.versionTag) {
     case 1:
       return resultsData;
+  }
+};
+
+/**
+ * @param graphSettings - Graph settings data of any version.
+ * @returns The original results data migrated to the latest version.
+ */
+export const migrateGraphSettings = (
+  graphSettings: UnknownGraphSettings,
+): GraphSettings => {
+  switch (graphSettings.versionTag) {
+    case 1:
+      return graphSettings;
   }
 };
 

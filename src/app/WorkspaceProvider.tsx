@@ -5,7 +5,7 @@ import defaultModel from "@/assets/default.ant?raw";
 
 import { setModelAtom } from "@/globals/model";
 import { activeProjectFileAtom } from "@/globals/project";
-import type { ProjectId } from "@/features/projectData";
+import type { ProjectId } from "@/features/savedData";
 
 const Initialize = ({
   didInitialLoadRef,
