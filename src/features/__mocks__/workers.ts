@@ -12,6 +12,7 @@ import {
   setMockFile,
 } from "@/testing-utils/mockFileSystem.ts";
 import type { ProjectData } from "../savedData.ts";
+import { defaultGraphSettings } from "@/globals/graphPresets.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
@@ -60,8 +61,10 @@ export const createWorker = (type: WorkerType) => {
             case "writePreset":
               // TODO: mock this properly
               return null;
-            case "getAllPresets":
-              return new Map();
+            case "readPreset":
+              return defaultGraphSettings;
+            case "getAllPresetNames":
+              return [];
             default:
               /* eslint-disable */
               const exhaustivenessCheck: never = action;
