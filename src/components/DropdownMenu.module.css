@@ -22,6 +22,15 @@
     outline: var(--border-input-focused);
   }
 
+  &[data-disabled] {
+    cursor: initial;
+    color: var(--color-layer3-fg-dim);
+
+    & .item-icon {
+      color: var(--color-layer3-fg-very-dim) !important;
+    }
+  }
+
   &[data-highlighted] {
     color: var(--color-accent-fg);
     background-color: var(--color-accent);

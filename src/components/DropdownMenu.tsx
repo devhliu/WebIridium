@@ -39,16 +39,22 @@ export const DropdownMenuContent = ({ children }: DropdownMenuContentProps) => {
 export interface DropdownMenuItemProps {
   name: string;
   icon?: React.ReactNode;
-  onSelect: () => void;
+  disabled?: boolean;
+  onSelect: (e: Event) => void;
 }
 
 export const DropdownMenuItem = ({
   name,
   icon,
+  disabled,
   onSelect,
 }: DropdownMenuItemProps) => {
   return (
-    <RadixDropdownMenu.Item className={styles.item} onSelect={onSelect}>
+    <RadixDropdownMenu.Item
+      className={styles.item}
+      onSelect={onSelect}
+      disabled={disabled}
+    >
       {icon && <div className={styles.itemIcon}>{icon}</div>}
       {name}
     </RadixDropdownMenu.Item>
