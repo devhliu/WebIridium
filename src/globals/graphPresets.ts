@@ -1,4 +1,4 @@
-import type { GraphSettings } from "@/features/savedData";
+import { type GraphSettings } from "@/features/savedData";
 import { atom } from "jotai";
 
 export const defaultGraphSettings: GraphSettings = {
@@ -267,9 +267,7 @@ export const graphSettingsAtom = atom((get) => {
   if (name === PROJECT_PRESET_NAME) {
     return presets.project;
   } else {
-    return (
-      presets.builtins[name] ?? presets.shared[name] ?? defaultGraphSettings
-    );
+    return presets.builtins[name] ?? presets.shared[name] ?? presets.project;
   }
 });
 

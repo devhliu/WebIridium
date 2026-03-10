@@ -25,7 +25,6 @@ import {
   getNewProjectId,
   getNewProjectData,
   type GraphSettings,
-  type UnknownGraphSettings,
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
@@ -33,8 +32,8 @@ import type {
   CloseCurrentProjectResult,
   DeleteProjectAction,
   DeleteProjectResult,
-  GetAllPresetsAction,
-  GetAllPresetsResult,
+  GetAllPresetNamesAction,
+  GetAllPresetNamesResult,
   ListProjectsAction,
   ListProjectsResult,
   NewProjectAction,
@@ -171,14 +170,11 @@ export const writePresetRaw = async (
 };
 
 /**
- * Get a list of all presets. May fail.
+ * Get a list of all preset name.
  */
-export const getAllPresetsRaw = async (): Promise<
-  Map<string, UnknownGraphSettings>
-> => {
-  return await fileWorker.runTask<GetAllPresetsAction, GetAllPresetsResult>(
-    "getAllPresets",
-    null,
-    null,
-  );
+export const getAllPresetsRaw = async (): Promise<string[]> => {
+  return await fileWorker.runTask<
+    GetAllPresetNamesAction,
+    GetAllPresetNamesResult
+  >("getAllPresetNames", null, null);
 };

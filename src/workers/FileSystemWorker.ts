@@ -45,8 +45,11 @@ export type WritePresetAction = Action<
 >;
 export type WritePresetResult = Result<null>;
 
-export type GetAllPresetsAction = Action<"getAllPresets">;
-export type GetAllPresetsResult = Result<Map<string, UnknownGraphSettings>>;
+export type ReadPresetAction = Action<"readPreset", string>;
+export type ReadPresetResult = Result<UnknownGraphSettings>;
+
+export type GetAllPresetNamesAction = Action<"getAllPresetNames">;
+export type GetAllPresetNamesResult = Result<string[]>;
 
 export type FileSystemAction =
   | ListProjectsAction
@@ -56,7 +59,8 @@ export type FileSystemAction =
   | SaveProjectAction
   | DeleteProjectAction
   | WritePresetAction
-  | GetAllPresetsAction;
+  | ReadPresetAction
+  | GetAllPresetNamesAction;
 
 const PROJECTS_DIR_NAME = "projects";
 const PRESETS_DIR_NAME = "presets";
@@ -98,6 +102,32 @@ const getJsonFileContents = async (
   const handle = await dir.getFileHandle(name);
   const file = await handle.getFile();
   return JSON.parse(await file.text());
+};
+
+/**
+ * Retries an action everytime a DOMException occurs, with exponential backoff.
+ * Gives up after 10 tries.
+ */
+const runWithRetry = async <T>(action: () => Promise<T>): Promise<T> => {
+  let timeout = 50;
+  let tries = 0;
+  const wrap = async () => {
+    try {
+      return await action();
+    } catch (e) {
+      if (e instanceof DOMException) {
+        timeout *= 2;
+        tries += 1;
+        if (tries < 10) {
+          await new Promise((resolve) => setTimeout(resolve, timeout));
+          return await wrap();
+        }
+      }
+      throw e;
+    }
+  };
+
+  return await wrap();
 };
 
 const listProjects = async (): Promise<ListProjectsResult["data"]> => {
@@ -310,35 +340,35 @@ const writePreset = async ({
     create: true,
   });
 
-  // Whoever gets the lock first gets to write.
-  // Swallow any other errors, it is probably not a big issue
-  // at our scale if for whatever reason you are editing the same
-  // preset on two tabs at the same time and they happen to write
-  // at the exact same sliver of time.
-  try {
+  await runWithRetry(async () => {
     const syncHandle = await fileHandle.createSyncAccessHandle();
-
     writeStringToHandle(syncHandle, JSON.stringify(settings));
-
     syncHandle.close();
-  } catch (e) {
-    console.error(e);
-  }
+  });
 
   return null;
 };
 
-const getAllPresets = async (): Promise<GetAllPresetsResult["data"]> => {
+const readPreset = async (name: string): Promise<ReadPresetResult["data"]> => {
   const presetsDirectory = await getPresetsDirHandle();
-  const map = new Map<string, UnknownGraphSettings>();
+  return (await getJsonFileContents(
+    presetsDirectory,
+    name,
+  )) as UnknownGraphSettings;
+};
+
+const getAllPresetNames = async (): Promise<
+  GetAllPresetNamesResult["data"]
+> => {
+  const presetsDirectory = await getPresetsDirHandle();
+  const names: string[] = [];
 
   for await (const [name, handle] of presetsDirectory.entries()) {
     if (handle.kind !== "file") continue;
-    const file = await (handle as FileSystemFileHandle).getFile();
-    map.set(name, JSON.parse(await file.text()) as GraphSettings);
+    names.push(name);
   }
 
-  return map;
+  return names;
 };
 
 const wrapResult = (action: Action, data: unknown): Result => ({
@@ -365,8 +395,10 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
       return wrapResult(action, await deleteProject(action.payload));
     case "writePreset":
       return wrapResult(action, await writePreset(action.payload));
-    case "getAllPresets":
-      return wrapResult(action, await getAllPresets());
+    case "readPreset":
+      return wrapResult(action, await readPreset(action.payload));
+    case "getAllPresetNames":
+      return wrapResult(action, await getAllPresetNames());
     default:
       throw new Error("unknown action type");
   }
