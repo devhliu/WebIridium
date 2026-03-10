@@ -134,7 +134,7 @@ export const defaultGraphSettings: GraphSettings = {
   },
 };
 
-export const builtinGraphPresets = {
+export const builtinGraphPresets: Record<string, GraphSettings> = {
   Dark: {
     ...defaultGraphSettings,
     backgroundColor: "#000000",
@@ -155,7 +155,7 @@ export const builtinGraphPresets = {
       backgroundColor: "#000",
       borderColor: "#fff",
     },
-  } satisfies GraphSettings,
+  },
 
   Winter: {
     ...defaultGraphSettings,
@@ -177,7 +177,7 @@ export const builtinGraphPresets = {
       backgroundColor: "#b6f1f2",
       borderColor: "#010a12",
     },
-  } satisfies GraphSettings,
+  },
 
   Beach: {
     ...defaultGraphSettings,
@@ -199,34 +199,167 @@ export const builtinGraphPresets = {
       backgroundColor: "#e8c6ba",
       borderColor: "#080600",
     },
-  } satisfies GraphSettings,
-} as const;
+  },
+};
 
-export const CUSTOM_PRESET = "Custom";
-export const currentGraphPresetAtom = atom(CUSTOM_PRESET);
+export const PROJECT_PRESET_NAME = "Custom";
+const NEW_PRESET_NAME = "Shared";
+export const graphPresetNameAtom = atom(PROJECT_PRESET_NAME);
 
-export const customGraphSettingsAtom = atom(defaultGraphSettings);
+const _graphPresetsAtom = atom({
+  // this is the one you get per project
+  project: defaultGraphSettings,
+  builtins: builtinGraphPresets,
+  // these ones are also shared, but the user creates them
+  shared: {} as Record<string, GraphSettings | undefined>,
+});
 
-export const graphPresetsAtom = atom(
-  builtinGraphPresets as Record<string, GraphSettings | undefined>,
+export const graphPresetsAtom = atom((get) => get(_graphPresetsAtom));
+
+export const projectGraphSettingsAtom = atom(
+  (get) => get(_graphPresetsAtom).project,
+  (get, set, newValue: GraphSettings) => {
+    set(_graphPresetsAtom, {
+      ...get(_graphPresetsAtom),
+      project: newValue,
+    });
+  },
 );
 
-export const graphSettingsAtom = atom(
-  (get) =>
-    get(graphPresetsAtom)[get(currentGraphPresetAtom)] ??
-    get(customGraphSettingsAtom),
+export const addGraphPresetAtom = atom(null, (get, set) => {
+  const graphPresets = get(graphPresetsAtom);
+  let chosenName: string;
+  let i = 0;
+  do {
+    i += 1;
+    chosenName = `${NEW_PRESET_NAME} ${i}`;
+  } while (
+    Object.hasOwn(graphPresets.builtins, chosenName) ||
+    Object.hasOwn(graphPresets.shared, chosenName) ||
+    chosenName === PROJECT_PRESET_NAME
+  );
+
+  set(_graphPresetsAtom, {
+    ...graphPresets,
+    shared: {
+      ...graphPresets.shared,
+      [chosenName]: defaultGraphSettings,
+    },
+  });
+  set(graphPresetNameAtom, chosenName);
+});
+
+export type RenamePresetError = "cantRename" | "dupeName";
+
+/**
+ * @returns a RenamePresetError if any occurred, otherwise nothing
+ */
+export const renameCurrentGraphPresetAtom = atom(
+  null,
+  (get, set, newName: string): RenamePresetError | null => {
+    const oldName = get(graphPresetNameAtom);
+    const presets = get(_graphPresetsAtom);
+
+    if (
+      Object.hasOwn(presets.shared, newName) ||
+      Object.hasOwn(presets.builtins, newName) ||
+      newName === PROJECT_PRESET_NAME
+    ) {
+      return "dupeName";
+    }
+
+    if (oldName === PROJECT_PRESET_NAME) {
+      return "cantRename";
+    } else if (Object.hasOwn(presets.builtins, oldName)) {
+      return "cantRename";
+    } else if (Object.hasOwn(presets.shared, oldName)) {
+      // Do an ugly swap since we don't have transactions/batching.
+      // For a brief moment, both old and new name will be present,
+      // but we immediately delete the old one when its safe (after
+      // the graphPresetNameAtom changes).
+
+      const settings = presets.shared[oldName];
+
+      set(_graphPresetsAtom, {
+        ...presets,
+        shared: {
+          ...presets.shared,
+          [newName]: settings,
+        },
+      });
+
+      set(graphPresetNameAtom, newName);
+
+      const { [oldName]: _, ...rest } = presets.shared;
+      set(_graphPresetsAtom, {
+        ...presets,
+        shared: {
+          ...rest,
+          [newName]: settings,
+        },
+      });
+    }
+
+    return null;
+  },
 );
+
+export const deleteCurrentGraphPresetAtom = atom(null, (get, set) => {
+  const name = get(graphPresetNameAtom);
+  const presets = get(_graphPresetsAtom);
+
+  if (name === PROJECT_PRESET_NAME) {
+    // not allowed, should not be possible via user interaction
+    console.warn("Can't rename project-specific preset.");
+  } else if (Object.hasOwn(presets.builtins, name)) {
+    console.warn("Can't rename builtin preset.");
+  } else if (Object.hasOwn(presets.shared, name)) {
+    const { [name]: _, ...rest } = presets.shared;
+    set(graphPresetNameAtom, PROJECT_PRESET_NAME);
+    set(_graphPresetsAtom, {
+      ...presets,
+      shared: rest,
+    });
+  }
+});
+
+export const graphSettingsAtom = atom((get) => {
+  const presets = get(_graphPresetsAtom);
+  const name = get(graphPresetNameAtom);
+  if (name === PROJECT_PRESET_NAME) {
+    return presets.project;
+  } else {
+    return (
+      presets.builtins[name] ?? presets.shared[name] ?? defaultGraphSettings
+    );
+  }
+});
+
 export const updateGraphSettingsAtom = atom(
   null,
   (get, set, newSettings: GraphSettings) => {
-    const preset = get(currentGraphPresetAtom);
-    const presets = get(graphPresetsAtom);
-    if (preset === CUSTOM_PRESET) {
-      set(customGraphSettingsAtom, newSettings);
-    } else {
-      set(graphPresetsAtom, {
+    const name = get(graphPresetNameAtom);
+    const presets = get(_graphPresetsAtom);
+    if (name === PROJECT_PRESET_NAME) {
+      set(_graphPresetsAtom, {
         ...presets,
-        [preset]: newSettings,
+        project: newSettings,
+      });
+    } else if (Object.hasOwn(presets.builtins, name)) {
+      set(_graphPresetsAtom, {
+        ...presets,
+        builtins: {
+          ...presets.builtins,
+          [name]: newSettings,
+        },
+      });
+    } else if (Object.hasOwn(presets.shared, name)) {
+      set(_graphPresetsAtom, {
+        ...presets,
+        shared: {
+          ...presets.shared,
+          [name]: newSettings,
+        },
       });
     }
   },

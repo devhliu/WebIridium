@@ -12,3 +12,13 @@
 .preset-select {
   flex-grow: 1;
 }
+
+.rename {
+  color: var(--color-input-fg);
+  background-color: var(--color-input-bg);
+  border-radius: var(--border-radius);
+  border: var(--border-layer1);
+  padding: var(--spacing-2);
+  font-size: var(--font-size-small);
+  flex-grow: 1;
+}

@@ -7,7 +7,6 @@ import {
   defaultParameterScanOptions,
   defaultTimeCourseParameters,
 } from "@/globals/settings";
-import { defaultGraphSettings } from "@/globals/graphPresets";
 import { getRandomCssGradient } from "./cssGradients";
 
 import type { MetadataV1 } from "./migrations/metadata/v1";
@@ -23,6 +22,7 @@ import {
 } from "./migrations/iridium/v3_graphPresets";
 
 import type { ResultsDataV1 } from "./migrations/results/v1";
+import { defaultGraphSettings } from "@/globals/graphPresets";
 
 // Should be union of every single version
 export type UnknownMetadata = MetadataV1;
