@@ -1,71 +1,9 @@
+import type { GraphSettings } from "@/features/savedData";
 import { atom } from "jotai";
 
-export interface AxisSettings {
-  includeTitle: boolean;
-  title: string;
-  color: string;
-}
-
-export interface GridSettings {
-  enabled: {
-    x: boolean;
-    y: boolean;
-  };
-  xColor: string;
-  yColor: string;
-  xWidth: number;
-  yWidth: number;
-  numXGrids: number;
-  numYGrids: number;
-}
-
-export interface LegendSettings {
-  visible: boolean;
-  isFloating: boolean;
-
-  // Floating only
-  textColor: string;
-  backgroundColor: string;
-  borderColor: string;
-  borderThickness: number;
-  padding: number;
-  lineLength: number;
-}
-
-export interface GraphSettings {
-  backgroundColor: string;
-  drawingAreaColor: string;
-
-  includeTitle: boolean;
-  title: string;
-  titleColor: string;
-
-  includeBorder: boolean;
-  borderColor: string;
-  borderThickness: number;
-
-  globalWidth: number;
-
-  isAutoscaledX: boolean;
-  minX: number;
-  maxX: number;
-
-  isAutoscaledY: boolean;
-  minY: number;
-  maxY: number;
-
-  margin: number;
-
-  xAxis: AxisSettings;
-  yAxis: AxisSettings;
-
-  majorGrid: GridSettings;
-  minorGrid: GridSettings;
-
-  legend: LegendSettings;
-}
-
 export const defaultGraphSettings: GraphSettings = {
+  versionTag: 1,
+
   backgroundColor: "#ffffff",
   drawingAreaColor: "#f1e7f4",
 

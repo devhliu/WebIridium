@@ -5,7 +5,7 @@ import type { LineSeriesOption } from "echarts/types/src/chart/line/LineSeries.j
 import type { SimulationResult } from "@/features/simulation/Simulator";
 import { getVariableSettingsFrom } from "@/globals/model";
 import { type VariableSettings } from "@/globals/settings";
-import { type GraphSettings } from "@/globals/graphPresets";
+import type { GraphSettings } from "@/features/savedData";
 import type { Dataset } from "@/globals/overlays";
 
 import type { LegendDataItem } from "./FloatingLegend";

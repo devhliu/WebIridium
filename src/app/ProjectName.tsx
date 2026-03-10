@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styles from "./ProjectName.module.css";
 import PencilIcon from "@/assets/icons/PencilIcon.svg?react";
-import type { Metadata } from "@/features/projectData";
+import type { Metadata } from "@/features/savedData";
 import IconButton from "@/components/IconButton";
 import CrossIcon from "@/assets/icons/CrossIcon.svg?react";
 import CheckIcon from "@/assets/icons/CheckIcon.svg?react";

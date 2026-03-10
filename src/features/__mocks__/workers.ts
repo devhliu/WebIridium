@@ -11,7 +11,7 @@ import {
   removeMockFile,
   setMockFile,
 } from "@/testing-utils/mockFileSystem.ts";
-import type { ProjectData } from "../projectData.ts";
+import type { ProjectData } from "../savedData.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
@@ -57,6 +57,11 @@ export const createWorker = (type: WorkerType) => {
             case "deleteProject":
               removeMockFile(action.payload);
               return null;
+            case "writePreset":
+              // TODO: mock this properly
+              return null;
+            case "getAllPresets":
+              return new Map();
             default:
               /* eslint-disable */
               const exhaustivenessCheck: never = action;

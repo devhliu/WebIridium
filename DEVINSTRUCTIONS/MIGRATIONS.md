@@ -14,6 +14,9 @@ help ensure they are met.
 - iridium: random dump of anything we want to save
 - results: just the simulation history (we keep it separate since it can get pretty big)
 
+- graphSettings: data about graph settings. Every `iridium` should contain some version of this.
+  These are also independently stored per preset.
+
 ## how to modify change saved data
 
 > [!TIP]
@@ -38,7 +41,7 @@ help ensure they are met.
 
 ### 2. updating the types
 
-1.  In `features/projectData.ts`, import the type and migration function. Find the appropriate
+1.  In `features/savedData.ts`, import the type and migration function. Find the appropriate
     `Unknown[data]` (e.g `UnknownIridiumData`) and add the type you just made to the union.
 2.  Update the `[data]` (e.g. `IridiumData`) type to the latest version of the data.
 3.  At this point, you should be getting a few type errors. We will need to fix all of these,
@@ -46,7 +49,7 @@ help ensure they are met.
 
 ### 3. integrating the migration
 
-1.  Find the appropriate migration function in `features/projectData.ts`. You will see a switch
+1.  Find the appropriate migration function in `features/savedData.ts`. You will see a switch
     statement on the `versionTag`.
 2.  Find the case for the previous data's version tag, and replace it with something like
     this: `return migrateIridiumData(migrateIridiumDataV1V2(iridiumData))`

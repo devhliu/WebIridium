@@ -10,7 +10,7 @@ import {
   resetMockFiles,
   setMockFile,
 } from "@/testing-utils/mockFileSystem";
-import { getNewProjectData, type ProjectData } from "@/features/projectData";
+import { getNewProjectData, type ProjectData } from "@/features/savedData";
 import {
   resetWorkerResponseDelay,
   setWorkerResponseDelay,

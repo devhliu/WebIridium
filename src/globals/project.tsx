@@ -6,7 +6,7 @@ import {
   type Metadata,
   type ProjectData,
   type ProjectId,
-} from "@/features/projectData";
+} from "@/features/savedData";
 import {
   closeCurrentProjectRaw,
   deleteProjectRaw,

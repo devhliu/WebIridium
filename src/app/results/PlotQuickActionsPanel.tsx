@@ -15,8 +15,8 @@ import LayersIcon from "@/assets/icons/LayersIcon.svg?react";
 import {
   graphSettingsAtom,
   updateGraphSettingsAtom,
-  type GraphSettings,
 } from "@/globals/graphPresets";
+import { type GraphSettings } from "@/features/savedData";
 import { currentVeryRightPanelAtom } from "@/globals/layout";
 
 const PlotQuickActionsPanel = () => {
