@@ -43,6 +43,7 @@ import ResultTabbedPanel from "./results/ResultsTabbedPanel";
 import GraphSettingsPanel from "./graphSettings/GraphSettingsPanel";
 import ChatPanel from "./ChatPanel";
 import StartPanel from "./start/StartPanel";
+import GraphPresetSyncer from "./GraphPresetSyncer";
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -190,6 +191,7 @@ const App = () => {
       <AppProvider>
         <ThemeUpdater />
         <ProjectAutoSaver />
+        <GraphPresetSyncer />
         <AppContent />
       </AppProvider>
     </AppErrorWrapperPage>

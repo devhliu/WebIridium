@@ -65,6 +65,10 @@ export const createWorker = (type: WorkerType) => {
               return defaultGraphSettings;
             case "getAllPresetNames":
               return [];
+            case "renamePreset":
+              return null;
+            case "deletePreset":
+              return null;
             default:
               /* eslint-disable */
               const exhaustivenessCheck: never = action;

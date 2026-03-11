@@ -9,7 +9,13 @@ import {
   isSavingAtom,
 } from "@/globals/saving";
 import { hasActiveProjectAtom } from "@/globals/project";
-import type { IridiumData, Metadata, ResultsData } from "@/features/savedData";
+import type {
+  GraphSettings,
+  IridiumData,
+  Metadata,
+  ResultsData,
+} from "@/features/savedData";
+import { savedPresetAtom, savePresetAtom } from "@/globals/graphPresets";
 
 const SAVE_DEBOUNCE = 1_000;
 
@@ -34,7 +40,7 @@ const useAutoSave = <T>(
 
       return () => clearTimeout(id);
     }
-  }, [hasActiveProject, savingRef]);
+  }, [hasActiveProject]);
 
   useEffect(() => {
     savingRef.current += 1;
@@ -59,6 +65,7 @@ const useAutoSave = <T>(
 
 const ProjectAutoSaver = () => {
   const savePartial = useSetAtom(savePartialProjectAtom);
+  const savePreset = useSetAtom(savePresetAtom);
 
   const savingRef = useRef(0);
   const isSaving = useAtomValue(isSavingAtom);
@@ -66,6 +73,7 @@ const ProjectAutoSaver = () => {
   const savedCode = useAtomValue(savedCodeAtom);
   const savedResults = useAtomValue(savedResultsAtom);
   const savedIridium = useAtomValue(savedIridiumAtom);
+  const savedPreset = useAtomValue(savedPresetAtom);
 
   useEffect(() => {
     if (import.meta.env.DEV) {
@@ -113,6 +121,14 @@ const ProjectAutoSaver = () => {
       await savePartial({ code: data });
     },
     savedCode,
+    savingRef,
+  );
+
+  useAutoSave(
+    async (data: { name: string; settings: GraphSettings }) => {
+      await savePreset(data);
+    },
+    savedPreset,
     savingRef,
   );
 

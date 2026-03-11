@@ -1,15 +1,17 @@
 import { useMemo, useRef, useState } from "react";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import styles from "./GraphSettingsControls.module.css";
 import {
   addGraphPresetAtom,
   builtinGraphPresets,
+  currentPresetAtom,
   defaultGraphSettings,
-  deleteCurrentGraphPresetAtom,
-  graphPresetNameAtom,
+  deleteGraphPresetAtom,
   graphPresetsAtom,
+  loadingPresetAtom,
   PROJECT_PRESET_NAME,
-  renameCurrentGraphPresetAtom,
+  renameGraphPresetAtom,
+  updateCurrentPresetAtom,
   updateGraphSettingsAtom,
 } from "@/globals/graphPresets";
 
@@ -27,17 +29,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/DropdownMenu";
 import { useToast } from "@/components/Toast";
+import { errorToDisplayString } from "@/features/formatUtils";
 
 const GraphSettingsControls = () => {
-  const [graphPresetName, setGraphPresetName] = useAtom(graphPresetNameAtom);
+  const currentPreset = useAtomValue(currentPresetAtom);
+  const updateCurrentPreset = useSetAtom(updateCurrentPresetAtom);
+  const loadingPreset = useAtomValue(loadingPresetAtom);
   const graphPresets = useAtomValue(graphPresetsAtom);
   const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
-  const renameCurrentGraphPreset = useSetAtom(renameCurrentGraphPresetAtom);
-  const deleteCurrentGraphPreset = useSetAtom(deleteCurrentGraphPresetAtom);
+  const renameGraphPreset = useSetAtom(renameGraphPresetAtom);
+  const deleteGraphPreset = useSetAtom(deleteGraphPresetAtom);
   const addGraphPreset = useSetAtom(addGraphPresetAtom);
   const { toast } = useToast();
 
-  const isUserMade = Object.hasOwn(graphPresets.shared, graphPresetName);
+  const isUserMade = Object.hasOwn(graphPresets.shared, currentPreset);
 
   const groups = useMemo(() => {
     const result: Record<string, Record<string, string>> = {
@@ -62,7 +67,7 @@ const GraphSettingsControls = () => {
   const renameInputRef = useRef<HTMLInputElement>(null);
 
   const handleRename = () => {
-    setRenamingTo(graphPresetName);
+    setRenamingTo(currentPreset);
 
     // fix dropdown closing stealing focus
     // https://github.com/radix-ui/primitives/issues/3106
@@ -71,28 +76,45 @@ const GraphSettingsControls = () => {
     }, 100);
   };
 
-  const finishRename = () => {
+  const finishRename = async () => {
     if (renamingTo) {
-      const err = renameCurrentGraphPreset(renamingTo);
-      if (err) {
+      try {
+        const err = await renameGraphPreset({
+          oldName: currentPreset,
+          newName: renamingTo,
+        });
+
+        if (err) {
+          toast({
+            type: "error",
+            title:
+              err === "cantRename"
+                ? "Can't rename this preset."
+                : err === "invalidName"
+                  ? "Invalid name"
+                  : "Name already taken.",
+            description:
+              err === "cantRename"
+                ? "You can only rename user-made presets."
+                : err === "invalidName"
+                  ? "Names can only contain alphanumeric characters, underscores, dashes, and must be at most 20 characters."
+                  : "You cannot have duplicate names.",
+          });
+        }
+      } catch (err) {
         toast({
           type: "error",
-          title:
-            err === "cantRename"
-              ? "Can't rename this preset."
-              : "Name already taken.",
-          description:
-            err === "cantRename"
-              ? "You can only rename user-made presets."
-              : "You cannot have duplicate names.",
+          title: "Failed to rename",
+          description: errorToDisplayString(err),
         });
       }
     }
+
     setRenamingTo(undefined);
   };
 
   const handleReset = () => {
-    const builtin = builtinGraphPresets[graphPresetName];
+    const builtin = builtinGraphPresets[currentPreset];
     if (builtin) {
       updateGraphSettings(builtin);
     } else {
@@ -100,8 +122,16 @@ const GraphSettingsControls = () => {
     }
   };
 
-  const handleDelete = () => {
-    deleteCurrentGraphPreset();
+  const handleDelete = async () => {
+    try {
+      await deleteGraphPreset({ name: currentPreset });
+    } catch (err) {
+      toast({
+        type: "error",
+        title: "Failed to delete",
+        description: errorToDisplayString(err),
+      });
+    }
   };
 
   return (
@@ -124,7 +154,7 @@ const GraphSettingsControls = () => {
           onBlur={finishRename}
           onKeyDown={(e) => {
             if (e.key === "Enter") {
-              finishRename();
+              void finishRename();
             } else if (e.key === "Escape") {
               // cancel
               setRenamingTo(undefined);
@@ -134,10 +164,11 @@ const GraphSettingsControls = () => {
       ) : (
         <Select
           name="graphPreset"
-          value={graphPresetName}
+          value={loadingPreset ?? currentPreset}
           className={styles.presetSelect}
           groups={groups}
-          onChange={setGraphPresetName}
+          disabled={!!loadingPreset}
+          onChange={updateCurrentPreset}
         />
       )}
 
@@ -154,18 +185,19 @@ const GraphSettingsControls = () => {
           <DropdownMenuItem
             name="Rename"
             onSelect={handleRename}
-            disabled={!isUserMade}
+            disabled={!isUserMade || !!loadingPreset}
             icon={<PencilIcon width="1em" height="1em" />}
           />
           <DropdownMenuItem
             name="Reset to Default"
             onSelect={handleReset}
+            disabled={!!loadingPreset}
             icon={<ResetIcon width="1em" height="1em" />}
           />
           <DropdownMenuItem
             name="Delete"
             onSelect={handleDelete}
-            disabled={!isUserMade}
+            disabled={!isUserMade || !!loadingPreset}
             icon={<TrashIcon width="1em" height="1em" />}
           />
         </DropdownMenuContent>

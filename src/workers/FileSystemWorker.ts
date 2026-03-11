@@ -48,6 +48,19 @@ export type WritePresetResult = Result<null>;
 export type ReadPresetAction = Action<"readPreset", string>;
 export type ReadPresetResult = Result<UnknownGraphSettings>;
 
+export type RenamePresetAction = Action<
+  "renamePreset",
+  {
+    oldName: string;
+    newName: string;
+    settings: GraphSettings;
+  }
+>;
+export type RenamePresetResult = Result<null>;
+
+export type DeletePresetAction = Action<"deletePreset", string>;
+export type DeletePresetResult = Result<null>;
+
 export type GetAllPresetNamesAction = Action<"getAllPresetNames">;
 export type GetAllPresetNamesResult = Result<string[]>;
 
@@ -60,6 +73,8 @@ export type FileSystemAction =
   | DeleteProjectAction
   | WritePresetAction
   | ReadPresetAction
+  | RenamePresetAction
+  | DeletePresetAction
   | GetAllPresetNamesAction;
 
 const PROJECTS_DIR_NAME = "projects";
@@ -106,7 +121,7 @@ const getJsonFileContents = async (
 
 /**
  * Retries an action everytime a DOMException occurs, with exponential backoff.
- * Gives up after 10 tries.
+ * Gives up after 5 tries.
  */
 const runWithRetry = async <T>(action: () => Promise<T>): Promise<T> => {
   let timeout = 50;
@@ -118,7 +133,7 @@ const runWithRetry = async <T>(action: () => Promise<T>): Promise<T> => {
       if (e instanceof DOMException) {
         timeout *= 2;
         tries += 1;
-        if (tries < 10) {
+        if (tries < 5) {
           await new Promise((resolve) => setTimeout(resolve, timeout));
           return await wrap();
         }
@@ -357,6 +372,32 @@ const readPreset = async (name: string): Promise<ReadPresetResult["data"]> => {
   )) as UnknownGraphSettings;
 };
 
+const renamePreset = async ({
+  oldName,
+  newName,
+  settings,
+}: RenamePresetAction["payload"]): Promise<RenamePresetResult["data"]> => {
+  const presetsDirectory = await getPresetsDirHandle();
+
+  await presetsDirectory.removeEntry(oldName);
+
+  await runWithRetry(async () => {
+    const fileHandle = await presetsDirectory.getFileHandle(newName, {
+      create: true,
+    });
+    const syncHandle = await fileHandle.createSyncAccessHandle();
+    writeStringToHandle(syncHandle, JSON.stringify(settings));
+    syncHandle.close();
+  });
+
+  return null;
+};
+
+const deletePreset = async (name: string) => {
+  const presetsDirectory = await getPresetsDirHandle();
+  await presetsDirectory.removeEntry(name);
+};
+
 const getAllPresetNames = async (): Promise<
   GetAllPresetNamesResult["data"]
 > => {
@@ -397,6 +438,10 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
       return wrapResult(action, await writePreset(action.payload));
     case "readPreset":
       return wrapResult(action, await readPreset(action.payload));
+    case "renamePreset":
+      return wrapResult(action, await renamePreset(action.payload));
+    case "deletePreset":
+      return wrapResult(action, await deletePreset(action.payload));
     case "getAllPresetNames":
       return wrapResult(action, await getAllPresetNames());
     default:
