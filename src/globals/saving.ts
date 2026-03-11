@@ -10,7 +10,7 @@ import type {
   ProjectData,
   ResultsData,
 } from "@/features/savedData";
-import { graphPresetNameAtom, projectGraphSettingsAtom } from "./graphPresets";
+import { currentPresetAtom, projectGraphSettingsAtom } from "./graphPresets";
 import { parameterScanOptionsAtom, timeCourseParametersAtom } from "./settings";
 import { historyAtom } from "./history";
 import { saveProjectRaw } from "@/features/fileSystem";
@@ -26,7 +26,7 @@ export const savedIridiumAtom = atom(
   (get) =>
     ({
       versionTag: 3,
-      currentGraphPreset: get(graphPresetNameAtom),
+      currentGraphPreset: get(currentPresetAtom),
       graphSettings: get(projectGraphSettingsAtom),
       variableSettings: get(variableSettingssAtom),
       timeCourseParameters: get(timeCourseParametersAtom),

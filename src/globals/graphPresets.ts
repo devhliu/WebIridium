@@ -1,4 +1,13 @@
+import { useEffect } from "react";
+import {
+  deletePresetRaw,
+  getAllPresetNamesRaw,
+  readPresetRaw,
+  renamePresetRaw,
+  writePresetRaw,
+} from "@/features/fileSystem";
 import { type GraphSettings } from "@/features/savedData";
+import { useSetAtom } from "jotai";
 import { atom } from "jotai";
 
 export const defaultGraphSettings: GraphSettings = {
@@ -140,16 +149,59 @@ export const builtinGraphPresets: Record<string, GraphSettings> = {
   },
 };
 
-export const PROJECT_PRESET_NAME = "Custom";
-const NEW_PRESET_NAME = "Shared";
-export const graphPresetNameAtom = atom(PROJECT_PRESET_NAME);
+export interface GraphPresetStatus {
+  /** Name of the current preset in-use. */
+  current: string;
+  /** Name of the preset they are trying to load. */
+  pending?: string;
+}
 
-const _graphPresetsAtom = atom({
+export const PROJECT_PRESET_NAME = "Custom";
+const NEW_PRESET_NAME_PREFIX = "Shared"; // becomes "Shared 1", "Shared 2", etc.
+
+const _graphPresetStatusAtom = atom<GraphPresetStatus>({
+  current: PROJECT_PRESET_NAME,
+});
+export const graphPresetStatusAtom = atom((get) => get(_graphPresetStatusAtom));
+export const currentPresetAtom = atom(
+  (get) => get(_graphPresetStatusAtom).current,
+);
+export const loadingPresetAtom = atom(
+  (get) => get(_graphPresetStatusAtom).pending,
+);
+
+const unloadedSymbol = Symbol("unloaded preset");
+type UnloadedSymbol = typeof unloadedSymbol;
+
+type GraphPresets = {
   // this is the one you get per project
-  project: defaultGraphSettings,
-  builtins: builtinGraphPresets,
+  project: GraphSettings;
+  // these ones are shared and builtin
+  builtins: Record<
+    keyof typeof builtinGraphPresets,
+    GraphSettings | UnloadedSymbol
+  >;
   // these ones are also shared, but the user creates them
-  shared: {} as Record<string, GraphSettings | undefined>,
+  shared: Record<string, GraphSettings | UnloadedSymbol | undefined>;
+};
+
+const getPreset = (
+  presets: GraphPresets,
+  name: string,
+): GraphSettings | UnloadedSymbol | undefined => {
+  if (name === PROJECT_PRESET_NAME) {
+    return presets.project;
+  } else {
+    return presets.builtins[name] ?? presets.shared[name];
+  }
+};
+
+const _graphPresetsAtom = atom<GraphPresets>({
+  project: defaultGraphSettings,
+  builtins: Object.fromEntries(
+    Object.keys(builtinGraphPresets).map((name) => [name, unloadedSymbol]),
+  ) as Record<keyof typeof builtinGraphPresets, GraphSettings | UnloadedSymbol>,
+  shared: {},
 });
 
 export const graphPresetsAtom = atom((get) => get(_graphPresetsAtom));
@@ -164,13 +216,110 @@ export const projectGraphSettingsAtom = atom(
   },
 );
 
+/**
+ * Tries to update the current preset, loading from the file system if necessary.
+ */
+export const updateCurrentPresetAtom = atom(
+  null,
+  async (get, set, newName: string) => {
+    const originalName = get(_graphPresetStatusAtom).current;
+    if (originalName === newName) return;
+
+    const presets = get(_graphPresetsAtom);
+
+    if (typeof getPreset(presets, newName) === "object") {
+      set(_graphPresetStatusAtom, {
+        current: newName,
+      });
+    } else {
+      set(_graphPresetStatusAtom, {
+        current: originalName,
+        pending: newName,
+      });
+
+      // check for if someone else tried to update while we did
+      const wasInterrupted = () =>
+        get(_graphPresetStatusAtom).pending !== newName;
+
+      if (presets.builtins[newName] === unloadedSymbol) {
+        try {
+          // try to load it
+          const data = await readPresetRaw(newName);
+          if (wasInterrupted()) return;
+
+          const newPresets = get(_graphPresetsAtom);
+          set(_graphPresetsAtom, {
+            ...newPresets,
+            shared: {
+              ...newPresets.shared,
+              [newName]: data,
+            },
+          });
+          set(_graphPresetStatusAtom, {
+            current: newName,
+          });
+        } catch (_) {
+          if (wasInterrupted()) return;
+          // might've not had a save yet. fill in with default.
+          if (Object.hasOwn(builtinGraphPresets, newName)) {
+            const newPresets = get(_graphPresetsAtom);
+            set(_graphPresetsAtom, {
+              ...newPresets,
+              builtins: {
+                ...newPresets.builtins,
+                [newName]: builtinGraphPresets[newName],
+              },
+            });
+            set(_graphPresetStatusAtom, {
+              current: newName,
+            });
+          } else {
+            // revert if the builtin has no defaults??
+            set(_graphPresetStatusAtom, {
+              current: originalName,
+            });
+          }
+        }
+      } else if (presets.shared[newName] === unloadedSymbol) {
+        try {
+          const data = await readPresetRaw(newName);
+          if (wasInterrupted()) return;
+
+          const newPresets = get(_graphPresetsAtom);
+          set(_graphPresetsAtom, {
+            ...newPresets,
+            shared: {
+              ...newPresets.shared,
+              [newName]: data,
+            },
+          });
+          set(_graphPresetStatusAtom, {
+            current: newName,
+          });
+        } catch (e) {
+          if (wasInterrupted()) return;
+          console.warn(e);
+          set(_graphPresetStatusAtom, {
+            current: originalName,
+          });
+        }
+      } else {
+        // doesn't exist?? abort
+        set(_graphPresetStatusAtom, {
+          current: originalName,
+        });
+      }
+    }
+  },
+);
+
 export const addGraphPresetAtom = atom(null, (get, set) => {
   const graphPresets = get(graphPresetsAtom);
   let chosenName: string;
   let i = 0;
   do {
     i += 1;
-    chosenName = `${NEW_PRESET_NAME} ${i}`;
+    chosenName = `${NEW_PRESET_NAME_PREFIX} ${i}`;
   } while (
     Object.hasOwn(graphPresets.builtins, chosenName) ||
     Object.hasOwn(graphPresets.shared, chosenName) ||
@@ -184,25 +333,47 @@ export const addGraphPresetAtom = atom(null, (get, set) => {
       [chosenName]: defaultGraphSettings,
     },
   });
-  set(graphPresetNameAtom, chosenName);
+  set(_graphPresetStatusAtom, {
+    current: chosenName,
+  });
 });
 
-export type RenamePresetError = "cantRename" | "dupeName";
+export type RenamePresetError = "cantRename" | "invalidName" | "dupeName";
+
+const isPresetNameValid = (name: string): boolean => {
+  return (
+    /^[A-Za-z0-9_ -]+$/.test(name) && 1 <= name.length && name.length <= 20
+  );
+};
 
 /**
  * @returns a RenamePresetError if any occurred, otherwise nothing
  */
-export const renameCurrentGraphPresetAtom = atom(
+export const renameGraphPresetAtom = atom(
   null,
-  (get, set, newName: string): RenamePresetError | null => {
-    const oldName = get(graphPresetNameAtom);
+  async (
+    get,
+    set,
+    {
+      oldName,
+      newName,
+      isOriginator = true,
+    }: {
+      oldName: string;
+      newName: string;
+      /** whether this change came from this tab */
+      isOriginator?: boolean;
+    },
+  ): Promise<RenamePresetError | null> => {
+    if (oldName === newName) return null;
+    if (!isPresetNameValid(newName)) {
+      console.log({ newName });
+      return "invalidName";
+    }
+
     const presets = get(_graphPresetsAtom);
 
-    if (
-      Object.hasOwn(presets.shared, newName) ||
-      Object.hasOwn(presets.builtins, newName) ||
-      newName === PROJECT_PRESET_NAME
-    ) {
+    if (getPreset(presets, newName)) {
       return "dupeName";
     }
 
@@ -211,10 +382,18 @@ export const renameCurrentGraphPresetAtom = atom(
     } else if (Object.hasOwn(presets.builtins, oldName)) {
       return "cantRename";
     } else if (Object.hasOwn(presets.shared, oldName)) {
+      if (isOriginator) {
+        const presets = get(_graphPresetsAtom);
+        const settings = getPreset(presets, oldName);
+        if (typeof settings === "object") {
+          await renamePresetRaw(oldName, newName, settings);
+        }
+      }
+
       // Do an ugly swap since we don't have transactions/batching.
       // For a brief moment, both old and new name will be present,
       // but we immediately delete the old one when its safe (after
-      // the graphPresetNameAtom changes).
+      // updating the preset name).
 
       const settings = presets.shared[oldName];
 
@@ -226,7 +405,11 @@ export const renameCurrentGraphPresetAtom = atom(
         },
       });
 
-      set(graphPresetNameAtom, newName);
+      if (oldName === get(graphPresetStatusAtom).current) {
+        set(_graphPresetStatusAtom, {
+          current: newName,
+        });
+      }
 
       const { [oldName]: _, ...rest } = presets.shared;
       set(_graphPresetsAtom, {
@@ -242,39 +425,55 @@ export const renameCurrentGraphPresetAtom = atom(
   },
 );
 
-export const deleteCurrentGraphPresetAtom = atom(null, (get, set) => {
-  const name = get(graphPresetNameAtom);
-  const presets = get(_graphPresetsAtom);
+export const deleteGraphPresetAtom = atom(
+  null,
+  async (
+    get,
+    set,
+    { name, isOriginator = false }: { name: string; isOriginator?: boolean },
+  ) => {
+    const presets = get(_graphPresetsAtom);
 
-  if (name === PROJECT_PRESET_NAME) {
-    // not allowed, should not be possible via user interaction
-    console.warn("Can't rename project-specific preset.");
-  } else if (Object.hasOwn(presets.builtins, name)) {
-    console.warn("Can't rename builtin preset.");
-  } else if (Object.hasOwn(presets.shared, name)) {
-    const { [name]: _, ...rest } = presets.shared;
-    set(graphPresetNameAtom, PROJECT_PRESET_NAME);
-    set(_graphPresetsAtom, {
-      ...presets,
-      shared: rest,
-    });
-  }
-});
+    if (name === PROJECT_PRESET_NAME) {
+      // not allowed, should not be possible via user interaction
+      console.warn("Can't rename project-specific preset.");
+    } else if (Object.hasOwn(presets.builtins, name)) {
+      console.warn("Can't rename builtin preset.");
+    } else if (Object.hasOwn(presets.shared, name)) {
+      if (isOriginator) {
+        await deletePresetRaw(name);
+      }
 
-export const graphSettingsAtom = atom((get) => {
+      const { [name]: _, ...rest } = presets.shared;
+
+      if (get(_graphPresetStatusAtom).current === name) {
+        set(_graphPresetStatusAtom, {
+          current: PROJECT_PRESET_NAME,
+        });
+      }
+
+      set(_graphPresetsAtom, {
+        ...presets,
+        shared: rest,
+      });
+    }
+  },
+);
+
+export const graphSettingsAtom = atom((get): GraphSettings => {
   const presets = get(_graphPresetsAtom);
-  const name = get(graphPresetNameAtom);
-  if (name === PROJECT_PRESET_NAME) {
-    return presets.project;
+  const settings = getPreset(presets, get(_graphPresetStatusAtom).current);
+  if (typeof settings === "object") {
+    return settings;
   } else {
-    return presets.builtins[name] ?? presets.shared[name] ?? presets.project;
+    return presets.project;
   }
 });
 
 export const updateGraphSettingsAtom = atom(
   null,
   (get, set, newSettings: GraphSettings) => {
-    const name = get(graphPresetNameAtom);
+    const name = get(_graphPresetStatusAtom).current;
     const presets = get(_graphPresetsAtom);
     if (name === PROJECT_PRESET_NAME) {
       set(_graphPresetsAtom, {
@@ -300,3 +499,54 @@ export const updateGraphSettingsAtom = atom(
     }
   },
 );
+
+// Saving & Syncing
+
+export const savedPresetAtom = atom((get) => {
+  const name = get(currentPresetAtom);
+  const settings = get(graphSettingsAtom);
+  return { name, settings };
+});
+
+export const savePresetAtom = atom(
+  null,
+  async (get, _set, data: { name: string; settings: GraphSettings }) => {
+    if (
+      data.name === PROJECT_PRESET_NAME ||
+      Object.hasOwn(get(_graphPresetsAtom).builtins, data.name)
+    ) {
+      return;
+    }
+
+    try {
+      await writePresetRaw(data.name, data.settings);
+    } catch (e) {
+      console.error(e);
+    }
+  },
+);
+
+const loadSharedPresetNamesAtom = atom(null, async (get, set) => {
+  const names = await getAllPresetNamesRaw();
+  const presets = get(_graphPresetsAtom);
+  const newShared = { ...presets.shared };
+
+  for (const name of names) {
+    if (newShared[name] === undefined) {
+      newShared[name] = unloadedSymbol;
+    }
+  }
+
+  set(_graphPresetsAtom, {
+    ...presets,
+    shared: newShared,
+  });
+});
+
+export const useGraphPresetSync = () => {
+  const loadSharedPresetNames = useSetAtom(loadSharedPresetNamesAtom);
+
+  useEffect(() => {
+    void loadSharedPresetNames();
+  }, [loadSharedPresetNames]);
+};
