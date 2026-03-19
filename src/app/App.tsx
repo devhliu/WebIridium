@@ -43,7 +43,6 @@ import ResultTabbedPanel from "./results/ResultsTabbedPanel";
 import GraphSettingsPanel from "./graphSettings/GraphSettingsPanel";
 import ChatPanel from "./ChatPanel";
 import StartPanel from "./start/StartPanel";
-import { graphPresetsAtom } from "@/globals/graphPresets";
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -185,22 +184,12 @@ const ThemeUpdater = () => {
   return null;
 };
 
-/**
- * Jotai won't load the graph presets until they are mounted. So we have to forcefully mount the graph presets
- * so that they load before any projects.
- */
-const UglyMountGraphPresets = () => {
-  void useAtomValue(graphPresetsAtom);
-  return null;
-};
-
 const App = () => {
   return (
     <AppErrorWrapperPage>
       <AppProvider>
         <ThemeUpdater />
         <ProjectAutoSaver />
-        <UglyMountGraphPresets />
         <AppContent />
       </AppProvider>
     </AppErrorWrapperPage>

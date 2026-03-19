@@ -6,6 +6,8 @@ import defaultModel from "@/assets/default.ant?raw";
 import { setModelAtom } from "@/globals/model";
 import { activeProjectFileAtom } from "@/globals/project";
 import type { ProjectId } from "@/features/savedData";
+import { useAtomValue } from "jotai";
+import { graphPresetsAtom } from "@/globals/graphPresets";
 
 const Initialize = ({
   didInitialLoadRef,
@@ -42,6 +44,15 @@ const Initialize = ({
   return null;
 };
 
+/**
+ * Jotai won't load the graph presets until they are mounted. So we have to forcefully mount the graph presets
+ * so that they load before any projects.
+ */
+const UglyMountGraphPresets = () => {
+  void useAtomValue(graphPresetsAtom);
+  return null;
+};
+
 const WorkspaceProvider = ({
   didInitialLoadRef,
   shouldStubActiveFile,
@@ -57,6 +68,7 @@ const WorkspaceProvider = ({
         didInitialLoadRef={didInitialLoadRef}
         shouldStubActiveFile={shouldStubActiveFile}
       />
+      <UglyMountGraphPresets />
       {children}
     </Provider>
   );
