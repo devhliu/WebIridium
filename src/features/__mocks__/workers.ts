@@ -12,7 +12,6 @@ import {
   setMockFile,
 } from "@/testing-utils/mockFileSystem.ts";
 import type { ProjectData } from "../savedData.ts";
-import { defaultGraphSettings } from "@/globals/graphPresets.ts";
 
 export const createWorker = (type: WorkerType) => {
   const worker = new MockWorker();
@@ -57,17 +56,6 @@ export const createWorker = (type: WorkerType) => {
               return null;
             case "deleteProject":
               removeMockFile(action.payload);
-              return null;
-            case "writePreset":
-              // TODO: mock this properly
-              return null;
-            case "readPreset":
-              return defaultGraphSettings;
-            case "getAllPresetNames":
-              return [];
-            case "renamePreset":
-              return null;
-            case "deletePreset":
               return null;
             default:
               /* eslint-disable */

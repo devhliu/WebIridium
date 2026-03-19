@@ -11,10 +11,6 @@
         \- iridium.json
         \- results.json
          \- project.ant
-   \- presets (these are .json but not named so)
-      \- {preset name}
-      \- {preset name}
-      \- {preset name}
  */
 
 import {
@@ -24,33 +20,21 @@ import {
   type ProjectData,
   getNewProjectId,
   getNewProjectData,
-  type GraphSettings,
-  migrateGraphSettings,
 } from "./savedData";
 import { WorkerPool } from "./taskPool";
 import type {
   CloseCurrentProjectAction,
   CloseCurrentProjectResult,
-  DeletePresetAction,
-  DeletePresetResult,
   DeleteProjectAction,
   DeleteProjectResult,
-  GetAllPresetNamesAction,
-  GetAllPresetNamesResult,
   ListProjectsAction,
   ListProjectsResult,
   NewProjectAction,
   NewProjectResult,
   OpenProjectAction,
   OpenProjectResult,
-  ReadPresetAction,
-  ReadPresetResult,
-  RenamePresetAction,
-  RenamePresetResult,
   SaveProjectAction,
   SaveProjectResult,
-  WritePresetAction,
-  WritePresetResult,
 } from "@/workers/FileSystemWorker";
 import { createWorker } from "@/features/workers";
 
@@ -160,66 +144,4 @@ export const deleteProjectRaw = async (id: ProjectId): Promise<void> => {
     id,
     null,
   );
-};
-
-/**
- * Write to a preset. Not guaranteed to go through. May error.
- */
-export const writePresetRaw = async (
-  name: string,
-  settings: GraphSettings,
-): Promise<void> => {
-  await fileWorker.runTask<WritePresetAction, WritePresetResult>(
-    "writePreset",
-    { name, settings },
-    null,
-  );
-};
-
-/**
- * Read a preset. Not guaranteed to be successful. May error.
- */
-export const readPresetRaw = async (name: string): Promise<GraphSettings> => {
-  const settings = await fileWorker.runTask<ReadPresetAction, ReadPresetResult>(
-    "readPreset",
-    name,
-    null,
-  );
-  return migrateGraphSettings(settings);
-};
-
-/**
- * Delete a preset. Not guaranteed to go through. May error.
- */
-export const deletePresetRaw = async (name: string): Promise<void> => {
-  await fileWorker.runTask<DeletePresetAction, DeletePresetResult>(
-    "deletePreset",
-    name,
-    null,
-  );
-};
-
-/**
- * Rename a preset. Not guaranteed to go through. May error.
- */
-export const renamePresetRaw = async (
-  oldName: string,
-  newName: string,
-  settings: GraphSettings,
-): Promise<void> => {
-  await fileWorker.runTask<RenamePresetAction, RenamePresetResult>(
-    "renamePreset",
-    { oldName, newName, settings },
-    null,
-  );
-};
-
-/**
- * Get a list of all preset name.
- */
-export const getAllPresetNamesRaw = async (): Promise<string[]> => {
-  return await fileWorker.runTask<
-    GetAllPresetNamesAction,
-    GetAllPresetNamesResult
-  >("getAllPresetNames", null, null);
 };
