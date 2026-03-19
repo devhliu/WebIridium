@@ -1,14 +1,12 @@
 import type {
-  GraphSettings,
   ProjectData,
+  Metadata,
   ProjectId,
-  UnknownGraphSettings,
   UnknownIridiumData,
   UnknownMetadata,
   UnknownProjectData,
   UnknownResultsData,
 } from "@/features/savedData";
-import type { Metadata } from "@/features/savedData";
 import type { Action, Result } from "@/features/taskPool";
 import wrapActionHandler from "./wrapActionHandler";
 
@@ -36,49 +34,15 @@ export type SaveProjectResult = Result<null>;
 export type DeleteProjectAction = Action<"deleteProject", ProjectId>;
 export type DeleteProjectResult = Result<null>;
 
-export type WritePresetAction = Action<
-  "writePreset",
-  {
-    name: string;
-    settings: GraphSettings;
-  }
->;
-export type WritePresetResult = Result<null>;
-
-export type ReadPresetAction = Action<"readPreset", string>;
-export type ReadPresetResult = Result<UnknownGraphSettings>;
-
-export type RenamePresetAction = Action<
-  "renamePreset",
-  {
-    oldName: string;
-    newName: string;
-    settings: GraphSettings;
-  }
->;
-export type RenamePresetResult = Result<null>;
-
-export type DeletePresetAction = Action<"deletePreset", string>;
-export type DeletePresetResult = Result<null>;
-
-export type GetAllPresetNamesAction = Action<"getAllPresetNames">;
-export type GetAllPresetNamesResult = Result<string[]>;
-
 export type FileSystemAction =
   | ListProjectsAction
   | OpenProjectAction
   | CloseCurrentProjectAction
   | NewProjectAction
   | SaveProjectAction
-  | DeleteProjectAction
-  | WritePresetAction
-  | ReadPresetAction
-  | RenamePresetAction
-  | DeletePresetAction
-  | GetAllPresetNamesAction;
+  | DeleteProjectAction;
 
 const PROJECTS_DIR_NAME = "projects";
-const PRESETS_DIR_NAME = "presets";
 
 let rootHandle: FileSystemDirectoryHandle | null = null;
 const getRootHandle = async (): Promise<FileSystemDirectoryHandle> => {
@@ -99,17 +63,6 @@ const getProjectsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
   return projectsDirHandle;
 };
 
-let presetsDirHandle: FileSystemDirectoryHandle | null = null;
-const getPresetsDirHandle = async (): Promise<FileSystemDirectoryHandle> => {
-  if (presetsDirHandle === null) {
-    const root = await getRootHandle();
-    presetsDirHandle = await root.getDirectoryHandle(PRESETS_DIR_NAME, {
-      create: true,
-    });
-  }
-  return presetsDirHandle;
-};
-
 const getJsonFileContents = async (
   dir: FileSystemDirectoryHandle,
   name: string,
@@ -117,32 +70,6 @@ const getJsonFileContents = async (
   const handle = await dir.getFileHandle(name);
   const file = await handle.getFile();
   return JSON.parse(await file.text());
-};
-
-/**
- * Retries an action everytime a DOMException occurs, with exponential backoff.
- * Gives up after 5 tries.
- */
-const runWithRetry = async <T>(action: () => Promise<T>): Promise<T> => {
-  let timeout = 50;
-  let tries = 0;
-  const wrap = async () => {
-    try {
-      return await action();
-    } catch (e) {
-      if (e instanceof DOMException) {
-        timeout *= 2;
-        tries += 1;
-        if (tries < 5) {
-          await new Promise((resolve) => setTimeout(resolve, timeout));
-          return await wrap();
-        }
-      }
-      throw e;
-    }
-  };
-
-  return await wrap();
 };
 
 const listProjects = async (): Promise<ListProjectsResult["data"]> => {
@@ -160,6 +87,7 @@ const listProjects = async (): Promise<ListProjectsResult["data"]> => {
       map.set(id as ProjectId, metadata);
     } catch (err) {
       if (err instanceof DOMException && err.name === "NotFoundError") {
+        // skip if it is not shaped correctly
         continue;
       } else {
         throw err;
@@ -168,28 +96,6 @@ const listProjects = async (): Promise<ListProjectsResult["data"]> => {
   }
 
   return map;
-};
-
-/**
- * Dump the whole contents of a file into a string.
- */
-const readHandleIntoString = (handle: FileSystemSyncAccessHandle): string => {
-  const buffer = new DataView(new ArrayBuffer(handle.getSize()));
-  handle.read(buffer, { at: 0 });
-
-  const decoder = new TextDecoder();
-  return decoder.decode(buffer);
-};
-
-const writeStringToHandle = (
-  handle: FileSystemSyncAccessHandle,
-  data: string,
-): void => {
-  const encoder = new TextEncoder();
-  const array = encoder.encode(data);
-  handle.truncate(0);
-  handle.write(array, { at: 0 });
-  handle.flush();
 };
 
 class ProjectHandle {
@@ -245,34 +151,65 @@ class ProjectHandle {
     return ProjectHandle.#current;
   }
 
+  /**
+   * Dump the whole contents of a file into a string.
+   */
+  static #readHandleIntoString(handle: FileSystemSyncAccessHandle): string {
+    const buffer = new DataView(new ArrayBuffer(handle.getSize()));
+    handle.read(buffer, { at: 0 });
+
+    const decoder = new TextDecoder();
+    return decoder.decode(buffer);
+  }
+
+  static #writeStringToHandle(
+    handle: FileSystemSyncAccessHandle,
+    data: string,
+  ): void {
+    const encoder = new TextEncoder();
+    const array = encoder.encode(data);
+    handle.truncate(0);
+    handle.write(array, { at: 0 });
+    handle.flush();
+  }
+
   setData(data: Partial<ProjectData>): void {
     if (data.code !== undefined) {
-      writeStringToHandle(this.#codeHandle, data.code);
+      ProjectHandle.#writeStringToHandle(this.#codeHandle, data.code);
     }
 
     if (data.metadata !== undefined) {
-      writeStringToHandle(this.#metadataHandle, JSON.stringify(data.metadata));
+      ProjectHandle.#writeStringToHandle(
+        this.#metadataHandle,
+        JSON.stringify(data.metadata),
+      );
     }
 
     if (data.iridium !== undefined) {
-      writeStringToHandle(this.#iridiumHandle, JSON.stringify(data.iridium));
+      ProjectHandle.#writeStringToHandle(
+        this.#iridiumHandle,
+        JSON.stringify(data.iridium),
+      );
     }
 
     if (data.results !== undefined) {
-      writeStringToHandle(this.#resultsHandle, JSON.stringify(data.results));
+      ProjectHandle.#writeStringToHandle(
+        this.#resultsHandle,
+        JSON.stringify(data.results),
+      );
     }
   }
 
   getData(): UnknownProjectData {
-    const code = readHandleIntoString(this.#codeHandle);
+    const code = ProjectHandle.#readHandleIntoString(this.#codeHandle);
     const metadata = JSON.parse(
-      readHandleIntoString(this.#metadataHandle),
+      ProjectHandle.#readHandleIntoString(this.#metadataHandle),
     ) as UnknownMetadata;
     const iridium = JSON.parse(
-      readHandleIntoString(this.#iridiumHandle),
+      ProjectHandle.#readHandleIntoString(this.#iridiumHandle),
     ) as UnknownIridiumData;
     const results = JSON.parse(
-      readHandleIntoString(this.#resultsHandle),
+      ProjectHandle.#readHandleIntoString(this.#resultsHandle),
     ) as UnknownResultsData;
     return { code, metadata, iridium, results };
   }
@@ -346,72 +283,6 @@ const deleteProject = async (id: ProjectId) => {
   }
 };
 
-const writePreset = async ({
-  name,
-  settings,
-}: WritePresetAction["payload"]): Promise<WritePresetResult["data"]> => {
-  const presetsDirectory = await getPresetsDirHandle();
-  const fileHandle = await presetsDirectory.getFileHandle(name, {
-    create: true,
-  });
-
-  await runWithRetry(async () => {
-    const syncHandle = await fileHandle.createSyncAccessHandle();
-    writeStringToHandle(syncHandle, JSON.stringify(settings));
-    syncHandle.close();
-  });
-
-  return null;
-};
-
-const readPreset = async (name: string): Promise<ReadPresetResult["data"]> => {
-  const presetsDirectory = await getPresetsDirHandle();
-  return (await getJsonFileContents(
-    presetsDirectory,
-    name,
-  )) as UnknownGraphSettings;
-};
-
-const renamePreset = async ({
-  oldName,
-  newName,
-  settings,
-}: RenamePresetAction["payload"]): Promise<RenamePresetResult["data"]> => {
-  const presetsDirectory = await getPresetsDirHandle();
-
-  await presetsDirectory.removeEntry(oldName);
-
-  await runWithRetry(async () => {
-    const fileHandle = await presetsDirectory.getFileHandle(newName, {
-      create: true,
-    });
-    const syncHandle = await fileHandle.createSyncAccessHandle();
-    writeStringToHandle(syncHandle, JSON.stringify(settings));
-    syncHandle.close();
-  });
-
-  return null;
-};
-
-const deletePreset = async (name: string) => {
-  const presetsDirectory = await getPresetsDirHandle();
-  await presetsDirectory.removeEntry(name);
-};
-
-const getAllPresetNames = async (): Promise<
-  GetAllPresetNamesResult["data"]
-> => {
-  const presetsDirectory = await getPresetsDirHandle();
-  const names: string[] = [];
-
-  for await (const [name, handle] of presetsDirectory.entries()) {
-    if (handle.kind !== "file") continue;
-    names.push(name);
-  }
-
-  return names;
-};
-
 const wrapResult = (action: Action, data: unknown): Result => ({
   id: action.id,
   data: data,
@@ -434,16 +305,6 @@ const handleAction = async (action: FileSystemAction): Promise<Result> => {
       return wrapResult(action, saveProject(action.payload));
     case "deleteProject":
       return wrapResult(action, await deleteProject(action.payload));
-    case "writePreset":
-      return wrapResult(action, await writePreset(action.payload));
-    case "readPreset":
-      return wrapResult(action, await readPreset(action.payload));
-    case "renamePreset":
-      return wrapResult(action, await renamePreset(action.payload));
-    case "deletePreset":
-      return wrapResult(action, await deletePreset(action.payload));
-    case "getAllPresetNames":
-      return wrapResult(action, await getAllPresetNames());
     default:
       throw new Error("unknown action type");
   }

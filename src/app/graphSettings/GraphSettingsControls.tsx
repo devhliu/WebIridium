@@ -8,7 +8,6 @@ import {
   defaultGraphSettings,
   deleteGraphPresetAtom,
   graphPresetsAtom,
-  loadingPresetAtom,
   PROJECT_PRESET_NAME,
   renameGraphPresetAtom,
   updateCurrentPresetAtom,
@@ -34,7 +33,6 @@ import { errorToDisplayString } from "@/features/formatUtils";
 const GraphSettingsControls = () => {
   const currentPreset = useAtomValue(currentPresetAtom);
   const updateCurrentPreset = useSetAtom(updateCurrentPresetAtom);
-  const loadingPreset = useAtomValue(loadingPresetAtom);
   const graphPresets = useAtomValue(graphPresetsAtom);
   const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
   const renameGraphPreset = useSetAtom(renameGraphPresetAtom);
@@ -42,7 +40,7 @@ const GraphSettingsControls = () => {
   const addGraphPreset = useSetAtom(addGraphPresetAtom);
   const { toast } = useToast();
 
-  const isUserMade = Object.hasOwn(graphPresets.shared, currentPreset);
+  const isUserMade = Object.hasOwn(graphPresets.user, currentPreset);
 
   const groups = useMemo(() => {
     const result: Record<string, Record<string, string>> = {
@@ -54,9 +52,9 @@ const GraphSettingsControls = () => {
       ),
     };
 
-    if (Object.keys(graphPresets.shared).length > 0) {
+    if (Object.keys(graphPresets.user).length > 0) {
       result["User (Shared)"] = Object.fromEntries(
-        Object.keys(graphPresets.shared).map((v) => [v, v]),
+        Object.keys(graphPresets.user).map((v) => [v, v]),
       );
     }
 
@@ -76,10 +74,10 @@ const GraphSettingsControls = () => {
     }, 100);
   };
 
-  const finishRename = async () => {
+  const finishRename = () => {
     if (renamingTo) {
       try {
-        const err = await renameGraphPreset({
+        const err = renameGraphPreset({
           oldName: currentPreset,
           newName: renamingTo,
         });
@@ -122,9 +120,9 @@ const GraphSettingsControls = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = () => {
     try {
-      await deleteGraphPreset({ name: currentPreset });
+      deleteGraphPreset(currentPreset);
     } catch (err) {
       toast({
         type: "error",
@@ -164,10 +162,9 @@ const GraphSettingsControls = () => {
       ) : (
         <Select
           name="graphPreset"
-          value={loadingPreset ?? currentPreset}
+          value={currentPreset}
           className={styles.presetSelect}
           groups={groups}
-          disabled={!!loadingPreset}
           onChange={updateCurrentPreset}
         />
       )}
@@ -185,19 +182,18 @@ const GraphSettingsControls = () => {
           <DropdownMenuItem
             name="Rename"
             onSelect={handleRename}
-            disabled={!isUserMade || !!loadingPreset}
+            disabled={!isUserMade}
             icon={<PencilIcon width="1em" height="1em" />}
           />
           <DropdownMenuItem
             name="Reset to Default"
             onSelect={handleReset}
-            disabled={!!loadingPreset}
             icon={<ResetIcon width="1em" height="1em" />}
           />
           <DropdownMenuItem
             name="Delete"
             onSelect={handleDelete}
-            disabled={!isUserMade || !!loadingPreset}
+            disabled={!isUserMade}
             icon={<TrashIcon width="1em" height="1em" />}
           />
         </DropdownMenuContent>
