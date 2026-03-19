@@ -8,7 +8,7 @@ const HelpDialog = ({ onClose }: HelpDialogProps) => {
   return (
     <Dialog
       title="Help"
-      description="Help for Web Iridium"
+      description="Help for WebIridium"
       showDescription={false}
       onClose={onClose}
     >

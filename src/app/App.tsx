@@ -17,13 +17,14 @@ import {
   availableLeftPanelsAtom,
 } from "@/globals/layout";
 import { themeAtom, tryUpdateThemeIfAutomaticAtom } from "@/globals/appearance";
-import { saveAtom } from "@/globals/saving";
+import { activeProjectFileAtom } from "@/globals/project";
 
 import AppErrorWrapperPage from "./AppErrorWrapperPage";
 import WorkspaceProvider from "./WorkspaceProvider";
 import Sidebar from "./Sidebar";
 import AppMenubar from "./AppMenubar";
 import AppStatusBar from "./AppStatusBar";
+import ProjectAutoSaver from "./ProjectAutoSaver";
 import { ToastProvider } from "@/components/Toast";
 import { TooltipProvider } from "@/components/Tooltip";
 
@@ -39,10 +40,9 @@ import EditorPanel from "./EditorPanel";
 import SlidersPanel from "./sliders/SlidersPanel";
 
 import ResultTabbedPanel from "./results/ResultsTabbedPanel";
-import PlotSettingsPanel from "./PlotSettingsPanel";
+import GraphSettingsPanel from "./graphSettings/GraphSettingsPanel";
 import ChatPanel from "./ChatPanel";
-
-const SAVE_INTERVAL = 60_000; // in ms
+import StartPanel from "./start/StartPanel";
 
 const getDefaultResultsPanelWidth = () => {
   if (window.matchMedia && window.matchMedia("(min-width: 2000px)").matches) {
@@ -77,6 +77,7 @@ const AppContent = () => {
     currentVeryRightPanelAtom,
   );
 
+  const activeProjectFile = useAtomValue(activeProjectFileAtom);
   const availableLeftPanels = useAtomValue(availableLeftPanelsAtom);
 
   return (
@@ -94,6 +95,7 @@ const AppContent = () => {
           <Allotment>
             <Allotment.Pane
               minSize={290}
+              priority={LayoutPriority.Low}
               preferredSize={290}
               visible={currentLeftPanel !== null}
             >
@@ -110,7 +112,11 @@ const AppContent = () => {
             <Allotment.Pane priority={LayoutPriority.High}>
               <Allotment vertical>
                 <Allotment.Pane priority={LayoutPriority.High}>
-                  <EditorPanel />
+                  {activeProjectFile === null ? (
+                    <StartPanel />
+                  ) : (
+                    <EditorPanel />
+                  )}
                 </Allotment.Pane>
 
                 <Allotment.Pane
@@ -127,6 +133,7 @@ const AppContent = () => {
             <Allotment.Pane
               visible={Boolean(currentRightPanel)}
               preferredSize={getDefaultResultsPanelWidth()}
+              priority={LayoutPriority.Low}
             >
               {currentRightPanel === "Results" && (
                 <ResultTabbedPanel onClose={() => setCurrentRightPanel(null)} />
@@ -136,9 +143,10 @@ const AppContent = () => {
             <Allotment.Pane
               visible={Boolean(currentVeryRightPanel)}
               preferredSize={450}
+              priority={LayoutPriority.Normal}
             >
               {currentVeryRightPanel === "Plot Settings" && (
-                <PlotSettingsPanel
+                <GraphSettingsPanel
                   onClose={() => setCurrentVeryRightPanel(null)}
                 />
               )}
@@ -176,36 +184,12 @@ const ThemeUpdater = () => {
   return null;
 };
 
-const DataSaver = () => {
-  const save = useSetAtom(saveAtom);
-
-  useEffect(() => {
-    const id = setInterval(() => {
-      void save();
-    }, SAVE_INTERVAL);
-
-    return () => clearInterval(id);
-  }, [save]);
-
-  useEffect(() => {
-    const handleUnload = () => {
-      void save();
-    };
-
-    window.addEventListener("beforeunload", handleUnload);
-
-    return () => window.removeEventListener("beforeunload", handleUnload);
-  }, [save]);
-
-  return null;
-};
-
 const App = () => {
   return (
     <AppErrorWrapperPage>
       <AppProvider>
         <ThemeUpdater />
-        <DataSaver />
+        <ProjectAutoSaver />
         <AppContent />
       </AppProvider>
     </AppErrorWrapperPage>
