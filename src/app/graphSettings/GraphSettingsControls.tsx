@@ -95,7 +95,7 @@ const GraphSettingsControls = () => {
               err === "cantRename"
                 ? "You can only rename user-made presets."
                 : err === "invalidName"
-                  ? "Names can only contain alphanumeric characters, underscores, dashes, and must be at most 20 characters."
+                  ? "Names must be at most 20 characters."
                   : "You cannot have duplicate names.",
           });
         }
