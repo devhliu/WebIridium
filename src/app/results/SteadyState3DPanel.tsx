@@ -1,4 +1,4 @@
-import { useAtomValue, useAtom } from "jotai";
+import { useAtomValue, useAtom, atom, useSetAtom } from "jotai";
 
 import styles from "./results.module.css";
 
@@ -10,38 +10,40 @@ import ArrayBarChart3D from "./visuals/ArrayBarChart3D";
 import { Allotment } from "allotment";
 
 import { simulationResultAtom } from "@/globals/simulation";
-import { graphSettingsAtom, steadyState3DItemAtom } from "@/globals/settings";
 import { PALETTES } from "@/features/colors";
+import {
+  graphSettingsAtom,
+  updateGraphSettingsAtom,
+} from "@/globals/graphPresets";
+
+// eslint-disable-next-line
+export const steadyState3DItemAtom = atom<SteadyState3DItem>("Jacobian");
 
 const ITEMS = [
   "Jacobian",
   "Flux Control",
   "Concentration Control",
   "Elasticities",
-];
-
-const AXES: { [name: string]: { x: string; y: string; z: string } } = {
-  Jacobian: { x: "X", y: "Y", z: "Z" },
-  "Flux Control": { x: "Reaction", y: "Flux", z: "Coefficient" },
-  "Concentration Control": { x: "Reaction", y: "Species", z: "Coefficient" },
-  Elasticities: { x: "Species", y: "Reaction", z: "Elasticity" },
-};
+] as const;
 
 const ITEM_OPTIONS = Object.fromEntries(ITEMS.map((i) => [i, i]));
 
+export type SteadyState3DItem = (typeof ITEMS)[number];
+
 const SteadyState3DPanel = () => {
   const result = useAtomValue(simulationResultAtom);
-  const [graphSettings, setGraphSettings] = useAtom(graphSettingsAtom);
+  const graphSettings = useAtomValue(graphSettingsAtom);
+  const updateGraphSettings = useSetAtom(updateGraphSettingsAtom);
   const [item, setItem] = useAtom(steadyState3DItemAtom);
 
-  const handleZAxisChangeFor = (
-    setting: keyof Pick<
-      typeof graphSettings,
-      "isAutoscaledZ" | "minZ" | "maxZ" | "colorScheme3D"
-    >,
+  const handleSettingsChangeFor = (
+    setting: keyof (typeof graphSettings)["steadyState3d"],
   ): ((newValue: unknown) => void) => {
     return (newValue) => {
-      setGraphSettings({ ...graphSettings, [setting]: newValue });
+      updateGraphSettings({
+        ...graphSettings,
+        steadyState3d: { ...graphSettings.steadyState3d, [setting]: newValue },
+      });
     };
   };
 
@@ -52,13 +54,6 @@ const SteadyState3DPanel = () => {
   if (result?.type !== "steadyState") {
     return null;
   }
-
-  // prettier-ignore
-  const resultItem =
-    item === "Jacobian" ? result.jacobian :
-    item === "Flux Control" ? result.fluxControl :
-    item === "Concentration Control" ? result.concentrationControl :
-    result.elasticities;
 
   return (
     <div className={styles.panel}>
@@ -72,17 +67,7 @@ const SteadyState3DPanel = () => {
               onChange={(newValue) => setItem(newValue as typeof item)}
             />
 
-            <ArrayBarChart3D
-              name={item}
-              data={resultItem}
-              x={AXES[item].x}
-              y={AXES[item].y}
-              z={AXES[item].z}
-              isAutoscaledZ={graphSettings.isAutoscaledZ}
-              minZ={graphSettings.minZ}
-              maxZ={graphSettings.maxZ}
-              colorScheme={graphSettings.colorScheme3D}
-            />
+            <ArrayBarChart3D result={result} item={item} />
           </div>
         </div>
 
@@ -92,30 +77,38 @@ const SteadyState3DPanel = () => {
               <PropertyList alignment="leftSmall">
                 <BooleanProperty
                   name="Autoscale Z"
-                  value={graphSettings.isAutoscaledZ}
-                  onChange={handleZAxisChangeFor("isAutoscaledZ")}
+                  value={graphSettings.steadyState3d.isAutoScaledZ}
+                  onChange={handleSettingsChangeFor("isAutoScaledZ")}
                 />
-                {!graphSettings.isAutoscaledZ && (
+                {!graphSettings.steadyState3d.isAutoScaledZ && (
                   <NumericProperty
                     name="Z Minimum"
-                    value={graphSettings.minZ}
-                    onChange={handleZAxisChangeFor("minZ")}
-                    validator={(newValue) => newValue < graphSettings.maxZ}
+                    value={graphSettings.steadyState3d.minZ}
+                    onChange={handleSettingsChangeFor("minZ")}
+                    validator={(newValue) =>
+                      newValue < graphSettings.steadyState3d.maxZ
+                    }
                   />
                 )}
-                {!graphSettings.isAutoscaledZ && (
+                {!graphSettings.steadyState3d.isAutoScaledZ && (
                   <NumericProperty
                     name="Z Maximum"
-                    value={graphSettings.maxZ}
-                    onChange={handleZAxisChangeFor("maxZ")}
-                    validator={(newValue) => newValue > graphSettings.minZ}
+                    value={graphSettings.steadyState3d.maxZ}
+                    onChange={handleSettingsChangeFor("maxZ")}
+                    validator={(newValue) =>
+                      newValue > graphSettings.steadyState3d.minZ
+                    }
                   />
                 )}
                 <SelectProperty
                   name="Color Scheme"
-                  value={graphSettings.colorScheme3D}
+                  value={graphSettings.steadyState3d.colorScheme}
                   options={colorSchemeOptions}
-                  onChange={handleZAxisChangeFor("colorScheme3D") as (newValue: string) => void}
+                  onChange={
+                    handleSettingsChangeFor("colorScheme") as (
+                      newValue: string,
+                    ) => void
+                  }
                 />
               </PropertyList>
             </div>

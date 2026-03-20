@@ -1,10 +1,12 @@
 import {
+  migrateGraphSettings,
   migrateIridiumData,
   migrateMetadata,
   migrateResultsData,
   type IridiumData,
   type Metadata,
   type ResultsData,
+  type UnknownGraphSettings,
   type UnknownIridiumData,
   type UnknownMetadata,
   type UnknownResultsData,
@@ -15,17 +17,122 @@ import {
   defaultTimeCourseParameters,
 } from "@/globals/settings";
 import { describe, it, expect } from "vitest";
+import type { GraphSettingsV1 } from "../graphSettings/v1";
+import type { GraphSettingsV2 } from "../graphSettings/v2_steadyState3D";
+
+const graphSettingsV1: GraphSettingsV1 = {
+  versionTag: 1,
+
+  backgroundColor: "#ffffff",
+  drawingAreaColor: "#f1e7f4",
+
+  includeTitle: true,
+  title: "Transition of substances in chemical reaction",
+  titleColor: "#000000",
+
+  includeBorder: true,
+  borderColor: "#000000",
+  borderThickness: 0.5,
+
+  globalWidth: 1,
+
+  isAutoscaledX: true,
+  minX: 0,
+  maxX: 10,
+
+  isAutoscaledY: true,
+  minY: 0,
+  maxY: 10,
+
+  margin: 70,
+
+  xAxis: {
+    includeTitle: true,
+    title: "", // empty means use placeholder
+    color: "#000",
+  },
+
+  yAxis: {
+    includeTitle: true,
+    title: "", // empty means use placeholder
+    color: "#000",
+  },
+
+  majorGrid: {
+    enabled: { x: false, y: false },
+    xColor: "#888",
+    yColor: "#888",
+    xWidth: 0.5,
+    yWidth: 0.5,
+    numXGrids: 4,
+    numYGrids: 4,
+  },
+
+  minorGrid: {
+    enabled: { x: false, y: false },
+    xColor: "#888",
+    yColor: "#888",
+    xWidth: 0.5,
+    yWidth: 0.5,
+    numXGrids: 4,
+    numYGrids: 4,
+  },
+
+  legend: {
+    visible: true,
+    isFloating: true,
+
+    textColor: "#000",
+    backgroundColor: "#fff",
+    borderColor: "#000",
+    borderThickness: 1,
+    padding: 15,
+    lineLength: 50,
+  },
+};
+
+const graphSettingsV2: GraphSettingsV2 = {
+  ...graphSettingsV1,
+  versionTag: 2,
+  steadyState3d: {
+    isAutoScaledZ: true,
+    minZ: 0,
+    maxZ: 20,
+    colorScheme: "BlueRed",
+  },
+};
+
+describe("graph settings", () => {
+  const olderVersions: UnknownGraphSettings[] = [
+    graphSettingsV1,
+    graphSettingsV2,
+  ];
+
+  it("should migrate gracefully", () => {
+    for (const data of olderVersions) {
+      expect(migrateGraphSettings(data)).toEqual(defaultGraphSettings);
+    }
+  });
+});
 
 describe("iridium data", () => {
   const olderVersions: UnknownIridiumData[] = [
     {
       versionTag: 1,
-      graphSettings: defaultGraphSettings,
+      graphSettings: graphSettingsV1,
       variableSettings: {},
     },
     {
       versionTag: 2,
-      graphSettings: defaultGraphSettings,
+      graphSettings: graphSettingsV1,
+      variableSettings: {},
+      timeCourseParameters: defaultTimeCourseParameters,
+      parameterScanOptions: defaultParameterScanOptions,
+    },
+    {
+      versionTag: 3,
+      currentGraphPreset: "Custom",
+      graphSettings: graphSettingsV1,
       variableSettings: {},
       timeCourseParameters: defaultTimeCourseParameters,
       parameterScanOptions: defaultParameterScanOptions,
@@ -33,7 +140,7 @@ describe("iridium data", () => {
   ];
 
   const finalVersion: IridiumData = {
-    versionTag: 3,
+    versionTag: 4,
     currentGraphPreset: "Custom",
     graphSettings: defaultGraphSettings,
     variableSettings: {},
