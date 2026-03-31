@@ -4,3 +4,4 @@ public/**/*
 src/assets/**/*.json
 src/features/editor/language-handler/**/*
 src/vendor/
+**/*.md
