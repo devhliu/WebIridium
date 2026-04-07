@@ -137,6 +137,13 @@ describe("iridium data", () => {
       timeCourseParameters: defaultTimeCourseParameters,
       parameterScanOptions: defaultParameterScanOptions,
     },
+    {
+      versionTag: 2,
+      graphSettings: defaultGraphSettings,
+      variableSettings: {},
+      timeCourseParameters: defaultTimeCourseParameters,
+      parameterScanOptions: defaultParameterScanOptions,
+    },
   ];
 
   const finalVersion: IridiumData = {
