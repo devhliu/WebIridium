@@ -25,7 +25,7 @@ export const savedCodeAtom = atom((get) => get(editorContentAtom));
 export const savedIridiumAtom = atom(
   (get) =>
     ({
-      versionTag: 3,
+      versionTag: 4,
       currentGraphPreset: get(currentPresetAtom),
       graphSettings: get(projectGraphSettingsAtom),
       variableSettings: get(variableSettingssAtom),

@@ -8,7 +8,7 @@ import { atomWithStorage } from "jotai/utils";
 import type { SyncStorage } from "jotai/vanilla/utils/atomWithStorage";
 
 export const defaultGraphSettings: GraphSettings = {
-  versionTag: 1,
+  versionTag: 2,
 
   backgroundColor: "#ffffff",
   drawingAreaColor: "#f1e7f4",
@@ -75,6 +75,13 @@ export const defaultGraphSettings: GraphSettings = {
     borderThickness: 1,
     padding: 15,
     lineLength: 50,
+  },
+
+  steadyState3d: {
+    isAutoScaledZ: true,
+    minZ: 0,
+    maxZ: 20,
+    colorScheme: "BlueRed",
   },
 };
 
